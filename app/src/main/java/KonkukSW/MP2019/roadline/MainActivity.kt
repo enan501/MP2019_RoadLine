@@ -1,4 +1,4 @@
-package konkuksw.mobileProgramming2019.roadline
+package KonkukSW.MP2019.roadline
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity

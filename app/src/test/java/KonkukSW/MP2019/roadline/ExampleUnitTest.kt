@@ -1,4 +1,4 @@
-package konkuksw.mobileProgramming2019.roadline
+package KonkukSW.MP2019.roadline
 
 import org.junit.Test
 
