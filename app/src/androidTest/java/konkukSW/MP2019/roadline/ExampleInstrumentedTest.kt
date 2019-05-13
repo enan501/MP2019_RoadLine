@@ -1,4 +1,4 @@
-package KonkukSW.MP2019.roadline
+package konkukSW.MP2019.roadline
 
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
