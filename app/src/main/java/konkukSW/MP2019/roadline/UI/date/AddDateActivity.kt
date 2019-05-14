@@ -1,13 +1,13 @@
-package konkukSW.MP2019.roadline.Money
+package konkukSW.MP2019.roadline.UI.date
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import konkukSW.MP2019.roadline.R
 
-class AddMoneyActivity : AppCompatActivity() {
+class AddDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_money)
+        setContentView(R.layout.activity_add_date)
     }
 }

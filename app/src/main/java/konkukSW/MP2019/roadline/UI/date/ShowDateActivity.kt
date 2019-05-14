@@ -1,13 +1,13 @@
-package konkukSW.MP2019.roadline.Date
+package konkukSW.MP2019.roadline.UI.date
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import konkukSW.MP2019.roadline.R
 
-class AddDateActivity : AppCompatActivity() {
+class ShowDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_date)
+        setContentView(R.layout.activity_show_date)
     }
 }

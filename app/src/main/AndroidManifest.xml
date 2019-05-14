@@ -9,17 +9,17 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Money.AddMoneyActivity">
+        <activity android:name="konkukSW.MP2019.roadline.UI.money.AddMoneyActivity">
         </activity>
-        <activity android:name=".Photo.ShowPhotoActivity">
+        <activity android:name="konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity">
         </activity>
-        <activity android:name=".Money.ShowMoneyActivity">
+        <activity android:name="konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity">
         </activity>
-        <activity android:name=".Date.ShowDateActivity">
+        <activity android:name="konkukSW.MP2019.roadline.UI.date.ShowDateActivity">
         </activity>
-        <activity android:name=".Date.AddDateActivity">
+        <activity android:name="konkukSW.MP2019.roadline.UI.date.AddDateActivity">
         </activity>
-        <activity android:name=".Date.PickDateActivity">
+        <activity android:name="konkukSW.MP2019.roadline.UI.date.PickDateActivity">
         </activity>
         <activity android:name=".MainListActivity">
             <intent-filter>

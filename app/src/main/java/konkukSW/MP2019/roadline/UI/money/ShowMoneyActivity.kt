@@ -1,4 +1,4 @@
-package konkukSW.MP2019.roadline.Money
+package konkukSW.MP2019.roadline.UI.money
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
