@@ -8,7 +8,7 @@ class MainListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_list)
+        setContentView(R.layout.activity_add_money)
         //화이팅화이팅~~
     }
 }
