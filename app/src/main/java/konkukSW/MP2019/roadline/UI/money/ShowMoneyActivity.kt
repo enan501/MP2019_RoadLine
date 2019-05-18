@@ -16,14 +16,13 @@ import kotlinx.android.synthetic.main.activity_show_money.*
 
 var data:ArrayList<MoneyItem> = ArrayList()
 lateinit var adapter:MoneyItemAdapter
-var dayCount = 1;
+var dayCount = 0;
 
 class ShowMoneyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_money)
-
         initLayout()
         initSwipe()
 
@@ -34,7 +33,7 @@ class ShowMoneyActivity : AppCompatActivity() {
             ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
             override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                //adapter.moveItem(p1.adapterPosition, p2.adapterPosition)
+                adapter.moveItem(p1.adapterPosition, p2.adapterPosition)
                 return true
             }
 
@@ -48,11 +47,6 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initLayout() {
-        //val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-//        val layoutManager = GridLayoutManager(this, 3) // 제일 큰놈으로 크기 맞춤
-//        rview.layoutManager = layoutManager
-//        rview.adapter = MyDataAdapter(data)
-
         val layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL) // 크기 제각각 가능
         money_recycleView.layoutManager = layoutManager
         adapter = MoneyItemAdapter(data)
@@ -69,9 +63,11 @@ class ShowMoneyActivity : AppCompatActivity() {
             data.add(MoneyItem("3000", 1, "null", 2))
             data.add(MoneyItem("6000", 2, "null", 2))
             data.add(MoneyItem("6000", 2, "null", 2))
+
+            data.add(MoneyItem("null", 0, "null", 1))
+            data.add(MoneyItem("null", 0, "null", 1))
+            data.add(MoneyItem("Total:1000", 0, "null", 3))
         }
-
-
     }
 
 }

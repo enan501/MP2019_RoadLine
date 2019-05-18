@@ -11,7 +11,6 @@
                android:layout_height="0dp"
                android:layout_weight="2.5"
                android:scaleType="fitCenter"
-               android:src="@drawable/imgtest"
                android:layout_marginHorizontal="70dp"
                android:layout_marginTop="25dp"
                android:layout_marginBottom="20dp"

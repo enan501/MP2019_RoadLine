@@ -23,10 +23,10 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
 
     fun moveItem(pos1:Int, pos2:Int)
     {
-        val item1 = items.get(pos1)
-        items.removeAt(pos1)
-        items.add(pos2, item1)
-        notifyItemMoved(pos1, pos2)
+//        val item1 = items.get(pos1)
+//        items.removeAt(pos1)
+//        items.add(pos2, item1)
+//        notifyItemMoved(pos1, pos2)
     }
     fun removeItem(pos:Int)
     {
@@ -41,22 +41,31 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
 
     override fun getItemCount(): Int {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-
         return items.size
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) { // p1: 포지션 정보
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        p0.price.setText(items.get(p1).price.toString())
+
         if(items.get(p1).headFlag == 0) {
+            p0.price.setText(items.get(p1).price)
             p0.layout1.visibility = View.GONE
             p0.layout3.visibility = View.GONE
+            p0.layout4.visibility = View.GONE
         }
         else if(items.get(p1).headFlag == 1) {
             p0.layout1.visibility = View.GONE
             p0.layout2.visibility = View.GONE
+            p0.layout4.visibility = View.GONE
         }
         else if(items.get(p1).headFlag == 2) {
+            p0.layout2.visibility = View.GONE
+            p0.layout3.visibility = View.GONE
+            p0.layout4.visibility = View.GONE
+        }
+        else if(items.get(p1).headFlag == 3) {
+            p0.totalPrice.text = items.get(p1).price
+            p0.layout1.visibility = View.GONE
             p0.layout2.visibility = View.GONE
             p0.layout3.visibility = View.GONE
         }
@@ -71,19 +80,21 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         : RecyclerView.ViewHolder(itemView)
     {
         var price: EditText
+        var totalPrice: TextView
         var img: ImageView
         var layout1: ConstraintLayout
         var layout2: LinearLayout
         var layout3: LinearLayout
-
+        var layout4: ConstraintLayout
 
         init{
             price = itemView.findViewById(R.id.money_Item_textView)
+            totalPrice = itemView.findViewById(R.id.money_Item_textView2)
             img = itemView.findViewById(R.id.money_Item_imageView)
             layout1 = itemView.findViewById(R.id.money_layout1)
             layout2 = itemView.findViewById(R.id.money_layout2)
             layout3 = itemView.findViewById(R.id.money_layout3)
-
+            layout4 = itemView.findViewById(R.id.money_layout4)
         }
     }
 
