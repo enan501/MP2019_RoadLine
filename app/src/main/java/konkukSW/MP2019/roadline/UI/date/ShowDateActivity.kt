@@ -4,7 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import konkukSW.MP2019.roadline.R
 import android.support.design.widget.TabLayout
-import konkukSW.MP2019.roadline.Data.TabAdapter
+import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import kotlinx.android.synthetic.main.activity_show_date.*
 
 class ShowDateActivity : AppCompatActivity() {
