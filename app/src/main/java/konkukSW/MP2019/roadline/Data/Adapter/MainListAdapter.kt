@@ -10,6 +10,7 @@ import konkukSW.MP2019.roadline.Data.Dataclass.MainList
 import konkukSW.MP2019.roadline.R
 
 class MainListAdapter(var items:ArrayList<MainList>): RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+    
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_main_list,p0,false)
         return ViewHolder(v)
@@ -23,8 +24,10 @@ class MainListAdapter(var items:ArrayList<MainList>): RecyclerView.Adapter<MainL
         p0.title.text =items.get(p1).title
         p0.date.text = items.get(p1).date
         if(items.get(p1).image.isEmpty()){
+            p0.image.setImageResource(R.drawable.ml_default_image)
         }
         else{
+            //TODO("대표이미지 설정")
         }
     }
 
