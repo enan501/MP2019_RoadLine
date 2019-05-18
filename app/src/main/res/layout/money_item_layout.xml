@@ -25,7 +25,7 @@
                 android:background="@color/blackAlpha"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
-        <TextView
+        <EditText
                 android:id="@+id/money_Item_textView"
                 android:text="1000원"
                 android:textSize="22sp"

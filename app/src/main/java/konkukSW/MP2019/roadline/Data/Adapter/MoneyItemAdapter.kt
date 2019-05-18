@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -46,8 +47,7 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) { // p1: 포지션 정보
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        p0.price.text = items.get(p1).price.toString()
-
+        p0.price.setText(items.get(p1).price.toString())
         if(items.get(p1).headFlag == 0) {
             p0.layout1.visibility = View.GONE
             p0.layout3.visibility = View.GONE
@@ -70,7 +70,7 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     inner class ViewHolder(itemView: View) // 레이아웃에 있는 위젯들 연결해주는 역할
         : RecyclerView.ViewHolder(itemView)
     {
-        var price: TextView
+        var price: EditText
         var img: ImageView
         var layout1: ConstraintLayout
         var layout2: LinearLayout
