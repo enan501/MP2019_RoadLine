@@ -5,21 +5,25 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
+import java.nio.file.Files.size
+import android.text.method.TextKeyListener.clear
+import android.widget.*
+
+
+val VIEW_TYPE_A = 0
+val VIEW_TYPE_B = 1
+val VIEW_TYPE_C = 2
+val VIEW_TYPE_D = 3
 
 class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
-    : RecyclerView.Adapter<MoneyItemAdapter.ViewHolder>() {
+    :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    /* 리사이클뷰 어댑터에 리스너 달기 */
-    interface OnItemClickListener{
-        fun OnItemClick(holder:ViewHolder, view: View, data:MoneyItem, position: Int )
+    interface OnItemLongClickListener{
+        fun OnItemLongClick(holder:ViewHolder1, view:View, data:MoneyItem, position: Int )
     }
-    var itemClickListener : OnItemClickListener? = null
+    var itemLongClickListener : OnItemLongClickListener? = null
 
     fun moveItem(pos1:Int, pos2:Int)
     {
@@ -33,10 +37,23 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         items.removeAt(pos)
         notifyItemRemoved(pos)
     }
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        val v = LayoutInflater.from(p0.context).inflate(R.layout.money_item_layout, p0, false) // row의 인스턴스 만듬
-        return ViewHolder(v) // ViewHolder로 생선한거 전달
+        if (p1 === 0) {
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_day_layout, p0, false)
+            return ViewHolder0(v)
+        } else if (p1 === 1) {
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_item_layout, p0, false)
+            return ViewHolder1(v)
+        }
+        else if (p1 === 2) {
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_empty_layout, p0, false)
+            return ViewHolder2(v)
+        }
+        else{
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_total_layout, p0, false)
+            return ViewHolder3(v)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -44,58 +61,72 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         return items.size
     }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) { // p1: 포지션 정보
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        if(items.get(p1).headFlag == 0) {
-            p0.price.setText(items.get(p1).price)
-            p0.layout1.visibility = View.GONE
-            p0.layout3.visibility = View.GONE
-            p0.layout4.visibility = View.GONE
+        if (holder is ViewHolder1)
+        {
+            holder.price.text = items.get(position).price
+            if(items.get(position).cate == 1)
+                holder.img.setImageResource(R.drawable.testimg1)
+            else
+                holder.img.setImageResource(R.drawable.testimg2)
         }
-        else if(items.get(p1).headFlag == 1) {
-            p0.layout1.visibility = View.GONE
-            p0.layout2.visibility = View.GONE
-            p0.layout4.visibility = View.GONE
-        }
-        else if(items.get(p1).headFlag == 2) {
-            p0.layout2.visibility = View.GONE
-            p0.layout3.visibility = View.GONE
-            p0.layout4.visibility = View.GONE
-        }
-        else if(items.get(p1).headFlag == 3) {
-            p0.totalPrice.text = items.get(p1).price
-            p0.layout1.visibility = View.GONE
-            p0.layout2.visibility = View.GONE
-            p0.layout3.visibility = View.GONE
-        }
-        if(items.get(p1).cate == 1)
-            p0.img.setImageResource(R.drawable.testimg1)
-        else
-            p0.img.setImageResource(R.drawable.testimg2)
+        else if (holder is ViewHolder3)
+            holder.totalPrice.text = items.get(position).price
 
     }
 
-    inner class ViewHolder(itemView: View) // 레이아웃에 있는 위젯들 연결해주는 역할
-        : RecyclerView.ViewHolder(itemView)
-    {
-        var price: EditText
-        var totalPrice: TextView
+    inner class ViewHolder0(itemView: View): RecyclerView.ViewHolder(itemView) {
+        init{
+        }
+    }
+    inner class ViewHolder1(itemView: View): RecyclerView.ViewHolder(itemView) {
+        var price: TextView
         var img: ImageView
-        var layout1: ConstraintLayout
-        var layout2: LinearLayout
-        var layout3: LinearLayout
-        var layout4: ConstraintLayout
-
         init{
             price = itemView.findViewById(R.id.money_Item_textView)
-            totalPrice = itemView.findViewById(R.id.money_Item_textView2)
             img = itemView.findViewById(R.id.money_Item_imageView)
-            layout1 = itemView.findViewById(R.id.money_layout1)
-            layout2 = itemView.findViewById(R.id.money_layout2)
-            layout3 = itemView.findViewById(R.id.money_layout3)
-            layout4 = itemView.findViewById(R.id.money_layout4)
+
+            /* 리사이클뷰 어댑터에 리스너 달기 */
+            itemView.setOnLongClickListener{
+                val position = adapterPosition
+                itemLongClickListener?.OnItemLongClick(this, it, items[position], position)
+                true
+            }
+        }
+
+
+    }
+    inner class ViewHolder2(itemView: View): RecyclerView.ViewHolder(itemView) {
+        init{
+
+        }
+    }
+    inner class ViewHolder3(itemView: View): RecyclerView.ViewHolder(itemView) {
+        var totalPrice: TextView
+
+        init{
+            totalPrice = itemView.findViewById(R.id.money_Item_textView2)
         }
     }
 
+    override fun getItemViewType(position: Int): Int {
+        return if (items.get(position).viewType === 0) {
+            VIEW_TYPE_A
+        } else if (items.get(position).viewType === 1) {
+            VIEW_TYPE_B
+        }
+        else if (items.get(position).viewType === 2) {
+            VIEW_TYPE_C
+        }
+        else {
+            VIEW_TYPE_D
+        }
+    }
+    fun onLongClick(view: View): Boolean {
+        // Handle long click
+        // Return true to indicate the click was handled
+        return true
+    }
 }

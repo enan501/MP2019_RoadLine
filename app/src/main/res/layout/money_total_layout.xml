@@ -13,32 +13,24 @@
 
     <android.support.constraint.ConstraintLayout
 
-        android:id="@+id/money_layout1"
+        android:id="@+id/money_layout4"
         android:layout_width="130dp"
-        android:layout_height="130dp"
-        android:background="@color/colorPrimary"
+        android:layout_height="40dp"
+        android:background="@color/white"
         android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/money_Item_imageView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/blackAlpha" />
         <TextView
-            android:id="@+id/money_Item_textView"
+            android:id="@+id/money_Item_textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1000원"
-            android:textColor="@color/white"
-            android:textSize="22sp"
+            android:text="Total:1000원"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.567"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.163" />
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
