@@ -37,8 +37,7 @@ class PickDateActivity : AppCompatActivity() {
         PDAdapter = PickDateAdapter(data)
         PD_rView.adapter = PDAdapter
 
-
-        snapHelper.attachToRecyclerView(PD_rView)
+        snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
     }
     fun notifySnapPositionChanged(rView:RecyclerView){
         val snapView = snapHelper.findSnapView(PD_rView.layoutManager)

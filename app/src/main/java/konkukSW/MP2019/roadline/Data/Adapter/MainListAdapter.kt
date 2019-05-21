@@ -24,12 +24,17 @@ class MainListAdapter(var items:ArrayList<MainList>): RecyclerView.Adapter<MainL
         p0.title.text =items.get(p1).title
         p0.date.text = items.get(p1).date
         if(items.get(p1).image.isEmpty()){
+            //TODO("대표이미지 설정")
             p0.image.setImageResource(R.drawable.ml_default_image)
         }
         else{
-            //TODO("대표이미지 설정")
+            //TODO("이미지 경로 받아와서 넣어주기")
         }
     }
+    interface OnItemClickListener{
+        fun OnItemClick(holder:ViewHolder, data: MainList, position: Int)
+    }
+    var itemClickListener : OnItemClickListener? = null
 
     inner class ViewHolder(itemView: View)
         :RecyclerView.ViewHolder(itemView){
@@ -40,6 +45,11 @@ class MainListAdapter(var items:ArrayList<MainList>): RecyclerView.Adapter<MainL
             title = itemView.findViewById(R.id.MLItem_title)
             date = itemView.findViewById(R.id.MLItem_date)
             image = itemView.findViewById(R.id.MLItem_image)
+            itemView.setOnClickListener{
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(this,items[position],position)
+            }
+
         }
 
     }
