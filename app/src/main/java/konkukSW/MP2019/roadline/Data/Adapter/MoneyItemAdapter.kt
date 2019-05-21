@@ -16,6 +16,7 @@ val VIEW_TYPE_A = 0
 val VIEW_TYPE_B = 1
 val VIEW_TYPE_C = 2
 val VIEW_TYPE_D = 3
+val VIEW_TYPE_E = 4
 
 class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -50,9 +51,13 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
             val v = LayoutInflater.from(p0.context).inflate(R.layout.money_empty_layout, p0, false)
             return ViewHolder2(v)
         }
-        else{
+        else if (p1 === 3) {
             val v = LayoutInflater.from(p0.context).inflate(R.layout.money_total_layout, p0, false)
             return ViewHolder3(v)
+        }
+        else{
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_add_layout, p0, false)
+            return ViewHolder4(v)
         }
     }
 
@@ -110,6 +115,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
             totalPrice = itemView.findViewById(R.id.money_Item_textView2)
         }
     }
+    inner class ViewHolder4(itemView: View): RecyclerView.ViewHolder(itemView) {
+        init{
+
+        }
+    }
 
     override fun getItemViewType(position: Int): Int {
         return if (items.get(position).viewType === 0) {
@@ -120,8 +130,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         else if (items.get(position).viewType === 2) {
             VIEW_TYPE_C
         }
-        else {
+        else if (items.get(position).viewType === 3) {
             VIEW_TYPE_D
+        }
+        else {
+            VIEW_TYPE_E
         }
     }
     fun onLongClick(view: View): Boolean {

@@ -14,6 +14,9 @@ import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_money.*
+import android.content.DialogInterface
+import android.support.v7.app.AlertDialog
+
 
 var data:ArrayList<MoneyItem> = ArrayList()
 lateinit var adapter:MoneyItemAdapter
@@ -32,6 +35,18 @@ class ShowMoneyActivity : AppCompatActivity() {
             override fun OnItemLongClick(holder: MoneyItemAdapter.ViewHolder1, view: View, data: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 Toast.makeText(applicationContext, data.price.toString(), Toast.LENGTH_LONG).show()
+
+                val alert_confirm = AlertDialog.Builder(this@ShowMoneyActivity)
+                alert_confirm.setMessage("삭제할래?").setCancelable(false).setPositiveButton("취소",
+                   DialogInterface.OnClickListener { dialog, which ->
+                        // 'YES'
+                    }).setNegativeButton("확인",
+                    DialogInterface.OnClickListener { dialog, which ->
+                        // 'No'
+                        return@OnClickListener
+                    })
+                val alert = alert_confirm.create()
+                alert.show()
             }
 
         }
@@ -64,7 +79,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             data.add(MoneyItem("null", 0, "null", 0))
             data.add(MoneyItem("null", 0, "null", 2))
-            data.add(MoneyItem("null", 0, "null", 2))
+            data.add(MoneyItem("null", 0, "null", 4))
 
             data.add(MoneyItem("3000", 1, "null", 1))
             data.add(MoneyItem("6000", 2, "null", 1))
