@@ -9,7 +9,7 @@ import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 
 class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickDateAdapter.ViewHolder>() {
-    
+
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_pick_date,p0,false)
         return ViewHolder(v)
@@ -23,7 +23,10 @@ class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickD
         p0.day.text = "Day " + items.get(p1).day.toString()
         p0.date.text = items.get(p1).date
     }
-
+    interface OnItemClickListener{
+        fun OnItemClick(holder:ViewHolder, data: PickDate, position: Int)
+    }
+    var itemClickListener : OnItemClickListener? = null
     inner class ViewHolder(itemView: View)
         :RecyclerView.ViewHolder(itemView){
         var day: TextView
@@ -31,7 +34,11 @@ class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickD
         init{
             day = itemView.findViewById(R.id.PDItem_day)
             date = itemView.findViewById(R.id.PDItem_date)
-        }
+            itemView.setOnClickListener{
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(this,items[position],position)
 
+            }
+        }
     }
 }
