@@ -2,6 +2,7 @@ package konkukSW.MP2019.roadline.UI.money
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.StaggeredGridLayoutManager
@@ -16,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_show_money.*
 
 var data:ArrayList<MoneyItem> = ArrayList()
 lateinit var adapter:MoneyItemAdapter
-var dayCount = 0;
+var dayCount = 2;
 
 class ShowMoneyActivity : AppCompatActivity() {
 
@@ -24,8 +25,16 @@ class ShowMoneyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_money)
         initLayout()
-        initSwipe()
+        //initSwipe()
 
+        /* 리사이클뷰 어댑터에 리스너 달기 */
+        adapter.itemLongClickListener = object : MoneyItemAdapter.OnItemLongClickListener{
+            override fun OnItemLongClick(holder: MoneyItemAdapter.ViewHolder1, view: View, data: MoneyItem, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                Toast.makeText(applicationContext, data.price.toString(), Toast.LENGTH_LONG).show()
+            }
+
+        }
     }
 
     fun initSwipe() {
@@ -47,25 +56,25 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initLayout() {
-        val layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL) // 크기 제각각 가능
+        val layoutManager = GridLayoutManager(this, 3)
         money_recycleView.layoutManager = layoutManager
         adapter = MoneyItemAdapter(data)
         money_recycleView.adapter = adapter
         for(i in 0..dayCount)
         {
             data.add(MoneyItem("null", 0, "null", 0))
-            data.add(MoneyItem("null", 0, "null", 1))
-            data.add(MoneyItem("null", 0, "null", 1))
+            data.add(MoneyItem("null", 0, "null", 2))
+            data.add(MoneyItem("null", 0, "null", 2))
 
-            data.add(MoneyItem("3000", 1, "null", 2))
-            data.add(MoneyItem("6000", 2, "null", 2))
-            data.add(MoneyItem("6000", 2, "null", 2))
-            data.add(MoneyItem("3000", 1, "null", 2))
-            data.add(MoneyItem("6000", 2, "null", 2))
-            data.add(MoneyItem("6000", 2, "null", 2))
+            data.add(MoneyItem("3000", 1, "null", 1))
+            data.add(MoneyItem("6000", 2, "null", 1))
+            data.add(MoneyItem("6000", 2, "null", 1))
+            data.add(MoneyItem("3000", 1, "null", 1))
+            data.add(MoneyItem("6000", 2, "null", 1))
+            data.add(MoneyItem("6000", 2, "null", 1))
 
-            data.add(MoneyItem("null", 0, "null", 1))
-            data.add(MoneyItem("null", 0, "null", 1))
+            data.add(MoneyItem("null", 0, "null", 2))
+            data.add(MoneyItem("null", 0, "null", 2))
             data.add(MoneyItem("Total:1000", 0, "null", 3))
         }
     }
