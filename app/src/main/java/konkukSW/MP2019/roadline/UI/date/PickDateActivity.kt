@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSnapHelper
 import android.support.v7.widget.RecyclerView
+import android.widget.Toast
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
@@ -36,9 +37,17 @@ class PickDateActivity : AppCompatActivity() {
         PD_rView.layoutManager = layoutManager
         PDAdapter = PickDateAdapter(data)
         PD_rView.adapter = PDAdapter
-
         snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
+        addListener()
     }
+    fun addListener() {
+        PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
+            override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
+                Toast.makeText(this@PickDateActivity,data.date,Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     fun notifySnapPositionChanged(rView:RecyclerView){
         val snapView = snapHelper.findSnapView(PD_rView.layoutManager)
         val snapPosition = PD_rView.layoutManager!!.getPosition(snapView!!)

@@ -20,7 +20,7 @@ class CenterZoomLayoutManager : LinearLayoutManager {
 
     override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler?, state: RecyclerView.State?): Int {
         val orientation = orientation
-        if (orientation == LinearLayoutManager.HORIZONTAL) {
+        if (orientation == HORIZONTAL) {
             val scrolled = super.scrollHorizontallyBy(dx, recycler, state)
 
             val midpoint = width / 2f
