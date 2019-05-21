@@ -7,8 +7,8 @@ import android.support.v7.widget.RecyclerView
 
 class CenterZoomLayoutManager : LinearLayoutManager {
 
-    private val mShrinkAmount = 0.9f
-    private val mShrinkDistance = 0.9f
+    private val mShrinkAmount = 0.8f
+    private val mShrinkDistance = 1.6f
 
     constructor(context: Context) : super(context)
 
