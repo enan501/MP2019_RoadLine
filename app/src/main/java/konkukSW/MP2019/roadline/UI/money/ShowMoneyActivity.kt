@@ -46,22 +46,17 @@ class ShowMoneyActivity : AppCompatActivity() {
                     }).setNegativeButton("확인",
                     DialogInterface.OnClickListener { dialog, which ->
                         data.removeAt(position)
-                        data.add(dataMaxPos[item.day]-4, MoneyItem("null", 0, "null", item.day,2))
-                        var emptyCount = 0
-                        if(data.get(dataMaxPos[item.day]-4).viewType == 2)
-                            emptyCount++
-                        if(data.get(dataMaxPos[item.day]-5).viewType == 2)
-                            emptyCount++
-                        if(data.get(dataMaxPos[item.day]-6).viewType == 2)
-                            emptyCount++
-                        System.out.println(emptyCount)
-                        if(emptyCount == 3) {
-                            data.removeAt(dataMaxPos[item.day] - 4)
-                            data.removeAt(dataMaxPos[item.day] - 5)
-                            data.removeAt(dataMaxPos[item.day] - 6)
-                            dataSize[item.day]-=3
-                            dataMaxPos[item.day]-=3
+                        var pos = 0;
+                        for(i in 0..data.size)
+                        {
+                            if(data.get(i).day == data.get(position).day && data.get(i).viewType == 5) {
+                                pos = i
+                                break;
+                            }
                         }
+                        data.add(pos, MoneyItem("null", 0, "null", item.day,2))
+                        adapter.notifyDataSetChanged()
+                        eraseItem(pos)
                         adapter.notifyDataSetChanged()
                         return@OnClickListener
                     })
@@ -108,14 +103,24 @@ class ShowMoneyActivity : AppCompatActivity() {
             data.add(MoneyItem("6000", 2, "null", i,1))
             data.add(MoneyItem("6000", 2, "null", i,1))
 
-            data.add(MoneyItem("null", 0, "null", i,2))
+            data.add(MoneyItem("null", 0, "null", i,5))
             data.add(MoneyItem("null", 0, "null", i,2))
             data.add(MoneyItem("Total:1000", 0, "null", i,3))
 
-            dataSize[i] = 12;
-            dataMaxPos[i] += data.size
         }
         adapter.notifyDataSetChanged()
+    }
+
+    fun eraseItem(pos:Int)
+    {
+        if(data.get(pos).viewType == 2 &&
+            data.get(pos-1).viewType == 2 &&
+            data.get(pos-2).viewType == 2)
+        {
+            data.removeAt(pos)
+            data.removeAt(pos-1)
+            data.removeAt(pos-2)
+        }
     }
 
 }

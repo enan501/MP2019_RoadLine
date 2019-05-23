@@ -1,14 +1,11 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
-import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
-import java.nio.file.Files.size
-import android.text.method.TextKeyListener.clear
 import android.widget.*
 
 
@@ -17,6 +14,7 @@ val VIEW_TYPE_B = 1
 val VIEW_TYPE_C = 2
 val VIEW_TYPE_D = 3
 val VIEW_TYPE_E = 4
+val VIEW_TYPE_F = 5
 
 class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -55,9 +53,13 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
             val v = LayoutInflater.from(p0.context).inflate(R.layout.money_total_layout, p0, false)
             return ViewHolder3(v)
         }
-        else{
+        else if (p1 === 4) {
             val v = LayoutInflater.from(p0.context).inflate(R.layout.money_add_layout, p0, false)
             return ViewHolder4(v)
+        }
+        else{
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_firstempty_layout, p0, false)
+            return ViewHolder5(v)
         }
     }
 
@@ -120,7 +122,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
 
         }
     }
+    inner class ViewHolder5(itemView: View): RecyclerView.ViewHolder(itemView) {
+        init{
 
+        }
+    }
     override fun getItemViewType(position: Int): Int {
         return if (items.get(position).viewType === 0) {
             VIEW_TYPE_A
@@ -133,13 +139,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         else if (items.get(position).viewType === 3) {
             VIEW_TYPE_D
         }
-        else {
+        else if (items.get(position).viewType === 4) {
             VIEW_TYPE_E
         }
-    }
-    fun onLongClick(view: View): Boolean {
-        // Handle long click
-        // Return true to indicate the click was handled
-        return true
+        else {
+            VIEW_TYPE_F
+        }
     }
 }

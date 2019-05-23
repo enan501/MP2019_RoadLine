@@ -12,7 +12,11 @@
         <activity android:name=".UI.money.AddMoneyActivity"></activity>
         <activity android:name=".UI.photo.ShowPhotoActivity"></activity>
         <activity android:name=".UI.money.ShowMoneyActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity android:name=".UI.date.ShowDateActivity">
 
@@ -21,11 +25,7 @@
 
         </activity>
         <activity android:name=".UI.MainListActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
     </application>
 
