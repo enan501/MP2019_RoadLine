@@ -9,6 +9,8 @@
         android:orientation="vertical">
 
 
+
+
     <TextView
             android:text="여행 List"
             android:layout_width="wrap_content"
@@ -17,11 +19,31 @@
             android:layout_marginLeft="20dp"
     android:textSize="28sp"
     android:textColor="@color/black"/>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <android.support.v7.widget.RecyclerView
-            android:id="@+id/ML_rView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-    android:padding="5dp"
-    android:layout_margin="5dp"/>
+        android:id="@+id/ML_rView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:padding="5dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="#FFFFFF"
+            android:clickable="true"
+            app:srcCompat="@drawable/add_bt" />
+
+    </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

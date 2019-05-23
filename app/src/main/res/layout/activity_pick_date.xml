@@ -7,17 +7,40 @@
         android:layout_height="match_parent"
         tools:context=".UI.date.PickDateActivity"
         android:orientation="vertical">
-<TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+<TextView android:layout_width="match_parent" android:layout_height="0dp"
+    android:layout_weight="2"
           android:id="@+id/PD_title"
           android:textSize="32sp"
           android:textColor="@color/black"
           android:text="대만여행"
           android:gravity="center"
-          android:layout_marginTop="40dp"
-          android:layout_marginBottom="20dp"
 />
     <android.support.v7.widget.RecyclerView android:layout_width="match_parent"
-                                            android:layout_height="wrap_content"
+                                            android:layout_height="0dp"
+        android:layout_weight="4"
     android:id="@+id/PD_rView"></android.support.v7.widget.RecyclerView>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:layout_width="match_parent" android:layout_height="0dp">
 
+        <ImageView
+            android:id="@+id/sd_imgBtn1"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/album_icon" />
+
+        <ImageView
+            android:id="@+id/sd_imgBtn2"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="left|center_vertical"
+            android:layout_margin="10dp"
+            app:srcCompat="@drawable/money_icon" />
+
+
+
+    </LinearLayout>
 </LinearLayout>

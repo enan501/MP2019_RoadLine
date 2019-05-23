@@ -20,8 +20,15 @@ class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickD
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.day.text = "Day " + items.get(p1).day.toString()
-        p0.date.text = items.get(p1).date
+
+        if(items.get(p1).day != 0){
+            p0.itemView.visibility =View.VISIBLE
+            p0.day.text = "Day " + items.get(p1).day.toString()
+            p0.date.text = items.get(p1).date
+        }
+        else{
+            p0.itemView.visibility =View.INVISIBLE
+        }
     }
     interface OnItemClickListener{
         fun OnItemClick(holder:ViewHolder, data: PickDate, position: Int)
@@ -36,8 +43,8 @@ class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickD
             date = itemView.findViewById(R.id.PDItem_date)
             itemView.setOnClickListener{
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(this,items[position],position)
-
+                if(position != 0 && position != items.size-1)
+                    itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
