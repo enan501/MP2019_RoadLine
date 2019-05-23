@@ -1,20 +1,22 @@
 package konkukSW.MP2019.roadline.UI.date
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.LinearSnapHelper
-import android.support.v7.widget.RecyclerView
-import android.widget.Toast
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
+import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
+import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
 
 
 
 class PickDateActivity : AppCompatActivity() {
 
+    var title:String = ""
     var data:ArrayList<PickDate> = arrayListOf(
         PickDate(0,"first"),
         PickDate(1,"2019.02.10"),
@@ -58,13 +60,28 @@ class PickDateActivity : AppCompatActivity() {
     fun addListener() {
         PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
-                Toast.makeText(this@PickDateActivity,data.date,Toast.LENGTH_SHORT).show()
+                var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
+                PDIntentToSD.putExtra("title",title)
+                PDIntentToSD.putExtra("day",data.day)
+                startActivity(PDIntentToSD)
             }
+        }
+        PD_photoBtn.setOnClickListener {
+            var PDIntentToPhoto = Intent(applicationContext, ShowPhotoActivity::class.java)
+            PDIntentToPhoto.putExtra("title",title)
+            PDIntentToPhoto.putExtra("day",0) //날짜별 사진or가계부는 Intent로 day값 넘겨서 하고, 0이면 전체 출력해주는걸로 하면 어떨까요
+            startActivity(PDIntentToPhoto)
+        }
+        PD_moneyBtn.setOnClickListener {
+            var PDIntentToMoney = Intent(applicationContext, ShowMoneyActivity::class.java)
+            PDIntentToMoney.putExtra("title",title)
+            PDIntentToMoney.putExtra("day",0) //날짜별 사진or가계부는 Intent로 day값 넘겨서 하고, 0이면 전체 출력해주는걸로 하면 어떨까요
+            startActivity(PDIntentToMoney)
         }
     }
 
-    fun notifySnapPositionChanged(rView:RecyclerView){
+/*    fun notifySnapPositionChanged(rView:RecyclerView){
         val snapView = snapHelper.findSnapView(PD_rView.layoutManager)
         val snapPosition = PD_rView.layoutManager!!.getPosition(snapView!!)
-    }
+    }*/
 }
