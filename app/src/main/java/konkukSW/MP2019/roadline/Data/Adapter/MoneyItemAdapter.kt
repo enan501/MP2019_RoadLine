@@ -24,6 +24,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     }
     var itemLongClickListener : OnItemLongClickListener? = null
 
+    interface OnItemClickListener{
+        fun OnItemClick(holder:ViewHolder4, view:View, data:MoneyItem, position: Int )
+    }
+    var itemClickListener : OnItemClickListener? = null
+
     fun moveItem(pos1:Int, pos2:Int)
     {
 //        val item1 = items.get(pos1)
@@ -74,10 +79,7 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         if (holder is ViewHolder1)
         {
             holder.price.text = items.get(position).price
-            if(items.get(position).cate == 1)
-                holder.img.setImageResource(R.drawable.testimg1)
-            else
-                holder.img.setImageResource(R.drawable.testimg2)
+            holder.img.setImageResource(items.get(position).img)
         }
         else if (holder is ViewHolder3)
             holder.totalPrice.text = items.get(position).price
@@ -119,7 +121,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     }
     inner class ViewHolder4(itemView: View): RecyclerView.ViewHolder(itemView) {
         init{
-
+            /* 리사이클뷰 어댑터에 리스너 달기 */
+            itemView.setOnClickListener{
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(this, it, items[position], position)
+            }
         }
     }
     inner class ViewHolder5(itemView: View): RecyclerView.ViewHolder(itemView) {
