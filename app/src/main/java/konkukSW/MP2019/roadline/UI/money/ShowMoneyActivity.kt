@@ -63,7 +63,6 @@ class ShowMoneyActivity : AppCompatActivity() {
                 val alert = alert_confirm.create()
                 alert.show()
             }
-
         }
     }
 
@@ -106,7 +105,6 @@ class ShowMoneyActivity : AppCompatActivity() {
             data.add(MoneyItem("null", 0, "null", i,5))
             data.add(MoneyItem("null", 0, "null", i,2))
             data.add(MoneyItem("Total:1000", 0, "null", i,3))
-
         }
         adapter.notifyDataSetChanged()
     }
