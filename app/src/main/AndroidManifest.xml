@@ -9,6 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBF9PD_Y5ddwcaPHqX-Frz5vjC41jzyWWY" />
+
         <activity android:name=".UI.money.AddMoneyActivity"></activity>
         <activity android:name=".UI.photo.ShowPhotoActivity"></activity>
         <activity android:name=".UI.money.ShowMoneyActivity">
