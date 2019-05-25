@@ -129,7 +129,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 3) {
                 data.get(i).price -= removePrice
-                TotalPrice += removePrice
+                TotalPrice -= removePrice
                 money_totalTextView.text = "Total " + TotalPrice.toString()
                 break;
             }

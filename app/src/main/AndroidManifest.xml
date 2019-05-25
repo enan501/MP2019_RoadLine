@@ -13,14 +13,14 @@
             android:name=".UI.SplashActivity"
             android:theme="@style/Splash"
             android:screenOrientation="portrait">
-        </activity>
-        <activity android:name=".UI.money.AddMoneyActivity" />
-        <activity android:name=".UI.photo.ShowPhotoActivity" />
-        <activity android:name=".UI.money.ShowMoneyActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".UI.money.AddMoneyActivity" />
+        <activity android:name=".UI.photo.ShowPhotoActivity" />
+        <activity android:name=".UI.money.ShowMoneyActivity">
         </activity>
         <activity android:name=".UI.date.ShowDateActivity"></activity>
         <activity android:name=".UI.date.PickDateActivity"></activity>
