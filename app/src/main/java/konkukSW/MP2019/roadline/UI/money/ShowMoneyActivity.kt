@@ -24,9 +24,11 @@ import android.widget.*
 var data:ArrayList<MoneyItem> = ArrayList()
 
 lateinit var adapter:MoneyItemAdapter
-var ListNumber = 0;
-var dayCount = 2;
 
+var ListNumber = 0; // 이건 나중에 디비에서 받아와야함
+var dayCount = 2; // 이것도 나중에 디비에서 받아와야함
+
+var TotalPrice = 0;
 
 class ShowMoneyActivity : AppCompatActivity() {
 
@@ -127,6 +129,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 3) {
                 data.get(i).price -= removePrice
+                TotalPrice += removePrice
+                money_totalTextView.text = "Total " + TotalPrice.toString()
                 break;
             }
         }
@@ -161,6 +165,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 3) {
                 data.get(i).price += price
+                TotalPrice += price
+                money_totalTextView.text = "Total " + TotalPrice.toString()
                 break;
             }
         }
