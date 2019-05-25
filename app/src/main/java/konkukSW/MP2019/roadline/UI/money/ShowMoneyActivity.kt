@@ -20,6 +20,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewManager
 import android.widget.*
+import io.realm.Realm
+import io.realm.RealmConfiguration
+import konkukSW.MP2019.roadline.Data.DB.T_List
+import io.realm.RealmResults
+import konkukSW.MP2019.roadline.Data.DB.T_Day
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
+
 
 var data:ArrayList<MoneyItem> = ArrayList()
 
@@ -66,6 +73,35 @@ class ShowMoneyActivity : AppCompatActivity() {
                 ShowLayout(item)
             }
         }
+
+
+//        Realm.init(this);
+//        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
+//        Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
+//
+//        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
+//        realm.beginTransaction()
+//        val query = realm.where(T_Day::class.java).findAll()
+//        val day: T_Day = realm.createObject(T_Day::class.java)//데이터베이스에 저장할 객체 생성
+//        day.listNum = ListNum
+//        day.dayNum = query.size
+//        day.date = "2015.05.20"
+//        realm.commitTransaction()
+
+//        Realm.init(this);
+//        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
+////        val q = realm.where(T_List::class.java).findAll()
+////        realm.beginTransaction()
+////        val list: T_List = realm.createObject(T_List::class.java, q.size+1)//데이터베이스에 저장할 객체 생성
+////        list.title = "ㅎㅇ"
+////        list.date = "2011"
+////        realm.commitTransaction()
+//
+//        val q3 = realm.where(T_Day::class.java).findAll()
+//        for(i in 0..q3.size-1) {
+//            System.out.println(q3.get(i)!!.listNum.toString() + ", " + q3.get(i)!!.dayNum.toString())
+//        }
+
     }
 
     fun initSwipe() {

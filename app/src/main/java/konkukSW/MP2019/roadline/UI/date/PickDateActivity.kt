@@ -6,15 +6,20 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.LinearSnapHelper
+import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_List
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
-
+import io.realm.RealmConfiguration
+import konkukSW.MP2019.roadline.Data.DB.T_Day
 
 
 class PickDateActivity : AppCompatActivity() {
+    var ListNum = 0
 
     var title:String = ""
     var data:ArrayList<PickDate> = arrayListOf(
