@@ -24,7 +24,9 @@ import android.widget.*
 var data:ArrayList<MoneyItem> = ArrayList()
 
 lateinit var adapter:MoneyItemAdapter
+var ListNumber = 0;
 var dayCount = 2;
+
 
 class ShowMoneyActivity : AppCompatActivity() {
 
@@ -32,7 +34,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_money)
         initLayout()
-        //initSwipe()
 
         /* 리사이클뷰 어댑터에 리스너 달기 */
         adapter.itemLongClickListener = object : MoneyItemAdapter.OnItemLongClickListener{
@@ -54,7 +55,13 @@ class ShowMoneyActivity : AppCompatActivity() {
         adapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                addItem(position, "3000", 0, R.drawable.testimg1, item.day, 1)
+                addItem(position, item.listNum, item.dayNum,3000, 0, R.drawable.testimg1, 1)
+            }
+        }
+        adapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
+            override fun OnItemClick2(holder: MoneyItemAdapter.ViewHolder1, view: View, item: MoneyItem, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                ShowLayout(item)
             }
         }
     }
@@ -82,38 +89,32 @@ class ShowMoneyActivity : AppCompatActivity() {
         money_recycleView.layoutManager = layoutManager
         adapter = MoneyItemAdapter(data)
         money_recycleView.adapter = adapter
-        for(i in 0..dayCount)
+        for(i in 1..dayCount)
         {
-            data.add(MoneyItem("null", 0, 0, i,0))
-            data.add(MoneyItem("null", 0, 0, i,2))
-            data.add(MoneyItem("null", 0, 0, i,4))
+            data.add(MoneyItem(ListNumber, i,20190530, 0, 0, 0))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 2))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 4))
 
-            data.add(MoneyItem("3000", 1, R.drawable.testimg1, i,1))
-            data.add(MoneyItem("6000", 2, R.drawable.testimg2, i,1))
-            data.add(MoneyItem("6000", 2, R.drawable.testimg1, i,1))
-            data.add(MoneyItem("3000", 1, R.drawable.testimg2, i,1))
-            data.add(MoneyItem("6000", 2, R.drawable.testimg1, i,1))
-            data.add(MoneyItem("6000", 2, R.drawable.testimg2, i,1))
-
-            data.add(MoneyItem("null", 0, 0, i,5))
-            data.add(MoneyItem("null", 0, 0, i,2))
-            data.add(MoneyItem("Total:1000", 0, 0, i,3))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 5))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 2))
+            data.add(MoneyItem(ListNumber, i,0, 0, 0, 3))
         }
         adapter.notifyDataSetChanged()
     }
 
     fun eraseItem(position:Int, item:MoneyItem)
     {
+        var removePrice = data.get(position).price
         data.removeAt(position)
         var lastPos = 0;
         for(i in 0..data.size)
         {
-            if(data.get(i).day == data.get(position).day && data.get(i).viewType == 5) {
+            if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 5) {
                 lastPos = i
                 break;
             }
         }
-        data.add(lastPos, MoneyItem("null", 0, 0, item.day,2))
+        data.add(lastPos, MoneyItem(item.listNum, item.dayNum,-1, 0, 0,2))
         if(data.get(lastPos).viewType == 2 &&
             data.get(lastPos-1).viewType == 2 &&
             data.get(lastPos-2).viewType == 2)
@@ -122,36 +123,50 @@ class ShowMoneyActivity : AppCompatActivity() {
             data.removeAt(lastPos-1)
             data.removeAt(lastPos-2)
         }
+        for(i in 0..data.size) // 토탈에 방금 제거한 가격 빼주기
+        {
+            if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 3) {
+                data.get(i).price -= removePrice
+                break;
+            }
+        }
         adapter.notifyDataSetChanged()
     }
-    fun addItem(position:Int, price:String, cate:Int, img:Int, day:Int, viewType:Int)
+    fun addItem(position:Int, listNum:Int, dayNum:Int, price:Int, cate:Int, img:Int, viewType:Int)
     {
         var lastPos = 0;
         for(i in 0..data.size)
         {
-            if(data.get(i).day == data.get(position).day && data.get(i).viewType == 5) {
+            if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 5) {
                 lastPos = i
                 break;
             }
         }
         if(data.get(lastPos-1).viewType != 2) {
-            data.add(lastPos, MoneyItem(price, cate, img, day, viewType))
-            data.add(lastPos+1, MoneyItem("null", 0, 0, day, 2))
-            data.add(lastPos+2, MoneyItem("null", 0, 0, day, 2))
+            data.add(lastPos, MoneyItem(listNum, dayNum, price, cate, img, viewType))
+            data.add(lastPos+1, MoneyItem(listNum, dayNum,-1, 0, 0, 2))
+            data.add(lastPos+2, MoneyItem(listNum, dayNum,-1, 0, 0, 2))
         }
         else if(data.get(lastPos-2).viewType == 2)
         {
             data.removeAt(lastPos-2)
-            data.add(lastPos-2, MoneyItem(price, cate, img, day, viewType))
+            data.add(lastPos-2, MoneyItem(listNum, dayNum, price, cate, img, viewType))
         }
         else if(data.get(lastPos-1).viewType == 2)
         {
             data.removeAt(lastPos-1)
-            data.add(lastPos-1, MoneyItem(price, cate, img, day, viewType))
+            data.add(lastPos-1, MoneyItem(listNum, dayNum, price, cate, img, viewType))
+        }
+        for(i in 0..data.size) // 토탈에 방금 추가한 가격 더해주기
+        {
+            if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 3) {
+                data.get(i).price += price
+                break;
+            }
         }
         adapter.notifyDataSetChanged()
     }
-    fun ShowLayout(v: View?):Unit
+    fun ShowLayout(item:MoneyItem):Unit
     {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
         val ll = inflater.inflate(R.layout.detail_img, null) as LinearLayout //레이아웃 객체생성
@@ -161,10 +176,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         ll.setOnClickListener{
             (ll.getParent() as ViewManager).removeView(ll)
         }
-
         var imageView = ll.findViewById<ImageView>(R.id.imageView) // 매번 새로운 레이어 이므로 ID를 find 해준다.
-        imageView.setImageResource(0)
-
+        imageView.setImageResource(item.img)
     }
 
 }

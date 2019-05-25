@@ -21,6 +21,7 @@
         android:visibility="visible">
 
         <TextView
+            android:id="@+id/money_Item_dayTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
@@ -28,6 +29,7 @@
             android:textSize="43sp" />
 
         <TextView
+            android:id="@+id/money_Item_dateTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
