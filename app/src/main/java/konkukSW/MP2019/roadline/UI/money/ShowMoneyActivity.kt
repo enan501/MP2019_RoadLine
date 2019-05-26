@@ -26,6 +26,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_List
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import kotlinx.android.synthetic.main.detail_img.*
 
 
 var data:ArrayList<MoneyItem> = ArrayList()
@@ -64,7 +65,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         adapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                addItem(position, item.listNum, item.dayNum,3000, 0, R.drawable.testimg1, 1)
+                addItem(position, item.listNum, item.dayNum,3000, 0, R.drawable.testimg1,
+                    "2019.05.20", 1)
             }
         }
         adapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
@@ -128,13 +130,13 @@ class ShowMoneyActivity : AppCompatActivity() {
         money_recycleView.adapter = adapter
         for(i in 1..dayCount)
         {
-            data.add(MoneyItem(ListNumber, i,20190530, 0, 0, 0))
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 2))
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 4))
+            data.add(MoneyItem(ListNumber, i,20190530, 0, 0, "NULL",0))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL",2))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL", 4))
 
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 5))
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, 2))
-            data.add(MoneyItem(ListNumber, i,0, 0, 0, 3))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL",5))
+            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL",2))
+            data.add(MoneyItem(ListNumber, i,0, 0, 0, "NULL",3))
         }
         adapter.notifyDataSetChanged()
     }
@@ -151,7 +153,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 break;
             }
         }
-        data.add(lastPos, MoneyItem(item.listNum, item.dayNum,-1, 0, 0,2))
+        data.add(lastPos, MoneyItem(item.listNum, item.dayNum,-1, 0, 0, "NULL", 2))
         if(data.get(lastPos).viewType == 2 &&
             data.get(lastPos-1).viewType == 2 &&
             data.get(lastPos-2).viewType == 2)
@@ -171,7 +173,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
         adapter.notifyDataSetChanged()
     }
-    fun addItem(position:Int, listNum:Int, dayNum:Int, price:Int, cate:Int, img:Int, viewType:Int)
+    fun addItem(position:Int, listNum:Int, dayNum:Int, price:Int, cate:Int, img:Int, date:String, viewType:Int)
     {
         var lastPos = 0;
         for(i in 0..data.size)
@@ -182,19 +184,19 @@ class ShowMoneyActivity : AppCompatActivity() {
             }
         }
         if(data.get(lastPos-1).viewType != 2) {
-            data.add(lastPos, MoneyItem(listNum, dayNum, price, cate, img, viewType))
-            data.add(lastPos+1, MoneyItem(listNum, dayNum,-1, 0, 0, 2))
-            data.add(lastPos+2, MoneyItem(listNum, dayNum,-1, 0, 0, 2))
+            data.add(lastPos, MoneyItem(listNum, dayNum, price, cate, img, date, viewType))
+            data.add(lastPos+1, MoneyItem(listNum, dayNum,-1, 0, 0,"NULL",2))
+            data.add(lastPos+2, MoneyItem(listNum, dayNum,-1, 0, 0, "NULL", 2))
         }
         else if(data.get(lastPos-2).viewType == 2)
         {
             data.removeAt(lastPos-2)
-            data.add(lastPos-2, MoneyItem(listNum, dayNum, price, cate, img, viewType))
+            data.add(lastPos-2, MoneyItem(listNum, dayNum, price, cate, img, date, viewType))
         }
         else if(data.get(lastPos-1).viewType == 2)
         {
             data.removeAt(lastPos-1)
-            data.add(lastPos-1, MoneyItem(listNum, dayNum, price, cate, img, viewType))
+            data.add(lastPos-1, MoneyItem(listNum, dayNum, price, cate, img, date, viewType))
         }
         for(i in 0..data.size) // 토탈에 방금 추가한 가격 더해주기
         {
@@ -218,6 +220,10 @@ class ShowMoneyActivity : AppCompatActivity() {
             (ll.getParent() as ViewManager).removeView(ll)
         }
         var imageView = ll.findViewById<ImageView>(R.id.imageView) // 매번 새로운 레이어 이므로 ID를 find 해준다.
+        var textView1 = ll.findViewById<TextView>(R.id.textView1)
+        var textView2 = ll.findViewById<TextView>(R.id.textView2)
+        textView1.text = item.price.toString()
+        textView2.text = item.date.toString()
         imageView.setImageResource(item.img)
     }
 

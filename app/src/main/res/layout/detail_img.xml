@@ -7,11 +7,45 @@
         android:orientation="vertical"
         android:gravity="center">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="399dp"
-        android:contentDescription="TODO"
-        app:srcCompat="@drawable/ic_launcher_background"
-        tools:ignore="VectorDrawableCompat" />
+        android:layout_height="400dp">
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="match_parent"
+            android:layout_height="399dp"
+            android:contentDescription="TODO"
+            app:srcCompat="@drawable/ic_launcher_background"
+            tools:ignore="VectorDrawableCompat" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="185dp"
+            android:layout_height="53dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="right"
+            android:text="TextView"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="33sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.994" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="185dp"
+            android:layout_height="39dp"
+            android:layout_marginEnd="216dp"
+            android:gravity="left"
+            android:text="TextView"
+            android:textColor="@color/white"
+            android:textSize="23sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.997" />
+    </android.support.constraint.ConstraintLayout>
+
 </LinearLayout>

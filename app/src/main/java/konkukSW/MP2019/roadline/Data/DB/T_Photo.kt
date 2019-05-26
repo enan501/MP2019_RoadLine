@@ -11,5 +11,6 @@ open class T_Photo : RealmObject() {
 
     var num : Int = 0
     var img: String = ""
+    var date: String = ""
 
 }

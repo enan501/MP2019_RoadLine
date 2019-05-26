@@ -14,5 +14,6 @@ open class T_Money : RealmObject() {
     var price: String = ""
     var img: String = ""
     var cate: String = ""
+    var date: String = ""
 
 }
