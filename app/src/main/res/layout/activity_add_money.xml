@@ -14,12 +14,12 @@
                android:layout_marginHorizontal="70dp"
                android:layout_marginTop="25dp"
                android:layout_marginBottom="20dp"
+               android:onClick="addImg"
                android:id="@+id/addMoneyImage"/>
-
     <LinearLayout android:layout_width="match_parent"
                   android:orientation="vertical"
                   android:layout_marginHorizontal="30dp"
-                  android:layout_marginVertical="10dp"
+                  android:layout_marginVertical="5dp"
                   android:layout_weight="1"
                   android:layout_height="0dp">
         <TextView android:layout_width="match_parent"
@@ -36,6 +36,7 @@
             <EditText android:layout_width="0dp"
                       android:layout_weight="8"
                       android:paddingRight="10dp"
+                      android:id="@+id/priceTxt"
                       android:layout_height="match_parent" android:textAlignment="textEnd"/>
             <TextView android:layout_width="0dp"
                       android:layout_weight="1"
@@ -48,7 +49,7 @@
                   android:layout_height="wrap_content"
                   android:layout_marginHorizontal="20dp"
                   android:paddingRight="30dp"
-                  android:text="1000원"
+                  android:text="1193원"
                   android:id="@+id/addMoneyExchange" android:textAlignment="textEnd"/>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
@@ -63,109 +64,158 @@
                   android:textStyle="bold"
                   android:layout_height="wrap_content"
                   android:textSize="23sp"/>
-        <LinearLayout android:layout_width="match_parent"
-                      android:orientation="horizontal"
-                      android:layout_marginHorizontal="10dp"
-                      android:layout_marginTop="10dp"
-                      android:layout_height="wrap_content">
-            <LinearLayout android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:layout_height="match_parent">
-                <ImageView android:layout_width="match_parent"
-                           android:layout_weight="3"
-                           android:layout_marginHorizontal="5dp"
-                           android:paddingVertical="5dp"
-                           android:layout_height="0dp"
-                           android:scaleType="fitCenter"
-                           android:src="@drawable/meal"/>
-                <TextView android:layout_width="match_parent"
-                          android:text="식사"
-                          android:gravity="center"
-                          android:layout_weight="1"
-                          android:layout_height="0dp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:layout_height="match_parent">
-                <ImageView android:layout_width="match_parent"
-                           android:layout_weight="3"
-                           android:layout_marginHorizontal="5dp"
-                           android:paddingVertical="5dp"
-                           android:layout_height="0dp"
-                           android:src="@drawable/shopping"/>
-                <TextView android:layout_width="match_parent"
-                          android:text="쇼핑"
-                          android:gravity="center"
-                          android:layout_weight="1"
-                          android:layout_height="0dp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:layout_height="match_parent">
-                <ImageView android:layout_width="match_parent"
-                           android:layout_weight="3"
-                           android:layout_marginHorizontal="5dp"
-                           android:paddingVertical="7dp"
-                           android:layout_height="0dp"
-                           android:src="@drawable/transport"/>
-                <TextView android:layout_width="match_parent"
-                          android:text="교통"
-                          android:gravity="center"
-                          android:layout_weight="1"
-                          android:layout_height="0dp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:layout_height="match_parent">
-                <ImageView android:layout_width="match_parent"
-                           android:layout_weight="3"
-                           android:layout_marginHorizontal="5dp"
-                           android:paddingVertical="5dp"
-                           android:layout_height="0dp"
-                           android:src="@drawable/tour"/>
-                <TextView android:layout_width="match_parent"
-                          android:text="관광"
-                          android:gravity="center"
-                          android:layout_weight="1"
-                          android:layout_height="0dp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:layout_height="match_parent">
-                <ImageView android:layout_width="match_parent"
-                           android:layout_weight="3"
-                           android:layout_marginHorizontal="5dp"
-                           android:paddingVertical="5dp"
-                           android:layout_height="0dp"
-                           android:src="@drawable/lodgment"/>
-                <TextView android:layout_width="match_parent"
-                          android:text="숙박"
-                          android:gravity="center"
-                          android:layout_weight="1"
-                          android:layout_height="0dp"/>
-            </LinearLayout>
-            <LinearLayout android:layout_width="0dp"
-                          android:layout_weight="1"
-                          android:orientation="vertical"
-                          android:layout_height="match_parent">
-                <ImageView android:layout_width="match_parent"
-                           android:layout_weight="3"
-                           android:layout_marginHorizontal="5dp"
-                           android:paddingVertical="10dp"
-                           android:layout_height="0dp"
-                           android:src="@drawable/etc"/>
-                <TextView android:layout_width="match_parent"
-                          android:text="기타"
-                          android:gravity="center"
-                          android:layout_weight="1"
-                          android:layout_height="0dp"/>
-            </LinearLayout>
-        </LinearLayout>
+        <!--<LinearLayout android:layout_width="match_parent"-->
+                      <!--android:orientation="horizontal"-->
+                      <!--android:layout_marginHorizontal="10dp"-->
+                      <!--android:layout_marginTop="10dp"-->
+                      <!--android:layout_height="wrap_content">-->
+            <!--<LinearLayout android:layout_width="0dp"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:orientation="vertical"-->
+                          <!--android:layout_height="match_parent">-->
+                <!--<ImageView android:layout_width="match_parent"-->
+                           <!--android:layout_weight="3"-->
+                           <!--android:layout_marginHorizontal="5dp"-->
+                           <!--android:paddingVertical="5dp"-->
+                           <!--android:layout_height="0dp"-->
+                           <!--android:scaleType="fitCenter"-->
+                           <!--android:src="@drawable/meal_click"/>-->
+                <!--<TextView android:layout_width="match_parent"-->
+                          <!--android:text="식사"-->
+                          <!--android:gravity="center"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:layout_height="0dp"/>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout android:layout_width="0dp"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:orientation="vertical"-->
+                          <!--android:layout_height="match_parent">-->
+                <!--<ImageView android:layout_width="match_parent"-->
+                           <!--android:layout_weight="3"-->
+                           <!--android:layout_marginHorizontal="5dp"-->
+                           <!--android:paddingVertical="5dp"-->
+                           <!--android:layout_height="0dp"-->
+                           <!--android:src="@drawable/shopping"/>-->
+                <!--<TextView android:layout_width="match_parent"-->
+                          <!--android:text="쇼핑"-->
+                          <!--android:gravity="center"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:layout_height="0dp"/>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout android:layout_width="0dp"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:orientation="vertical"-->
+                          <!--android:layout_height="match_parent">-->
+                <!--<ImageView android:layout_width="match_parent"-->
+                           <!--android:layout_weight="3"-->
+                           <!--android:layout_marginHorizontal="5dp"-->
+                           <!--android:paddingVertical="7dp"-->
+                           <!--android:layout_height="0dp"-->
+                           <!--android:src="@drawable/transport"/>-->
+                <!--<TextView android:layout_width="match_parent"-->
+                          <!--android:text="교통"-->
+                          <!--android:gravity="center"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:layout_height="0dp"/>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout android:layout_width="0dp"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:orientation="vertical"-->
+                          <!--android:layout_height="match_parent">-->
+                <!--<ImageView android:layout_width="match_parent"-->
+                           <!--android:layout_weight="3"-->
+                           <!--android:layout_marginHorizontal="5dp"-->
+                           <!--android:paddingVertical="5dp"-->
+                           <!--android:layout_height="0dp"-->
+                           <!--android:src="@drawable/tour"/>-->
+                <!--<TextView android:layout_width="match_parent"-->
+                          <!--android:text="관광"-->
+                          <!--android:gravity="center"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:layout_height="0dp"/>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout android:layout_width="0dp"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:orientation="vertical"-->
+                          <!--android:layout_height="match_parent">-->
+                <!--<ImageView android:layout_width="match_parent"-->
+                           <!--android:layout_weight="3"-->
+                           <!--android:layout_marginHorizontal="5dp"-->
+                           <!--android:paddingVertical="5dp"-->
+                           <!--android:layout_height="0dp"-->
+                           <!--android:src="@drawable/lodgment"/>-->
+                <!--<TextView android:layout_width="match_parent"-->
+                          <!--android:text="숙박"-->
+                          <!--android:gravity="center"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:layout_height="0dp"/>-->
+            <!--</LinearLayout>-->
+            <!--<LinearLayout android:layout_width="0dp"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:orientation="vertical"-->
+                          <!--android:layout_height="match_parent">-->
+                <!--<ImageView android:layout_width="match_parent"-->
+                           <!--android:layout_weight="3"-->
+                           <!--android:layout_marginHorizontal="5dp"-->
+                           <!--android:paddingVertical="10dp"-->
+                           <!--android:layout_height="0dp"-->
+                           <!--android:src="@drawable/etc"/>-->
+                <!--<TextView android:layout_width="match_parent"-->
+                          <!--android:text="기타"-->
+                          <!--android:gravity="center"-->
+                          <!--android:layout_weight="1"-->
+                          <!--android:layout_height="0dp"/>-->
+            <!--</LinearLayout>-->
+        <!--</LinearLayout>-->
+        <RadioGroup android:layout_width="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/categoryGroup"
+                    android:layout_height="wrap_content">
+            <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="식사"
+                    android:id="@+id/mealBtn"
+                    android:layout_weight="1"/>
+                    <!--android:button="@drawable/meal_btn"-->
+            <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="쇼핑"
+                    android:id="@+id/shoppingBtn"
+                    android:layout_weight="1"/>
+                    <!--android:button="@drawable/shopping_btn"-->
+            <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="교통"
+                    android:id="@+id/transfortBtn"
+                    android:layout_weight="1"/>
+                    <!--android:button="@drawable/transport_btn"-->
+            <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="관광"
+                    android:id="@+id/tourBtn"
+                    android:layout_weight="1"/>
+                    <!--android:button="@drawable/tour_btn"-->
+            <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="숙박"
+                    android:id="@+id/lodgmentBtn"
+                    android:layout_weight="1"/>
+                    <!--android:button="@drawable/lodgment_btn"-->
+            <RadioButton
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="etc"
+                    android:id="@+id/etcBtn"
+                    android:layout_weight="1"/>
+                    <!--android:button="@drawable/etc_btn"-->
+        </RadioGroup>
     </LinearLayout>
     <LinearLayout android:layout_width="match_parent"
                   android:layout_weight="1"
@@ -181,6 +231,7 @@
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="SUBMIT"
+                android:onClick="submitBtn"
                 android:textStyle="bold"
                 android:layout_marginHorizontal="20dp"
                 android:backgroundTint="#eeeeee"
