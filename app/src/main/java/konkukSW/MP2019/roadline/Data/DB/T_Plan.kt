@@ -10,7 +10,8 @@ open class T_Plan : RealmObject() {
 
     var num : Int = 0
     var name: String = ""
-    var location: String = ""
+    var locationX: Float = 0.0f
+    var locationY: Float = 0.0f
     var time: String = ""
 
 }
