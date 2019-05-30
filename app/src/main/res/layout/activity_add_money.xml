@@ -224,7 +224,8 @@
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="CANCEL"
-                android:layout_marginHorizontal="20dp"
+            android:onClick="cancelBtn"
+            android:layout_marginHorizontal="20dp"
                 android:id="@+id/addMoneyCancel"
                 android:backgroundTint="#eeeeee"
                 android:textColor="#777777"/>
