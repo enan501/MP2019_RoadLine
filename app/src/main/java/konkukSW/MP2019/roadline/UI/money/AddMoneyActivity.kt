@@ -11,15 +11,22 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.view.View
 import android.widget.Toast
+import io.realm.Realm
+import konkukSW.MP2019.roadline.Data.DB.T_Money
+import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
 
 class AddMoneyActivity : AppCompatActivity() {
+    var ListNumber = 0 // 디비에서 받아올것
+    var dayCount = 2 // 디비에서 받아올것
+    var planNum = 1 // 디비에서 받아올것
+
     val SELECT_IMAGE = 100
 
     lateinit var img_url: String // 이미지 URI
     var price = 0 // 가격
-    var categor_num = -1 // 카테고리
+    var cate: String = "" // 카테고리
     // 날짜를 담는 변수 -> intent로 받아와야함
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,15 +38,15 @@ class AddMoneyActivity : AppCompatActivity() {
 
     fun initPermission() {
         if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("반드시 이미지 데이터에 대한 권한이 허용되어야 합니다.")
-                .setTitle("권한 허용")
-                .setIcon(R.drawable.abc_ic_star_black_48dp)
-            builder.setPositiveButton("OK") { _, _ ->
-                askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
-            }
-            val dialog = builder.create()
-            dialog.show()
+            askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
+//            val builder = AlertDialog.Builder(this)
+//            builder.setMessage("반드시 이미지 데이터에 대한 권한이 허용되어야 합니다.")
+//                .setTitle("권한 허용")
+//                .setIcon(R.drawable.abc_ic_star_black_48dp)
+//            builder.setPositiveButton("OK") { _, _ ->
+//            }
+//            val dialog = builder.create()
+//            dialog.show()
         } else {
             Toast.makeText(
                 getApplicationContext(),
@@ -115,22 +122,22 @@ class AddMoneyActivity : AppCompatActivity() {
             if (checkedId != -1) {
                 when (checkedId) {
                     R.id.mealBtn -> {
-                        categor_num = 0
+                        cate = "식사"
                     }
                     R.id.shoppingBtn -> {
-                        categor_num = 1
+                        cate = "쇼핑"
                     }
                     R.id.transfortBtn -> {
-                        categor_num = 2
+                        cate = "교통"
                     }
                     R.id.tourBtn -> {
-                        categor_num = 3
+                        cate = "관광"
                     }
                     R.id.lodgmentBtn -> {
-                        categor_num = 4
+                        cate = "숙박"
                     }
                     R.id.etcBtn -> {
-                        categor_num = 5
+                        cate = "etc"
                     }
                 }
             }
@@ -138,7 +145,36 @@ class AddMoneyActivity : AppCompatActivity() {
     }
 
     fun submitBtn(view: View) {
+        Realm.init(this)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
 
-        price = priceTxt.text.toString().toInt()
+        val moneyTable: T_Money = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
+        val moneyTableTuple = realm.where(T_Money::class.java).findAll()
+
+        moneyTable.listNum = ListNumber
+        moneyTable.dayNum = dayCount
+        moneyTable.planNum = planNum
+        moneyTable.num = moneyTableTuple.size
+        moneyTable.priceType = ""
+        moneyTable.img = img_url
+        moneyTable.price = priceTxt.text.toString().toInt()
+        moneyTable.cate = cate
+        moneyTable.date = "2018.05.30"
+        realm.commitTransaction()
+
+//        val q3 = realm.where(T_Money::class.java).findAll()
+//        for (i in 0..q3.size - 1) {
+//            System.out.println(q3.get(i)!!.img.toString() + ", " + q3.get(i)!!.price.toString() + ", " + q3.get(i)!!.cate.toString())
+//        }
+
+        // 인텐트 넘겨줌
+        val intent = Intent(this, ShowMoneyActivity::class.java)
+        startActivity(intent)
+    }
+
+    fun cancelBtn(view: View) {
+        val intent = Intent(this, ShowMoneyActivity::class.java)
+        startActivity(intent)
     }
 }
