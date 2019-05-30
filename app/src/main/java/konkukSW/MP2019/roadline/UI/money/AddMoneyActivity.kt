@@ -4,16 +4,15 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.Toast
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Money
-import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
 
@@ -169,7 +168,7 @@ class AddMoneyActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("지금 돌아가면 데이터 입력 내용이 삭제됩니다.")
             .setTitle("뒤로가기")
-            .setIcon(R.drawable.ic_keyboard_backspace_black_24dp)
+            .setIcon(R.drawable.ic_mtrl_chip_checked_black)
         builder.setPositiveButton("OK") { _, _ ->
             val intent = Intent(this, ShowMoneyActivity::class.java)
             startActivity(intent)
