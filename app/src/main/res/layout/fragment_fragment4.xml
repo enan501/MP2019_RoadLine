@@ -4,7 +4,6 @@
     android:layout_height="match_parent"
     tools:context="konkukSW.MP2019.roadline.UI.date.Fragment4">
 
-    <!-- TODO: Update blank fragment layout -->
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapView"
         android:name="com.google.android.gms.maps.SupportMapFragment"
