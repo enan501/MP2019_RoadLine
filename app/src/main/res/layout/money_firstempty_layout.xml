@@ -12,21 +12,11 @@
         android:layout_height="wrap_content">
 
     <LinearLayout
-        android:id="@+id/money_layout2"
-        android:layout_width="150dp"
-        android:layout_height="120dp"
-        android:gravity="center"
+        android:id="@+id/money_layout3"
+        android:layout_width="500dp"
+        android:layout_height="40dp"
         android:orientation="vertical"
-        android:visibility="visible">
-
-
-        <ImageView
-            android:id="@+id/money_add_bt"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/add_bt"
-            android:backgroundTint="#A0A0A0" />
-    </LinearLayout>
+        android:visibility="visible"/>
 
 </LinearLayout>
 

@@ -6,6 +6,9 @@ import konkukSW.MP2019.roadline.R
 import android.support.design.widget.TabLayout
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import kotlinx.android.synthetic.main.activity_show_date.*
+import android.content.Intent
+
+
 
 class ShowDateActivity : AppCompatActivity() {
 
@@ -13,7 +16,7 @@ class ShowDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_show_date)
+        setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_date)
         init()
     }
 
@@ -23,7 +26,7 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        tabLayer = findViewById(R.id.sd_layout_tab)
+        tabLayer = findViewById(konkukSW.MP2019.roadline.R.id.sd_layout_tab)
         tabLayer!!.addTab(tabLayer!!.newTab().setText("리스트"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("가로 타임라인"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("세로 타임라인"))
@@ -45,11 +48,15 @@ class ShowDateActivity : AppCompatActivity() {
         })
 
         sd_leftImg.setOnClickListener {
-
+            startActivity(Intent(this, ShowDateActivity::class.java))
+            overridePendingTransition(konkukSW.MP2019.roadline.R.anim.anim_slide_in_right, konkukSW.MP2019.roadline.R.anim.anim_slide_out_left)
+            finish()
         }
 
         sd_rightImg.setOnClickListener {
-
+            startActivity(Intent(this, ShowDateActivity::class.java))
+            overridePendingTransition(konkukSW.MP2019.roadline.R.anim.anim_slide_in_left, konkukSW.MP2019.roadline.R.anim.anim_slide_out_right)
+            finish()
         }
 
     }

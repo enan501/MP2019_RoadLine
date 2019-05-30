@@ -1,22 +1,22 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
-import android.support.constraint.ConstraintLayout
+import android.support.annotation.IntegerRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
-import java.nio.file.Files.size
-import android.text.method.TextKeyListener.clear
 import android.widget.*
 
+var dayCount = 2; // 이건 디비로 나중에 뽑아와야함.
 
 val VIEW_TYPE_A = 0
 val VIEW_TYPE_B = 1
 val VIEW_TYPE_C = 2
 val VIEW_TYPE_D = 3
 val VIEW_TYPE_E = 4
+val VIEW_TYPE_F = 5
 
 class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -25,6 +25,16 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         fun OnItemLongClick(holder:ViewHolder1, view:View, data:MoneyItem, position: Int )
     }
     var itemLongClickListener : OnItemLongClickListener? = null
+
+    interface OnItemClickListener{
+        fun OnItemClick(holder:ViewHolder4, view:View, data:MoneyItem, position: Int )
+    }
+    var itemClickListener : OnItemClickListener? = null
+
+    interface OnItemClickListener2{
+        fun OnItemClick2(holder:ViewHolder1, view:View, data:MoneyItem, position: Int )
+    }
+    var itemClickListener2 : OnItemClickListener2? = null
 
     fun moveItem(pos1:Int, pos2:Int)
     {
@@ -55,9 +65,13 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
             val v = LayoutInflater.from(p0.context).inflate(R.layout.money_total_layout, p0, false)
             return ViewHolder3(v)
         }
-        else{
+        else if (p1 === 4) {
             val v = LayoutInflater.from(p0.context).inflate(R.layout.money_add_layout, p0, false)
             return ViewHolder4(v)
+        }
+        else{
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.money_firstempty_layout, p0, false)
+            return ViewHolder5(v)
         }
     }
 
@@ -69,21 +83,29 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
-        if (holder is ViewHolder1)
+        if (holder is ViewHolder1) // 이미지 아이템
         {
-            holder.price.text = items.get(position).price
-            if(items.get(position).cate == 1)
-                holder.img.setImageResource(R.drawable.testimg1)
-            else
-                holder.img.setImageResource(R.drawable.testimg2)
+            holder.price.text = items.get(position).price.toString()
+            holder.img.setImageResource(items.get(position).img)
         }
-        else if (holder is ViewHolder3)
-            holder.totalPrice.text = items.get(position).price
+        else if (holder is ViewHolder0) { // 데이 아이템
+            holder.day.text = "DAY" + items.get(position).dayNum.toString()
+            holder.date.text = items.get(position).price.toString() // 여기선 price를 임시로 날짜로 나중에 디비에서 가져오기.
+        }
+        else if (holder is ViewHolder3) { // 토탈 아이템
+            holder.totalPrice.text = items.get(position).price.toString()
+        }
 
     }
 
     inner class ViewHolder0(itemView: View): RecyclerView.ViewHolder(itemView) {
+        var day: TextView
+        var date: TextView
+
         init{
+            day = itemView.findViewById(R.id.money_Item_dayTextView)
+            date = itemView.findViewById(R.id.money_Item_dateTextView)
+
         }
     }
     inner class ViewHolder1(itemView: View): RecyclerView.ViewHolder(itemView) {
@@ -99,6 +121,10 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
                 itemLongClickListener?.OnItemLongClick(this, it, items[position], position)
                 true
             }
+            itemView.setOnClickListener{
+                val position = adapterPosition
+                itemClickListener2?.OnItemClick2(this, it, items[position], position)
+            }
         }
 
 
@@ -112,15 +138,23 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         var totalPrice: TextView
 
         init{
-            totalPrice = itemView.findViewById(R.id.money_Item_textView2)
+            totalPrice = itemView.findViewById(R.id.money_Item_total)
         }
     }
     inner class ViewHolder4(itemView: View): RecyclerView.ViewHolder(itemView) {
         init{
+            /* 리사이클뷰 어댑터에 리스너 달기 */
+            itemView.setOnClickListener{
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(this, it, items[position], position)
+            }
+        }
+    }
+    inner class ViewHolder5(itemView: View): RecyclerView.ViewHolder(itemView) {
+        init{
 
         }
     }
-
     override fun getItemViewType(position: Int): Int {
         return if (items.get(position).viewType === 0) {
             VIEW_TYPE_A
@@ -133,13 +167,11 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         else if (items.get(position).viewType === 3) {
             VIEW_TYPE_D
         }
-        else {
+        else if (items.get(position).viewType === 4) {
             VIEW_TYPE_E
         }
-    }
-    fun onLongClick(view: View): Boolean {
-        // Handle long click
-        // Return true to indicate the click was handled
-        return true
+        else {
+            VIEW_TYPE_F
+        }
     }
 }
