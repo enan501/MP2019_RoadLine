@@ -5,9 +5,10 @@
     tools:context="konkukSW.MP2019.roadline.UI.date.Fragment2">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/timeline_recycleView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="가로타임라인" />
+        android:layout_height="match_parent" />
 
 </FrameLayout>
