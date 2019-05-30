@@ -13,5 +13,6 @@ open class T_Plan : RealmObject() {
     var locationX: Float = 0.0f
     var locationY: Float = 0.0f
     var time: String = ""
+    var memo: String = ""
 
 }
