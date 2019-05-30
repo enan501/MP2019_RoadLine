@@ -39,14 +39,6 @@ class AddMoneyActivity : AppCompatActivity() {
     fun initPermission() {
         if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
             askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
-//            val builder = AlertDialog.Builder(this)
-//            builder.setMessage("반드시 이미지 데이터에 대한 권한이 허용되어야 합니다.")
-//                .setTitle("권한 허용")
-//                .setIcon(R.drawable.abc_ic_star_black_48dp)
-//            builder.setPositiveButton("OK") { _, _ ->
-//            }
-//            val dialog = builder.create()
-//            dialog.show()
         } else {
             Toast.makeText(
                 getApplicationContext(),
@@ -174,7 +166,16 @@ class AddMoneyActivity : AppCompatActivity() {
     }
 
     fun cancelBtn(view: View) {
-        val intent = Intent(this, ShowMoneyActivity::class.java)
-        startActivity(intent)
+        val builder = AlertDialog.Builder(this)
+        builder.setMessage("지금 돌아가면 데이터 입력 내용이 삭제됩니다.")
+            .setTitle("뒤로가기")
+            .setIcon(R.drawable.ic_keyboard_backspace_black_24dp)
+        builder.setPositiveButton("OK") { _, _ ->
+            val intent = Intent(this, ShowMoneyActivity::class.java)
+            startActivity(intent)
+        }
+        val dialog = builder.create()
+        dialog.show()
+
     }
 }
