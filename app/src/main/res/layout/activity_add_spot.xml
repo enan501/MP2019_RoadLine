@@ -17,7 +17,7 @@
         android:inputType="textPersonName" />
 
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/addMapView"
+        android:id="@+id/AS_MapView"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_weight="5"

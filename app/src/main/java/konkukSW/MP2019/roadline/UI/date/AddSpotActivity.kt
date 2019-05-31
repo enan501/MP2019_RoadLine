@@ -1,25 +1,24 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.EditText
-import io.realm.Realm
-import io.realm.kotlin.createObject
-import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Spot
-import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_add_spot.*
+import android.support.v7.app.AppCompatActivity
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import io.realm.Realm
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.activity_add_spot.*
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
-    override fun onMapReady(p0: GoogleMap?) {
+    lateinit var addMap: GoogleMap
+    lateinit var addMapView:SupportMapFragment
+    override fun onMapReady(p0: GoogleMap) {
+        addMap = p0
     }
 
-    lateinit var realm:Realm
+    lateinit var realm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,8 +27,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
-        val addMap = supportFragmentManager.findFragmentById(R.id.addMapView) as SupportMapFragment
-        addMap.getMapAsync(this)
+        addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
+        addMapView.getMapAsync(this)
         initListener()
     }
 
@@ -38,7 +37,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         realm = Realm.getDefaultInstance()
         as_button.setOnClickListener {
             realm.beginTransaction()
-            val plan:T_Plan = realm.createObject(T_Plan::class.java)
+            val plan: T_Plan = realm.createObject(T_Plan::class.java)
             plan.listNum = 0
             plan.dayNum = 0
             plan.num = 0
@@ -49,5 +48,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val i = Intent(this, ShowDateActivity::class.java)
             startActivity(i)
         }
+
     }
 }
