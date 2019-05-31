@@ -1,18 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context="konkukSW.MP2019.roadline.UI.money.ShowDetailMoneyActivity">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="가계부 통계 액티비티"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="320dp" />
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="15dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="총지출"
+                android:textAlignment="textStart"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/totalMoney"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="392300원"
+                android:textAlignment="textEnd"
+                android:textColor="#60AEBF"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!-- 가로 줄 -->
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:background="#eeeeee" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="10dp"
+            android:id="@+id/piechart"
+            android:layout_width="match_parent"
+            android:layout_height="350dp">
+        </com.github.mikephil.charting.charts.PieChart>
+
+        <ListView
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginVertical="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:id="@+id/categoryMoneyListView">
+        </ListView>
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="10dp"
+            android:background="#eeeeee" />
+
+    </LinearLayout>
+</ScrollView>

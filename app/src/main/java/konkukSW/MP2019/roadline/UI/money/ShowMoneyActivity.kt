@@ -67,8 +67,10 @@ class ShowMoneyActivity : AppCompatActivity() {
         adapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                addItem(position, item.listNum, item.dayNum,3000, 0, R.drawable.testimg1,
-                    "2019.05.20", 1)
+//                addItem(position, item.listNum, item.dayNum,3000, 0, R.drawable.testimg1,
+//                    "2019.05.20", 1)
+                val intent = Intent(applicationContext, AddMoneyActivity::class.java)
+                startActivity(intent)
             }
         }
         adapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {

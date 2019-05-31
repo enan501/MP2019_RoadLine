@@ -9,7 +9,7 @@
             android:left = "80dp"
             android:right = "80dp">
             <bitmap
-                android:src = "@drawable/album_icon"
+                android:src = "@drawable/splash_logo"
                 android:gravity="center"/>
         </item>
 
