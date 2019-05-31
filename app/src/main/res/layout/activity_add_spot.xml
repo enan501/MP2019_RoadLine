@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,15 +8,37 @@
     android:layout_height="match_parent"
     tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity">
 
-    <TextView
+    <EditText
+        android:id="@+id/as_spotName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="일정 추가"/>
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/addMapView"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="장소를 입력하세요"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/as_memo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="메모를 입력하세요"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/as_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ems="10"
+        android:hint="시간을 입력하세요"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/as_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Button" />
 </LinearLayout>

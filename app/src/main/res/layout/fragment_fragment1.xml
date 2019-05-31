@@ -10,6 +10,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/f1_rView"
             android:layout_width="match_parent"
@@ -17,13 +18,7 @@
 
         </android.support.v7.widget.RecyclerView>
 
-        <ImageView
-            android:id="@+id/f1_addBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:clickable="true"
-            android:src="@android:drawable/ic_menu_add" />
+
 
     </LinearLayout>
 

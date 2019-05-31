@@ -7,7 +7,9 @@ import android.support.design.widget.TabLayout
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import kotlinx.android.synthetic.main.activity_show_date.*
 import android.content.Intent
-
+import konkukSW.MP2019.roadline.Data.Dataclass.Spot
+import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
+import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -31,6 +33,7 @@ class ShowDateActivity : AppCompatActivity() {
         tabLayer!!.addTab(tabLayer!!.newTab().setText("가로 타임라인"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("세로 타임라인"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("지도"))
+
     }
 
     fun initListener(){
@@ -57,6 +60,20 @@ class ShowDateActivity : AppCompatActivity() {
             startActivity(Intent(this, ShowDateActivity::class.java))
             overridePendingTransition(konkukSW.MP2019.roadline.R.anim.anim_slide_in_left, konkukSW.MP2019.roadline.R.anim.anim_slide_out_right)
             finish()
+        }
+
+        sd_imgBtn1.setOnClickListener {
+            //사진첩 버튼
+            startActivity(Intent(this, ShowPhotoActivity::class.java))
+        }
+
+        sd_imgBtn2.setOnClickListener {
+            //가계부 버튼
+            startActivity(Intent(this, ShowMoneyActivity::class.java))
+        }
+
+        sd_imgBtn3.setOnClickListener {
+            //공유 버튼
         }
 
     }

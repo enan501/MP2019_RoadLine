@@ -1,5 +1,8 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
+import android.content.Context
+import android.content.Intent
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -8,14 +11,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import io.realm.Realm
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Spot
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.date.AddSpotActivity
 import konkukSW.MP2019.roadline.UI.date.Fragment1
 
-class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener): RecyclerView.Adapter<DateListAdapter.ViewHolder>()  {
+class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+
+    private val TYPE_ITEM:Int = 0
+    private val TYPE_FOOTER:Int = 1
 
     interface OnItemClickListener{
-        fun OnItemClick(holder:ViewHolder, view:View, data: Spot, position: Int)
+        fun OnItemClick(holder:ItemViewHolder, view:View, data: Spot, position: Int)
+        fun OnItemClick(holder:FooterViewHolder)
     }
 
     var itemClickListener :OnItemClickListener? = null
@@ -25,35 +35,58 @@ class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener)
     }
 
     fun moveItem(pos1:Int, pos2:Int){ //객체 두개 바꾸기 함수
-        val item1 = items.get(pos1)
-        items.removeAt(pos1)
-        items.add(pos2, item1)
-        notifyItemMoved(pos1, pos2)
+        if(pos2 <= items.size - 1){
+            val item1 = items.get(pos1)
+            items.removeAt(pos1)
+            items.add(pos2, item1)
+            notifyItemMoved(pos1, pos2)
+        }
     }
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val tuple = realm.where(T_Plan::class.java).equalTo("name", items[pos].spot).findFirst()
+        tuple!!.deleteFromRealm()
+        realm.commitTransaction()
         items.removeAt(pos)
         notifyItemRemoved(pos)
     }
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        val v = LayoutInflater.from(p0.context).inflate(R.layout.row_spot, p0, false)
-        return  ViewHolder(v, listener)
+        var v:View
+        if(p1 == TYPE_ITEM){
+            v = LayoutInflater.from(p0.context).inflate(R.layout.row_spot, p0, false)
+            return  ItemViewHolder(v, listener)
+        }else{
+            v = LayoutInflater.from(p0.context).inflate(R.layout.row_spot_footer, p0, false)
+            return  FooterViewHolder(v)
+        }
     }
 
     override fun getItemCount(): Int {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        return items.size
+        return items.size + 1
     }
 
-    override fun onBindViewHolder(p0: ViewHolder, p1: Int) { //viewHolder의 내용 초기화
+    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        p0.spotName.text = items.get(p1).spot.toString()
-
+        if(p0 is ItemViewHolder)
+            p0.spotName.text = items.get(p1).spot
     }
 
-    inner class ViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
+    override fun getItemViewType(position: Int): Int {
+        if(position == items.size ){
+            return TYPE_FOOTER
+        }
+        else{
+            return TYPE_ITEM
+        }
+    }
+
+    inner class ItemViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var spotName: TextView
         var dragBtn: ImageView
 
@@ -73,4 +106,16 @@ class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener)
 
         }
 
-}}
+    }
+    inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
+        var addBtn: ImageView
+
+        init {
+            addBtn = itemView.findViewById(R.id.rsf_addBtn)
+            addBtn.setOnClickListener {
+                itemClickListener?.OnItemClick(this)
+            }
+        }
+
+    }
+}

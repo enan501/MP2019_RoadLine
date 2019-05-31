@@ -51,113 +51,113 @@ class Fragment2 : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        if(StartedFlag == true) {
-            data.clear()
-            position = 0;
-            foldFlag = false;
-            foldCount = 0;
-        }
-        StartedFlag = true
-        // 이거 안하면 계속 중복되서 아이템 추가됨
-
-        val layoutManager = GridLayoutManager(getActivity(), 5)
-        timeline_recycleView.layoutManager = layoutManager
-        adapter = PlanAdapter(data)
-        timeline_recycleView.adapter = adapter
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
-
-        // 마지막 일정 모양 바꿔주기
-        if(foldFlag == true) {
-            if(foldCount == 0)
-                data.get(lastPosition).viewType = 1
-            else if(foldCount == 1)
-                data.get(lastPosition).viewType = 3
-            else
-                data.get(lastPosition).viewType = 2
-
-        } else {
-            if(foldCount == 0)
-                data.get(lastPosition).viewType = 2
-            else if(foldCount == 1)
-                data.get(lastPosition).viewType = 4
-            else
-                data.get(lastPosition).viewType = 1
-        }
-        adapter.notifyDataSetChanged()
+//        if(StartedFlag == true) {
+//            data.clear()
+//            position = 0;
+//            foldFlag = false;
+//            foldCount = 0;
+//        }
+//        StartedFlag = true
+//        // 이거 안하면 계속 중복되서 아이템 추가됨
+//
+//        val layoutManager = GridLayoutManager(getActivity(), 5)
+//        timeline_recycleView.layoutManager = layoutManager
+//        adapter = PlanAdapter(data)
+//        timeline_recycleView.adapter = adapter
+//
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL")
+//
+//        // 마지막 일정 모양 바꿔주기
+//        if(foldFlag == true) {
+//            if(foldCount == 0)
+//                data.get(lastPosition).viewType = 1
+//            else if(foldCount == 1)
+//                data.get(lastPosition).viewType = 3
+//            else
+//                data.get(lastPosition).viewType = 2
+//
+//        } else {
+//            if(foldCount == 0)
+//                data.get(lastPosition).viewType = 2
+//            else if(foldCount == 1)
+//                data.get(lastPosition).viewType = 4
+//            else
+//                data.get(lastPosition).viewType = 1
+//        }
+//        adapter.notifyDataSetChanged()
     }
 
-    fun addItem(listnum:Int, daynum:Int, num:Int, name:String, locaX:Float, locaY:Float, time:String)
-    {
-        if(foldFlag == false) { // 오른쪽으로 추가
-            data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
-            lastPosition = position;
-        }
-        else // 왼쪽으로 추가
-        {
-            if(foldCount == 0) {
-                data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
-                data.add(position + 1, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
-                data.add(position + 2, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
-                data.add(position + 3, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
-                data.add(position + 4, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
-                lastPosition = position + 4;
-            }
-            else if(foldCount == 1) {
-                data.removeAt(position+2)
-                data.add(position + 2, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
-                lastPosition = position + 2;
-            }
-            else if(foldCount == 2) {
-                data.removeAt(position)
-                data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
-                lastPosition = position;
-            }
-            else if(foldCount == 3) {
-                data.removeAt(position-2)
-                data.add(position-2, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
-                lastPosition = position - 2;
-            }
-            else if(foldCount == 4) {
-                data.removeAt(position-4)
-                data.add(position-4, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
-                lastPosition = position - 4;
-            }
-        }
-        position++
-        foldCount++
-        if (foldCount == 5)
-        {
-            foldCount = 0;
-            if(foldFlag == true)
-                foldFlag = false
-            else
-                foldFlag = true
-        }
-    }
+//    fun addItem(listnum:Int, daynum:Int, num:Int, name:String, locaX:Float, locaY:Float, time:String)
+//    {
+//        if(foldFlag == false) { // 오른쪽으로 추가
+//            data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
+//            lastPosition = position;
+//        }
+//        else // 왼쪽으로 추가
+//        {
+//            if(foldCount == 0) {
+//                data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
+//                data.add(position + 1, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
+//                data.add(position + 2, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
+//                data.add(position + 3, Plan(listnum, daynum, num, name, locaX, locaY, time, 9))
+//                data.add(position + 4, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
+//                lastPosition = position + 4;
+//            }
+//            else if(foldCount == 1) {
+//                data.removeAt(position+2)
+//                data.add(position + 2, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
+//                lastPosition = position + 2;
+//            }
+//            else if(foldCount == 2) {
+//                data.removeAt(position)
+//                data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
+//                lastPosition = position;
+//            }
+//            else if(foldCount == 3) {
+//                data.removeAt(position-2)
+//                data.add(position-2, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
+//                lastPosition = position - 2;
+//            }
+//            else if(foldCount == 4) {
+//                data.removeAt(position-4)
+//                data.add(position-4, Plan(listnum, daynum, num, name, locaX, locaY, time, ViewTypeArray[position]))
+//                lastPosition = position - 4;
+//            }
+//        }
+//        position++
+//        foldCount++
+//        if (foldCount == 5)
+//        {
+//            foldCount = 0;
+//            if(foldFlag == true)
+//                foldFlag = false
+//            else
+//                foldFlag = true
+//        }
+//    }
 }

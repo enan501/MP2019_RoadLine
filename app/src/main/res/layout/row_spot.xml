@@ -11,22 +11,22 @@
 
         <TextView
             android:id="@+id/rs_spotName"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="20dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="15"
-            android:text="값 없음"
+            android:text="null"
             android:textSize="25sp" />
 
         <ImageView
             android:id="@+id/rs_dragBtn"
             android:layout_margin="5dp"
-            android:layout_width="50dp"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
+            android:layout_weight="3"
             app:srcCompat="@drawable/drag_icon" />
     </LinearLayout>
 </LinearLayout>

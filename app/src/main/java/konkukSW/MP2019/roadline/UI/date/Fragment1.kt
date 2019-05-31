@@ -8,14 +8,19 @@ import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
+import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.kotlin.createObject
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Spot
 
 
@@ -53,31 +58,38 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     }
 
     fun initData(){
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java).findAll()
         spotList = ArrayList<Spot>()
-        spotList.add(Spot("타이페이 역", "time", "memo"))
-        spotList.add(Spot("스펀", "time", "memo"))
-        spotList.add(Spot("허운트 마을", "time", "memo"))
-
+        for(T_Plan in results){
+            spotList.add(Spot(T_Plan.name, T_Plan.time, T_Plan.memo))
+        }
     }
 
     fun initLayout(){
         rView = v!!.findViewById(R.id.f1_rView) as RecyclerView
         val layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         rView.layoutManager = layoutManager
-        adapter = DateListAdapter(spotList, this)
+        adapter = DateListAdapter(spotList, this, context!!)
         rView.adapter = adapter
+
     }
 
     fun addListener(){
-        val addBtn = v!!.findViewById(R.id.f1_addBtn) as ImageView
-        addBtn.setOnClickListener {
-            val i = Intent(activity, AddSpotActivity::class.java)
-            startActivity(i)
-        }
         adapter.itemClickListener = object : DateListAdapter.OnItemClickListener{
-            override fun OnItemClick(holder: DateListAdapter.ViewHolder, view: View, data: Spot, position: Int) {
+            //addBtn 클릭했을 때
+            override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
+                val i = Intent(activity, AddSpotActivity::class.java)
+                startActivity(i)
+            }
+
+            //리사이클러뷰 아이템 클릭했을 때
+            override fun OnItemClick(holder: DateListAdapter.ItemViewHolder, view: View, data: Spot, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val i = Intent(activity, AddSpotActivity::class.java)
+                val bundle = Bundle()
+                bundle.putSerializable("pos", position)
                 startActivity(i)
             }
         }
@@ -94,6 +106,5 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     fun initSwipe(){
         itemTouchHelper = ItemTouchHelper(DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT))
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
-
     }
 }
