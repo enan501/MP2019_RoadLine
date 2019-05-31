@@ -6,16 +6,11 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.LinearSnapHelper
-import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
-import konkukSW.MP2019.roadline.Data.DB.T_List
-import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
-import io.realm.RealmConfiguration
-import konkukSW.MP2019.roadline.Data.DB.T_Day
 
 
 class PickDateActivity : AppCompatActivity() {
@@ -31,6 +26,7 @@ class PickDateActivity : AppCompatActivity() {
         PickDate(5,"2019.02.14"),
         PickDate(6,"2019.02.15"),
         PickDate(7,"2019.02.16"),
+        PickDate(-1,"ADD"),
         PickDate(0,"last")
     )
     lateinit var PDAdapter: PickDateAdapter
@@ -65,10 +61,15 @@ class PickDateActivity : AppCompatActivity() {
     fun addListener() {
         PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
+                if(data.day > 0){
                 var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
                 PDIntentToSD.putExtra("title",title)
                 PDIntentToSD.putExtra("day",data.day)
                 startActivity(PDIntentToSD)
+                }
+                else if(data.day == -1){ //추가
+                    //db에다 여행 날짜 추가
+                }
             }
         }
         PD_photoBtn.setOnClickListener {

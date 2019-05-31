@@ -21,12 +21,19 @@ class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickD
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
 
-        if(items.get(p1).day != 0){
+        if(items.get(p1).day > 0){ //일반 날짜
             p0.itemView.visibility =View.VISIBLE
             p0.day.text = "Day " + items.get(p1).day.toString()
             p0.date.text = items.get(p1).date
         }
-        else{
+        else if(items.get(p1).day == -1) //맨 마지막 추가버튼
+        {
+            p0.itemView.visibility =View.VISIBLE
+            p0.day.text = "+"
+            p0.day.setTextSize(30.0f)
+            p0.date.text = items.get(p1).date
+        }
+        else{ //양쪽 끝
             p0.itemView.visibility =View.INVISIBLE
         }
     }

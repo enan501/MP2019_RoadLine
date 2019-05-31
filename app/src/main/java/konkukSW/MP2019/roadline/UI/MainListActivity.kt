@@ -45,7 +45,7 @@ class MainListActivity : AppCompatActivity() {
             }
         }
         ML_addListBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
+            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
             val addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
             val dialogText = addListDialog.findViewById<EditText>(R.id.AL_title)
             builder.setView(addListDialog)
