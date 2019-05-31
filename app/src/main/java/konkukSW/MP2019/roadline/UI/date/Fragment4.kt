@@ -18,14 +18,14 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         gMap = p0
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view: View = inflater!!.inflate(R.layout.fragment_fragment4, container, false)
-        val mapFragment = this.childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        return view
-    }
+override fun onCreateView(
+    inflater: LayoutInflater, container: ViewGroup?,
+    savedInstanceState: Bundle?
+): View? {
+    val view: View = inflater!!.inflate(R.layout.fragment_fragment4, container, false)
+    val mapFragment = this.childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+    mapFragment.getMapAsync(this)
+    return view
+}
 
 }

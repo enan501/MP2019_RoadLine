@@ -14,7 +14,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBF9PD_Y5ddwcaPHqX-Frz5vjC41jzyWWY" />
+            android:value="@string/api_key" />
         <activity android:name=".UI.money.ShowDetailMoneyActivity"></activity>
         <activity android:name=".UI.date.AddSpotActivity"></activity>
         <activity android:name=".UI.money.AddMoneyActivity"></activity>
