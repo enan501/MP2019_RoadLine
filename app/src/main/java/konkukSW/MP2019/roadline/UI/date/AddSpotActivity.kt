@@ -26,10 +26,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMapView:SupportMapFragment
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), "YOUR_API_KEY");
-        }
-
     }
 
     lateinit var realm: Realm
