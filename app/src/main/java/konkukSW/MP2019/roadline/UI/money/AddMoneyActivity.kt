@@ -149,7 +149,7 @@ class AddMoneyActivity : AppCompatActivity() {
         moneyTable.dayNum = dayNum
         moneyTable.id = UUID.randomUUID().toString();
         moneyTable.priceType = ""
-        if (img_url == null) { // 사진 선택 안했으면
+        if (img_url == "") { // 사진 선택 안했으면
             moneyTable.img = ""
         } else {
             moneyTable.img = img_url
@@ -174,7 +174,7 @@ class AddMoneyActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("지금 돌아가면 데이터 입력 내용이 삭제됩니다.")
             .setTitle("뒤로가기")
-            .setIcon(R.drawable.ic_mtrl_chip_checked_black)
+            .setIcon(R.drawable.ic_keyboard_backspace_black_24dp)
         builder.setPositiveButton("OK") { _, _ ->
             val intent = Intent(this, ShowMoneyActivity::class.java)
             startActivity(intent)

@@ -28,7 +28,7 @@ android {
 buildscript {
     repositories {
         jcenter()
-        maven {url "https://jitpack.io"}
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath "io.realm:realm-gradle-plugin:5.11.0"
@@ -37,7 +37,7 @@ buildscript {
 
 allprojects {
     repositories {
-        maven {url "https://jitpack.io"}
+        maven { url "https://jitpack.io" }
     }
 }
 

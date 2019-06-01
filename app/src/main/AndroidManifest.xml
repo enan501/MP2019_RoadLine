@@ -11,29 +11,30 @@
         android:roundIcon="@drawable/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".UI.money.SelectCurrency"></activity>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
-        <activity android:name=".UI.money.ShowDetailMoneyActivity"></activity>
-        <activity android:name=".UI.date.AddSpotActivity"></activity>
-        <activity android:name=".UI.money.AddMoneyActivity"></activity>
-        <activity android:name=".UI.photo.ShowPhotoActivity"></activity>
-        <activity android:name=".UI.money.ShowMoneyActivity"></activity>
-        <activity android:name=".UI.date.ShowDateActivity"></activity>
-        <activity android:name=".UI.date.PickDateActivity"></activity>
-        <activity android:name=".UI.MainListActivity"></activity>
+
+        <activity android:name=".UI.money.ShowDetailMoneyActivity" />
+        <activity android:name=".UI.date.AddSpotActivity" />
+        <activity android:name=".UI.money.AddMoneyActivity" />
+        <activity android:name=".UI.photo.ShowPhotoActivity" />
+        <activity android:name=".UI.money.ShowMoneyActivity" />
+        <activity android:name=".UI.date.ShowDateActivity" />
+        <activity android:name=".UI.date.PickDateActivity" />
+        <activity android:name=".UI.MainListActivity" />
         <activity
             android:name=".UI.SplashActivity"
-            android:theme="@style/Splash"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>
