@@ -13,12 +13,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
-import com.koushikdutta.ion.Ion
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
-import org.jsoup.Jsoup
 import org.xmlpull.v1.XmlPullParser
 import org.xmlpull.v1.XmlPullParserFactory
 import java.nio.charset.Charset
@@ -158,16 +156,16 @@ class AddMoneyActivity : AppCompatActivity() {
 //        //data += ("${i.attr("원하는 속성//예를 들어 a 태그의 href는 abs:href")}${i.text().trim()}\n")
 //        //for (i in links) {
         //1. Fetching the HTML from a given URL
-        Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
-            //2. Parses and scrapes the HTML response
-            select("tbody >tr").forEachIndexed { index, element ->
-                val titleAnchor = element.select("td")
-                val title = titleAnchor.text()
-//                val url = titleAnchor.attr("href")
-                //3. Dumping Search Index, Title and URL on the stdout.
-                println("$index. $title")
-            }
-        }
+//        Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
+//            //2. Parses and scrapes the HTML response
+//            select("tbody >tr").forEachIndexed { index, element ->
+//                val titleAnchor = element.select("td")
+//                val title = titleAnchor.text()
+////                val url = titleAnchor.attr("href")
+//                //3. Dumping Search Index, Title and URL on the stdout.
+//                println("$index. $title")
+//            }
+//        }
     }
 
     fun category_click() {
@@ -221,7 +219,6 @@ class AddMoneyActivity : AppCompatActivity() {
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
         moneyTable.date = "2018.05.30"
-        //moneyTable.pos = pos
         realm.commitTransaction()
 
 //        val q3 = realm.where(T_Money::class.java).findAll()

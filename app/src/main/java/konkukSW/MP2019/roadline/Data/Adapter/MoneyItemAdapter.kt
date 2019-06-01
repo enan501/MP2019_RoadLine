@@ -92,7 +92,7 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         }
         else if (holder is ViewHolder0) { // 데이 아이템
             holder.day.text = "DAY" + items.get(position).dayNum.toString()
-            holder.date.text = items.get(position).price.toString() // 여기선 price를 임시로 날짜로 나중에 디비에서 가져오기.
+            holder.date.text = items.get(position).date
         }
         else if (holder is ViewHolder3) { // 토탈 아이템
             holder.totalPrice.text = items.get(position).price.toString()

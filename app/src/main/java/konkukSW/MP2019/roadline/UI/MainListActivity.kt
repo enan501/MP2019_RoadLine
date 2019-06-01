@@ -68,17 +68,17 @@ class MainListActivity : AppCompatActivity() {
             val addListTitle = addListDialog.findViewById<EditText>(R.id.AL_title)
             val addListDate = addListDialog.findViewById<DatePicker>(R.id.AL_date)
             builder.setView(addListDialog)
-                .setPositiveButton("추가") { dialogInterface, i ->
+                .setPositiveButton("추가") { dialogInterface, _ ->
                     realm.beginTransaction()
-                    val newList:T_List = realm.createObject(T_List::class.java,UUID.randomUUID().toString())
+                    val newList = realm.createObject(T_List::class.java, UUID.randomUUID().toString())
                     newList.title = addListTitle.text.toString()
                     newList.date = addListDate.year.toString() +". "+ (addListDate.month+1).toString() +". "+ addListDate.dayOfMonth.toString()
 
-                    val newDay: T_Day = realm.createObject(T_Day::class.java)
-                    newDay.ListID = newList.id
+                    val newDay  = realm.createObject(T_Day::class.java)
+                    newDay.listID = newList.id
                     newDay.date = newList.date
                     newDay.num = 1
-                    realm.deleteAll()
+                    //realm.deleteAll()
                     realm.commitTransaction()
                     MLArray.add(MainList(newList.id,newList.title,newList.date,""))
                     MLAdapter.notifyDataSetChanged()

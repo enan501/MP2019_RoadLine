@@ -42,9 +42,9 @@ class ShowMoneyActivity : AppCompatActivity() {
     var data:ArrayList<MoneyItem> = ArrayList()
     lateinit var adapter:MoneyItemAdapter
 
-    var ListID = "aa"; // 인텐트로 받아
-    var DayNum = 0; // 인텐트로 받아
-    var dayCount = 3; // 이것 나중에 디비에서 받아와야함
+    var ListID = ""
+    var DayNum = 0;
+    var dayCount = 0;
 
     var TotalPrice = 0;
 
@@ -80,7 +80,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             if(resultCode == Activity.RESULT_OK)
             {
-                Toast.makeText(this, "zz", Toast.LENGTH_LONG).show()
                 initLayout() // 어댑터 갱신
                 initListener()
             }
@@ -159,9 +158,16 @@ class ShowMoneyActivity : AppCompatActivity() {
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
         if(DayNum == 0) // 리스트내 Day 전부 다 출력
         {
+            val q = realm.where(T_Day::class.java)
+                .equalTo("listID", ListID)
+                .findAll()
+            dayCount = q.size
             for (i in 1..dayCount) {
-
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), 20190530, "", "", "NULL", 0))
+                val q2 = realm.where(T_Day::class.java)
+                    .equalTo("listID", ListID)
+                    .equalTo("num", i)
+                    .findFirst()
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0))
                 data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(),-1, "", "", "NULL", 2))
                 data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(),-1, "", "", "NULL", 4))
 
@@ -188,7 +194,11 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
         else // 한개의 Day만 출력
         {
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(),20190530, "", "", "NULL", 0))
+            val q2 = realm.where(T_Day::class.java)
+                .equalTo("listID", ListID)
+                .equalTo("num", DayNum)
+                .findFirst()
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0))
             data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(),-1, "", "", "NULL", 2))
             data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(),-1, "", "", "NULL", 4))
 

@@ -1,5 +1,6 @@
 package konkukSW.MP2019.roadline.UI.date
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -15,6 +16,7 @@ import kotlinx.android.synthetic.main.activity_show_date.*
 class ShowDateActivity : AppCompatActivity() {
 
     var ListID = ""
+    var DayNum = 0;
 
     private var tabLayer:TabLayout?= null
 
@@ -36,6 +38,8 @@ class ShowDateActivity : AppCompatActivity() {
         tabLayer!!.addTab(tabLayer!!.newTab().setText("세로 타임라인"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("지도"))
 
+        ListID = intent.getStringExtra("ListID")
+        DayNum = intent.getIntExtra("DayNum", 0)
     }
 
     fun initListener(){
@@ -73,7 +77,7 @@ class ShowDateActivity : AppCompatActivity() {
             //가계부 버튼
             var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
             PDIntentToMoney.putExtra("ListID", ListID)
-            PDIntentToMoney.putExtra("DayNum",3) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+            PDIntentToMoney.putExtra("DayNum", DayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
         }
 

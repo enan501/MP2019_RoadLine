@@ -14,6 +14,5 @@ open class T_Money : RealmObject() {
     var price: Int = 0
     var cate: String = ""
     var date: String = ""
-    var time: String = ""
 
 }

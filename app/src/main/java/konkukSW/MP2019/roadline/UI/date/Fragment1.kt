@@ -1,6 +1,7 @@
 package konkukSW.MP2019.roadline.UI.date
 
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -82,7 +83,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
                 i.putExtra("pos", planList.size)
-                startActivity(i)
+                startActivityForResult(i,123)
             }
 
             //리사이클러뷰 아이템 클릭했을 때
@@ -106,5 +107,17 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     fun initSwipe(){
         itemTouchHelper = ItemTouchHelper(DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT))
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { // 애드스팟 하고나서 돌아왔을때 어댑터뷰 바로 갱신
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 123)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                planList.clear()
+                init() // 갱신
+            }
+        }
     }
 }
