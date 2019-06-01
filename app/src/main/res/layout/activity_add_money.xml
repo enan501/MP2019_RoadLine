@@ -42,6 +42,17 @@
             android:orientation="horizontal"
             android:paddingLeft="10dp">
 
+            <Spinner
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:id="@+id/currencySpinner"
+                android:text="$"
+                android:entries="@array/spin_arr"
+                android:prompt="@string/spin_prompt"
+                android:spinnerMode="dialog"
+                android:textSize="20sp" />
             <EditText
                 android:id="@+id/priceTxt"
                 android:layout_width="0dp"
@@ -49,14 +60,15 @@
                 android:layout_weight="8"
                 android:paddingRight="10dp"
                 android:textAlignment="textEnd" />
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="$"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:id="@+id/currency"
+                android:text="₩"/>
+
         </LinearLayout>
 
         <TextView

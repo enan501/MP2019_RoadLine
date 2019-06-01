@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="konkukSW.MP2019.roadline">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
@@ -11,15 +12,14 @@
         android:roundIcon="@drawable/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UI.money.SelectCurrency"></activity>
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key" />
 
         <activity android:name=".UI.money.ShowDetailMoneyActivity" />
         <activity android:name=".UI.date.AddSpotActivity" />
-        <activity android:name=".UI.money.AddMoneyActivity" />
+        <activity android:name=".UI.money.AddMoneyActivity">
+        </activity>
         <activity android:name=".UI.photo.ShowPhotoActivity" />
         <activity android:name=".UI.money.ShowMoneyActivity" />
         <activity android:name=".UI.date.ShowDateActivity" />

@@ -7,21 +7,28 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.widget.AdapterView
 import android.widget.Toast
+import com.koushikdutta.ion.Ion
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
+import org.jsoup.Jsoup
+import org.xmlpull.v1.XmlPullParser
+import org.xmlpull.v1.XmlPullParserFactory
+import java.nio.charset.Charset
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddMoneyActivity : AppCompatActivity() {
-
+    var currencyList: ArrayList<Currency> = ArrayList()
     val SELECT_IMAGE = 100
-
-    var img_url: String = ""// 이미지 URI
+    var img_url: String = "" // 이미지 URI
     var price = 0 // 가격
     var cate: String = "" // 카테고리
     // 날짜를 담는 변수 -> intent로 받아와야함
@@ -81,7 +88,23 @@ class AddMoneyActivity : AppCompatActivity() {
     fun init() {
 
         category_click()
+        currencySpinner.onItemSelectedListener = SpinnerSelectedListener()
+        money_calculation()
     }
+
+    inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener {
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            //Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
+            currency.text = parent?.getItemAtPosition(position).toString()
+            // ?. -> null 이 아닐때 수행시키는 연산자
+        }
+    }
+
 
     fun addImg(view: View) {
         //어떤 앱에서 이미지를 가져오는지 몰라서 묵시적 intent 수행
@@ -102,8 +125,49 @@ class AddMoneyActivity : AppCompatActivity() {
         }
     }
 
+    //currencyList
     fun money_calculation() { // 현재 환율 불러와서 원 단위로 환산
-
+//        Ion.with(this).load("https://kr.fxexchangerate.com/currency-exchange-rates.html")
+//            .asString(Charsets.UTF_8)
+//            .setCallback { e, result ->
+//                if (result != null) {
+//                    var table = ""
+//                    var str = ""
+//                    var pt_start = -1
+//                    var pt_end = -1
+//                    for (i in 0..5) {
+//                        val table_start = "<tbody>"
+//                        val table_end = "</tbody>"
+//                        pt_start = result.indexOf(table_start)
+//                        pt_end = result.indexOf(table_end)
+//                        table = result.substring(pt_start + table_start.length, pt_end)
+//                        val tr_start = "<tr>"
+//                        val tr_end = "</tr>"
+//                        pt_start = table.indexOf(tr_start)
+//                        pt_end = table.indexOf(tr_end)
+//                        str = table.substring(pt_start + tr_start.length, pt_end)
+//                        //println(str)
+//                    }
+//                } else
+//                    Toast.makeText(applicationContext, "환율을 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
+//            }
+//
+//        val doc = Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get()
+//        val links = doc.select("td")
+//        println(links)
+//        //data += ("${i.attr("원하는 속성//예를 들어 a 태그의 href는 abs:href")}${i.text().trim()}\n")
+//        //for (i in links) {
+        //1. Fetching the HTML from a given URL
+        Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
+            //2. Parses and scrapes the HTML response
+            select("tbody >tr").forEachIndexed { index, element ->
+                val titleAnchor = element.select("td")
+                val title = titleAnchor.text()
+//                val url = titleAnchor.attr("href")
+                //3. Dumping Search Index, Title and URL on the stdout.
+                println("$index. $title")
+            }
+        }
     }
 
     fun category_click() {
@@ -157,6 +221,7 @@ class AddMoneyActivity : AppCompatActivity() {
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
         moneyTable.date = "2018.05.30"
+        moneyTable.pos = pos
         realm.commitTransaction()
 
 //        val q3 = realm.where(T_Money::class.java).findAll()
