@@ -7,7 +7,7 @@ import io.realm.annotations.PrimaryKey
 open class T_Plan : RealmObject() {
 
     var listID :String = "" // T_List의 id의 외래키
-    var dayID: String = "" // T_Day의 id의 외래키
+    var dayNum: String = "" // T_Day의 id의 외래키
 
     var id : String = ""
     var name: String =  ""

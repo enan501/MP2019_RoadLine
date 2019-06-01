@@ -75,7 +75,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             if(as_button.text == "등록"){
                 val plan: T_Plan = realm.createObject(T_Plan::class.java)
                 plan.listID = "a"
-                plan.dayID = "a"
+                plan.dayNum = "a"
                 plan.id = "a"
                 plan.name = as_spotName.text.toString()
                 plan.time = as_time.text.toString()
