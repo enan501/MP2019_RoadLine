@@ -25,7 +25,7 @@ import java.util.*
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
     lateinit var addMapView:SupportMapFragment
-    var spotNum:Int = -1
+    var spotId:String = ""
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
     }
@@ -82,7 +82,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 plan.memo = as_memo.text.toString()
             }
             else{ //수정
-                val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotNum).findFirst()!!
+                val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
                 result.name = as_spotName.text.toString()
                 result.time = as_time.text.toString()
                 result.memo = as_memo.text.toString()
@@ -97,7 +97,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         var spot = intent.getSerializableExtra("spot")
         if(spot!=null){ //수정
             spot = spot as Plan
-            spotNum = spot.num
+            spotId = spot.id
             as_spotName.setText(spot.name)
             as_time.setText(spot.time)
             as_memo.setText(spot.memo)
