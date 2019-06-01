@@ -28,8 +28,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMapView:SupportMapFragment
     var spotId:String = ""
     var spotName:String=""
-    var locationX:Float = 0f
-    var locationY:Float = 0f
+    var locationX:Double = 0.0
+    var locationY:Double = 0.0
 
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
@@ -64,6 +64,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 marker.position(place.latLng!!)
                 addMap.addMarker(marker)
                 spotName = place.name.toString()
+                locationY = (place.latLng as LatLng).latitude
+                locationX = (place.latLng as LatLng).longitude
+
 //                var position = place.latLng
 //                posi
 //                locationX = place.latLng.
@@ -111,7 +114,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             as_button.setText("수정")
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spot.name)
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(spot.locationX,spot.locationY),12f))
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(spot.locationY,spot.locationX),12f))
 
 
         }
