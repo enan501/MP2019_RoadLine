@@ -13,18 +13,18 @@ import android.widget.ImageView
 import android.widget.TextView
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Spot
+import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.AddSpotActivity
 import konkukSW.MP2019.roadline.UI.date.Fragment1
 
-class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
+class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
     private val TYPE_ITEM:Int = 0
     private val TYPE_FOOTER:Int = 1
 
     interface OnItemClickListener{
-        fun OnItemClick(holder:ItemViewHolder, view:View, data: Spot, position: Int)
+        fun OnItemClick(holder:ItemViewHolder, view:View, data: Plan, position: Int)
         fun OnItemClick(holder:FooterViewHolder)
     }
 
@@ -47,7 +47,7 @@ class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener,
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val tuple = realm.where(T_Plan::class.java).equalTo("name", items[pos].spot).findFirst()
+        val tuple = realm.where(T_Plan::class.java).equalTo("name", items[pos].name).findFirst()
         tuple!!.deleteFromRealm()
         realm.commitTransaction()
         items.removeAt(pos)
@@ -74,7 +74,7 @@ class DateListAdapter(val items:ArrayList<Spot>, val listener: ItemDragListener,
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         if(p0 is ItemViewHolder)
-            p0.spotName.text = items.get(p1).spot
+            p0.spotName.text = items.get(p1).name
     }
 
     override fun getItemViewType(position: Int): Int {

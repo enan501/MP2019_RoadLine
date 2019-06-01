@@ -11,15 +11,16 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import konkukSW.MP2019.roadline.Data.Dataclass.Spot
+import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 
 
 class Fragment4 : Fragment(),OnMapReadyCallback {
-    var spotList:ArrayList<Spot> = arrayListOf(
-        Spot("건국대학교","14:30","그린호프ㄱ"),
-        Spot("개미집2","20:30","밥술ㄱ"),
-        Spot("신천역4번출구","21:30","걷다보니 앞이야"))
+    var spotList:ArrayList<Plan> = arrayListOf(
+//        Plan("건국대학교","14:30","그린호프ㄱ"),
+//        Plan("개미집2","20:30","밥술ㄱ"),
+//        Plan("신천역4번출구","21:30","걷다보니 앞이야")
+    )
     var latlngList:ArrayList<LatLng> = arrayListOf(
         LatLng(37.540005, 127.076530),
         LatLng(37.545200, 127.076277),
@@ -49,7 +50,7 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         {
             markerOptions
                 .position(latlngList[i])
-                .title(spotList[i].spot)
+                .title(spotList[i].name)
                 .snippet(spotList[i].time)
             gMap.addMarker(markerOptions)
 

@@ -116,7 +116,7 @@ class AddMoneyActivity : AppCompatActivity() {
                     R.id.shoppingBtn -> {
                         cate = "쇼핑"
                     }
-                    R.id.transfortBtn -> {
+                    R.id.transportBtn -> {
                         cate = "교통"
                     }
                     R.id.tourBtn -> {
@@ -126,7 +126,7 @@ class AddMoneyActivity : AppCompatActivity() {
                         cate = "숙박"
                     }
                     R.id.etcBtn -> {
-                        cate = "etc"
+                        cate = "기타"
                     }
                 }
             }
@@ -149,7 +149,11 @@ class AddMoneyActivity : AppCompatActivity() {
         moneyTable.dayNum = dayNum
         moneyTable.id = UUID.randomUUID().toString();
         moneyTable.priceType = ""
-        moneyTable.img = img_url
+        if (img_url == null) { // 사진 선택 안했으면
+            moneyTable.img = ""
+        } else {
+            moneyTable.img = img_url
+        }
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
         moneyTable.date = "2018.05.30"

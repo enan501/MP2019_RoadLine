@@ -55,7 +55,7 @@
             android:layout_marginHorizontal="40dp"
             android:layout_marginVertical="20dp"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="230dp"
             android:id="@+id/categoryMoneyListView">
         </ListView>
 

@@ -228,7 +228,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 5) {
                 lastPos = i
-                break;
+                break
             }
         }
         if(data.get(lastPos-1).viewType != 2) {

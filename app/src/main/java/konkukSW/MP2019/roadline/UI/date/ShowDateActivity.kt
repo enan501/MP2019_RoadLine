@@ -2,12 +2,10 @@ package konkukSW.MP2019.roadline.UI.date
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import konkukSW.MP2019.roadline.R
 import android.support.design.widget.TabLayout
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import kotlinx.android.synthetic.main.activity_show_date.*
 import android.content.Intent
-import konkukSW.MP2019.roadline.Data.Dataclass.Spot
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 
