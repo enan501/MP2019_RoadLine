@@ -71,9 +71,9 @@ class ShowDateActivity : AppCompatActivity() {
 
         sd_imgBtn2.setOnClickListener {
             //가계부 버튼
-            var PDIntentToMoney = Intent(applicationContext, ShowMoneyActivity::class.java)
+            var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
             PDIntentToMoney.putExtra("ListID", ListID)
-            PDIntentToMoney.putExtra("DayID",3) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+            PDIntentToMoney.putExtra("DayNum",3) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
         }
 

@@ -77,9 +77,9 @@ class PickDateActivity : AppCompatActivity() {
             startActivity(PDIntentToPhoto)
         }
         PD_moneyBtn.setOnClickListener {
-            var PDIntentToMoney = Intent(applicationContext, ShowMoneyActivity::class.java)
+            var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
             PDIntentToMoney.putExtra("ListID", ListID)
-            PDIntentToMoney.putExtra("DayID",0) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+            PDIntentToMoney.putExtra("DayNum",0) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
         }
     }

@@ -86,7 +86,7 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         if (holder is ViewHolder1) // 이미지 아이템
         {
             holder.price.text = items.get(position).price.toString()
-            holder.img.setImageResource(items.get(position).img)
+            holder.img.setImageResource(R.drawable.testimg1)// items.get(position).img
         }
         else if (holder is ViewHolder0) { // 데이 아이템
             holder.day.text = "DAY" + items.get(position).dayNum.toString()

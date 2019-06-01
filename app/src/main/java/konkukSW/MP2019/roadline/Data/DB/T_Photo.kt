@@ -6,11 +6,10 @@ import io.realm.annotations.PrimaryKey
 open class T_Photo : RealmObject() {
 
     var listID :String = "" // T_List의 id의 외래키
-    var dayNum: String = "" // T_Day의 id의 외래키
+    var dayNum: Int = 0 // T_Day의 id의 외래키
 
     var id : String = ""
     var img: String = ""
     var date: String = ""
-    var pos : Int = 0
 
 }

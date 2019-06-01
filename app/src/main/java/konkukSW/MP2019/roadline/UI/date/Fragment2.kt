@@ -65,11 +65,11 @@ class Fragment2 : Fragment() {
         adapter = PlanAdapter(data)
         timeline_recycleView.adapter = adapter
 
-        addItem(ListID, DayNum, "a1", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListID, DayNum, "a2", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListID, DayNum, "a3", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListID, DayNum, "a4", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListID, DayNum, "a5", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
+        addItem(ListID, DayNum, "a1", "건국대학교", 0.0, 0.0, "NULL", "NULL")
+        addItem(ListID, DayNum, "a2", "건국대학교", 0.0, 0.0, "NULL", "NULL")
+        addItem(ListID, DayNum, "a3", "건국대학교", 0.0, 0.0, "NULL", "NULL")
+        addItem(ListID, DayNum, "a4", "건국대학교", 0.0, 0.0, "NULL", "NULL")
+        addItem(ListID, DayNum, "a5", "건국대학교", 0.0, 0.0, "NULL", "NULL")
 
 
         // 마지막 일정 모양 바꿔주기
@@ -92,7 +92,7 @@ class Fragment2 : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Float, locaY:Float, time:String, memo:String)
+    fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
         if(foldFlag == false) { // 오른쪽으로 추가
             data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))

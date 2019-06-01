@@ -9,6 +9,5 @@ open class T_Day : RealmObject() {
 
     var num: Int = 0
     var date: String = ""
-    var pos : Int = 0
 
 }

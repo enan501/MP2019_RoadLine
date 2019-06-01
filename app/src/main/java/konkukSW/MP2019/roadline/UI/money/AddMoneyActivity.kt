@@ -21,7 +21,7 @@ class AddMoneyActivity : AppCompatActivity() {
 
     val SELECT_IMAGE = 100
 
-    lateinit var img_url: String // 이미지 URI
+    var img_url: String = ""// 이미지 URI
     var price = 0 // 가격
     var cate: String = "" // 카테고리
     // 날짜를 담는 변수 -> intent로 받아와야함
@@ -141,9 +141,9 @@ class AddMoneyActivity : AppCompatActivity() {
         val moneyTable: T_Money = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
         val moneyTableTuple = realm.where(T_Money::class.java).findAll()
 
-        val pos = intent.getIntExtra("position", 0);
-        val dayNum = intent.getIntExtra("DayNum", 0);
-        val listID = intent.getStringExtra("ListID");
+        val i = intent;
+        val dayNum = i.getIntExtra("DayNum", 0);
+        val listID = i.getStringExtra("ListID");
 
         moneyTable.listID = listID
         moneyTable.dayNum = dayNum
@@ -157,7 +157,6 @@ class AddMoneyActivity : AppCompatActivity() {
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
         moneyTable.date = "2018.05.30"
-        moneyTable.pos = pos
         realm.commitTransaction()
 
 //        val q3 = realm.where(T_Money::class.java).findAll()
@@ -176,8 +175,7 @@ class AddMoneyActivity : AppCompatActivity() {
             .setTitle("뒤로가기")
             .setIcon(R.drawable.ic_keyboard_backspace_black_24dp)
         builder.setPositiveButton("OK") { _, _ ->
-            val intent = Intent(this, ShowMoneyActivity::class.java)
-            startActivity(intent)
+            finish()
         }
         val dialog = builder.create()
         dialog.show()
