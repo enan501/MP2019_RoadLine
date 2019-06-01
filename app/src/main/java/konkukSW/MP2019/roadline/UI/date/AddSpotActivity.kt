@@ -27,6 +27,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
     lateinit var addMapView:SupportMapFragment
     var spotId:String = ""
+    var spotName:String=""
+    var locationX:Float = 0f
+    var locationY:Float = 0f
+
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
     }
@@ -59,7 +63,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 var marker = MarkerOptions()
                 marker.position(place.latLng!!)
                 addMap.addMarker(marker)
-                as_spotName.setText(place.name)
+                spotName = place.name.toString()
+//                var position = place.latLng
+//                posi
+//                locationX = place.latLng.
             }
         })
         addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
@@ -68,29 +75,29 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         initListener()
     }
 
-    fun initListener() {
+    fun initListener(){
         Realm.init(this)
         realm = Realm.getDefaultInstance()
-        as_button.setOnClickListener {
-            //추가 등록일때
+        as_button.setOnClickListener { //추가 등록일때
             realm.beginTransaction()
-            if (as_button.text == "등록") {
+            if(as_button.text == "등록"){
                 val plan: T_Plan = realm.createObject(T_Plan::class.java)
                 plan.listID = "a"
                 plan.dayNum = 0
                 plan.id = "a"
-                plan.name = as_spotName.text.toString()
+                plan.name = spotName
                 plan.time = as_time.text.toString()
                 plan.memo = as_memo.text.toString()
-            } else { //수정
-                val result: T_Plan = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
-                result.name = as_spotName.text.toString()
+            }
+            else{ //수정
+                val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
+                result.name = spotName
                 result.time = as_time.text.toString()
                 result.memo = as_memo.text.toString()
-                realm.commitTransaction()
-                val i = Intent(this, ShowDateActivity::class.java)
-                startActivity(i)
             }
+            realm.commitTransaction()
+            val i = Intent(this, ShowDateActivity::class.java)
+            startActivity(i)
         }
     }
 
@@ -99,7 +106,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         if(spot!=null){ //수정
             spot = spot as Plan
             spotId = spot.id
-            as_spotName.setText(spot.name)
             as_time.setText(spot.time)
             as_memo.setText(spot.memo)
             as_button.setText("수정")
