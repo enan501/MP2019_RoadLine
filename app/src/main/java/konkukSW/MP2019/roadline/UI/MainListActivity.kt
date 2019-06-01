@@ -17,10 +17,10 @@ import kotlinx.android.synthetic.main.activity_main_list.*
 class MainListActivity : AppCompatActivity() {
 
     var data:ArrayList<MainList> = arrayListOf(
-            /*MainList("대만여행","2019.02.10 ~ 2019.02.14",""),
+            MainList("대만여행","2019.02.10 ~ 2019.02.14",""),
             MainList("일본여행","2019.02.10 ~ 2019.02.14",""),
             MainList("우주여행","2019.02.10 ~ 2019.02.14",""),
-            MainList("집여행","2019.02.10 ~ 2019.02.14","")*/
+            MainList("집여행","2019.02.10 ~ 2019.02.14","")
         )
     lateinit var MLAdapter:MainListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +34,7 @@ class MainListActivity : AppCompatActivity() {
         Realm.init(this);
         val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
         Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
+
     }
     fun initLayout(){
         val layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)

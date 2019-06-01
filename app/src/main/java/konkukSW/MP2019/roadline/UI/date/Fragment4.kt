@@ -17,9 +17,12 @@ import konkukSW.MP2019.roadline.R
 
 class Fragment4 : Fragment(),OnMapReadyCallback {
     var spotList:ArrayList<Plan> = arrayListOf(
-//        Plan("건국대학교","14:30","그린호프ㄱ"),
-//        Plan("개미집2","20:30","밥술ㄱ"),
-//        Plan("신천역4번출구","21:30","걷다보니 앞이야")
+        Plan("",0,"","건국대학교",37.540005, 127.076530,
+            "14:30","그린호프ㄱ", 0),
+        Plan("",0,"","개미집2",37.545200,  127.076277,
+            "12:30","ㅎㅇ", 0),
+        Plan("",0,"","신천역 4번출구",37.511429, 127.084784,
+            "11:30","ㅂㅇ", 0)
     )
     var latlngList:ArrayList<LatLng> = arrayListOf(
         LatLng(37.540005, 127.076530),
