@@ -21,7 +21,7 @@ import io.realm.kotlin.createObject
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Spot
+import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 
 
 import konkukSW.MP2019.roadline.R
@@ -34,7 +34,7 @@ import kotlinx.android.synthetic.main.fragment_fragment1.*
  */
 class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
 
-    lateinit var spotList:ArrayList<Spot>
+    lateinit var planList:ArrayList<Plan>
     lateinit var adapter:DateListAdapter
     lateinit var rView:RecyclerView
     lateinit var v:View
@@ -61,9 +61,9 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java).findAll()
-        spotList = ArrayList<Spot>()
+        planList = ArrayList<Plan>()
         for(T_Plan in results){
-            spotList.add(Spot(T_Plan.name, T_Plan.time, T_Plan.memo))
+            planList.add(Plan(T_Plan.listNum, T_Plan.dayNum, T_Plan.num, T_Plan.name, T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, -1))
         }
     }
 
@@ -71,7 +71,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
         rView = v!!.findViewById(R.id.f1_rView) as RecyclerView
         val layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         rView.layoutManager = layoutManager
-        adapter = DateListAdapter(spotList, this, context!!)
+        adapter = DateListAdapter(planList, this, context!!)
         rView.adapter = adapter
 
     }
@@ -85,11 +85,12 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             }
 
             //리사이클러뷰 아이템 클릭했을 때
-            override fun OnItemClick(holder: DateListAdapter.ItemViewHolder, view: View, data: Spot, position: Int) {
+            override fun OnItemClick(holder: DateListAdapter.ItemViewHolder, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val i = Intent(activity, AddSpotActivity::class.java)
-                val bundle = Bundle()
-                bundle.putSerializable("pos", position)
+                i.putExtra("spot", data)
+//                val bundle = Bundle()
+//                bundle.putSerializable("spot", data)
                 startActivity(i)
             }
         }

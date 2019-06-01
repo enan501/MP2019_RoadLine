@@ -1,8 +1,9 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.os.Bundle
+import android.widget.EditText
 import android.util.Log
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -15,15 +16,19 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.kotlin.createObject
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_spot.*
 import java.util.*
 
+import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
     lateinit var addMapView:SupportMapFragment
+    var spotNum:Int = -1
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
     }
@@ -61,25 +66,45 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         })
         addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
         addMapView.getMapAsync(this)
+        initData()
         initListener()
     }
 
     fun initListener(){
         Realm.init(this)
         realm = Realm.getDefaultInstance()
-        as_button.setOnClickListener {
+        as_button.setOnClickListener { //추가 등록일때
             realm.beginTransaction()
-            val plan: T_Plan = realm.createObject(T_Plan::class.java)
-            plan.listNum = 0
-            plan.dayNum = 0
-            plan.num = 0
-            plan.name = as_spotName.text.toString()
-            plan.time = as_time.text.toString()
-            plan.memo = as_memo.text.toString()
+            if(as_button.text == "등록"){
+                val plan: T_Plan = realm.createObject(T_Plan::class.java)
+                plan.listNum = 0
+                plan.dayNum = 0
+                plan.num = 0
+                plan.name = as_spotName.text.toString()
+                plan.time = as_time.text.toString()
+                plan.memo = as_memo.text.toString()
+            }
+            else{ //수정
+                val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotNum).findFirst()!!
+                result.name = as_spotName.text.toString()
+                result.time = as_time.text.toString()
+                result.memo = as_memo.text.toString()
+            }
             realm.commitTransaction()
             val i = Intent(this, ShowDateActivity::class.java)
             startActivity(i)
         }
+    }
 
+    fun initData(){
+        var spot = intent.getSerializableExtra("spot")
+        if(spot!=null){ //수정
+            spot = spot as Plan
+            spotNum = spot.num
+            as_spotName.setText(spot.name)
+            as_time.setText(spot.time)
+            as_memo.setText(spot.memo)
+            as_button.setText("수정")
+        }
     }
 }
