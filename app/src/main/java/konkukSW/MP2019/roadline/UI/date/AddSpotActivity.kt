@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -67,12 +68,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         initListener()
     }
 
-    fun initListener(){
+    fun initListener() {
         Realm.init(this)
         realm = Realm.getDefaultInstance()
-        as_button.setOnClickListener { //추가 등록일때
+        as_button.setOnClickListener {
+            //추가 등록일때
             realm.beginTransaction()
-            if(as_button.text == "등록"){
+            if (as_button.text == "등록") {
                 val plan: T_Plan = realm.createObject(T_Plan::class.java)
                 plan.listID = "a"
                 plan.dayNum = 0
@@ -80,16 +82,15 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 plan.name = as_spotName.text.toString()
                 plan.time = as_time.text.toString()
                 plan.memo = as_memo.text.toString()
-            }
-            else{ //수정
-                val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
+            } else { //수정
+                val result: T_Plan = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
                 result.name = as_spotName.text.toString()
                 result.time = as_time.text.toString()
                 result.memo = as_memo.text.toString()
+                realm.commitTransaction()
+                val i = Intent(this, ShowDateActivity::class.java)
+                startActivity(i)
             }
-            realm.commitTransaction()
-            val i = Intent(this, ShowDateActivity::class.java)
-            startActivity(i)
         }
     }
 
@@ -104,6 +105,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             as_button.setText("수정")
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spot.name)
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(spot.locationX,spot.locationY),12f))
+
 
         }
     }
