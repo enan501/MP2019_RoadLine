@@ -33,6 +33,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
+        initData()
+        initListener()
     }
 
     lateinit var realm: Realm
@@ -74,8 +76,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         })
         addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
         addMapView.getMapAsync(this)
-        initData()
-        initListener()
+
     }
 
     fun initListener(){
