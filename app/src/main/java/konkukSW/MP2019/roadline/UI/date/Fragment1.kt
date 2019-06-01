@@ -4,28 +4,19 @@ package konkukSW.MP2019.roadline.UI.date
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmResults
-import io.realm.kotlin.createObject
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
-
-
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.fragment_fragment1.*
 
 
 /**
@@ -63,7 +54,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
         val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java).findAll()
         planList = ArrayList<Plan>()
         for(T_Plan in results){
-            planList.add(Plan(T_Plan.listNum, T_Plan.dayNum, T_Plan.num, T_Plan.name, T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, -1))
+            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name, T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, -1))
         }
     }
 
