@@ -92,37 +92,37 @@ class Fragment2 : Fragment() {
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
         if(foldFlag == false) { // 오른쪽으로 추가
-            data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+            data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
             lastPosition = position;
         }
         else // 왼쪽으로 추가
         {
             if(foldCount == 0) {
-                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 9))
-                data.add(position + 1, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 9))
-                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,9))
-                data.add(position + 3, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,9))
-                data.add(position + 4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,ViewTypeArray[position]))
+                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9))
+                data.add(position + 1, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9))
+                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9))
+                data.add(position + 3, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9))
+                data.add(position + 4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
                 lastPosition = position + 4;
             }
             else if(foldCount == 1) {
                 data.removeAt(position+2)
-                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time,memo, ViewTypeArray[position]))
+                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time,memo, 0, ViewTypeArray[position]))
                 lastPosition = position + 2;
             }
             else if(foldCount == 2) {
                 data.removeAt(position)
-                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
                 lastPosition = position;
             }
             else if(foldCount == 3) {
                 data.removeAt(position-2)
-                data.add(position-2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+                data.add(position-2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
                 lastPosition = position - 2;
             }
             else if(foldCount == 4) {
                 data.removeAt(position-4)
-                data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+                data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
                 lastPosition = position - 4;
             }
         }

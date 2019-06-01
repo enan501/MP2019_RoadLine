@@ -34,30 +34,25 @@
     </FrameLayout>
 
 
-
-
-    <EditText
-        android:id="@+id/as_memo"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:ems="10"
-        android:hint="메모를 입력하세요"
-        android:inputType="textPersonName" />
+        android:layout_height="0dp"
+        android:orientation="horizontal">
 
-    <EditText
-        android:id="@+id/as_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="시간을 입력하세요"
-        android:inputType="textPersonName" />
+        <ImageView
+            android:id="@+id/as_button_plus"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/plan_add_btn" />
 
-    <Button
-        android:id="@+id/as_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="등록" />
+        <ImageView
+            android:id="@+id/as_button_check"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            app:srcCompat="@drawable/plan_confirm_btn" />
+    </LinearLayout>
+
 </LinearLayout>

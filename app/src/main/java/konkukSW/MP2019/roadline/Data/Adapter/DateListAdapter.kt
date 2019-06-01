@@ -11,7 +11,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.google.android.libraries.places.internal.i
 import io.realm.Realm
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
@@ -40,6 +42,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
             items.removeAt(pos1)
             items.add(pos2, item1)
             notifyItemMoved(pos1, pos2)
+            changePos()
         }
     }
 
@@ -52,6 +55,20 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         realm.commitTransaction()
         items.removeAt(pos)
         notifyItemRemoved(pos)
+        changePos()
+    }
+
+    fun changePos(){
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        var i = 0
+        for(i in 0..items.size-1){
+            val id = items[i].id
+            val result:T_Plan = realm.where<T_Plan>(T_Plan::class.java).equalTo("id", id).findFirst()!!
+            result.pos = i
+        }
+        realm.commitTransaction()
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {

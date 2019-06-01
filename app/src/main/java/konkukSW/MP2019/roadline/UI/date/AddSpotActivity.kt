@@ -2,6 +2,7 @@ package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.EditText
@@ -30,6 +31,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var spotName:String=""
     var locationX:Double = 0.0
     var locationY:Double = 0.0
+    var btnType:Boolean = false
+    var time:String = ""
+    var memo:String = ""
 
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
@@ -68,40 +72,66 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 spotName = place.name.toString()
                 locationY = (place.latLng as LatLng).latitude
                 locationX = (place.latLng as LatLng).longitude
-
-//                var position = place.latLng
-//                posi
-//                locationX = place.latLng.
             }
         })
         addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
         addMapView.getMapAsync(this)
-
     }
 
     fun initListener(){
         Realm.init(this)
         realm = Realm.getDefaultInstance()
-        as_button.setOnClickListener { //추가 등록일때
-            realm.beginTransaction()
-            if(as_button.text == "등록"){
-                val plan: T_Plan = realm.createObject(T_Plan::class.java)
-                plan.listID = "a"
-                plan.dayNum = 0
-                plan.id = "a"
-                plan.name = spotName
-                plan.time = as_time.text.toString()
-                plan.memo = as_memo.text.toString()
+        as_button_check.setOnClickListener { //체크 등록 버튼
+            val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
+            if(as_searchBox.text.toString() != ""){
+                realm.beginTransaction()
+                if(btnType == false){ //등록
+                    val plan: T_Plan = realm.createObject(T_Plan::class.java)
+                    plan.listID = "a"
+                    plan.dayNum = 0
+                    plan.id = UUID.randomUUID().toString()
+                    plan.name = spotName
+                    plan.time = time
+                    plan.memo = memo
+                    plan.locationX = locationX
+                    plan.locationY = locationY
+                    plan.pos = intent.getIntExtra("pos", -1)
+                }
+                else{ //수정
+                    val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
+                    result.name = spotName
+                    result.time = time
+                    result.memo = memo
+                    result.locationX = locationX
+                    result.locationY = locationY
+                }
+                realm.commitTransaction()
+                val i = Intent(this, ShowDateActivity::class.java)
+                startActivity(i)
             }
-            else{ //수정
-                val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
-                result.name = spotName
-                result.time = as_time.text.toString()
-                result.memo = as_memo.text.toString()
+            else{ //아무값 입력하지 않으면
+                onBackPressed()
             }
-            realm.commitTransaction()
-            val i = Intent(this, ShowDateActivity::class.java)
-            startActivity(i)
+
+        }
+
+        as_button_plus.setOnClickListener { //상세정보 추가 버튼
+            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+            val addDialog = layoutInflater.inflate(R.layout.add_plan_dialog, null)
+            val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
+            val dialogTime = addDialog.findViewById<EditText>(R.id.apd_editText2)
+            if(btnType){ //수정
+                dialogMemo.setText(memo)
+                dialogTime.setText(time)
+            }
+            builder.setView(addDialog)
+                .setPositiveButton("추가") { dialogInterface, i ->
+                    memo = dialogMemo.text.toString()
+                    time = dialogTime.text.toString()
+                }
+                .setNegativeButton("취소") { dialogInterface, i ->
+                }
+                .show()
         }
     }
 
@@ -110,14 +140,15 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         if(spot!=null){ //수정
             spot = spot as Plan
             spotId = spot.id
-            as_time.setText(spot.time)
-            as_memo.setText(spot.memo)
-            as_button.setText("수정")
+            spotName = spot.name
+            time = spot.time
+            memo = spot.memo
+            locationX = spot.locationX
+            locationY = spot.locationY
+            btnType = true
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spot.name)
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(spot.locationY,spot.locationX),12f))
-
-
         }
     }
 }

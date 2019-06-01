@@ -60,10 +60,10 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     fun initData(){
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
-        val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java).findAll()
+        val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java).findAll().sort("pos")
         planList = ArrayList<Plan>()
         for(T_Plan in results){
-            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name, T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, -1))
+            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name, T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
         }
     }
 
@@ -81,6 +81,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             //addBtn 클릭했을 때
             override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
+                i.putExtra("pos", planList.size)
                 startActivity(i)
             }
 
@@ -89,8 +90,6 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val i = Intent(activity, AddSpotActivity::class.java)
                 i.putExtra("spot", data)
-//                val bundle = Bundle()
-//                bundle.putSerializable("spot", data)
                 startActivity(i)
             }
         }

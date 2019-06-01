@@ -32,6 +32,10 @@ class MainListActivity : AppCompatActivity() {
     fun init(){
         initData()
         initLayout()
+
+        Realm.init(this);
+        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
+        Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
     }
     fun initLayout(){
         val layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
