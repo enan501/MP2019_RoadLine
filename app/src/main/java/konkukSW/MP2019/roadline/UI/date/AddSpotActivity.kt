@@ -1,10 +1,10 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.widget.EditText
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -16,14 +16,11 @@ import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import io.realm.Realm
-import io.realm.RealmResults
-import io.realm.kotlin.createObject
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_spot.*
 import java.util.*
-
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
@@ -105,6 +102,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             as_time.setText(spot.time)
             as_memo.setText(spot.memo)
             as_button.setText("수정")
+            val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
+            as_searchBox.setText(spot.name)
+
         }
     }
 }
