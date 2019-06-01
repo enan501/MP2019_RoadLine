@@ -12,7 +12,9 @@ import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.charts.PieChart
 import android.graphics.Color
 import com.github.mikephil.charting.components.Description
+import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.CategoryPrintAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.Dataclass.CategoryToatal
 import kotlinx.android.synthetic.main.activity_show_detail_money.*
 import java.util.*
@@ -20,20 +22,77 @@ import kotlin.collections.ArrayList
 
 
 class ShowDetailMoneyActivity : AppCompatActivity() {
-    lateinit var categoryList:ArrayList<CategoryToatal>
-    lateinit var adapter:CategoryPrintAdapter
+    lateinit var adapterList: ArrayList<CategoryToatal>
+    lateinit var adapter: CategoryPrintAdapter
+    var categoryList: Array<String> = arrayOf("식사", "쇼핑", "교통", "관광", "숙박", "기타")
+    var priceList: ArrayList<Int> = ArrayList()
+    var pricePercentList: ArrayList<Float> = ArrayList()
+    var toatalMoneyValue = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_detail_money)
+        //initDB()
         showPieChart()
         showCategoryList()
         showLineChart()
     }
 
-    fun showPieChart() {
-        var pieChart = findViewById(konkukSW.MP2019.roadline.R.id.piechart) as PieChart
+    fun initDB() {
+        Realm.init(this)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        realm.deleteAll()
+        realm.commitTransaction()
+    }
 
+    fun showPieChart() {
+        for (i in 0..5)
+            priceList.add(0) // 초기화
+
+        Realm.init(this)
+        val realm = Realm.getDefaultInstance()
+        val DBlist = realm.where(T_Money::class.java).findAll()
+        for (i in 0..DBlist.size - 1) { // 디비에서 값 불러옴
+            when (DBlist.get(i)!!.cate.toString()) {
+                "식사" -> {
+                    priceList[0] += DBlist.get(i)!!.price.toInt()
+                }
+                "쇼핑" -> {
+                    priceList[1] += DBlist.get(i)!!.price.toInt()
+                }
+                "교통" -> {
+                    priceList[2] += DBlist.get(i)!!.price.toInt()
+                }
+                "관광" -> {
+                    priceList[3] += DBlist.get(i)!!.price.toInt()
+                }
+                "숙박" -> {
+                    priceList[4] += DBlist.get(i)!!.price.toInt()
+                }
+                "기타" -> {
+                    priceList[5] += DBlist.get(i)!!.price.toInt()
+                }
+            }
+        }
+
+        for (i in 0..5)
+            toatalMoneyValue += priceList[i]
+
+        totalMoney.text = toatalMoneyValue.toInt().toString() + "원" // 총지출액
+
+        for (i in 0..5) { // 총지출액 대비 카테고리금액 퍼센트로 통계
+            println("가격 : " + priceList[i])
+            if (priceList[i] == 0) {
+                pricePercentList.add(0F)
+            } else {
+                val percent = (priceList[i] / toatalMoneyValue) * 100
+                println("퍼센트 : " + percent)
+                pricePercentList.add(percent.toFloat())
+            }
+        }
+
+        var pieChart = findViewById(konkukSW.MP2019.roadline.R.id.piechart) as PieChart
 
         pieChart.setUsePercentValues(true)
         pieChart.getDescription().setEnabled(false)
@@ -45,16 +104,12 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         pieChart.setHoleColor(Color.WHITE)
         pieChart.setTransparentCircleRadius(61f)
 
-        val yValues = ArrayList<PieEntry>()
+        val chartValues = ArrayList<PieEntry>()
 
-        yValues.add(PieEntry(34f, "식사"))
-        yValues.add(PieEntry(23f, "쇼핑"))
-        yValues.add(PieEntry(14f, "교통"))
-        yValues.add(PieEntry(35f, "관광"))
-        yValues.add(PieEntry(40f, "숙박"))
-        yValues.add(PieEntry(40f, "기타"))
+        for (i in 0..5)
+            chartValues.add(PieEntry(pricePercentList[i], categoryList[i]))
 
-        val colors:ArrayList<Int> = ArrayList()
+        val colors: ArrayList<Int> = ArrayList()
         colors.add(Color.rgb(156, 254, 230))
         colors.add(Color.rgb(159, 185, 235))
         colors.add(Color.rgb(143, 231, 161))
@@ -65,7 +120,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
 
         pieChart.animateY(1000, Easing.EaseInOutCubic) //애니메이션
 
-        val dataSet = PieDataSet(yValues, "")
+        val dataSet = PieDataSet(chartValues, "")
         dataSet.sliceSpace = 3f
         dataSet.selectionShift = 5f
         dataSet.setColors(colors)
@@ -78,16 +133,12 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
     }
 
     fun showCategoryList() {
-        categoryList = ArrayList()
+        adapterList = ArrayList()
 
-        categoryList.add(CategoryToatal("식사", "18390원"))
-        categoryList.add(CategoryToatal("쇼핑", "22012원"))
-        categoryList.add(CategoryToatal("교통", "6200원"))
-        categoryList.add(CategoryToatal("관광", "11720원"))
-        categoryList.add(CategoryToatal("숙박", "32090원"))
-        categoryList.add(CategoryToatal("기타", "2900원"))
+        for (i in 0..5)
+            adapterList.add(CategoryToatal(categoryList[i], priceList[i].toString() + "원"))
 
-        adapter = CategoryPrintAdapter(this, konkukSW.MP2019.roadline.R.layout.row_category_money, categoryList)
+        adapter = CategoryPrintAdapter(this, konkukSW.MP2019.roadline.R.layout.row_category_money, adapterList)
         categoryMoneyListView.adapter = adapter
     }
 
