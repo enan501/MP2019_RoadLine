@@ -221,7 +221,7 @@ class AddMoneyActivity : AppCompatActivity() {
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
         moneyTable.date = "2018.05.30"
-        moneyTable.pos = pos
+        //moneyTable.pos = pos
         realm.commitTransaction()
 
 //        val q3 = realm.where(T_Money::class.java).findAll()
