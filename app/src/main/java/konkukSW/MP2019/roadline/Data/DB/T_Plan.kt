@@ -1,17 +1,20 @@
 package konkukSW.MP2019.roadline.Data.DB
 
+import com.google.android.gms.maps.model.LatLng
 import io.realm.RealmObject
 import io.realm.annotations.PrimaryKey
 
 open class T_Plan : RealmObject() {
 
-    var listNum :Int = 0 // T_List의 num의 외래키
-    var dayNum: Int = 0 // T_Day의 num의 외래키
+    var listID :String = "" // T_List의 id의 외래키
+    var dayID: String = "" // T_Day의 id의 외래키
 
-    var num : Int = 0
-    var name: String = ""
-    var locationX: Float = 0.0f
-    var locationY: Float = 0.0f
+    var id : String = ""
+    var name: String =  ""
+    var locationX :Double = 0.0
+    var locationY :Double = 0.0
+
     var time: String = ""
     var memo:String = ""
+    var pos : Int = 0
 }

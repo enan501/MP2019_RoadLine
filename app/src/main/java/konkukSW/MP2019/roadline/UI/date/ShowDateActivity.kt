@@ -12,7 +12,11 @@ import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 
 
+
+
 class ShowDateActivity : AppCompatActivity() {
+
+    var ListID = "aaa";
 
     private var tabLayer:TabLayout?= null
 
@@ -69,7 +73,10 @@ class ShowDateActivity : AppCompatActivity() {
 
         sd_imgBtn2.setOnClickListener {
             //가계부 버튼
-            startActivity(Intent(this, ShowMoneyActivity::class.java))
+            var PDIntentToMoney = Intent(applicationContext, ShowMoneyActivity::class.java)
+            PDIntentToMoney.putExtra("ListID", ListID)
+            PDIntentToMoney.putExtra("DayID",3) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+            startActivity(PDIntentToMoney)
         }
 
         sd_imgBtn3.setOnClickListener {

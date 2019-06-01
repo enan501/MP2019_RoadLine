@@ -5,9 +5,10 @@ import io.realm.annotations.PrimaryKey
 
 open class T_List : RealmObject() {
     @PrimaryKey
-    var num :Int = 0
+    var id :String = ""
 
     var title: String = ""
     var date: String = ""
+    var pos:Int = 0
 
 }

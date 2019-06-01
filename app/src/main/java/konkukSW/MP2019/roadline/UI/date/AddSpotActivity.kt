@@ -38,9 +38,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         as_button.setOnClickListener {
             realm.beginTransaction()
             val plan: T_Plan = realm.createObject(T_Plan::class.java)
-            plan.listNum = 0
-            plan.dayNum = 0
-            plan.num = 0
+            plan.listID = "a"
+            plan.dayID = "a"
+            plan.id = "a"
             plan.name = as_spotName.text.toString()
             plan.time = as_time.text.toString()
             plan.memo = as_memo.text.toString()

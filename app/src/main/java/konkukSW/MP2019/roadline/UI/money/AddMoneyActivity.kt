@@ -15,11 +15,11 @@ import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
+import java.util.*
 
 class AddMoneyActivity : AppCompatActivity() {
-    var ListNumber = 0 // 디비에서 받아올것
+    var ListID = "aaa" // 디비에서 받아올것
     var dayCount = 2 // 디비에서 받아올것
-    var planNum = 1 // 디비에서 받아올것
 
     val SELECT_IMAGE = 100
 
@@ -143,10 +143,9 @@ class AddMoneyActivity : AppCompatActivity() {
         val moneyTable: T_Money = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
         val moneyTableTuple = realm.where(T_Money::class.java).findAll()
 
-        moneyTable.listNum = ListNumber
-        moneyTable.dayNum = dayCount
-        moneyTable.planNum = planNum
-        moneyTable.num = moneyTableTuple.size
+        moneyTable.listID = ListID
+        moneyTable.id = UUID.randomUUID().toString();
+        moneyTable.dayNum = 0
         moneyTable.priceType = ""
         moneyTable.img = img_url
         moneyTable.price = priceTxt.text.toString().toInt()
@@ -160,8 +159,9 @@ class AddMoneyActivity : AppCompatActivity() {
 //        }
 
         // 인텐트 넘겨줌
-        val intent = Intent(this, ShowMoneyActivity::class.java)
-        startActivity(intent)
+        val s = Intent()
+        setResult(Activity.RESULT_OK, s)
+        finish()
     }
 
     fun cancelBtn(view: View) {

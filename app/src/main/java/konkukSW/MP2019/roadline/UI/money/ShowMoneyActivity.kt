@@ -1,5 +1,7 @@
 package konkukSW.MP2019.roadline.UI.money
 
+import android.app.Activity
+import android.app.DownloadManager
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +25,7 @@ import android.view.ViewManager
 import android.widget.*
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmQuery
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Day
@@ -36,8 +39,9 @@ class ShowMoneyActivity : AppCompatActivity() {
     var data:ArrayList<MoneyItem> = ArrayList()
     lateinit var adapter:MoneyItemAdapter
 
-    var ListNumber = 0; // 이건 나중에 디비에서 받아와야함
-    var dayCount = 2; // 이것도 나중에 디비에서 받아와야함
+    var ListID = ""; // 인텐트로 받아
+    var DayNum = 0; // 인텐트로 받아
+    var dayCount = 3; // 이것 나중에 디비에서 받아와야함
 
     var TotalPrice = 0;
 
@@ -46,6 +50,9 @@ class ShowMoneyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_money)
         initLayout()
+
+        ListID = intent.getStringExtra("ListID");
+        DayNum = intent.getIntExtra("DayNum", 0);
 
         /* 리사이클뷰 어댑터에 리스너 달기 */
         adapter.itemLongClickListener = object : MoneyItemAdapter.OnItemLongClickListener{
@@ -67,10 +74,11 @@ class ShowMoneyActivity : AppCompatActivity() {
         adapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                addItem(position, item.listNum, item.dayNum,3000, 0, R.drawable.testimg1,
+//                addItem(position, item.listID, item.DayNum,3000, 0, R.drawable.testimg1,
 //                    "2019.05.20", 1)
                 val intent = Intent(applicationContext, AddMoneyActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(intent,123)
+
             }
         }
         adapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
@@ -88,15 +96,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         Realm.init(this);
         val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
         Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
-//
-//        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
-//        realm.beginTransaction()
-//        val query = realm.where(T_Day::class.java).findAll()
-//        val day: T_Day = realm.createObject(T_Day::class.java)//데이터베이스에 저장할 객체 생성
-//        day.listNum = ListNum
-//        day.dayNum = query.size
-//        day.date = "2015.05.20"
-//        realm.commitTransaction()
 
 //        Realm.init(this);
 //        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
@@ -109,9 +108,20 @@ class ShowMoneyActivity : AppCompatActivity() {
 //
 //        val q3 = realm.where(T_Day::class.java).findAll()
 //        for(i in 0..q3.size-1) {
-//            System.out.println(q3.get(i)!!.listNum.toString() + ", " + q3.get(i)!!.dayNum.toString())
+//            System.out.println(q3.get(i)!!.listID.toString() + ", " + q3.get(i)!!.DayNum.toString())
 //        }
 
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 123)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                //Toast.makeText(this, pass, Toast.LENGTH_SHORT).show()
+                initLayout() // 어댑터 갱신
+            }
+        }
     }
 
     fun initSwipe() {
@@ -133,19 +143,42 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initLayout() {
+        data.clear()
         val layoutManager = GridLayoutManager(this, 3)
         money_recycleView.layoutManager = layoutManager
         adapter = MoneyItemAdapter(data)
         money_recycleView.adapter = adapter
-        for(i in 1..dayCount)
-        {
-            data.add(MoneyItem(ListNumber, i,20190530, 0, 0, "NULL",0))
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL",2))
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL", 4))
 
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL",5))
-            data.add(MoneyItem(ListNumber, i,-1, 0, 0, "NULL",2))
-            data.add(MoneyItem(ListNumber, i,0, 0, 0, "NULL",3))
+        Realm.init(this);
+        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
+
+        if(DayNum == 0) // 리스트내 Day 전부 다 출력
+        {
+            val q = realm.where(T_Money::class.java)
+                .equalTo("listID", ListID)
+                .findAll()
+
+            for (i in 1..dayCount) {
+                data.add(MoneyItem(ListID, i, 20190530, 0, 0, "NULL", 0))
+                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 2))
+                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 4))
+
+                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 5))
+                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 2))
+                data.add(MoneyItem(ListID, i, 0, 0, 0, "NULL", 3))
+
+
+            }
+        }
+        else
+        {
+            data.add(MoneyItem(ListID, DayNum, 20190530, 0, 0, "NULL", 0))
+            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 2))
+            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 4))
+
+            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 5))
+            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 2))
+            data.add(MoneyItem(ListID, DayNum, 0, 0, 0, "NULL", 3))
         }
         adapter.notifyDataSetChanged()
     }
@@ -162,7 +195,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 break;
             }
         }
-        data.add(lastPos, MoneyItem(item.listNum, item.dayNum,-1, 0, 0, "NULL", 2))
+        data.add(lastPos, MoneyItem(item.listID, item.dayNum,-1, 0, 0, "NULL", 2))
         if(data.get(lastPos).viewType == 2 &&
             data.get(lastPos-1).viewType == 2 &&
             data.get(lastPos-2).viewType == 2)
@@ -182,7 +215,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
         adapter.notifyDataSetChanged()
     }
-    fun addItem(position:Int, listNum:Int, dayNum:Int, price:Int, cate:Int, img:Int, date:String, viewType:Int)
+    fun addItem(position:Int, listID:String, DayNum:Int, price:Int, cate:Int, img:Int, date:String, viewType:Int)
     {
         var lastPos = 0;
         for(i in 0..data.size)
@@ -193,19 +226,19 @@ class ShowMoneyActivity : AppCompatActivity() {
             }
         }
         if(data.get(lastPos-1).viewType != 2) {
-            data.add(lastPos, MoneyItem(listNum, dayNum, price, cate, img, date, viewType))
-            data.add(lastPos+1, MoneyItem(listNum, dayNum,-1, 0, 0,"NULL",2))
-            data.add(lastPos+2, MoneyItem(listNum, dayNum,-1, 0, 0, "NULL", 2))
+            data.add(lastPos, MoneyItem(listID, DayNum, price, cate, img, date, viewType))
+            data.add(lastPos+1, MoneyItem(listID, DayNum,-1, 0, 0,"NULL",2))
+            data.add(lastPos+2, MoneyItem(listID, DayNum,-1, 0, 0, "NULL", 2))
         }
         else if(data.get(lastPos-2).viewType == 2)
         {
             data.removeAt(lastPos-2)
-            data.add(lastPos-2, MoneyItem(listNum, dayNum, price, cate, img, date, viewType))
+            data.add(lastPos-2, MoneyItem(listID, DayNum, price, cate, img, date, viewType))
         }
         else if(data.get(lastPos-1).viewType == 2)
         {
             data.removeAt(lastPos-1)
-            data.add(lastPos-1, MoneyItem(listNum, dayNum, price, cate, img, date, viewType))
+            data.add(lastPos-1, MoneyItem(listID, DayNum, price, cate, img, date, viewType))
         }
         for(i in 0..data.size) // 토탈에 방금 추가한 가격 더해주기
         {

@@ -14,7 +14,7 @@ import kotlinx.android.synthetic.main.activity_pick_date.*
 
 
 class PickDateActivity : AppCompatActivity() {
-    var ListNum = 0
+    var ListID = "aaa"
 
     var title:String = ""
     var data:ArrayList<PickDate> = arrayListOf(
@@ -74,14 +74,12 @@ class PickDateActivity : AppCompatActivity() {
         }
         PD_photoBtn.setOnClickListener {
             var PDIntentToPhoto = Intent(applicationContext, ShowPhotoActivity::class.java)
-            PDIntentToPhoto.putExtra("title",title)
-            PDIntentToPhoto.putExtra("day",0) //날짜별 사진or가계부는 Intent로 day값 넘겨서 하고, 0이면 전체 출력해주는걸로 하면 어떨까요
             startActivity(PDIntentToPhoto)
         }
         PD_moneyBtn.setOnClickListener {
             var PDIntentToMoney = Intent(applicationContext, ShowMoneyActivity::class.java)
-            PDIntentToMoney.putExtra("title",title)
-            PDIntentToMoney.putExtra("day",0) //날짜별 사진or가계부는 Intent로 day값 넘겨서 하고, 0이면 전체 출력해주는걸로 하면 어떨까요
+            PDIntentToMoney.putExtra("ListID", ListID)
+            PDIntentToMoney.putExtra("DayID",0) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
         }
     }

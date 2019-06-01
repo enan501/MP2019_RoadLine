@@ -5,9 +5,10 @@ import io.realm.annotations.PrimaryKey
 
 open class T_Day : RealmObject() {
 
-    var listNum :Int = 0 // T_List의 num의 외래키
+    var listID :String = "" // T_List의 id의 외래키
 
     var num: Int = 0
     var date: String = ""
+    var pos : Int = 0
 
 }

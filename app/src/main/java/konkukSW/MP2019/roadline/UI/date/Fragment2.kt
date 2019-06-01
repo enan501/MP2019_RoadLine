@@ -19,8 +19,8 @@ var StartedFlag = false;
 
 class Fragment2 : Fragment() {
 
-    var ListNumber = 0; // 이건 나중에 디비에서 받아와야함
-    var DayNumber = 0; // 이건 나중에 디비에서 받아와야함
+    var ListID = "aaa"; // 이건 나중에 디비에서 받아와야함
+    var DayNum = 0; // 이건 나중에 디비에서 받아와야함
 
     lateinit var adapter: PlanAdapter
     var data : ArrayList<Plan> = ArrayList()
@@ -65,32 +65,12 @@ class Fragment2 : Fragment() {
         adapter = PlanAdapter(data)
         timeline_recycleView.adapter = adapter
 
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
+        addItem(ListID, DayNum, "a1", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
+        addItem(ListID, DayNum, "a2", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
+        addItem(ListID, DayNum, "a3", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
+        addItem(ListID, DayNum, "a4", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
+        addItem(ListID, DayNum, "a5", "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
 
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
-        addItem(ListNumber, DayNumber, 0, "건국대학교", 0.0f, 0.0f, "NULL", "NULL")
 
         // 마지막 일정 모양 바꿔주기
         if(foldFlag == true) {
@@ -112,40 +92,40 @@ class Fragment2 : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    fun addItem(listnum:Int, daynum:Int, num:Int, name:String, locaX:Float, locaY:Float, time:String, memo:String)
+    fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Float, locaY:Float, time:String, memo:String)
     {
         if(foldFlag == false) { // 오른쪽으로 추가
-            data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+            data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
             lastPosition = position;
         }
         else // 왼쪽으로 추가
         {
             if(foldCount == 0) {
-                data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, memo, 9))
-                data.add(position + 1, Plan(listnum, daynum, num, name, locaX, locaY, time, memo, 9))
-                data.add(position + 2, Plan(listnum, daynum, num, name, locaX, locaY, time, memo,9))
-                data.add(position + 3, Plan(listnum, daynum, num, name, locaX, locaY, time, memo,9))
-                data.add(position + 4, Plan(listnum, daynum, num, name, locaX, locaY, time, memo,ViewTypeArray[position]))
+                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 9))
+                data.add(position + 1, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 9))
+                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,9))
+                data.add(position + 3, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,9))
+                data.add(position + 4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,ViewTypeArray[position]))
                 lastPosition = position + 4;
             }
             else if(foldCount == 1) {
                 data.removeAt(position+2)
-                data.add(position + 2, Plan(listnum, daynum, num, name, locaX, locaY, time,memo, ViewTypeArray[position]))
+                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time,memo, ViewTypeArray[position]))
                 lastPosition = position + 2;
             }
             else if(foldCount == 2) {
                 data.removeAt(position)
-                data.add(position, Plan(listnum, daynum, num, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
                 lastPosition = position;
             }
             else if(foldCount == 3) {
                 data.removeAt(position-2)
-                data.add(position-2, Plan(listnum, daynum, num, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+                data.add(position-2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
                 lastPosition = position - 2;
             }
             else if(foldCount == 4) {
                 data.removeAt(position-4)
-                data.add(position-4, Plan(listnum, daynum, num, name, locaX, locaY, time, memo, ViewTypeArray[position]))
+                data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, ViewTypeArray[position]))
                 lastPosition = position - 4;
             }
         }
