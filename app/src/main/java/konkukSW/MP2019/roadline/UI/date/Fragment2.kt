@@ -7,12 +7,9 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
-import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.fragment_fragment2.*
 
 var StartedFlag = false;

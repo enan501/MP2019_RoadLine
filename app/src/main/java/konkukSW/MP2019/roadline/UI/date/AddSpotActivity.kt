@@ -10,6 +10,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
@@ -26,6 +27,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
     lateinit var addMapView:SupportMapFragment
     var spotId:String = ""
+    var spotName:String=""
+    var locationX:Double = 0.0
+    var locationY:Double = 0.0
+
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
     }
@@ -58,7 +63,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 var marker = MarkerOptions()
                 marker.position(place.latLng!!)
                 addMap.addMarker(marker)
-                as_spotName.setText(place.name)
+                spotName = place.name.toString()
+                locationY = (place.latLng as LatLng).latitude
+                locationX = (place.latLng as LatLng).longitude
+
+//                var position = place.latLng
+//                posi
+//                locationX = place.latLng.
             }
         })
         addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
@@ -77,13 +88,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 plan.listID = "a"
                 plan.dayNum = 0
                 plan.id = "a"
-                plan.name = as_spotName.text.toString()
+                plan.name = spotName
                 plan.time = as_time.text.toString()
                 plan.memo = as_memo.text.toString()
             }
             else{ //수정
                 val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("num", spotId).findFirst()!!
-                result.name = as_spotName.text.toString()
+                result.name = spotName
                 result.time = as_time.text.toString()
                 result.memo = as_memo.text.toString()
             }
@@ -98,12 +109,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         if(spot!=null){ //수정
             spot = spot as Plan
             spotId = spot.id
-            as_spotName.setText(spot.name)
             as_time.setText(spot.time)
             as_memo.setText(spot.memo)
             as_button.setText("수정")
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spot.name)
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(spot.locationY,spot.locationX),12f))
+
 
         }
     }

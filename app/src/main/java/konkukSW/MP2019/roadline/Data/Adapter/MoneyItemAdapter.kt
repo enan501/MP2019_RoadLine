@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
 import android.widget.*
@@ -86,7 +88,7 @@ class MoneyItemAdapter(val items:ArrayList<MoneyItem>)
         if (holder is ViewHolder1) // 이미지 아이템
         {
             holder.price.text = items.get(position).price.toString()
-            holder.img.setImageResource(R.drawable.testimg1)// items.get(position).img
+            holder.img.setImageResource(R.drawable.photo_default)
         }
         else if (holder is ViewHolder0) { // 데이 아이템
             holder.day.text = "DAY" + items.get(position).dayNum.toString()

@@ -7,15 +7,6 @@
     tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <EditText
-        android:id="@+id/as_spotName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:ems="10"
-        android:hint="장소를 입력하세요"
-        android:inputType="textPersonName" />
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_weight="6"
