@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.LinearSnapHelper
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
@@ -20,7 +19,6 @@ import java.time.format.DateTimeFormatter
 
 class PickDateActivity : AppCompatActivity() {
     var ListID = ""
-    var title:String = ""
 
     var snapHelper = LinearSnapHelper()
     lateinit var dateList:ArrayList<PickDate>

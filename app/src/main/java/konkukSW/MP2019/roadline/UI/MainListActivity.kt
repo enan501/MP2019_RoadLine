@@ -51,7 +51,7 @@ class MainListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
         val results = realm.where<T_List>(T_List::class.java).findAll()
         for(T_List in results){
-            MLArray.add(MainList(UUID.randomUUID().toString(),T_List.title,T_List.date,""))
+            MLArray.add(MainList(T_List.id,T_List.title,T_List.date,""))
         }
     }
     fun addListener() {
@@ -78,7 +78,7 @@ class MainListActivity : AppCompatActivity() {
                     newDay.ListID = newList.id
                     newDay.date = newList.date
                     newDay.num = 1
-
+                    realm.deleteAll()
                     realm.commitTransaction()
                     MLArray.add(MainList(newList.id,newList.title,newList.date,""))
                     MLAdapter.notifyDataSetChanged()

@@ -1,20 +1,20 @@
 package konkukSW.MP2019.roadline.UI.date
 
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v7.app.AppCompatActivity
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
-import kotlinx.android.synthetic.main.activity_show_date.*
-import android.content.Intent
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+import kotlinx.android.synthetic.main.activity_show_date.*
 
 
 
 
 class ShowDateActivity : AppCompatActivity() {
 
-    var ListID = "aaa";
+    var ListID = ""
 
     private var tabLayer:TabLayout?= null
 
