@@ -202,6 +202,11 @@ class ShowMoneyActivity : AppCompatActivity() {
                 .findAll()
             for(i in 0..q.size-1)
             {
+                System.out.println(q.get(i)!!.listID)
+                System.out.println(q.get(i)!!.dayNum)
+                System.out.println(q.get(i)!!.id)
+                System.out.println(q.get(i)!!.price)
+
                 addItem(q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.price,
                     q.get(i)!!.cate, q.get(i)!!.img, "2019.05.20", 1)
             }
@@ -242,6 +247,7 @@ class ShowMoneyActivity : AppCompatActivity() {
 
         Realm.init(this);
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
+
         val q = realm.where(T_Money::class.java)
             .equalTo("listID", item.listID)
             .equalTo("dayNum", item.dayNum)
