@@ -18,8 +18,6 @@ import kotlinx.android.synthetic.main.activity_add_money.*
 import java.util.*
 
 class AddMoneyActivity : AppCompatActivity() {
-    var ListID = "aaa" // 디비에서 받아올것
-    var dayCount = 2 // 디비에서 받아올것
 
     val SELECT_IMAGE = 100
 
@@ -143,21 +141,25 @@ class AddMoneyActivity : AppCompatActivity() {
         val moneyTable: T_Money = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
         val moneyTableTuple = realm.where(T_Money::class.java).findAll()
 
-        moneyTable.listID = ListID
+        val pos = intent.getIntExtra("position", 0);
+        val dayNum = intent.getIntExtra("DayNum", 0);
+        val listID = intent.getStringExtra("ListID");
+
+        moneyTable.listID = listID
+        moneyTable.dayNum = dayNum
         moneyTable.id = UUID.randomUUID().toString();
-        moneyTable.dayNum = 0
         moneyTable.priceType = ""
         moneyTable.img = img_url
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
         moneyTable.date = "2018.05.30"
+        moneyTable.pos = pos
         realm.commitTransaction()
 
 //        val q3 = realm.where(T_Money::class.java).findAll()
 //        for (i in 0..q3.size - 1) {
 //            System.out.println(q3.get(i)!!.img.toString() + ", " + q3.get(i)!!.price.toString() + ", " + q3.get(i)!!.cate.toString())
 //        }
-
         // 인텐트 넘겨줌
         val s = Intent()
         setResult(Activity.RESULT_OK, s)

@@ -76,9 +76,12 @@ class ShowMoneyActivity : AppCompatActivity() {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //                addItem(position, item.listID, item.DayNum,3000, 0, R.drawable.testimg1,
 //                    "2019.05.20", 1)
-                val intent = Intent(applicationContext, AddMoneyActivity::class.java)
-                startActivityForResult(intent,123)
 
+                val intent = Intent(applicationContext, AddMoneyActivity::class.java)
+                intent.putExtra("ListID", item.listID)
+                intent.putExtra("DayNum", item.dayNum)
+                intent.putExtra("position", position)
+                startActivityForResult(intent,123)
             }
         }
         adapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
@@ -118,7 +121,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         {
             if(resultCode == Activity.RESULT_OK)
             {
-                //Toast.makeText(this, pass, Toast.LENGTH_SHORT).show()
                 initLayout() // 어댑터 갱신
             }
         }
@@ -154,31 +156,35 @@ class ShowMoneyActivity : AppCompatActivity() {
 
         if(DayNum == 0) // 리스트내 Day 전부 다 출력
         {
-            val q = realm.where(T_Money::class.java)
-                .equalTo("listID", ListID)
-                .findAll()
-
             for (i in 1..dayCount) {
-                data.add(MoneyItem(ListID, i, 20190530, 0, 0, "NULL", 0))
-                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 2))
-                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 4))
 
-                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 5))
-                data.add(MoneyItem(ListID, i, -1, 0, 0, "NULL", 2))
-                data.add(MoneyItem(ListID, i, 0, 0, 0, "NULL", 3))
+                val q = realm.where(T_Money::class.java)
+                    .equalTo("listID", ListID)
+                    .findAll()
+                for(i in 0..q.size)
+                {
+                    addItem(q.get(i)!!.pos, q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.price,
+                        q.get(i)!!.cate, q.get(i)!!.img, "2019.05.20", 1)
+                }
 
+                data.add(MoneyItem(ListID, i, 20190530, "", "", "NULL", 0))
+                data.add(MoneyItem(ListID, i, -1, "", "", "NULL", 2))
+                data.add(MoneyItem(ListID, i, -1, "", "", "NULL", 4))
 
+                data.add(MoneyItem(ListID, i, -1, "", "", "NULL", 5))
+                data.add(MoneyItem(ListID, i, -1, "", "", "NULL", 2))
+                data.add(MoneyItem(ListID, i, 0, "", "", "NULL", 3))
             }
         }
         else
         {
-            data.add(MoneyItem(ListID, DayNum, 20190530, 0, 0, "NULL", 0))
-            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 2))
-            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 4))
+            data.add(MoneyItem(ListID, DayNum, 20190530, "", "", "NULL", 0))
+            data.add(MoneyItem(ListID, DayNum, -1, "", "", "NULL", 2))
+            data.add(MoneyItem(ListID, DayNum, -1, "", "", "NULL", 4))
 
-            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 5))
-            data.add(MoneyItem(ListID, DayNum, -1, 0, 0, "NULL", 2))
-            data.add(MoneyItem(ListID, DayNum, 0, 0, 0, "NULL", 3))
+            data.add(MoneyItem(ListID, DayNum, -1, "", "", "NULL", 5))
+            data.add(MoneyItem(ListID, DayNum, -1, "", "", "NULL", 2))
+            data.add(MoneyItem(ListID, DayNum, 0, "", "", "NULL", 3))
         }
         adapter.notifyDataSetChanged()
     }
@@ -195,7 +201,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 break;
             }
         }
-        data.add(lastPos, MoneyItem(item.listID, item.dayNum,-1, 0, 0, "NULL", 2))
+        data.add(lastPos, MoneyItem(item.listID, item.dayNum,-1, "", "", "NULL", 2))
         if(data.get(lastPos).viewType == 2 &&
             data.get(lastPos-1).viewType == 2 &&
             data.get(lastPos-2).viewType == 2)
@@ -215,7 +221,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
         adapter.notifyDataSetChanged()
     }
-    fun addItem(position:Int, listID:String, DayNum:Int, price:Int, cate:Int, img:Int, date:String, viewType:Int)
+    fun addItem(position:Int, listID:String, DayNum:Int, price:Int, cate:String, img:String, date:String, viewType:Int)
     {
         var lastPos = 0;
         for(i in 0..data.size)
@@ -227,8 +233,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
         if(data.get(lastPos-1).viewType != 2) {
             data.add(lastPos, MoneyItem(listID, DayNum, price, cate, img, date, viewType))
-            data.add(lastPos+1, MoneyItem(listID, DayNum,-1, 0, 0,"NULL",2))
-            data.add(lastPos+2, MoneyItem(listID, DayNum,-1, 0, 0, "NULL", 2))
+            data.add(lastPos+1, MoneyItem(listID, DayNum,-1, "", "","NULL",2))
+            data.add(lastPos+2, MoneyItem(listID, DayNum,-1, "", "", "NULL", 2))
         }
         else if(data.get(lastPos-2).viewType == 2)
         {
@@ -266,7 +272,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         var textView2 = ll.findViewById<TextView>(R.id.textView2)
         textView1.text = item.price.toString()
         textView2.text = item.date.toString()
-        imageView.setImageResource(item.img)
+        imageView.setImageResource(R.drawable.logo)
     }
 
 }
