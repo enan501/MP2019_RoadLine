@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearSnapHelper
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
+import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
@@ -58,6 +59,7 @@ class PickDateActivity : AppCompatActivity() {
         Realm.init(this)
         realm = Realm.getDefaultInstance()
 
+        PD_title.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title)
         val results = realm.where<T_Day>(T_Day::class.java)
             .equalTo("listID",ListID)
             .findAll()

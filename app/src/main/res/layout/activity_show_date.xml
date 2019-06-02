@@ -35,7 +35,7 @@
                 android:layout_weight="1.5"
                 android:gravity="bottom|left"
                 android:text="대만여행-DAY3"
-                android:textSize="40sp" />
+                android:textSize="28sp" />
 
             <TextView
                 android:id="@+id/sd_textView2"

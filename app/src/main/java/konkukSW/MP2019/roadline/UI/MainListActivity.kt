@@ -73,12 +73,10 @@ class MainListActivity : AppCompatActivity() {
                     val newList = realm.createObject(T_List::class.java, UUID.randomUUID().toString())
                     newList.title = addListTitle.text.toString()
                     newList.date = addListDate.year.toString() +". "+ (addListDate.month+1).toString() +". "+ addListDate.dayOfMonth.toString()
-
                     val newDay  = realm.createObject(T_Day::class.java)
                     newDay.listID = newList.id
                     newDay.date = newList.date
                     newDay.num = 1
-                    //realm.deleteAll()
                     realm.commitTransaction()
                     MLArray.add(MainList(newList.id,newList.title,newList.date,""))
                     MLAdapter.notifyDataSetChanged()
