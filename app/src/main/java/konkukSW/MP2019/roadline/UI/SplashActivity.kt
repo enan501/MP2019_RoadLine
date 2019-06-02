@@ -82,7 +82,10 @@ class SplashActivity : AppCompatActivity() {
             var results = realm.where(T_Currency::class.java).findAll()
             for(T_currency in results){
                 if(T_currency.symbol.isEmpty())
-                    T_currency.symbol = T_currency.code
+                {
+                    var code = T_currency.code
+                    T_currency.symbol = code
+                }
             }
             realm.commitTransaction()
         }
