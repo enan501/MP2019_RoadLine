@@ -18,7 +18,7 @@ import android.support.v4.view.ViewPager
 
 class ShowDateActivity : AppCompatActivity() {
 
-    var ListID = ""
+    var ListID = "a"
     var DayNum = 0
     var maxDayNum = 0
     lateinit var realm: Realm
