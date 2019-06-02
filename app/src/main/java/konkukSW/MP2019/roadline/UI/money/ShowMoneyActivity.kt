@@ -59,20 +59,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         initLayout()
         initListener()
 
-//        Realm.init(this);
-//        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
-////        val q = realm.where(T_List::class.java).findAll()
-////        realm.beginTransaction()
-////        val list: T_List = realm.createObject(T_List::class.java, q.size+1)//데이터베이스에 저장할 객체 생성
-////        list.title = "ㅎㅇ"
-////        list.date = "2011"
-////        realm.commitTransaction()
-//
-//        val q3 = realm.where(T_Day::class.java).findAll()
-//        for(i in 0..q3.size-1) {
-//            System.out.println(q3.get(i)!!.listID.toString() + ", " + q3.get(i)!!.DayNum.toString())
-//        }
-
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

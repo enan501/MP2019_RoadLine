@@ -36,6 +36,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var time:String = ""
     var memo:String = ""
 
+    var ListID = ""
+    var DayNum = 0;
+
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
         initData()
@@ -51,6 +54,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
+        ListID = intent.getStringExtra("ListID")
+        DayNum = intent.getIntExtra("DayNum", 0)
+
         if (!Places.isInitialized()) {
             Places.initialize(this, getString(R.string.api_key))
         }
@@ -88,8 +94,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 realm.beginTransaction()
                 if(btnType == false){ //등록
                     val plan: T_Plan = realm.createObject(T_Plan::class.java)
-                    plan.listID = "a"
-                    plan.dayNum = 0
+                    plan.listID = ListID
+                    plan.dayNum = DayNum
                     plan.id = UUID.randomUUID().toString()
                     plan.name = spotName
                     plan.time = time

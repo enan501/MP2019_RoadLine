@@ -41,6 +41,9 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
 
+    var ListID = ""
+    var DayNum = 0;
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,12 +62,24 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     }
 
     fun initData(){
+        if(activity != null){
+            val intent = activity!!.intent
+            if(intent != null){
+                ListID = intent.getStringExtra("ListID")
+                DayNum = intent.getIntExtra("DayNum", 0)
+            }
+        }
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
-        val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java).findAll().sort("pos")
+        val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
+            .equalTo("listID", ListID)
+            .equalTo("dayNum", DayNum)
+            .findAll()
+            .sort("pos")
         planList = ArrayList<Plan>()
         for(T_Plan in results){
-            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name, T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
+            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
+                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
         }
     }
 
@@ -83,6 +98,8 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
                 i.putExtra("pos", planList.size)
+                i.putExtra("DayNum", DayNum)
+                i.putExtra("ListID", ListID)
                 startActivityForResult(i,123)
             }
 
