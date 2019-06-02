@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
@@ -15,13 +14,11 @@ import android.widget.AdapterView
 import android.widget.Toast
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Money
-import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
-import org.xmlpull.v1.XmlPullParser
-import org.xmlpull.v1.XmlPullParserFactory
-import java.nio.charset.Charset
 import java.util.*
 import kotlin.collections.ArrayList
+
+
 
 class AddMoneyActivity : AppCompatActivity() {
     var currencyList: ArrayList<Currency> = ArrayList()
@@ -33,7 +30,7 @@ class AddMoneyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_money)
+        setContentView(konkukSW.MP2019.roadline.R.layout.activity_add_money)
         initPermission()
         init()
     }
@@ -149,45 +146,29 @@ class AddMoneyActivity : AppCompatActivity() {
 //                } else
 //                    Toast.makeText(applicationContext, "환율을 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
 //            }
-//
-//        val doc = Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get()
-//        val links = doc.select("td")
-//        println(links)
-//        //data += ("${i.attr("원하는 속성//예를 들어 a 태그의 href는 abs:href")}${i.text().trim()}\n")
-//        //for (i in links) {
-        //1. Fetching the HTML from a given URL
-//        Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
-//            //2. Parses and scrapes the HTML response
-//            select("tbody >tr").forEachIndexed { index, element ->
-//                val titleAnchor = element.select("td")
-//                val title = titleAnchor.text()
-////                val url = titleAnchor.attr("href")
-//                //3. Dumping Search Index, Title and URL on the stdout.
-//                println("$index. $title")
-//            }
-//        }
+
     }
 
     fun category_click() {
         categoryGroup.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId != -1) {
                 when (checkedId) {
-                    R.id.mealBtn -> {
+                    konkukSW.MP2019.roadline.R.id.mealBtn -> {
                         cate = "식사"
                     }
-                    R.id.shoppingBtn -> {
+                    konkukSW.MP2019.roadline.R.id.shoppingBtn -> {
                         cate = "쇼핑"
                     }
-                    R.id.transportBtn -> {
+                    konkukSW.MP2019.roadline.R.id.transportBtn -> {
                         cate = "교통"
                     }
-                    R.id.tourBtn -> {
+                    konkukSW.MP2019.roadline.R.id.tourBtn -> {
                         cate = "관광"
                     }
-                    R.id.lodgmentBtn -> {
+                    konkukSW.MP2019.roadline.R.id.lodgmentBtn -> {
                         cate = "숙박"
                     }
-                    R.id.etcBtn -> {
+                    konkukSW.MP2019.roadline.R.id.etcBtn -> {
                         cate = "기타"
                     }
                 }
@@ -235,7 +216,7 @@ class AddMoneyActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("지금 돌아가면 데이터 입력 내용이 삭제됩니다.")
             .setTitle("뒤로가기")
-            .setIcon(R.drawable.ic_keyboard_backspace_black_24dp)
+            .setIcon(konkukSW.MP2019.roadline.R.drawable.ic_keyboard_backspace_black_24dp)
         builder.setPositiveButton("OK") { _, _ ->
             finish()
         }
