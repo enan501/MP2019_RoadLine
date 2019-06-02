@@ -33,9 +33,24 @@ class SplashActivity : AppCompatActivity() {
     fun getCurrency() {
         realm = Realm.getDefaultInstance()
         println("size : " + realm.where(T_Currency::class.java).findAll().size.toString())
-        if (realm.where(T_Currency::class.java).findAll().size < 142) { //중복으로 받아오지 않음
+        if (realm.where(T_Currency::class.java).findAll().size == 142) {
+            //이미 db 구성되어 있으면 환율정보만 업데이트
             Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
-                select("tbody >tr").forEachIndexed { index, element ->
+                select("tbody >tr").forEach {element ->
+                    var curCode = element.select("td:nth-child(3)>a").text()
+                    var curRate = element.select("td:nth-child(4)").text()
+
+                    realm.beginTransaction()
+                    realm.where(T_Currency::class.java).equalTo("code",curCode).findFirst()!!.rate = curRate.toDouble()
+                    realm.commitTransaction()
+                }
+            }
+        }
+        else{
+            //환율정보 db 초기 세팅
+            //이름,코드,환율 parsing
+            Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
+                select("tbody >tr").forEach {element ->
                     var curName = element.select("td:nth-child(2)>a").text()
                     var curCode = element.select("td:nth-child(3)>a").text()
                     var curRate = element.select("td:nth-child(4)").text()
@@ -48,8 +63,9 @@ class SplashActivity : AppCompatActivity() {
                      //println(index.toString() + " : " + curName + "/" + curCode + "/" + curRate)
                 }
             }
+            //코드와 일치하는 기호 parsing
             Jsoup.connect("https://kr.fxexchangerate.com/currency-symbols.html").get().run {
-                select("tbody >tr").forEachIndexed { index, element ->
+                select("tbody >tr").forEach {element ->
                     var curCode = element.select("td:nth-child(2)").text()
                     var curSymbol = element.select("td:nth-child(3)").text()
                     if (curCode.isNotEmpty()) {
@@ -61,6 +77,7 @@ class SplashActivity : AppCompatActivity() {
                     }
                 }
             }
+            //기호가 없는 화폐는 코드를 기호로 대체
             realm.beginTransaction()
             var results = realm.where(T_Currency::class.java).findAll()
             for(T_currency in results){
@@ -68,7 +85,6 @@ class SplashActivity : AppCompatActivity() {
                     T_currency.symbol = T_currency.code
             }
             realm.commitTransaction()
-
         }
         //DB에 담긴 환율 리스트 출력
 //        var results = realm.where(T_Currency::class.java).findAll()
