@@ -36,9 +36,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var time:String = ""
     var memo:String = ""
 
-    var ListID = ""
-    var DayNum = 0;
-
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
         initData()
@@ -54,9 +51,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
-        ListID = intent.getStringExtra("ListID")
-        DayNum = intent.getIntExtra("DayNum", 0)
-
         if (!Places.isInitialized()) {
             Places.initialize(this, getString(R.string.api_key))
         }
@@ -92,10 +86,11 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             if(as_searchBox.text.toString() != ""){
                 realm.beginTransaction()
-                if(btnType == false){ //등록
+                if(btnType == false){ //추가
                     val plan: T_Plan = realm.createObject(T_Plan::class.java)
-                    plan.listID = ListID
-                    plan.dayNum = DayNum
+                    plan.listID = intent.getStringExtra("listId")
+                    plan.dayNum = intent.getIntExtra("dayNum", -1)
+                    //Log.v("list", plan.listID +" " + plan.dayNum.toString())
                     plan.id = UUID.randomUUID().toString()
                     plan.name = spotName
                     plan.time = time
@@ -105,7 +100,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     plan.pos = intent.getIntExtra("pos", -1)
                 }
                 else{ //수정
-                    Log.v("rea", "kk")
                     val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
                     result.name = spotName
                     result.time = time
@@ -115,6 +109,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 realm.commitTransaction()
                 val s = Intent()
+                s.putExtra("dayNum", intent.getIntExtra("dayNum", -1))
+                s.putExtra("listId", intent.getStringExtra("listId"))
                 setResult(Activity.RESULT_OK, s)
                 finish()
             }

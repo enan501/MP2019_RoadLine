@@ -51,7 +51,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val q = realm.where(T_Plan::class.java).findAll()
         val tuple = realm.where(T_Plan::class.java).equalTo("pos", pos).findFirst()
         tuple!!.deleteFromRealm()
         realm.commitTransaction()
