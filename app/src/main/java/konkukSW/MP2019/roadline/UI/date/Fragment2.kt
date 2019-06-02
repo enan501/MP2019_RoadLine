@@ -7,7 +7,10 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import io.realm.Realm
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.fragment_fragment2.*
@@ -16,8 +19,8 @@ var StartedFlag = false;
 
 class Fragment2 : Fragment() {
 
-    var ListID = "aaa"; // 이건 나중에 디비에서 받아와야함
-    var DayNum = 0; // 이건 나중에 디비에서 받아와야함
+    var ListID = "";
+    var DayNum = 0;
 
     lateinit var adapter: PlanAdapter
     var data : ArrayList<Plan> = ArrayList()
@@ -45,9 +48,15 @@ class Fragment2 : Fragment() {
         return ll
     }
 
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        init()
+    }
+
+    fun init()
+    {
         if(StartedFlag == true) {
             data.clear()
             position = 0;
@@ -57,38 +66,54 @@ class Fragment2 : Fragment() {
         StartedFlag = true
         // 이거 안하면 계속 중복되서 아이템 추가됨
 
+        if(activity != null){
+            val intent = activity!!.intent
+            if(intent != null){
+                ListID = intent.getStringExtra("ListID")
+                DayNum = intent.getIntExtra("DayNum", 0)
+            }
+        }
+
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        val q: RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
+            .equalTo("listID", ListID)
+            .equalTo("dayNum", DayNum)
+            .findAll()
+            .sort("pos")
+
         val layoutManager = GridLayoutManager(getActivity(), 5)
         timeline_recycleView.layoutManager = layoutManager
         adapter = PlanAdapter(data)
         timeline_recycleView.adapter = adapter
 
-        addItem(ListID, DayNum, "a1", "건국대학교", 0.0, 0.0, "NULL", "NULL")
-        addItem(ListID, DayNum, "a2", "건국대학교", 0.0, 0.0, "NULL", "NULL")
-        addItem(ListID, DayNum, "a3", "건국대학교", 0.0, 0.0, "NULL", "NULL")
-        addItem(ListID, DayNum, "a4", "건국대학교", 0.0, 0.0, "NULL", "NULL")
-        addItem(ListID, DayNum, "a5", "건국대학교", 0.0, 0.0, "NULL", "NULL")
+        for(i in 0..q.size-1)
+        {
+            addItem(ListID, DayNum, q.get(i)!!.id, q.get(i)!!.name, q.get(i)!!.locationX, q.get(i)!!.locationY,
+                q.get(i)!!.time, q.get(i)!!.memo)
+        }
 
+        if(data.size > 1) {
+            // 마지막 일정 모양 바꿔주기
+            if (foldFlag == true) {
+                if (foldCount == 0)
+                    data.get(lastPosition).viewType = 1
+                else if (foldCount == 1)
+                    data.get(lastPosition).viewType = 3
+                else
+                    data.get(lastPosition).viewType = 2
 
-        // 마지막 일정 모양 바꿔주기
-        if(foldFlag == true) {
-            if(foldCount == 0)
-                data.get(lastPosition).viewType = 1
-            else if(foldCount == 1)
-                data.get(lastPosition).viewType = 3
-            else
-                data.get(lastPosition).viewType = 2
-
-        } else {
-            if(foldCount == 0)
-                data.get(lastPosition).viewType = 2
-            else if(foldCount == 1)
-                data.get(lastPosition).viewType = 4
-            else
-                data.get(lastPosition).viewType = 1
+            } else {
+                if (foldCount == 0)
+                    data.get(lastPosition).viewType = 2
+                else if (foldCount == 1)
+                    data.get(lastPosition).viewType = 4
+                else
+                    data.get(lastPosition).viewType = 1
+            }
         }
         adapter.notifyDataSetChanged()
     }
-
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
         if(foldFlag == false) { // 오른쪽으로 추가
@@ -137,4 +162,5 @@ class Fragment2 : Fragment() {
                 foldFlag = true
         }
     }
+
 }
