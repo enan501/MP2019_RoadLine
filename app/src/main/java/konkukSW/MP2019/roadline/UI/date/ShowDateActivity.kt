@@ -13,8 +13,7 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
-
-
+import android.support.v4.view.ViewPager
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -55,14 +54,17 @@ class ShowDateActivity : AppCompatActivity() {
     fun initListener(){
         val adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
         sd_viewPager.adapter = adapter
-
         sd_viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayer))
-
         tabLayer!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
                 sd_viewPager.currentItem = tab.position
+                if(tab.position == 1) {
+                    (getSupportFragmentManager()
+                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
+                            as Fragment2).init()
+                }
             }
         })
 
