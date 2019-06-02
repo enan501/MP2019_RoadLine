@@ -41,7 +41,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
 
-    var ListID = ""
+    var ListID = "a"
     var DayNum = 0;
 
     override fun onCreateView(
