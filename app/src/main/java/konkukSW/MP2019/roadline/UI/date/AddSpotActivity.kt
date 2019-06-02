@@ -154,7 +154,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
             spotName = result.name
             time = result.time
-            memo = result.time
+            memo = result.memo
             locationX = result.locationX
             locationY = result.locationY
             btnType = true

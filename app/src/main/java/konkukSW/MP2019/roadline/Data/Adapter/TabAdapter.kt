@@ -20,7 +20,6 @@ class TabAdapter(fm: FragmentManager, val num:Int): FragmentPagerAdapter(fm) {
             2->return Fragment3()
             3->return Fragment4()
 
-
         }
         return null
     }
