@@ -32,6 +32,9 @@ class SplashActivity : AppCompatActivity() {
     }
     fun getCurrency() {
         realm = Realm.getDefaultInstance()
+//        realm.beginTransaction()
+//        realm.deleteAll()
+//        realm.commitTransaction()
         println("size : " + realm.where(T_Currency::class.java).findAll().size.toString())
         if (realm.where(T_Currency::class.java).findAll().size == 142) {
             //이미 db 구성되어 있으면 환율정보만 업데이트
@@ -78,18 +81,20 @@ class SplashActivity : AppCompatActivity() {
                 }
             }
             //기호가 없는 화폐는 코드를 기호로 대체
-            realm.beginTransaction()
+
             var results = realm.where(T_Currency::class.java).findAll()
             for(T_currency in results){
                 if(T_currency.symbol.isEmpty())
                 {
+                    realm.beginTransaction()
                     var code = T_currency.code
                     T_currency.symbol = code
+                    realm.commitTransaction()
                 }
             }
-            realm.commitTransaction()
+
         }
-        //DB에 담긴 환율 리스트 출력
+//        //DB에 담긴 환율 리스트 출력
 //        var results = realm.where(T_Currency::class.java).findAll()
 //        for(T_currency in results) {
 //            println(T_currency.name + " : " + T_currency.code + " : " + T_currency.symbol + " : " + T_currency.rate)
