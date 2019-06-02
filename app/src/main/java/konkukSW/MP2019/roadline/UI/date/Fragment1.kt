@@ -91,7 +91,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val i = Intent(activity, AddSpotActivity::class.java)
                 i.putExtra("spot", data)
-                startActivity(i)
+                startActivityForResult(i, 123)
             }
         }
 

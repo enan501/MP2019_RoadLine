@@ -5,6 +5,7 @@ import android.content.Intent
 import android.support.v4.content.ContextCompat.startActivity
 import android.support.v4.view.MotionEventCompat
 import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -50,7 +51,8 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        val tuple = realm.where(T_Plan::class.java).equalTo("name", items[pos].name).findFirst()
+        val q = realm.where(T_Plan::class.java).findAll()
+        val tuple = realm.where(T_Plan::class.java).equalTo("pos", pos).findFirst()
         tuple!!.deleteFromRealm()
         realm.commitTransaction()
         items.removeAt(pos)
@@ -62,7 +64,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        var i = 0
         for(i in 0..items.size-1){
             val id = items[i].id
             val result:T_Plan = realm.where<T_Plan>(T_Plan::class.java).equalTo("id", id).findFirst()!!

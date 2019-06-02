@@ -99,6 +99,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     plan.pos = intent.getIntExtra("pos", -1)
                 }
                 else{ //수정
+                    Log.v("rea", "kk")
                     val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
                     result.name = spotName
                     result.time = time
@@ -109,7 +110,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 realm.commitTransaction()
                 val s = Intent()
                 setResult(Activity.RESULT_OK, s)
-               finish()
+                finish()
             }
             else{ //아무값 입력하지 않으면
                 onBackPressed()
@@ -142,15 +143,18 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         if(spot!=null){ //수정
             spot = spot as Plan
             spotId = spot.id
-            spotName = spot.name
-            time = spot.time
-            memo = spot.memo
-            locationX = spot.locationX
-            locationY = spot.locationY
+            Realm.init(this)
+            realm = Realm.getDefaultInstance()
+            val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
+            spotName = result.name
+            time = result.time
+            memo = result.time
+            locationX = result.locationX
+            locationY = result.locationY
             btnType = true
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
-            as_searchBox.setText(spot.name)
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(spot.locationY,spot.locationX),12f))
+            as_searchBox.setText(spotName)
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }
     }
 }
