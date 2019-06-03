@@ -85,14 +85,16 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
             notifyItemRemoved(pos)
             changePos()
 
-        if(items.size == 1 && pos == 0)
-            items.get(pos).viewType = -2
-        else if(items.size > 1 && pos == items.size-1)
-            items.get(pos).viewType = -3
-        else if(items.size > 1 && pos == 0)
-            items.get(pos).viewType = -4
-        else if(items.size > 1)
-            items.get(pos).viewType = -1
+        for(i in 0..items.size-1) {
+            if (items.size == 1 && i == 0)
+                items.get(i).viewType = -2
+            else if (items.size > 1 && i == items.size - 1)
+                items.get(i).viewType = -3
+            else if (items.size > 1 && i == 0)
+                items.get(i).viewType = -4
+            else if (items.size > 1)
+                items.get(i).viewType = -1
+        }
         notifyDataSetChanged()
     }
 
