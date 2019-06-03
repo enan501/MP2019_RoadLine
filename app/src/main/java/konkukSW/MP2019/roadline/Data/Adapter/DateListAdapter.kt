@@ -47,24 +47,16 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
             notifyItemMoved(pos1, pos2)
             changePos()
 
-            if(items.size == 1 && pos1 == 0)
-                items.get(pos1).viewType = -2
-            else if(items.size > 1 && pos1 == items.size-1)
-                items.get(pos1).viewType = -3
-            else if(items.size > 1 && pos1 == 0)
-                items.get(pos1).viewType = -4
-            else if(items.size > 1)
-                items.get(pos1).viewType = -1
-
-            if(items.size == 1 && pos2 == 0)
-                items.get(pos2).viewType = -2
-            else if(items.size > 1 && pos2 == items.size-1)
-                items.get(pos2).viewType = -3
-            else if(items.size > 1 && pos2 == 0)
-                items.get(pos2).viewType = -4
-            else if(items.size > 1)
-                items.get(pos2).viewType = -1
-
+            for(i in 0..items.size-1) {
+                if (items.size == 1 && i == 0)
+                    items.get(i).viewType = -2
+                else if (items.size > 1 && i == items.size - 1)
+                    items.get(i).viewType = -3
+                else if (items.size > 1 && i == 0)
+                    items.get(i).viewType = -4
+                else if (items.size > 1)
+                    items.get(i).viewType = -1
+            }
             notifyDataSetChanged()
 
         }
