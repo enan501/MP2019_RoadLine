@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentPagerAdapter
 import android.support.v4.app.ListFragment
 import konkukSW.MP2019.roadline.UI.date.*
 
-class TabAdapter(fm: FragmentManager, val num:Int, val listId:String, val dayNum:Int): FragmentPagerAdapter(fm) {
+class TabAdapter(fm: FragmentManager, val num:Int): FragmentPagerAdapter(fm) {
 
     override fun getCount(): Int {
         return num
@@ -15,7 +15,7 @@ class TabAdapter(fm: FragmentManager, val num:Int, val listId:String, val dayNum
 
     override fun getItem(position: Int): Fragment? {
         when(position){
-            0->return Fragment1.newFragment(listId, dayNum)
+            0->return Fragment1()
             1->return Fragment2()
             //2->return Fragment3()
             2->return Fragment4()

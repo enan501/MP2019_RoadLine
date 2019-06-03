@@ -88,8 +88,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 realm.beginTransaction()
                 if(btnType == false){ //추가
                     val plan: T_Plan = realm.createObject(T_Plan::class.java)
-                    plan.listID = intent.getStringExtra("listId")
-                    plan.dayNum = intent.getIntExtra("dayNum", -1)
+                    plan.listID = intent.getStringExtra("ListID")
+                    plan.dayNum = intent.getIntExtra("DayNum", -1)
                     //Log.v("list", plan.listID +" " + plan.dayNum.toString())
                     plan.id = UUID.randomUUID().toString()
                     plan.name = spotName
@@ -109,8 +109,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 realm.commitTransaction()
                 val s = Intent()
-                s.putExtra("dayNum", intent.getIntExtra("dayNum", -1))
-                s.putExtra("listId", intent.getStringExtra("listId"))
+                s.putExtra("dayNum", intent.getIntExtra("DayNum", -1))
+                s.putExtra("listId", intent.getStringExtra("ListID"))
                 setResult(Activity.RESULT_OK, s)
 
                 finish()
@@ -126,10 +126,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val addDialog = layoutInflater.inflate(R.layout.add_plan_dialog, null)
             val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
             val dialogTime = addDialog.findViewById<EditText>(R.id.apd_editText2)
-            if(btnType){ //수정
-                dialogMemo.setText(memo)
-                dialogTime.setText(time)
-            }
+            dialogMemo.setText(memo)
+            dialogTime.setText(time)
             builder.setView(addDialog)
                 .setPositiveButton("추가") { dialogInterface, i ->
                     memo = dialogMemo.text.toString()

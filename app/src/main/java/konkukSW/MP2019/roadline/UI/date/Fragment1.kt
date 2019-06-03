@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +59,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             if(intent != null){
                 ListID = intent.getStringExtra("ListID")
                 DayNum = intent.getIntExtra("DayNum", 0)
+                Log.v("logtag", ListID + DayNum.toString())
             }
         }
         Realm.init(context)
@@ -72,12 +74,14 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
                 T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
         }
+       // Log.v("logtag", planList.size.toString())
     }
 
     fun initLayout(){
         rView = v!!.findViewById(R.id.f1_rView) as RecyclerView
         val layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         rView.layoutManager = layoutManager
+        Log.v("planList", planList.size.toString())
         adapter = DateListAdapter(planList, this, context!!)
         rView.adapter = adapter
 
@@ -115,6 +119,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
 
 
     fun initSwipe(){
+        Log.v("planList1", adapter.items.size.toString())
         itemTouchHelper = ItemTouchHelper(DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT))
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
     }
