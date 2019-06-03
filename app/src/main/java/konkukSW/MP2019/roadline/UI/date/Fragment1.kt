@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,11 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 
+
+/**
+ * A simple [Fragment] subclass.
+ *
+ */
 class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
 
     lateinit var planList:ArrayList<Plan>
@@ -26,6 +32,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     lateinit var rView:RecyclerView
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
+    lateinit var callback: DateItemTouchHelperCallback
 
     var ListID = "a"
     var DayNum = 0;
@@ -110,13 +117,18 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     }
 
     override fun onStartDrag(holder: RecyclerView.ViewHolder) {
-            itemTouchHelper.startDrag(holder)
+        itemTouchHelper.startDrag(holder)
 
     }
 
+    override fun onStartSwipe(holder: RecyclerView.ViewHolder) {
+        itemTouchHelper.startSwipe(holder)
+    }
 
     fun initSwipe(){
-        itemTouchHelper = ItemTouchHelper(DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT))
+        Log.v("planList1", adapter.items.size.toString())
+        callback = DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
+        itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
     }
 
