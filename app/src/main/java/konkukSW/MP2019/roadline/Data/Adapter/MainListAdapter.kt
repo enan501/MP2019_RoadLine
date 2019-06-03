@@ -1,25 +1,45 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
+import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import io.realm.Realm
+import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.Dataclass.MainList
 import konkukSW.MP2019.roadline.R
 
-class MainListAdapter(var items:ArrayList<MainList>): RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter(var items:ArrayList<MainList>, val context: Context): RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
     
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_main_list,p0,false)
         return ViewHolder(v)
     }
+    fun moveItem(pos1:Int, pos2:Int){
+        var temp = items[pos1]
+        items[pos1] = items[pos2]
+        items[pos2] = temp
+        changePos()
+        notifyItemMoved(pos1,pos2)
+    }
 
     override fun getItemCount(): Int {
         return items.size
     }
-
+    fun changePos(){
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        for(i in 0..items.size-1){
+            val id = items[i].id
+            val result: T_List = realm.where<T_List>(T_List::class.java).equalTo("id", id).findFirst()!!
+            result.pos = i
+        }
+        realm.commitTransaction()
+    }
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.title.text =items.get(p1).title
         p0.date.text = items.get(p1).date
@@ -28,7 +48,7 @@ class MainListAdapter(var items:ArrayList<MainList>): RecyclerView.Adapter<MainL
             p0.image.setImageResource(R.drawable.ml_default_image)
         }
         else{
-            //TODO("이미지 경로 받아와서 넣어주기")
+            //p0.image.setImageResource(items.get(p1).image)
         }
     }
     interface OnItemClickListener{

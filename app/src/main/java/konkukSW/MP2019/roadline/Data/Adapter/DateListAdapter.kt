@@ -1,27 +1,17 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
-import android.content.Intent
-import android.support.v4.content.ContextCompat.startActivity
-import android.support.v4.view.MotionEventCompat
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.google.android.libraries.places.internal.i
 import io.realm.Realm
-import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import konkukSW.MP2019.roadline.UI.date.AddSpotActivity
-import konkukSW.MP2019.roadline.UI.date.Fragment1
-import konkukSW.MP2019.roadline.UI.date.Fragment2
-import kotlinx.android.synthetic.main.activity_show_date.*
 
 class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
@@ -35,7 +25,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
 
     var itemClickListener :OnItemClickListener? = null
 
-    interface ItemDragListener {
+    interface ItemDragListener{
         fun onStartDrag(holder: RecyclerView.ViewHolder)
     }
 

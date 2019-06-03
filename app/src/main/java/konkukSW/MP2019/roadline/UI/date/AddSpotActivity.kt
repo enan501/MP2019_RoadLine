@@ -155,6 +155,12 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             btnType = true
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spotName)
+            addMap.addMarker(
+                MarkerOptions()
+                        .position(LatLng(locationY,locationX))
+                        .title(spotName)
+                        .snippet(time)
+            )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }
     }

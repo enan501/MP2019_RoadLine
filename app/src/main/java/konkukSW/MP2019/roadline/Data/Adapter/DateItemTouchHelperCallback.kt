@@ -3,7 +3,6 @@ package konkukSW.MP2019.roadline.Data.Adapter
 import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 
 class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dragDirs:Int, swipeDirs:Int) :ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs){
     override fun isLongPressDragEnabled(): Boolean {
@@ -17,6 +16,8 @@ class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dra
         dateListAdapter.moveItem(p1.adapterPosition, p2.adapterPosition)
         return true
     }
+
+
 
     override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
         //Log.v("planList2", dateListAdapter.items.size.toString())

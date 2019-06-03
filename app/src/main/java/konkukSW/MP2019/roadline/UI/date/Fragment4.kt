@@ -3,6 +3,7 @@ package konkukSW.MP2019.roadline.UI.date
 
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,34 +12,63 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import io.realm.Realm
+import io.realm.RealmResults
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 
 
 class Fragment4 : Fragment(),OnMapReadyCallback {
-    var spotList:ArrayList<Plan> = arrayListOf(
-        Plan("",0,"","건국대학교",37.540005, 127.076530,
-            "14:30","그린호프ㄱ", 0, 0),
-        Plan("",0,"","개미집2",37.545200,  127.076277,
-            "12:30","ㅎㅇ", 0, 0),
-        Plan("",0,"","신천역 4번출구",37.511429, 127.084784,
-            "11:30","ㅂㅇ", 0, 0)
-    )
-    var latlngList:ArrayList<LatLng> = arrayListOf(
-        LatLng(37.540005, 127.076530),
-        LatLng(37.545200, 127.076277),
-        LatLng(37.511429, 127.084784)
-    )
+    var ListID = "init"
+    var DayNum = 0;
+    var spotList:ArrayList<Plan> = arrayListOf()
+    var latlngList:ArrayList<LatLng> = arrayListOf()
     lateinit var gMap: GoogleMap
+    
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view: View = inflater!!.inflate(R.layout.fragment_fragment4, container, false)
+        val mapFragment = this.childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
+        if(ListID == "init") initData()
+        mapFragment.getMapAsync(this)
+        return view
+    }
+
+    fun initData(){
+        if(activity != null){
+            val intent = activity!!.intent
+            if(intent != null){
+                ListID = intent.getStringExtra("ListID")
+                DayNum = intent.getIntExtra("DayNum", 0)
+                Log.v("logtag", ListID + DayNum.toString())
+            }
+        }
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        val results: RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
+            .equalTo("listID", ListID)
+            .equalTo("dayNum", DayNum)
+            .findAll()
+            .sort("pos")
+        for(T_Plan in results){
+            spotList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
+                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
+            latlngList.add(LatLng(T_Plan.locationY,T_Plan.locationX))
+        }
+    }
     override fun onMapReady(p0: GoogleMap) {
         gMap = p0
         addPolylines()
         addMarkers()
     }
+    
     fun addPolylines(){
         val polyLine = gMap.addPolyline(
             PolylineOptions()
-                .add(LatLng(37.540005, 127.076530), LatLng(37.545200, 127.076277),LatLng(37.511429, 127.084784))
+                .addAll(latlngList)
                 .width(15f)
                 .color(R.color.colorPrimary)
                 .startCap(ButtCap())
@@ -63,14 +93,6 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
     }
 
-override fun onCreateView(
-    inflater: LayoutInflater, container: ViewGroup?,
-    savedInstanceState: Bundle?
-): View? {
-    val view: View = inflater!!.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment4, container, false)
-    val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
-    mapFragment.getMapAsync(this)
-    return view
-    }
+
 
 }
