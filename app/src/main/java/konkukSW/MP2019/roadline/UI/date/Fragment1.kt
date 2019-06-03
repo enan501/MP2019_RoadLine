@@ -73,6 +73,12 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
                 T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
         }
+        if(planList.size == 1)
+            planList.get(0).viewType = -2
+        else if(planList.size > 1){
+            planList.get(0).viewType = -4
+            planList.get(planList.size - 1).viewType = -3
+        }
     }
 
     fun initLayout(){
@@ -116,7 +122,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
 
 
     fun initSwipe(){
-        itemTouchHelper = ItemTouchHelper(DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT))
+        itemTouchHelper = ItemTouchHelper(DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT))
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
     }
 

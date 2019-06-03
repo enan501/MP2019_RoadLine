@@ -20,6 +20,8 @@ import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.AddSpotActivity
 import konkukSW.MP2019.roadline.UI.date.Fragment1
+import konkukSW.MP2019.roadline.UI.date.Fragment2
+import kotlinx.android.synthetic.main.activity_show_date.*
 
 class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>()  {
 
@@ -33,7 +35,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
 
     var itemClickListener :OnItemClickListener? = null
 
-    interface ItemDragListener{
+    interface ItemDragListener {
         fun onStartDrag(holder: RecyclerView.ViewHolder)
     }
 
@@ -44,23 +46,54 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
             items.add(pos2, item1)
             notifyItemMoved(pos1, pos2)
             changePos()
+
+            if(items.size == 1 && pos1 == 0)
+                items.get(pos1).viewType = -2
+            else if(items.size > 1 && pos1 == items.size-1)
+                items.get(pos1).viewType = -3
+            else if(items.size > 1 && pos1 == 0)
+                items.get(pos1).viewType = -4
+            else if(items.size > 1)
+                items.get(pos1).viewType = -1
+
+            if(items.size == 1 && pos2 == 0)
+                items.get(pos2).viewType = -2
+            else if(items.size > 1 && pos2 == items.size-1)
+                items.get(pos2).viewType = -3
+            else if(items.size > 1 && pos2 == 0)
+                items.get(pos2).viewType = -4
+            else if(items.size > 1)
+                items.get(pos2).viewType = -1
+
+            notifyDataSetChanged()
+
         }
     }
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
-        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
-        realm.beginTransaction()
-        val q = realm.where(T_Plan::class.java).findAll()
-        val tuple = realm.where(T_Plan::class.java)
-            .equalTo("id", items.get(pos).id)
-            .equalTo("pos", pos)
-            .findFirst()
-        tuple!!.deleteFromRealm()
-        realm.commitTransaction()
-        items.removeAt(pos)
-        notifyItemRemoved(pos)
-        changePos()
+            Realm.init(context)
+            val realm = Realm.getDefaultInstance()
+            realm.beginTransaction()
+            val q = realm.where(T_Plan::class.java).findAll()
+            val tuple = realm.where(T_Plan::class.java)
+                .equalTo("id", items.get(pos).id)
+                .equalTo("pos", pos)
+                .findFirst()
+            tuple!!.deleteFromRealm()
+            realm.commitTransaction()
+            items.removeAt(pos)
+            notifyItemRemoved(pos)
+            changePos()
+
+        if(items.size == 1 && pos == 0)
+            items.get(pos).viewType = -2
+        else if(items.size > 1 && pos == items.size-1)
+            items.get(pos).viewType = -3
+        else if(items.size > 1 && pos == 0)
+            items.get(pos).viewType = -4
+        else if(items.size > 1)
+            items.get(pos).viewType = -1
+        notifyDataSetChanged()
     }
 
     fun changePos(){
@@ -94,8 +127,19 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        if(p0 is ItemViewHolder)
+        if(p0 is ItemViewHolder) {
             p0.spotName.text = items.get(p1).name
+
+            if(items.get(p1).viewType == -1)
+                p0.listimg.setImageResource(R.drawable.ver_mid)
+            else if(items.get(p1).viewType == -2)
+                p0.listimg.setImageResource(R.drawable.ver_one)
+            else if(items.get(p1).viewType == -3)
+                p0.listimg.setImageResource(R.drawable.ver_down)
+            else if(items.get(p1).viewType == -4)
+                p0.listimg.setImageResource(R.drawable.ver_top)
+
+        }
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -110,10 +154,12 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
     inner class ItemViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var spotName: TextView
         var dragBtn: ImageView
+        var listimg: ImageView
 
         init {
             spotName = itemView.findViewById(R.id.rs_spotName)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
+            listimg = itemView.findViewById(R.id.list_img)
             dragBtn.setOnTouchListener { v, event ->
                 if(event.action == MotionEvent.ACTION_DOWN){
                     listener.onStartDrag(this)
