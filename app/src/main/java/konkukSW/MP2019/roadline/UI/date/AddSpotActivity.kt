@@ -116,6 +116,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 realm.commitTransaction()
                 val s = Intent()
                 setResult(Activity.RESULT_OK, s)
+
                 finish()
             }
             else{ //아무값 입력하지 않으면
@@ -163,4 +164,5 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }
     }
+
 }
