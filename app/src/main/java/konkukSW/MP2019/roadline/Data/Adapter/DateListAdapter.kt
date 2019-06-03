@@ -147,14 +147,19 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
             listimg = itemView.findViewById(R.id.list_img)
             dragBtn.setOnTouchListener { v, event ->
-                Log.v("tag", "dd")
                 if(event.action == MotionEvent.ACTION_DOWN){
                     listener.onStartDrag(this)
-                    listener.onStartSwipe(this)
+                    //listener.onStartSwipe(this)
                 }
                 false
             }
             spotName.setOnTouchListener { v, event ->
+                if(event.action == MotionEvent.ACTION_DOWN){
+                    listener.onStartSwipe(this)
+                }
+                false
+            }
+            listimg.setOnTouchListener { v, event ->
                 if(event.action == MotionEvent.ACTION_DOWN){
                     listener.onStartSwipe(this)
                 }
