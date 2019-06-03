@@ -4,15 +4,20 @@
     android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/rsf_addBtn"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_horizontal"
-            android:clickable="true"
-            android:src="@android:drawable/ic_menu_add" />
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/add_bt"
+            android:backgroundTint="#C7C7C7"
+            android:clickable="true">
+
+        </ImageView>
     </LinearLayout>
 </LinearLayout>

@@ -20,6 +20,7 @@ val VIEW_TYPE_6 = 6
 val VIEW_TYPE_7 = 7
 val VIEW_TYPE_8 = 8
 val VIEW_TYPE_9 = 9
+val VIEW_TYPE_10 = 10
 
 class PlanAdapter(val items:ArrayList<Plan>)
     :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -73,9 +74,13 @@ class PlanAdapter(val items:ArrayList<Plan>)
             val v = LayoutInflater.from(p0.context).inflate(R.layout.plan_left_up_layout, p0, false)
             return ViewHolder8(v)
         }
-        else{
+        else if (p1 === 9) {
             val v = LayoutInflater.from(p0.context).inflate(R.layout.plan_empty_layout, p0, false)
             return ViewHolder9(v)
+        }
+        else{
+            val v = LayoutInflater.from(p0.context).inflate(R.layout.plan_one_layout, p0, false)
+            return ViewHolder10(v)
         }
     }
 
@@ -120,6 +125,10 @@ class PlanAdapter(val items:ArrayList<Plan>)
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder8) // 이미지 아이템
+        {
+            holder.name.text = items.get(position).name.toString()
+        }
+        if (holder is ViewHolder10) // 이미지 아이템
         {
             holder.name.text = items.get(position).name.toString()
         }
@@ -186,6 +195,12 @@ class PlanAdapter(val items:ArrayList<Plan>)
 
         }
     }
+    inner class ViewHolder10(itemView: View): RecyclerView.ViewHolder(itemView) {
+        var name: TextView
+        init{
+            name = itemView.findViewById(R.id.plan_Item_textView)
+        }
+    }
     override fun getItemViewType(position: Int): Int {
         return if (items.get(position).viewType === 0) {
             VIEW_TYPE_0
@@ -214,8 +229,11 @@ class PlanAdapter(val items:ArrayList<Plan>)
         else if (items.get(position).viewType === 8) {
             VIEW_TYPE_8
         }
-        else {
+        else if (items.get(position).viewType === 9) {
             VIEW_TYPE_9
+        }
+        else {
+            VIEW_TYPE_10
         }
     }
 }

@@ -112,6 +112,10 @@ class Fragment2 : Fragment() {
                     data.get(lastPosition).viewType = 1
             }
         }
+        else if(data.size == 1)
+        {
+            data.get(lastPosition).viewType = 10
+        }
         adapter.notifyDataSetChanged()
     }
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)

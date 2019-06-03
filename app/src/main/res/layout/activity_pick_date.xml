@@ -7,18 +7,32 @@
         android:layout_height="match_parent"
         tools:context=".UI.date.PickDateActivity"
         android:orientation="vertical">
-<TextView android:layout_width="match_parent" android:layout_height="0dp"
-    android:layout_weight="2"
+
+<TextView android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="90dp"
           android:id="@+id/PD_title"
-          android:textSize="32sp"
+          android:textSize="36sp"
           android:textColor="@color/black"
           android:text="대만여행"
+         android:textStyle="bold"
           android:gravity="center"
 />
-    <android.support.v7.widget.RecyclerView android:layout_width="match_parent"
-                                            android:layout_height="0dp"
+    <View
+        android:id="@+id/view"
+        android:layout_gravity="center"
+        android:layout_width="290dp"
+        style="@style/Divider"
+        android:background="#B0505050"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_marginTop="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_weight="4"
-    android:id="@+id/PD_rView"></android.support.v7.widget.RecyclerView>
+    android:id="@+id/PD_rView">
+    </android.support.v7.widget.RecyclerView>
     <LinearLayout
         android:layout_marginTop="20dp"
         android:layout_weight="1"

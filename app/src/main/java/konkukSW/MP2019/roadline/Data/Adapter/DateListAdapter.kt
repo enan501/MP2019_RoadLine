@@ -52,7 +52,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         val q = realm.where(T_Plan::class.java).findAll()
-        Log.v("planList", "itemsize"+items.size.toString())
         val tuple = realm.where(T_Plan::class.java)
             .equalTo("id", items.get(pos).id)
             .equalTo("pos", pos)

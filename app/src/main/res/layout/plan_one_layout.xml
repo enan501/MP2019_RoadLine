@@ -4,11 +4,10 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    app:cardElevation="0dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-    app:cardElevation="0dp">
+        android:layout_height="wrap_content">
 <LinearLayout
-
         android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -18,8 +17,7 @@
         android:id="@+id/money_layout1"
         android:layout_width="83dp"
         android:layout_height="83dp"
-        android:background="@drawable/roadl_right_up"
-        android:backgroundTintMode="screen"
+        android:background="@drawable/plan_one"
         android:visibility="visible">
 
         <TextView
@@ -33,7 +31,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.698" />
+            app:layout_constraintVertical_bias="0.735" />
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>
