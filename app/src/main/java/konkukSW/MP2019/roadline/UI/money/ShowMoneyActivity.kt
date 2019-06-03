@@ -139,7 +139,9 @@ class ShowMoneyActivity : AppCompatActivity() {
 
         detail_money.setOnClickListener {
             val intent = Intent(this, ShowDetailMoneyActivity::class.java)
-            startActivity(intent)
+            intent.putExtra("ListID", ListID)
+            intent.putExtra("DayNum", DayNum)
+            startActivityForResult(intent, 123)
         }
     }
 

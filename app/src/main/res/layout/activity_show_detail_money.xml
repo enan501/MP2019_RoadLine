@@ -17,6 +17,13 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="30dp"
             android:layout_marginVertical="15dp">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:textStyle="italic"
+                android:layout_weight="1"
+                android:id="@+id/day"
+                android:textSize="25sp"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -30,7 +37,7 @@
                 android:id="@+id/totalMoney"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:text="392300원"
                 android:textAlignment="textEnd"
                 android:textColor="#60AEBF"
@@ -44,20 +51,18 @@
             android:background="#eeeeee" />
 
         <com.github.mikephil.charting.charts.PieChart
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="10dp"
             android:id="@+id/piechart"
             android:layout_width="match_parent"
-            android:layout_height="350dp">
-        </com.github.mikephil.charting.charts.PieChart>
+            android:layout_height="350dp"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginVertical="10dp"></com.github.mikephil.charting.charts.PieChart>
 
         <ListView
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginVertical="20dp"
+            android:id="@+id/categoryMoneyListView"
             android:layout_width="match_parent"
             android:layout_height="230dp"
-            android:id="@+id/categoryMoneyListView">
-        </ListView>
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginVertical="20dp"></ListView>
 
         <View
             android:layout_width="wrap_content"

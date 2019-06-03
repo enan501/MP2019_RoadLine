@@ -1,5 +1,6 @@
 package konkukSW.MP2019.roadline.UI.money
 
+import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import konkukSW.MP2019.roadline.R
@@ -11,9 +12,13 @@ import com.github.mikephil.charting.animation.Easing.EaseInOutCubic
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.charts.PieChart
 import android.graphics.Color
+import android.opengl.Visibility
+import android.view.View
 import com.github.mikephil.charting.components.Description
+import com.google.android.libraries.places.internal.da
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.CategoryPrintAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.Dataclass.CategoryToatal
 import kotlinx.android.synthetic.main.activity_show_detail_money.*
@@ -27,12 +32,21 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
     var categoryList: Array<String> = arrayOf("식사", "쇼핑", "교통", "관광", "숙박", "기타")
     var priceList: ArrayList<Int> = ArrayList()
     var pricePercentList: ArrayList<Float> = ArrayList()
+
+    var ListID = ""
+    var DayNum = 0
+    var dayCount = 0
     var toatalMoneyValue = 0F
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_detail_money)
         //initDB()
+
+        val i = getIntent()
+        ListID = i.getStringExtra("ListID")
+        DayNum = i.getIntExtra("DayNum", 0)
+
         showPieChart()
         showCategoryList()
         showLineChart()
@@ -52,33 +66,50 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
 
         Realm.init(this)
         val realm = Realm.getDefaultInstance()
-        val DBlist = realm.where(T_Money::class.java).findAll()
-        for (i in 0..DBlist.size - 1) { // 디비에서 값 불러옴
-            when (DBlist.get(i)!!.cate.toString()) {
-                "식사" -> {
-                    priceList[0] += DBlist.get(i)!!.price.toInt()
+        val DBlist = realm.where(T_Money::class.java)
+            .equalTo("listID", ListID)
+            .findAll() // 현재 리스트의 가계부만 들고옴
+
+        if (DayNum == 0) // 리스트내 Day 전부 다 출력
+        {
+            for (i in 0..DBlist.size - 1) { // 디비에서 값 불러옴
+                when (DBlist.get(i)!!.cate.toString()) {
+                    "식사" -> priceList[0] += DBlist.get(i)!!.price.toInt()
+                    "쇼핑" -> priceList[1] += DBlist.get(i)!!.price.toInt()
+                    "교통" -> priceList[2] += DBlist.get(i)!!.price.toInt()
+                    "관광" -> priceList[3] += DBlist.get(i)!!.price.toInt()
+                    "숙박" -> priceList[4] += DBlist.get(i)!!.price.toInt()
+                    "기타" -> priceList[5] += DBlist.get(i)!!.price.toInt()
                 }
-                "쇼핑" -> {
-                    priceList[1] += DBlist.get(i)!!.price.toInt()
-                }
-                "교통" -> {
-                    priceList[2] += DBlist.get(i)!!.price.toInt()
-                }
-                "관광" -> {
-                    priceList[3] += DBlist.get(i)!!.price.toInt()
-                }
-                "숙박" -> {
-                    priceList[4] += DBlist.get(i)!!.price.toInt()
-                }
-                "기타" -> {
-                    priceList[5] += DBlist.get(i)!!.price.toInt()
+            }
+        } else { // 한개의 Day만 출력
+            val DayDBlist = realm.where(T_Money::class.java)
+                .equalTo("listID", ListID)
+                .equalTo("dayNum", DayNum)
+                .findAll() // 현재 리스트의 가계부만 들고옴
+            for (i in 0..DayDBlist.size - 1) { // 디비에서 값 불러옴
+                when (DayDBlist.get(i)!!.cate.toString()) {
+                    "식사" -> priceList[0] += DayDBlist.get(i)!!.price.toInt()
+                    "쇼핑" -> priceList[1] += DayDBlist.get(i)!!.price.toInt()
+                    "교통" -> priceList[2] += DayDBlist.get(i)!!.price.toInt()
+                    "관광" -> priceList[3] += DayDBlist.get(i)!!.price.toInt()
+                    "숙박" -> priceList[4] += DayDBlist.get(i)!!.price.toInt()
+                    "기타" -> priceList[5] += DayDBlist.get(i)!!.price.toInt()
                 }
             }
         }
 
+
         for (i in 0..5)
             toatalMoneyValue += priceList[i]
 
+        //day.text =
+        if(DayNum == 0) {
+            day.visibility = View.GONE
+        } else {
+            day.visibility = View.VISIBLE
+            day.text = "DAY"+DayNum.toString()
+        }
         totalMoney.text = toatalMoneyValue.toInt().toString() + "원" // 총지출액
 
         for (i in 0..5) { // 총지출액 대비 카테고리금액 퍼센트로 통계
