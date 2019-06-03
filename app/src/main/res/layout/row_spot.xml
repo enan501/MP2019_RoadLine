@@ -22,14 +22,13 @@
         <TextView
             android:id="@+id/rs_spotName"
             android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="15dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="10dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginRight="8dp"
             android:layout_marginBottom="5dp"
             android:layout_weight="15"
             android:text="null"
-            android:textSize="22sp" />
+            android:textSize="19sp" />
 
         <ImageView
             android:id="@+id/rs_dragBtn"

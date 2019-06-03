@@ -4,6 +4,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
+    app:cardElevation="0dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 <LinearLayout
@@ -31,6 +32,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.163" />
+
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

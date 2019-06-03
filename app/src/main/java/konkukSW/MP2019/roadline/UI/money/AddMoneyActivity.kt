@@ -18,6 +18,7 @@ import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import kotlinx.android.synthetic.main.activity_add_money.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -204,7 +205,7 @@ class AddMoneyActivity : AppCompatActivity() {
         }
         moneyTable.price = priceTxt.text.toString().toInt()
         moneyTable.cate = cate
-        moneyTable.date = "2018.05.30"
+        moneyTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
         realm.commitTransaction()
 
 //        val q3 = realm.where(T_Money::class.java).findAll()
