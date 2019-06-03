@@ -89,9 +89,12 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
 
             boundsBuilder.include(latlngList[i])
         }
-        var bounds = boundsBuilder.build()
-        gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
+        if(spotList.isNotEmpty()){
+            var bounds = boundsBuilder.build()
+            gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
+        }
     }
+
 
 
 
