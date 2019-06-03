@@ -112,6 +112,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 s.putExtra("dayNum", intent.getIntExtra("dayNum", -1))
                 s.putExtra("listId", intent.getStringExtra("listId"))
                 setResult(Activity.RESULT_OK, s)
+
                 finish()
             }
             else{ //아무값 입력하지 않으면
@@ -159,4 +160,5 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }
     }
+
 }

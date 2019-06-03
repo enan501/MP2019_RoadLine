@@ -5,28 +5,19 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmResults
-import io.realm.kotlin.createObject
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
-
-
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.fragment_fragment1.*
 
 
 /**
@@ -134,8 +125,8 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
         {
             if(resultCode == Activity.RESULT_OK)
             {
-                planList.clear()
-                init() // 갱신
+                val ft = fragmentManager!!.beginTransaction()
+                ft.detach(this).attach(this).commit()
             }
         }
     }
