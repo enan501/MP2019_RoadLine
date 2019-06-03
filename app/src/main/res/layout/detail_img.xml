@@ -16,7 +16,7 @@
             android:layout_height="399dp"
             android:contentDescription="TODO"
             app:srcCompat="@drawable/ic_launcher_background"
-            tools:ignore="VectorDrawableCompat" />
+            tools:ignore="MissingConstraints,VectorDrawableCompat" />
 
         <TextView
             android:id="@+id/textView1"

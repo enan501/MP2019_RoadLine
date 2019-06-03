@@ -4,6 +4,8 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.Cursor
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
@@ -13,6 +15,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.Toast
 import io.realm.Realm
+import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import kotlinx.android.synthetic.main.activity_add_money.*
 import java.util.*
@@ -26,6 +29,7 @@ class AddMoneyActivity : AppCompatActivity() {
     var img_url: String = "" // 이미지 URI
     var price = 0 // 가격
     var cate: String = "" // 카테고리
+    var currencyitem = ""
     // 날짜를 담는 변수 -> intent로 받아와야함
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,7 +85,7 @@ class AddMoneyActivity : AppCompatActivity() {
 
 
     fun init() {
-
+        currencyitem = currency.text.toString() // 초기에 화면에 보여진 값
         category_click()
         currencySpinner.onItemSelectedListener = SpinnerSelectedListener()
         money_calculation()
@@ -95,7 +99,9 @@ class AddMoneyActivity : AppCompatActivity() {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             //Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
-            currency.text = parent?.getItemAtPosition(position).toString()
+            val result = parent?.getItemAtPosition(position).toString()
+            currency.text = result
+            currencyitem = currency.text.toString()
             // ?. -> null 이 아닐때 수행시키는 연산자
         }
     }
@@ -110,42 +116,41 @@ class AddMoneyActivity : AppCompatActivity() {
         startActivityForResult(intent, SELECT_IMAGE)
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
-                img_url = data!!.dataString
+                img_url = getPathFromUri(data!!.data)
                 addMoneyImage.setImageURI(data!!.data)
+                println("data!!.dataString : "+data!!.dataString)
+                println("img_url :" + img_url)
             }
         }
     }
 
-    //currencyList
+
+    fun getPathFromUri(uri: Uri): String {
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor!!.moveToNext()
+        val path = cursor.getString(cursor.getColumnIndex("_data"))
+        cursor.close()
+        return path
+    }
+
+    fun initCurrency() { // 고를 수 있는 화폐만 출력
+        //if()
+    }
+
+    //currencyList'
     fun money_calculation() { // 현재 환율 불러와서 원 단위로 환산
-//        Ion.with(this).load("https://kr.fxexchangerate.com/currency-exchange-rates.html")
-//            .asString(Charsets.UTF_8)
-//            .setCallback { e, result ->
-//                if (result != null) {
-//                    var table = ""
-//                    var str = ""
-//                    var pt_start = -1
-//                    var pt_end = -1
-//                    for (i in 0..5) {
-//                        val table_start = "<tbody>"
-//                        val table_end = "</tbody>"
-//                        pt_start = result.indexOf(table_start)
-//                        pt_end = result.indexOf(table_end)
-//                        table = result.substring(pt_start + table_start.length, pt_end)
-//                        val tr_start = "<tr>"
-//                        val tr_end = "</tr>"
-//                        pt_start = table.indexOf(tr_start)
-//                        pt_end = table.indexOf(tr_end)
-//                        str = table.substring(pt_start + tr_start.length, pt_end)
-//                        //println(str)
-//                    }
-//                } else
-//                    Toast.makeText(applicationContext, "환율을 불러올 수 없습니다.", Toast.LENGTH_SHORT).show()
-//            }
+        Realm.init(this)
+        val realm = Realm.getDefaultInstance()
+        val DBlist = realm.where(T_Currency::class.java).findAll()
+        for(T_currency in DBlist) {
+            //if(currencyitem)
+            println(T_currency.name + " : " + T_currency.code + " : " + T_currency.symbol + " : " + T_currency.rate)
+        }
 
     }
 

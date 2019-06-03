@@ -8,10 +8,9 @@
         <item>$</item> <!-- 미국-->
         <item>₩</item> <!-- 한국-->
         <item>£</item> <!-- 영국-->
-        <item>¥(CNY)</item> <!-- 중국-->
+        <item>¥</item> <!-- 중국 / 일본-->
         <item>€</item> <!-- 유로-->
         <item>₵</item> <!-- 가나(세디)-->
-        <item>¥(JPY)</item> <!-- 일본 -->
         <item>₡</item> <!-- 에콰도르, 엘살바도르(콜론)-->
         <item>₫</item> <!-- 베트남-->
         <item>₲</item> <!-- 과라니, 파라과이-->
