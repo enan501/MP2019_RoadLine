@@ -97,7 +97,11 @@ class SplashActivity : AppCompatActivity() {
         //DB에 담긴 환율 리스트 출력
         var results = realm.where(T_Currency::class.java).findAll()
         for(T_currency in results) {
-            println(T_currency.name + " : " + T_currency.code + " : " + T_currency.symbol + " : " + T_currency.rate)
+            println(T_currency.name)
+            println(T_currency.code)
+            println(T_currency.symbol)
+            println(T_currency.rate)
+
         }
     }
 

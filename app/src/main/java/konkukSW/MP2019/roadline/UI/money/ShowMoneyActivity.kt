@@ -25,15 +25,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewManager
 import android.widget.*
+import com.google.android.libraries.places.internal.i
+import com.google.android.libraries.places.internal.q
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmQuery
-import konkukSW.MP2019.roadline.Data.DB.T_List
 import io.realm.RealmResults
 import io.realm.kotlin.delete
-import konkukSW.MP2019.roadline.Data.DB.T_Day
-import konkukSW.MP2019.roadline.Data.DB.T_Money
-import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import konkukSW.MP2019.roadline.Data.DB.*
 import kotlinx.android.synthetic.main.detail_img.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -42,13 +41,15 @@ import kotlin.collections.ArrayList
 class ShowMoneyActivity : AppCompatActivity() {
 
     var data: ArrayList<MoneyItem> = ArrayList()
-    lateinit var adapter: MoneyItemAdapter
+    lateinit var MIadapter: MoneyItemAdapter
 
     var ListID = ""
-    var DayNum = 0;
-    var dayCount = 0;
-
-    var TotalPrice = 0;
+    var DayNum = 0
+    var dayCount = 0
+    var rate = 0.0
+    var symbol = "" // currency
+    var code = "" // currency
+    var TotalPrice = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +61,40 @@ class ShowMoneyActivity : AppCompatActivity() {
 
         initLayout()
         initListener()
-
+        initCurrencyAdapter()
+        currencySpinner.onItemSelectedListener = SpinnerSelectedListener()
     }
+
+    inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener { // 오버라이딩 단축키 alt + enter
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
+
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
+            // 화폐고름
+
+            val result = parent?.getItemAtPosition(position).toString()
+            val c_codelist = result.split(" - ")
+            val c_code = c_codelist[0]
+
+            Realm.init(applicationContext)
+            val realm = Realm.getDefaultInstance()
+            // 해당 화페 가져옴
+            val DB = realm.where(T_Currency::class.java)
+                .equalTo("code", c_code)
+                .findFirst()
+            symbol = DB?.symbol.toString()
+            code = DB?.code.toString()
+            rate = DB?.rate.toString().toDouble()
+            println(symbol)
+            currencySymbol.text = symbol
+            val exchange = TotalPrice / rate
+            money_totalTextView.text = exchange.toInt().toString()
+        }
+    }
+
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -69,6 +102,7 @@ class ShowMoneyActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 initLayout() // 어댑터 갱신
                 initListener()
+                initCurrencyAdapter()
             }
         }
     }
@@ -78,13 +112,13 @@ class ShowMoneyActivity : AppCompatActivity() {
             ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
             override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                adapter.moveItem(p1.adapterPosition, p2.adapterPosition)
+                MIadapter.moveItem(p1.adapterPosition, p2.adapterPosition)
                 return true
             }
 
             override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                adapter.removeItem(p0.adapterPosition)
+                MIadapter.removeItem(p0.adapterPosition)
             }
         }
         val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
@@ -93,7 +127,7 @@ class ShowMoneyActivity : AppCompatActivity() {
 
     fun initListener() {
         /* 리사이클뷰 어댑터에 리스너 달기 */
-        adapter.itemLongClickListener = object : MoneyItemAdapter.OnItemLongClickListener {
+        MIadapter.itemLongClickListener = object : MoneyItemAdapter.OnItemLongClickListener {
             override fun OnItemLongClick(
                 holder: MoneyItemAdapter.ViewHolder1,
                 view: View,
@@ -114,7 +148,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 alert.show()
             }
         }
-        adapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
+        MIadapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 //                addItem(item.listID, item.DayNum,3000, 0, R.drawable.testimg1,
@@ -122,10 +156,11 @@ class ShowMoneyActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, AddMoneyActivity::class.java)
                 intent.putExtra("ListID", item.listID)
                 intent.putExtra("DayNum", item.dayNum)
+                intent.putExtra("currencyCode", code)
                 startActivityForResult(intent, 123)
             }
         }
-        adapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
+        MIadapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
             override fun OnItemClick2(
                 holder: MoneyItemAdapter.ViewHolder1,
                 view: View,
@@ -150,8 +185,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         data.clear()
         val layoutManager = GridLayoutManager(this, 3)
         money_recycleView.layoutManager = layoutManager
-        adapter = MoneyItemAdapter(data)
-        money_recycleView.adapter = adapter
+        MIadapter = MoneyItemAdapter(data)
+        money_recycleView.adapter = MIadapter
 
         Realm.init(this);
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
@@ -222,7 +257,32 @@ class ShowMoneyActivity : AppCompatActivity() {
                 )
             }
         }
-        adapter.notifyDataSetChanged()
+        MIadapter.notifyDataSetChanged()
+    }
+
+    fun initCurrencyAdapter() {
+        val Cadapter = ArrayAdapter<String>(
+            this,
+            android.R.layout.simple_spinner_dropdown_item,
+            ArrayList<String>()
+        )
+
+        Realm.init(this)
+        val realm = Realm.getDefaultInstance()
+        val DBlist = realm.where(T_Currency::class.java).findAll()
+        for (T_currency in DBlist) {
+            //if(currencyitem)
+            Cadapter.add(T_currency.code + " - " + T_currency.name)
+            println(T_currency.name + " : " + T_currency.code + " : " + T_currency.symbol + " : " + T_currency.rate)
+        }
+        currencySpinner.adapter = Cadapter
+        // 해당 화페 가져옴
+
+        val find = realm.where(T_Currency::class.java).findAll()
+
+        for (i in 0..find.size - 1)
+            if (find.get(i)!!.code == "KRW")
+                currencySpinner.setSelection(i)
     }
 
     fun eraseItem(position: Int, item: MoneyItem) {
@@ -309,7 +369,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 break;
             }
         }
-        adapter.notifyDataSetChanged()
+        MIadapter.notifyDataSetChanged()
     }
 
     fun ShowLayout(item: MoneyItem): Unit {
@@ -329,12 +389,12 @@ class ShowMoneyActivity : AppCompatActivity() {
         textView2.text = item.date.toString()
         if (item.img == "") {
             when (item.cate) {
-                "식사" ->  imageView.setImageResource(R.drawable.meal)
-                "쇼핑" ->  imageView.setImageResource(R.drawable.shopping)
-                "교통" ->  imageView.setImageResource(R.drawable.transport)
-                "관광" ->  imageView.setImageResource(R.drawable.tour)
-                "숙박" ->  imageView.setImageResource(R.drawable.lodgment)
-                "기타" ->  imageView.setImageResource(R.drawable.etc)
+                "식사" -> imageView.setImageResource(R.drawable.meal)
+                "쇼핑" -> imageView.setImageResource(R.drawable.shopping)
+                "교통" -> imageView.setImageResource(R.drawable.transport)
+                "관광" -> imageView.setImageResource(R.drawable.tour)
+                "숙박" -> imageView.setImageResource(R.drawable.lodgment)
+                "기타" -> imageView.setImageResource(R.drawable.etc)
             }
         } else
             imageView.setImageBitmap(BitmapFactory.decodeFile(item.img))

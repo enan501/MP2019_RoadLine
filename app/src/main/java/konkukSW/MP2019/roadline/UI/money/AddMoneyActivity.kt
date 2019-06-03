@@ -11,13 +11,17 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import kotlinx.android.synthetic.main.activity_add_money.*
+import kotlinx.android.synthetic.main.activity_show_money.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -30,7 +34,8 @@ class AddMoneyActivity : AppCompatActivity() {
     var img_url: String = "" // 이미지 URI
     var price = 0 // 가격
     var cate: String = "" // 카테고리
-    var currencyitem = ""
+    var currenyCode = ""
+    var exchange = 0.0
     // 날짜를 담는 변수 -> intent로 받아와야함
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,27 +91,9 @@ class AddMoneyActivity : AppCompatActivity() {
 
 
     fun init() {
-        currencyitem = currency.text.toString() // 초기에 화면에 보여진 값
         category_click()
-        currencySpinner.onItemSelectedListener = SpinnerSelectedListener()
         money_calculation()
     }
-
-    inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener {
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            //Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
-            val result = parent?.getItemAtPosition(position).toString()
-            currency.text = result
-            currencyitem = currency.text.toString()
-            // ?. -> null 이 아닐때 수행시키는 연산자
-        }
-    }
-
 
     fun addImg(view: View) {
         //어떤 앱에서 이미지를 가져오는지 몰라서 묵시적 intent 수행
@@ -124,7 +111,7 @@ class AddMoneyActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 img_url = getPathFromUri(data!!.data)
                 addMoneyImage.setImageURI(data!!.data)
-                println("data!!.dataString : "+data!!.dataString)
+                println("data!!.dataString : " + data!!.dataString)
                 println("img_url :" + img_url)
             }
         }
@@ -139,44 +126,53 @@ class AddMoneyActivity : AppCompatActivity() {
         return path
     }
 
-    fun initCurrency() { // 고를 수 있는 화폐만 출력
-        //if()
-    }
-
     //currencyList'
     fun money_calculation() { // 현재 환율 불러와서 원 단위로 환산
+        val i = intent
+        currenyCode = i.getStringExtra("currencyCode")
+
         Realm.init(this)
         val realm = Realm.getDefaultInstance()
-        val DBlist = realm.where(T_Currency::class.java).findAll()
-        for(T_currency in DBlist) {
-            //if(currencyitem)
-            println(T_currency.name + " : " + T_currency.code + " : " + T_currency.symbol + " : " + T_currency.rate)
+
+        val find = realm.where(T_Currency::class.java).findAll()
+
+        var currency_rate = 0.0
+        var input = 0.0
+        for (i in 0..find.size - 1) {
+            if (find.get(i)!!.code == currenyCode) {
+                currency.text = find.get(i)!!.symbol // 출력변경
+                currency_rate = find.get(i)!!.rate
+                break
+            }
         }
 
+        priceTxt.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                exchange = currency_rate * s.toString().toDouble()
+                addMoneyExchange.text = exchange.toString() + "원"
+            }
+        })
     }
 
     fun category_click() {
         categoryGroup.setOnCheckedChangeListener { group, checkedId ->
             if (checkedId != -1) {
                 when (checkedId) {
-                    konkukSW.MP2019.roadline.R.id.mealBtn -> {
-                        cate = "식사"
-                    }
-                    konkukSW.MP2019.roadline.R.id.shoppingBtn -> {
-                        cate = "쇼핑"
-                    }
-                    konkukSW.MP2019.roadline.R.id.transportBtn -> {
-                        cate = "교통"
-                    }
-                    konkukSW.MP2019.roadline.R.id.tourBtn -> {
-                        cate = "관광"
-                    }
-                    konkukSW.MP2019.roadline.R.id.lodgmentBtn -> {
-                        cate = "숙박"
-                    }
-                    konkukSW.MP2019.roadline.R.id.etcBtn -> {
-                        cate = "기타"
-                    }
+                    konkukSW.MP2019.roadline.R.id.mealBtn -> cate = "식사"
+                    konkukSW.MP2019.roadline.R.id.shoppingBtn -> cate = "쇼핑"
+                    konkukSW.MP2019.roadline.R.id.transportBtn -> cate = "교통"
+                    konkukSW.MP2019.roadline.R.id.tourBtn -> cate = "관광"
+                    konkukSW.MP2019.roadline.R.id.lodgmentBtn -> cate = "숙박"
+                    konkukSW.MP2019.roadline.R.id.etcBtn -> cate = "기타"
                 }
             }
         }
@@ -190,9 +186,9 @@ class AddMoneyActivity : AppCompatActivity() {
         val moneyTable: T_Money = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
         val moneyTableTuple = realm.where(T_Money::class.java).findAll()
 
-        val i = intent;
-        val dayNum = i.getIntExtra("DayNum", 0);
-        val listID = i.getStringExtra("ListID");
+        val i = intent
+        val dayNum = i.getIntExtra("DayNum", 0)
+        val listID = i.getStringExtra("ListID")
 
         moneyTable.listID = listID
         moneyTable.dayNum = dayNum
@@ -203,7 +199,7 @@ class AddMoneyActivity : AppCompatActivity() {
         } else {
             moneyTable.img = img_url
         }
-        moneyTable.price = priceTxt.text.toString().toInt()
+        moneyTable.price = exchange.toInt()
         moneyTable.cate = cate
         moneyTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
         realm.commitTransaction()
