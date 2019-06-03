@@ -140,6 +140,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
             {
                 val ft = fragmentManager!!.beginTransaction()
                 ft.detach(this).attach(this).commit()
+
             }
         }
     }

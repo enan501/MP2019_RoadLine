@@ -37,6 +37,16 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         return view
     }
 
+    fun refresh(){
+//        val ft = fragmentManager!!.beginTransaction()
+//        ft.detach(this).attach(this).commit()
+        gMap.clear()
+        spotList.clear()
+        latlngList.clear()
+        initData()
+        addPolylines()
+        addMarkers()
+    }
     fun initData(){
         if(activity != null){
             val intent = activity!!.intent
@@ -64,7 +74,7 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         addPolylines()
         addMarkers()
     }
-    
+
     fun addPolylines(){
         val polyLine = gMap.addPolyline(
             PolylineOptions()

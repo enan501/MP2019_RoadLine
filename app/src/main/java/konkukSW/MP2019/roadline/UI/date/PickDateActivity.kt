@@ -109,7 +109,6 @@ class PickDateActivity : AppCompatActivity() {
             )
         }
     }
-
 /*    fun notifySnapPositionChanged(rView:RecyclerView){
         val snapView = snapHelper.findSnapView(PD_rView.layoutManager)
         val snapPosition = PD_rView.layoutManager!!.getPosition(snapView!!)

@@ -1,6 +1,5 @@
 package konkukSW.MP2019.roadline.UI.date
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
@@ -13,14 +12,15 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
-import android.support.v4.view.ViewPager
 
 
 class ShowDateActivity : AppCompatActivity() {
 
+
     var ListID = "a"
     var DayNum = 0
     var maxDayNum = 0
+    lateinit var adapter:TabAdapter
     lateinit var realm: Realm
     private var tabLayer:TabLayout?= null
 
@@ -52,7 +52,7 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun initListener(){
-        val adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
+        adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
         sd_viewPager.adapter = adapter
         sd_viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayer))
         tabLayer!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -64,6 +64,11 @@ class ShowDateActivity : AppCompatActivity() {
                     (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
                             as Fragment2).init()
+                }
+                else if(tab.position == 2) {
+                    (getSupportFragmentManager()
+                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
+                            as Fragment4).refresh()
                 }
             }
         })
