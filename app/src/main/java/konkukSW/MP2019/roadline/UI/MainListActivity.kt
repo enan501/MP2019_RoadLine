@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.widget.DatePicker
 import android.widget.EditText
 import io.realm.Realm
-import io.realm.RealmConfiguration
 import konkukSW.MP2019.roadline.Data.Adapter.MainListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
@@ -33,11 +32,6 @@ class MainListActivity : AppCompatActivity() {
         initData()
         initLayout()
 
-        Realm.init(this);
-        val config =
-            RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
-        Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
-
 //        val realm = Realm.getDefaultInstance()
 //        realm.beginTransaction()
 //        realm.deleteAll()
@@ -53,8 +47,6 @@ class MainListActivity : AppCompatActivity() {
     }
     fun initData(){
         Realm.init(this)
-        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
-        Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
         realm = Realm.getDefaultInstance()
         val results = realm.where<T_List>(T_List::class.java).findAll()
         for(T_List in results){

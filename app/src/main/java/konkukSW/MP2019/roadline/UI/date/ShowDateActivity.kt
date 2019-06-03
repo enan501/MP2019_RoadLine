@@ -39,7 +39,7 @@ class ShowDateActivity : AppCompatActivity() {
         tabLayer = findViewById(R.id.sd_layout_tab)
         tabLayer!!.addTab(tabLayer!!.newTab().setText("리스트"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("가로 타임라인"))
-        tabLayer!!.addTab(tabLayer!!.newTab().setText("세로 타임라인"))
+        //tabLayer!!.addTab(tabLayer!!.newTab().setText("세로 타임라인"))
         tabLayer!!.addTab(tabLayer!!.newTab().setText("지도"))
 
         ListID = intent.getStringExtra("ListID")
