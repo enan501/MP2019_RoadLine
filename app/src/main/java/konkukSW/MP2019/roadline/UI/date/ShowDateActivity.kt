@@ -108,6 +108,10 @@ class ShowDateActivity : AppCompatActivity() {
             PDIntentToMoney.putExtra("ListID", ListID)
             PDIntentToMoney.putExtra("DayNum", DayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
+            overridePendingTransition(
+                R.anim.anim_slide_in_top,
+                R.anim.anim_slide_out_bottom
+            )
         }
 
         sd_imgBtn3.setOnClickListener {

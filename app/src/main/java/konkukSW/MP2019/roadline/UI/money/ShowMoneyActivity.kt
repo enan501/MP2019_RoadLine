@@ -187,7 +187,7 @@ class ShowMoneyActivity : AppCompatActivity() {
 
                     addItem(
                         q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.price,
-                        q.get(i)!!.cate, q.get(i)!!.img, "2019.05.20", 1
+                        q.get(i)!!.cate, q.get(i)!!.img, q.get(i)!!.date, 1
                     )
                 }
             }
@@ -218,7 +218,7 @@ class ShowMoneyActivity : AppCompatActivity() {
 
                 addItem(
                     q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.price,
-                    q.get(i)!!.cate, q.get(i)!!.img, "2019.05.20", 1
+                    q.get(i)!!.cate, q.get(i)!!.img, q.get(i)!!.date, 1
                 )
             }
         }

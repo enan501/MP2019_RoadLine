@@ -11,6 +11,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
+import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
@@ -102,6 +103,10 @@ class PickDateActivity : AppCompatActivity() {
             PDIntentToMoney.putExtra("ListID", ListID)
             PDIntentToMoney.putExtra("DayNum",0) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
+            overridePendingTransition(
+                R.anim.anim_slide_in_top,
+                R.anim.anim_slide_out_bottom
+            )
         }
     }
 
