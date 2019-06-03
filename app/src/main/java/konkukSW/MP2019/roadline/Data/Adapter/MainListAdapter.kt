@@ -54,7 +54,11 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
     interface OnItemClickListener{
         fun OnItemClick(holder:ViewHolder, data: MainList, position: Int)
     }
+    interface OnItemLongClickListener {
+        fun OnItemLongClick(holder: ViewHolder, view: View, data: MainList, position: Int)
+    }
     var itemClickListener : OnItemClickListener? = null
+    var itemLongClickListener : OnItemLongClickListener? = null
 
     inner class ViewHolder(itemView: View)
         :RecyclerView.ViewHolder(itemView){
@@ -68,6 +72,11 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
             itemView.setOnClickListener{
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this,items[position],position)
+            }
+            itemView.setOnLongClickListener{
+                val position = adapterPosition
+                itemLongClickListener?.OnItemLongClick(this,it, items[position],position)
+                true
             }
 
         }

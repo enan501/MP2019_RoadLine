@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.Log
+import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
 import io.realm.Realm
@@ -14,10 +16,11 @@ import konkukSW.MP2019.roadline.Data.Adapter.MainListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.Dataclass.MainList
-import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
 import java.util.*
+
+
 
 class MainListActivity : AppCompatActivity() {
 
@@ -25,9 +28,12 @@ class MainListActivity : AppCompatActivity() {
         )
     lateinit var MLAdapter:MainListAdapter
     lateinit var realm: Realm
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main_list)
+        setContentView(konkukSW.MP2019.roadline.R.layout.activity_main_list)
         init()
     }
     fun init() {
@@ -83,12 +89,42 @@ class MainListActivity : AppCompatActivity() {
                 startActivity(MLIntent)
             }
         }
+        MLAdapter.itemLongClickListener = object : MainListAdapter.OnItemLongClickListener {
+            override fun OnItemLongClick(
+                holder: MainListAdapter.ViewHolder,view: View,data: MainList,position: Int) {
+                Log.d("longclicked", "LongClicked")
+            }
+
+        }
+//        var gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
+//            override fun onSingleTapUp(e: MotionEvent): Boolean {
+//                return true
+//            }
+//        })
+//        var onItemTouchListener = object : RecyclerView.OnItemTouchListener{
+//            override fun onTouchEvent(rView: RecyclerView, e: MotionEvent) {
+//
+//            }
+//            override fun onInterceptTouchEvent(rView: RecyclerView, e: MotionEvent): Boolean {
+//                var childView = rView.findChildViewUnder(e.getX(),e.getY())
+//                if(childView != null && gestureDetector.onTouchEvent(e)){
+//                    var pos = rView.getChildAdapterPosition(childView)
+//                    //롱클릭 했을때
+//                    Log.d("longclicked",pos.toString())
+//                    return true
+//                }
+//                return false
+//            }
+//            override fun onRequestDisallowInterceptTouchEvent(p0: Boolean) {
+//            }
+//        }
+//        ML_rView.addOnItemTouchListener(onItemTouchListener)
 
         ML_addListBtn.setOnClickListener {
             val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-            val addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
-            val addListTitle = addListDialog.findViewById<EditText>(R.id.AL_title)
-            val addListDate = addListDialog.findViewById<DatePicker>(R.id.AL_date)
+            val addListDialog = layoutInflater.inflate(konkukSW.MP2019.roadline.R.layout.add_list_dialog, null)
+            val addListTitle = addListDialog.findViewById<EditText>(konkukSW.MP2019.roadline.R.id.AL_title)
+            val addListDate = addListDialog.findViewById<DatePicker>(konkukSW.MP2019.roadline.R.id.AL_date)
             builder.setView(addListDialog)
                 .setPositiveButton("추가") { dialogInterface, _ ->
                     realm.beginTransaction()
