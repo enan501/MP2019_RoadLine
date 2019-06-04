@@ -1,8 +1,11 @@
 package konkukSW.MP2019.roadline.UI.date
 
 
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -30,9 +33,9 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater!!.inflate(R.layout.fragment_fragment4, container, false)
-        val mapFragment = this.childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
-        if(ListID == "init") initData()
+        val view: View = inflater!!.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment4, container, false)
+        val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
+        initData()
         mapFragment.getMapAsync(this)
         return view
     }
@@ -40,12 +43,15 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
     fun refresh(){
 //        val ft = fragmentManager!!.beginTransaction()
 //        ft.detach(this).attach(this).commit()
-        gMap.clear()
+
         spotList.clear()
         latlngList.clear()
         initData()
-        addPolylines()
-        addMarkers()
+        if(ListID != "init"){
+            gMap.clear()
+            addPolylines()
+            addMarkers()
+        }
     }
     fun initData(){
         if(activity != null){
@@ -80,7 +86,7 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
             PolylineOptions()
                 .addAll(latlngList)
                 .width(15f)
-                .color(R.color.colorPrimary)
+                .color(konkukSW.MP2019.roadline.R.color.colorPrimary)
                 .startCap(ButtCap())
                 .endCap(ButtCap())
         )
@@ -89,12 +95,16 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         var markerOptions = MarkerOptions()
         var boundsBuilder = LatLngBounds.builder()
 
+        val bitmapDraw = ContextCompat.getDrawable(activity!!.applicationContext,R.drawable.marker) as BitmapDrawable
+        val b = bitmapDraw.bitmap
+        val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
         for(i in 0..spotList.size-1)
         {
             markerOptions
                 .position(latlngList[i])
                 .title(spotList[i].name)
                 .snippet(spotList[i].time)
+                .icon(BitmapDescriptorFactory.fromBitmap(marker))
             gMap.addMarker(markerOptions)
 
             boundsBuilder.include(latlngList[i])

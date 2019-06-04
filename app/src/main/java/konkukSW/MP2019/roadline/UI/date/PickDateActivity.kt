@@ -48,14 +48,16 @@ class PickDateActivity : AppCompatActivity() {
         snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
         PDAdapter = PickDateAdapter(dateList)
         PD_rView.adapter = PDAdapter
-        smoothScroller.targetPosition = 1
-        smoothScroller.computeScrollVectorForPosition(1)
+        smoothScroller.targetPosition = 2
+        smoothScroller.computeScrollVectorForPosition(2)
         layoutManager.startSmoothScroll(smoothScroller)
+        dateList.removeAt(0)
+        PDAdapter.notifyDataSetChanged()
         addListener()
     }
     fun initData(){
         ListID = intent.getStringExtra("ListID")
-        dateList = arrayListOf(PickDate(ListID,0,"first"))
+        dateList = arrayListOf(PickDate(ListID,0,"blank"),PickDate(ListID,0,"first"))
 
         Realm.init(this)
         realm = Realm.getDefaultInstance()
