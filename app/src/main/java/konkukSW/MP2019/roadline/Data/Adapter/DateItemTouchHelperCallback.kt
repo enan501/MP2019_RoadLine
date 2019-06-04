@@ -52,12 +52,14 @@ class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dra
                 val background = RectF(itemView.right.toFloat() + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
                 c.drawRect(background, p)
                 icon = BitmapFactory.decodeResource(context.resources, R.drawable.garbage_white)
-                val mutableBitmap = Bitmap.createBitmap(icon.width, icon.height, Bitmap.Config.ARGB_8888)
-                val immutableDraw = BitmapDrawable(icon)
+               // val mutableBitmap = Bitmap.createBitmap(icon.width, icon.height, Bitmap.Config.ARGB_8888)
+                val immutableDraw = icon as BitmapDrawable
+                immutableDraw.setBounds(0, 0, height.toInt(), height.toInt())
 
 
                 val icon_dest = RectF(itemView.right.toFloat() - 2*width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
-                c.drawBitmap(mutableBitmap, null, icon_dest, p)
+                val newBitmap = immutableDraw.bitmap
+                c.drawBitmap(newBitmap, null, icon_dest, p)
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
