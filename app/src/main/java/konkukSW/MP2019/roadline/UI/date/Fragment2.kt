@@ -7,6 +7,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
@@ -53,8 +54,16 @@ class Fragment2 : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         init()
+        addListener()
     }
 
+    fun addListener() {
+        adapter.itemClickListener = object : PlanAdapter.OnItemClickListner {
+            override fun OnItemClick(data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     fun init()
     {
         if(StartedFlag == true) {
