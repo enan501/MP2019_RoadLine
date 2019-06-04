@@ -6,7 +6,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".UI.date.PickDateActivity"
+        android:background="@color/white"
         android:orientation="vertical">
+    <ImageView
+        android:id="@+id/cancel_bt"
+        android:onClick="back"
+        android:background="@drawable/cancel"
+        android:layout_width="50dp"
+        android:layout_height="50dp" />
 
 <TextView android:layout_width="match_parent"
     android:layout_height="wrap_content"

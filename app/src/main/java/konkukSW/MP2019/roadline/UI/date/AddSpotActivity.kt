@@ -140,7 +140,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
             val addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
             val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
+            //val dialogTime = addDialog.findViewById<EditText>(R.id.apd_editText2)
             dialogMemo.setText(memo)
+            //dialogTime.setText(time)
             builder.setView(addDialog)
                 .setPositiveButton("추가") { dialogInterface, i ->
                     memo = dialogMemo.text.toString()

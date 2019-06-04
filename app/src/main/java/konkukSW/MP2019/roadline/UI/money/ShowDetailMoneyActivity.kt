@@ -51,6 +51,9 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         showCategoryList()
         showLineChart()
     }
+    fun back(v: View?):Unit{
+        finish()
+    }
 
     fun initDB() {
         Realm.init(this)

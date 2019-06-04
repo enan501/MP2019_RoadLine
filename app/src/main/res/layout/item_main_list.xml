@@ -49,6 +49,7 @@
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_gravity="center_vertical"
+                android:backgroundTint="@color/black"
                 android:background="@drawable/garbage" />
 />
         </LinearLayout>

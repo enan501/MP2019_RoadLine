@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.LinearSnapHelper
+import android.view.View
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
@@ -37,6 +38,10 @@ class PickDateActivity : AppCompatActivity() {
         initData()
         initLayout()
     }
+    fun back(v: View?):Unit{
+        finish()
+    }
+
     fun initLayout(){
         val layoutManager = CenterZoomLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         val smoothScroller = object : LinearSmoothScroller(this) {

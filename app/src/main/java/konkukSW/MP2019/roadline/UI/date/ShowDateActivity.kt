@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.view.View
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
@@ -34,6 +35,9 @@ class ShowDateActivity : AppCompatActivity() {
     fun init(){
         initData()
         initListener()
+    }
+    fun back(v: View?):Unit{
+        finish()
     }
 
     fun initData(){
