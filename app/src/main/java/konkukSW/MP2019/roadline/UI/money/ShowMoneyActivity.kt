@@ -37,7 +37,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     var DayNum = 0
     var dayCount = 0
     var rate = 0.0
-    var symbol = "" // currency
+    var symbol = "₩" // currency
     var code = "" // currency
     var TotalPrice = 0
 
@@ -78,8 +78,7 @@ class ShowMoneyActivity : AppCompatActivity() {
             symbol = DB?.symbol.toString()
             code = DB?.code.toString()
             rate = DB?.rate.toString().toDouble()
-            println(symbol)
-            currencySymbol.text = symbol
+            currencySymbol.text = " " + symbol
             //val exchange = TotalPrice / rate
             //money_totalTextView.text = exchange.toInt().toString()
 
@@ -186,7 +185,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initLayout() {
-        TotalPrice = 0;
+        TotalPrice = 0
         data.clear()
 
 

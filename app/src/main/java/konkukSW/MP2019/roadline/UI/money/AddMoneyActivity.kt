@@ -118,8 +118,6 @@ class AddMoneyActivity : AppCompatActivity() {
             if (resultCode == Activity.RESULT_OK) {
                 img_url = getPathFromUri(data!!.data)
                 addMoneyImage.setImageURI(data!!.data)
-                println("data!!.dataString : " + data!!.dataString)
-                println("img_url :" + img_url)
             }
         }
     }
@@ -143,13 +141,11 @@ class AddMoneyActivity : AppCompatActivity() {
             .equalTo("num", dayNum) // 현재 날짜를 골라낸다
             .findFirst()
         currenyCode = c_day?.currency.toString() // 데이에 저장된 통화 코드 알아냄
-        println(currenyCode)
 
         val find = realm.where(T_Currency::class.java)
             .equalTo("code", currenyCode).findFirst()
 
         currency.text = find?.symbol.toString() // 출력변경
-        println(find?.symbol.toString())
         val currency_rate = find!!.rate
 
         priceTxt.addTextChangedListener(object : TextWatcher {
