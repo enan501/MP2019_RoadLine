@@ -1,39 +1,29 @@
 package konkukSW.MP2019.roadline.UI.money
 
 import android.app.Activity
-import android.app.DownloadManager
 import android.content.Context
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.StaggeredGridLayoutManager
-import android.support.v7.widget.helper.ItemTouchHelper
-import android.view.View
-import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
-import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
-import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_show_money.*
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.net.Uri
+import android.os.Bundle
 import android.support.v7.app.AlertDialog
-import android.util.Log
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewManager
 import android.widget.*
-import com.google.android.libraries.places.internal.i
-import com.google.android.libraries.places.internal.q
 import io.realm.Realm
-import io.realm.RealmConfiguration
-import io.realm.RealmQuery
-import io.realm.RealmResults
-import io.realm.kotlin.delete
-import konkukSW.MP2019.roadline.Data.DB.*
-import kotlinx.android.synthetic.main.detail_img.*
+import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_Currency
+import konkukSW.MP2019.roadline.Data.DB.T_Day
+import konkukSW.MP2019.roadline.Data.DB.T_Money
+import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
+import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.activity_show_money.*
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -201,7 +191,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 3)
         money_recycleView.layoutManager = layoutManager
         MIadapter = MoneyItemAdapter(data)
-        money_recycleView.adapter = MIadapter
 
         Realm.init(this);
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
@@ -210,34 +199,29 @@ class ShowMoneyActivity : AppCompatActivity() {
             val q = realm.where(T_Day::class.java)
                 .equalTo("listID", ListID)
                 .findAll()
-            dayCount = q.size
-            for (i in 1..dayCount) {
-                val q2 = realm.where(T_Day::class.java)
-                    .equalTo("listID", ListID)
-                    .equalTo("num", i)
-                    .findFirst()
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, symbol))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, symbol))
+            for (q2 in q) {
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, symbol))
 
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, symbol))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), 0, "", "", "NULL", 3, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", "NULL", 3, symbol))
 
                 val q = realm.where(T_Money::class.java)
                     .equalTo("listID", ListID)
-                    .equalTo("dayNum", i)
+                    .equalTo("dayNum", q2.num)
                     .findAll()
 
-                for (i in 0..q.size - 1) {
-                    System.out.println(q.get(i)!!.listID)
-                    System.out.println(q.get(i)!!.dayNum)
-                    System.out.println(q.get(i)!!.id)
-                    System.out.println((q.get(i)!!.price / rate).roundToInt())
+                for (q3 in q) {
+//                    System.out.println(q.get(i)!!.listID)
+//                    System.out.println(q.get(i)!!.dayNum)
+//                    System.out.println(q.get(i)!!.id)
+//                    System.out.println((q.get(i)!!.price / rate).roundToInt())
 
                     addItem(
-                        q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, (q.get(i)!!.price / rate).roundToInt(),
-                        q.get(i)!!.cate, q.get(i)!!.img, q.get(i)!!.date, 1
+                        q3.listID, q3.dayNum, q3.id, (q3.price / rate).roundToInt(),
+                        q3.cate, q3.img, q3.date, 1
                     )
                 }
             }
@@ -259,19 +243,20 @@ class ShowMoneyActivity : AppCompatActivity() {
                 .equalTo("listID", ListID)
                 .equalTo("dayNum", DayNum)
                 .findAll()
-            for (i in 0..q.size - 1) {
-                System.out.println(q.get(i)!!.listID)
-                System.out.println(q.get(i)!!.dayNum)
-                System.out.println(q.get(i)!!.id)
-                System.out.println((q.get(i)!!.price / rate).roundToInt())
-                System.out.println(q.get(i)!!.img)
+            for (q3 in q) {
+//                System.out.println(q.get(i)!!.listID)
+//                System.out.println(q.get(i)!!.dayNum)
+//                System.out.println(q.get(i)!!.id)
+//                System.out.println((q.get(i)!!.price / rate).roundToInt())
+//                System.out.println(q.get(i)!!.img)
 
                 addItem(
-                    q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, (q.get(i)!!.price / rate).roundToInt(),
-                    q.get(i)!!.cate, q.get(i)!!.img, q.get(i)!!.date, 1
+                    q3.listID, q3.dayNum, q3.id, (q3.price / rate).roundToInt(),
+                    q3.cate, q3.img, q3.date, 1
                 )
             }
         }
+        money_recycleView.adapter = MIadapter
         MIadapter.notifyDataSetChanged()
     }
 
