@@ -53,6 +53,9 @@ class ShowPhotoActivity : AppCompatActivity() {
         initLayout()
         initListener()
     }
+    fun back(v: View?):Unit{
+        finish()
+    }
 
     inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener { // 오버라이딩 단축키 alt + enter
         override fun onNothingSelected(parent: AdapterView<*>?) {
