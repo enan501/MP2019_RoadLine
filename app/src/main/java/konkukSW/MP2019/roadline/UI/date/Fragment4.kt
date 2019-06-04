@@ -94,13 +94,14 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         var markerOptions = MarkerOptions()
         var boundsBuilder = LatLngBounds.builder()
 
-        val bitmapDraw = ContextCompat.getDrawable(activity!!.applicationContext,R.drawable.marker) as BitmapDrawable
-        val b = bitmapDraw.bitmap
-        val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
-        for(i in 0..spotList.size-1)
-        {
-            markerOptions
-                .position(latlngList[i])
+            val bitmapDraw = ContextCompat.getDrawable(activity!!.applicationContext,R.drawable.marker) as BitmapDrawable
+            val b = bitmapDraw.bitmap
+            val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
+
+            for(i in 0..spotList.size-1)
+            {
+                markerOptions
+                    .position(latlngList[i])
                 .title(spotList[i].name)
                 .snippet(spotList[i].time)
                 .icon(BitmapDescriptorFactory.fromBitmap(marker))

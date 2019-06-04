@@ -3,6 +3,7 @@ package konkukSW.MP2019.roadline.Data.Adapter
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
+import android.support.v4.content.ContextCompat
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import konkukSW.MP2019.roadline.R
@@ -45,21 +46,23 @@ class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dra
         if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
             val itemView = viewHolder.itemView
             val height = itemView.bottom.toFloat() - itemView.top.toFloat()
-            val width = height / 3
+            val width = height/3
 
             if(dX < 0){
                 p.color = Color.parseColor("#ef5f5f")
                 val background = RectF(itemView.right.toFloat() + dX, itemView.top.toFloat(), itemView.right.toFloat(), itemView.bottom.toFloat())
                 c.drawRect(background, p)
-                icon = BitmapFactory.decodeResource(context.resources, R.drawable.garbage_white)
-               // val mutableBitmap = Bitmap.createBitmap(icon.width, icon.height, Bitmap.Config.ARGB_8888)
-                val immutableDraw = icon as BitmapDrawable
-                immutableDraw.setBounds(0, 0, height.toInt(), height.toInt())
+//                icon = BitmapFactory.decodeResource(context.resources, R.drawable.garbage_white)
+//               // val mutableBitmap = Bitmap.createBitmap(icon.width, icon.height, Bitmap.Config.ARGB_8888)
+//                val immutableDraw = icon as BitmapDrawable
+//                immutableDraw.setBounds(0, 0, height.toInt(), height.toInt())
 
+                val bitmapDraw = ContextCompat.getDrawable(context,R.drawable.garbage_white) as BitmapDrawable
+                val b = bitmapDraw.bitmap
 
-                val icon_dest = RectF(itemView.right.toFloat() - 2*width, itemView.top.toFloat() + width, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width)
-                val newBitmap = immutableDraw.bitmap
-                c.drawBitmap(newBitmap, null, icon_dest, p)
+                val icon_dest = RectF(itemView.right.toFloat() - 3*width, itemView.top.toFloat() + width/2, itemView.right.toFloat() - width, itemView.bottom.toFloat() - width/2)
+                //val newBitmap = immutableDraw.bitmap
+                c.drawBitmap(b, null, icon_dest, p)
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
