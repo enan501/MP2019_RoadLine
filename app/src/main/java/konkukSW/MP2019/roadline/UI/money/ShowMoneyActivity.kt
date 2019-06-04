@@ -188,8 +188,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         TotalPrice = 0
         data.clear()
 
-
-        Realm.init(this);
+        Realm.init(this)
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
         if (DayNum == 0) // 리스트내 Day 전부 다 출력
         {
@@ -197,12 +196,12 @@ class ShowMoneyActivity : AppCompatActivity() {
                 .equalTo("listID", ListID)
                 .findAll()
             for (q2 in q) {
-                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, symbol))
-                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
-                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", q2!!.date, 0, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", "NULL", 4, symbol))
 
-                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, symbol))
-                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", "NULL", 5, symbol))
+                data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, symbol))
                 data.add(MoneyItem(ListID, q2.num, UUID.randomUUID().toString(), 0, "", "", "NULL", 3, symbol))
 
                 val q = realm.where(T_Money::class.java)
@@ -228,12 +227,12 @@ class ShowMoneyActivity : AppCompatActivity() {
                 .equalTo("listID", ListID)
                 .equalTo("num", DayNum)
                 .findFirst()
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, symbol))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, symbol))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", q2!!.date, 0, symbol))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, symbol))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 4, symbol))
 
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, symbol))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, symbol))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 5, symbol))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, symbol))
             data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 3, symbol))
 
             val q = realm.where(T_Money::class.java)
@@ -253,9 +252,11 @@ class ShowMoneyActivity : AppCompatActivity() {
                 )
             }
         }
+
         val layoutManager = GridLayoutManager(this, 3)
         money_recycleView.layoutManager = layoutManager
         MIadapter = MoneyItemAdapter(data)
+        money_recycleView.adapter = MIadapter
         MIadapter.notifyDataSetChanged()
     }
 
@@ -366,8 +367,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
         if (data.get(lastPos - 1).viewType != 2) {
             data.add(lastPos, MoneyItem(listID, DayNum, id, price, cate, img, date, viewType, symbol))
-            data.add(lastPos + 1, MoneyItem(listID, DayNum, id, -1, "", "", "NULL", 2, symbol))
-            data.add(lastPos + 2, MoneyItem(listID, DayNum, id, -1, "", "", "NULL", 2, symbol))
+            data.add(lastPos + 1, MoneyItem(listID, DayNum, id, 0, "", "", "NULL", 2, symbol))
+            data.add(lastPos + 2, MoneyItem(listID, DayNum, id, 0, "", "", "NULL", 2, symbol))
         } else if (data.get(lastPos - 2).viewType == 2) {
             data.removeAt(lastPos - 2)
             data.add(lastPos - 2, MoneyItem(listID, DayNum, id, price, cate, img, date, viewType, symbol))
