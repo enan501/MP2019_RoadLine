@@ -46,11 +46,18 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
 
         spotList.clear()
         latlngList.clear()
-        initData()
-        if(ListID != "init"){
+        if(ListID != "init") {
+            gMap.clear()
+            initData()
+            addPolylines()
+            addMarkers()
+        }
+        else{
+            initData()
             val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
             mapFragment.getMapAsync(this)
         }
+
     }
     fun initData(){
         if(activity != null){
@@ -84,8 +91,8 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         val polyLine = gMap.addPolyline(
             PolylineOptions()
                 .addAll(latlngList)
-                .width(15f)
-                .color(R.color.colorPrimary)
+                .width(10f)
+                .color(activity!!.getColor(R.color.blackAlpha))
                 .startCap(ButtCap())
                 .endCap(ButtCap())
         )

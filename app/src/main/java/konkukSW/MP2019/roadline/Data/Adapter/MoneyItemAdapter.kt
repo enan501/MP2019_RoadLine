@@ -92,7 +92,7 @@ class MoneyItemAdapter(val items: ArrayList<MoneyItem>) : RecyclerView.Adapter<R
                 holder.price.visibility = View.GONE
                 holder.cover.visibility = View.GONE
             }
-            holder.price.text = items.get(position).price.toString() + items.get(position).symbol
+            holder.price.text = items.get(position).price.toString() + " " + items.get(position).symbol
             if (items.get(position).img == "") {
                 when (items.get(position).cate) {
                     "식사" -> holder.img.setImageResource(R.drawable.meal)
@@ -108,7 +108,7 @@ class MoneyItemAdapter(val items: ArrayList<MoneyItem>) : RecyclerView.Adapter<R
             holder.day.text = "DAY" + items.get(position).dayNum.toString()
             holder.date.text = items.get(position).date
         } else if (holder is ViewHolder3) { // 토탈 아이템
-            holder.totalPrice.text = items.get(position).price.toString() + items.get(position).symbol
+            holder.totalPrice.text = items.get(position).price.toString() + " " +items.get(position).symbol
         }
     }
 

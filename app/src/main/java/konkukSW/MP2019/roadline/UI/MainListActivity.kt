@@ -94,8 +94,10 @@ class MainListActivity : AppCompatActivity() {
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
                 val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
                 val addListDialog = layoutInflater.inflate(konkukSW.MP2019.roadline.R.layout.add_list_dialog, null)
+                val addListText = addListDialog.findViewById<TextView>(konkukSW.MP2019.roadline.R.id.AL_text)
                 val addListTitle = addListDialog.findViewById<EditText>(konkukSW.MP2019.roadline.R.id.AL_title)
                 val addListDate = addListDialog.findViewById<DatePicker>(konkukSW.MP2019.roadline.R.id.AL_date)
+                addListText.text = "여행 수정"
                 val item = realm.where(T_List::class.java)
                     .equalTo("id", data.id)
                     .findFirst()

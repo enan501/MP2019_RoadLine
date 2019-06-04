@@ -1,14 +1,12 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
-import android.support.annotation.IntegerRes
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
-import konkukSW.MP2019.roadline.R
-import android.widget.*
+import android.widget.TextView
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
+import konkukSW.MP2019.roadline.R
 
 val VIEW_TYPE_0 = 0
 val VIEW_TYPE_1 = 1
@@ -36,6 +34,10 @@ class PlanAdapter(val items:ArrayList<Plan>)
         items.removeAt(pos)
         notifyItemRemoved(pos)
     }
+    interface OnItemClickListner{
+        fun OnItemClick(data: Plan, position: Int)
+    }
+    var itemClickListener : OnItemClickListner? = null
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         if (p1 === 0) {
@@ -139,66 +141,110 @@ class PlanAdapter(val items:ArrayList<Plan>)
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
+
     }
     inner class ViewHolder1(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder2(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder3(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder4(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder5(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder6(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder7(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder8(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder9(itemView: View): RecyclerView.ViewHolder(itemView) {
 
         init{
-
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     inner class ViewHolder10(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(items[position],position)
+            }
         }
     }
     override fun getItemViewType(position: Int): Int {
