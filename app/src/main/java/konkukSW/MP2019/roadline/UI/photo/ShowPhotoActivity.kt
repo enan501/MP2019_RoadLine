@@ -1,33 +1,32 @@
 package konkukSW.MP2019.roadline.UI.photo
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.net.Uri
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewManager
 import android.widget.*
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
-import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
-import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
-import konkukSW.MP2019.roadline.UI.money.AddMoneyActivity
-import konkukSW.MP2019.roadline.UI.money.ShowDetailMoneyActivity
-import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.activity_show_photo.*
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -38,9 +37,9 @@ class ShowPhotoActivity : AppCompatActivity() {
     var ListID = ""
     var DayNum = 0
     var dayCount = 0
-    var rate = 0.0
-    var symbol = "" // currency
-    var code = "" // currency
+    val SELECT_IMAGE = 100
+    var day_click = 0
+    var img_url: String = "" // 이미지 URI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,52 +49,90 @@ class ShowPhotoActivity : AppCompatActivity() {
         ListID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum", 0)
 
+        initPermission()
         initLayout()
         initListener()
     }
-    fun back(v: View?):Unit{
+
+    fun back(v: View?): Unit {
         finish()
     }
 
-    inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener { // 오버라이딩 단축키 alt + enter
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
-            // 화폐고름
+    fun initPermission() {
+        if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
+            askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
+        } else {
+            Toast.makeText(
+                getApplicationContext(),
+                "권한이 승인되었습니다.", Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
+    fun checkAppPermission(requestPermission: Array<String>): Boolean {
+        val requestResult = BooleanArray(requestPermission.size)
+        for (i in requestResult.indices) {
+            requestResult[i] = ContextCompat.checkSelfPermission(
+                this,
+                requestPermission[i]
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!requestResult[i]) {
+                return false
+            }
+        }
+        return true
+    } // checkAppPermission
+
+    fun askPermission(requestPermission: Array<String>, REQ_PERMISSION: Int) {
+        ActivityCompat.requestPermissions(
+            this, requestPermission,
+            REQ_PERMISSION
+        )
+    } // askPermission
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            SELECT_IMAGE -> if (checkAppPermission(permissions)) { //퍼미션 동의했을 때 할 일
+                Toast.makeText(this, "권한이 승인됨", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "권한이 거절됨", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+        }
+    } // onRequestPermissionsResult
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 123) {
+        if (requestCode == SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
+                img_url = getPathFromUri(data!!.data)
+
+                Realm.init(this)
+                val realm = Realm.getDefaultInstance()
+                realm.beginTransaction()
+                val Table: T_Photo = realm.createObject(T_Photo::class.java)//데이터베이스에 저장할 객체 생성
+                Table.listID = ListID
+                Table.dayNum = day_click
+                Table.id = UUID.randomUUID().toString()
+                Table.img = img_url
+                Table.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+                realm.commitTransaction()
+                val test = realm.where(T_Photo::class.java).findAll()
+                println(test)
+
                 initLayout() // 어댑터 갱신
                 initListener()
             }
         }
     }
 
-    fun initSwipe() {
-        val simpleItemTouchCallback = object :
-            ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.RIGHT) {
-            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                MIadapter.moveItem(p1.adapterPosition, p2.adapterPosition)
-                return true
-            }
-
-            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                MIadapter.removeItem(p0.adapterPosition)
-            }
-        }
-        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(money_recycleView)
+    fun getPathFromUri(uri: Uri): String {
+        val cursor = contentResolver.query(uri, null, null, null, null)
+        cursor!!.moveToNext()
+        val path = cursor.getString(cursor.getColumnIndex("_data"))
+        cursor.close()
+        return path
     }
 
     fun initListener() {
@@ -124,12 +161,8 @@ class ShowPhotoActivity : AppCompatActivity() {
         MIadapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                addItem(item.listID, item.DayNum,3000, 0, R.drawable.testimg1,
-//                    "2019.05.20", 1)
-                val intent = Intent(applicationContext, AddPhotoActivity::class.java)
-                intent.putExtra("ListID", item.listID)
-                intent.putExtra("DayNum", item.dayNum)
-                startActivityForResult(intent, 123)
+                day_click = item.dayNum
+                addImg()
             }
         }
         MIadapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
@@ -143,6 +176,15 @@ class ShowPhotoActivity : AppCompatActivity() {
                 ShowLayout(item)
             }
         }
+    }
+
+    fun addImg() {
+        //어떤 앱에서 이미지를 가져오는지 몰라서 묵시적 intent 수행
+        //가져올 때 액션 picK이라는 인텐트 필터 적용
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+        intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        startActivityForResult(intent, SELECT_IMAGE)
     }
 
     fun initLayout() {
@@ -208,25 +250,6 @@ class ShowPhotoActivity : AppCompatActivity() {
     }
 
     fun eraseItem(position: Int, item: MoneyItem) {
-//        data.removeAt(position)
-//        var lastPos = 0;
-//        for(i in 0..data.size)
-//        {
-//            if(data.get(i).dayNum == data.get(position).dayNum && data.get(i).viewType == 5) {
-//                lastPos = i
-//                break;
-//            }
-//        }
-//        data.add(lastPos, MoneyItem(item.listID, item.dayNum, UUID.randomUUID().toString(),-1, "", "", "NULL", 2))
-//        if(data.get(lastPos).viewType == 2 &&
-//            data.get(lastPos-1).viewType == 2 &&
-//            data.get(lastPos-2).viewType == 2)
-//        {
-//            data.removeAt(lastPos)
-//            data.removeAt(lastPos-1)
-//            data.removeAt(lastPos-2)
-//        }
-
         Realm.init(this);
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
 
@@ -275,7 +298,7 @@ class ShowPhotoActivity : AppCompatActivity() {
 
     fun ShowLayout(item: MoneyItem): Unit {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
-        val ll = inflater.inflate(R.layout.detail_img, null) as LinearLayout //레이아웃 객체생성
+        val ll = inflater.inflate(R.layout.detail_photo_img, null) as LinearLayout //레이아웃 객체생성
         ll.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
         val paramll =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT)
@@ -285,13 +308,18 @@ class ShowPhotoActivity : AppCompatActivity() {
         }
         var imageView = ll.findViewById<ImageView>(R.id.imageView) // 매번 새로운 레이어 이므로 ID를 find 해준다.
         var textView2 = ll.findViewById<TextView>(R.id.textView2)
-        var textView1 = ll.findViewById<TextView>(R.id.textView1)
         textView2.text = item.date.toString()
-        textView1.text = ""
-        if (item.img == "") {
-                imageView.setImageResource(R.drawable.logo)
-        } else
+        if (item.img == "")
+            imageView.setImageResource(R.drawable.logo)
+        else
             imageView.setImageBitmap(BitmapFactory.decodeFile(item.img))
+
+        var button = ll.findViewById<Button>(R.id.selectMainImg)
+        button.setOnClickListener {
+            // 대표사진으로 설정하는 코드
+
+
+        }
     }
 }
 

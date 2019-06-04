@@ -97,7 +97,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
     }
 
-    fun back(v: View?):Unit{
+    fun back(v: View?): Unit {
         finish()
     }
 
@@ -390,7 +390,7 @@ class ShowMoneyActivity : AppCompatActivity() {
 
     fun ShowLayout(item: MoneyItem): Unit {
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
-        val ll = inflater.inflate(R.layout.detail_img, null) as LinearLayout //레이아웃 객체생성
+        val ll = inflater.inflate(R.layout.detail_money_img, null) as LinearLayout //레이아웃 객체생성
         ll.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
         val paramll =
             LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT)
@@ -401,7 +401,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         var imageView = ll.findViewById<ImageView>(R.id.imageView) // 매번 새로운 레이어 이므로 ID를 find 해준다.
         var textView1 = ll.findViewById<TextView>(R.id.textView1)
         var textView2 = ll.findViewById<TextView>(R.id.textView2)
-        textView1.text = item.price.toString() + item.symbol
+        textView1.text = item.price.toString() + " " + item.symbol
         textView2.text = item.date.toString()
         if (item.img == "") {
             when (item.cate) {
