@@ -46,17 +46,10 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
 
         spotList.clear()
         latlngList.clear()
-        if(ListID != "init") {
-            gMap.clear()
-            initData()
-            addPolylines()
-            addMarkers()
-        }
-        else{
-            initData()
-            val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
-            mapFragment.getMapAsync(this)
-        }
+        val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        initData()
+
 
     }
     fun initData(){
@@ -83,6 +76,7 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
     }
     override fun onMapReady(p0: GoogleMap) {
         gMap = p0
+        gMap.clear()
         addPolylines()
         addMarkers()
     }

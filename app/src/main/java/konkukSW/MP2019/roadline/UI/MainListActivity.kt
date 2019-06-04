@@ -64,6 +64,7 @@ class MainListActivity : AppCompatActivity() {
             MLArray.add(MainList(T_List.id,T_List.title,T_List.date,T_List.img))
         }
     }
+
     fun initSwipe(){
         val simpleItemTouchCallback = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT){
             override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
