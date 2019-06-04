@@ -72,6 +72,16 @@ class ShowDateActivity : AppCompatActivity() {
                 }
             }
             override fun onPageSelected(position: Int) {
+                if(position == 1) {
+                    (getSupportFragmentManager()
+                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
+                            as Fragment2).init()
+                }
+                else if(position == 2) {
+                    (getSupportFragmentManager()
+                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
+                            as Fragment4).refresh()
+                }
             }
         })
         tabLayer!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
