@@ -42,7 +42,6 @@ class ShowMoneyActivity : AppCompatActivity() {
 
     var data: ArrayList<MoneyItem> = ArrayList()
     lateinit var MIadapter: MoneyItemAdapter
-
     var ListID = ""
     var DayNum = 0
     var dayCount = 0
@@ -92,6 +91,17 @@ class ShowMoneyActivity : AppCompatActivity() {
             currencySymbol.text = symbol
             val exchange = TotalPrice / rate
             money_totalTextView.text = exchange.toInt().toString()
+
+            if (DayNum != 0) { // 화면에 보여지는 데이가 전체가 아님
+                val c_day = realm.where(T_Day::class.java)
+                    .equalTo("num", DayNum) // 현재 날짜를 골라낸다
+                    .findFirst() // findfirst하면 한놈만 골라냄
+
+                realm.beginTransaction()
+                c_day?.currency = code //해당 날짜의 currency 변경
+                realm.commitTransaction()
+            } // 데이 전체면 변경 안함
+
         }
     }
 
@@ -156,7 +166,6 @@ class ShowMoneyActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, AddMoneyActivity::class.java)
                 intent.putExtra("ListID", item.listID)
                 intent.putExtra("DayNum", item.dayNum)
-                intent.putExtra("currencyCode", code)
                 startActivityForResult(intent, 123)
             }
         }
@@ -279,10 +288,26 @@ class ShowMoneyActivity : AppCompatActivity() {
         // 해당 화페 가져옴
 
         val find = realm.where(T_Currency::class.java).findAll()
+        val d_currency = realm.where(T_Day::class.java).equalTo("num", DayNum).findFirst()
 
-        for (i in 0..find.size - 1)
-            if (find.get(i)!!.code == "KRW")
-                currencySpinner.setSelection(i)
+        println(d_currency?.currency)
+        if (DayNum != 0) { // 데이가 전체가 아니면 데이에 따라 스피너 선택되어있음
+            // 처음 아니면 계속 이전것
+            if (d_currency?.currency == "KRW") { // 통화를 따로 선택하지 않았다
+                for (i in 0..find.size - 1)
+                    if (find.get(i)!!.code == "KRW")   // 현재 코드로 변경함
+                        currencySpinner.setSelection(i)
+            } else { // 통화를 따로 선택하지 않았다
+                for (i in 0..find.size - 1)
+                    if (find.get(i)!!.code == d_currency?.currency)   // 현재 코드로 변경함
+                        currencySpinner.setSelection(i)
+            }
+        } else { // 데이 전체면 그냥 KRW로 스피너 선택
+            for (i in 0..find.size - 1)
+                if (find.get(i)!!.code == "KRW")  // 현재 코드로 변경함
+                    currencySpinner.setSelection(i)
+
+        }
     }
 
     fun eraseItem(position: Int, item: MoneyItem) {

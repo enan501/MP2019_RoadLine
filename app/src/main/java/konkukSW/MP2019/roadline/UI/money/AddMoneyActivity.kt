@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
+import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_show_money.*
@@ -30,6 +31,8 @@ import kotlin.collections.ArrayList
 class AddMoneyActivity : AppCompatActivity() {
     var currencyList: ArrayList<Currency> = ArrayList()
     val SELECT_IMAGE = 100
+    var listID = ""
+    var dayNum = 0
     var img_url: String = "" // 이미지 URI
     var price = 0 // 가격
     var cate: String = "" // 카테고리
@@ -90,6 +93,10 @@ class AddMoneyActivity : AppCompatActivity() {
 
 
     fun init() {
+        val i = intent
+        dayNum = i.getIntExtra("DayNum", 0)
+        listID = i.getStringExtra("ListID")
+
         category_click()
         money_calculation()
     }
@@ -127,24 +134,22 @@ class AddMoneyActivity : AppCompatActivity() {
 
     //currencyList'
     fun money_calculation() { // 현재 환율 불러와서 원 단위로 환산
-        val i = intent
-        currenyCode = i.getStringExtra("currencyCode")
 
         Realm.init(this)
         val realm = Realm.getDefaultInstance()
 
-        val find = realm.where(T_Currency::class.java).findAll()
+        val c_day = realm.where(T_Day::class.java)
+            .equalTo("num", dayNum) // 현재 날짜를 골라낸다
+            .findFirst()
+        currenyCode = c_day?.currency.toString() // 데이에 저장된 통화 코드 알아냄
+        println(currenyCode)
 
-        var currency_rate = 0.0
-        var input = 0.0
-        for (i in 0..find.size - 1) {
-            if (find.get(i)!!.code == currenyCode) {
-                currency.text = find.get(i)!!.symbol // 출력변경
-                currency_rate = find.get(i)!!.rate
-                break
-            }
-        }
+        val find = realm.where(T_Currency::class.java)
+            .equalTo("code", currenyCode).findFirst()
 
+        currency.text = find?.symbol.toString() // 출력변경
+        println(find?.symbol.toString())
+        val currency_rate = find!!.rate
 
         priceTxt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -190,10 +195,6 @@ class AddMoneyActivity : AppCompatActivity() {
 
         val moneyTable: T_Money = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
         val moneyTableTuple = realm.where(T_Money::class.java).findAll()
-
-        val i = intent
-        val dayNum = i.getIntExtra("DayNum", 0)
-        val listID = i.getStringExtra("ListID")
 
         moneyTable.listID = listID
         moneyTable.dayNum = dayNum
