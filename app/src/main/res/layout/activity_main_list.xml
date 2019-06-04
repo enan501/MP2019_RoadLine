@@ -68,7 +68,7 @@
             android:layout_marginBottom="10dp"
             android:backgroundTint="#FFFFFF"
             android:clickable="true"
-            app:srcCompat="@drawable/add_bt" />
+            android:src="@drawable/add_bt2" />
 
     </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

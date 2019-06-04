@@ -3,6 +3,7 @@ package konkukSW.MP2019.roadline.UI.date
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
@@ -37,10 +38,9 @@ class ShowDateActivity : AppCompatActivity() {
 
     fun initData(){
         tabLayer = findViewById(R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setText("리스트"))
-        tabLayer!!.addTab(tabLayer!!.newTab().setText("가로 타임라인"))
-        //tabLayer!!.addTab(tabLayer!!.newTab().setText("세로 타임라인"))
-        tabLayer!!.addTab(tabLayer!!.newTab().setText("지도"))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
 
         ListID = intent.getStringExtra("ListID")
         DayNum = intent.getIntExtra("DayNum", 0)
@@ -54,11 +54,34 @@ class ShowDateActivity : AppCompatActivity() {
     fun initListener(){
         adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
         sd_viewPager.adapter = adapter
-        sd_viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayer))
+        //sd_viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayer))
+        sd_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
+            override fun onPageScrollStateChanged(state: Int) {}
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                when(position) {
+                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
+                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
+                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                }
+            }
+            override fun onPageSelected(position: Int) {
+            }
+        })
         tabLayer!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
+                tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                when(tab.position) {
+                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
+                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
+                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                }
                 sd_viewPager.currentItem = tab.position
                 if(tab.position == 1) {
                     (getSupportFragmentManager()
@@ -104,7 +127,14 @@ class ShowDateActivity : AppCompatActivity() {
 
         sd_imgBtn1.setOnClickListener {
             //사진첩 버튼
-            startActivity(Intent(this, ShowPhotoActivity::class.java))
+            var Intent = Intent(this, ShowPhotoActivity::class.java)
+            Intent.putExtra("ListID", ListID)
+            Intent.putExtra("DayNum", DayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
+            startActivity(Intent)
+            overridePendingTransition(
+                R.anim.anim_slide_in_top,
+                R.anim.anim_slide_out_bottom
+            )
         }
 
         sd_imgBtn2.setOnClickListener {

@@ -15,7 +15,6 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:background="@drawable/add_bt"
-            android:backgroundTint="#C7C7C7"
             android:clickable="true">
 
         </ImageView>

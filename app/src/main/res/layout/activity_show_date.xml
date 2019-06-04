@@ -17,12 +17,12 @@
 
         <ImageView
             android:id="@+id/sd_leftImg"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            app:srcCompat="@drawable/next_left" />
+            app:srcCompat="@drawable/back" />
 
         <LinearLayout
+            android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
@@ -31,36 +31,35 @@
             <TextView
                 android:id="@+id/sd_textView1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.5"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
                 android:gravity="bottom|left"
                 android:text="대만여행-DAY3"
-                android:textSize="28sp" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="32sp" />
 
             <TextView
                 android:id="@+id/sd_textView2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:textColor="@color/common_google_signin_btn_text_light_focused"
                 android:gravity="center_vertical|left"
                 android:text="2018.12.05"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/sd_rightImg"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
-            android:layout_weight="2"
-            app:srcCompat="@drawable/next_right" />
+            app:srcCompat="@drawable/next" />
     </LinearLayout>
 
     <android.support.design.widget.TabLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:tabGravity="center"
+            android:layout_height="50dp"
             android:id="@+id/sd_layout_tab"
+            android:background="@drawable/grad1"
             app:tabMode="fixed"
             app:tabTextColor="#000000"
             app:tabSelectedTextColor="@color/colorPrimary"

@@ -85,7 +85,7 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
             PolylineOptions()
                 .addAll(latlngList)
                 .width(15f)
-                .color(konkukSW.MP2019.roadline.R.color.colorPrimary)
+                .color(R.color.colorPrimary)
                 .startCap(ButtCap())
                 .endCap(ButtCap())
         )

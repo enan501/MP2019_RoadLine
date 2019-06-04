@@ -87,6 +87,11 @@ class MoneyItemAdapter(val items: ArrayList<MoneyItem>) : RecyclerView.Adapter<R
 
         if (holder is ViewHolder1) // 이미지 아이템
         {
+            if(items.get(position).price == -5) // 추억함 아이템일 경우
+            {
+                holder.price.visibility = View.GONE
+                holder.cover.visibility = View.GONE
+            }
             holder.price.text = items.get(position).price.toString()
             if (items.get(position).img == "") {
                 when (items.get(position).cate) {
@@ -121,11 +126,11 @@ class MoneyItemAdapter(val items: ArrayList<MoneyItem>) : RecyclerView.Adapter<R
     inner class ViewHolder1(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var price: TextView
         var img: ImageView
-
+        var cover: ImageView
         init {
             price = itemView.findViewById(R.id.money_Item_textView)
             img = itemView.findViewById(R.id.money_Item_imageView)
-
+            cover = itemView.findViewById(R.id.img_cover)
             /* 리사이클뷰 어댑터에 리스너 달기 */
             itemView.setOnLongClickListener {
                 val position = adapterPosition

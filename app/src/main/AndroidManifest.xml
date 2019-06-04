@@ -23,6 +23,7 @@
         <activity android:name=".UI.money.AddMoneyActivity">
         </activity>
         <activity android:name=".UI.photo.ShowPhotoActivity" />
+        <activity android:name=".UI.photo.AddPhotoActivity" />
         <activity android:name=".UI.money.ShowMoneyActivity" />
         <activity android:name=".UI.date.ShowDateActivity" />
         <activity android:name=".UI.date.PickDateActivity" />
