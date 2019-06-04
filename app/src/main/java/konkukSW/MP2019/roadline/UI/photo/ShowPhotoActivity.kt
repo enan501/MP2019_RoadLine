@@ -162,13 +162,13 @@ class ShowPhotoActivity : AppCompatActivity() {
                     .equalTo("listID", ListID)
                     .equalTo("num", i)
                     .findFirst()
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 4))
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, "NULL"))
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, "NULL"))
 
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 5))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2))
-                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), 0, "", "", "NULL", 2))
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, "NULL"))
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
+                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, "NULL"))
 
                 val q = realm.where(T_Photo::class.java)
                     .equalTo("listID", ListID)
@@ -185,13 +185,13 @@ class ShowPhotoActivity : AppCompatActivity() {
                 .equalTo("listID", ListID)
                 .equalTo("num", DayNum)
                 .findFirst()
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 4))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, "NULL"))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, "NULL"))
 
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 5))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2))
-            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 2))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, "NULL"))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
+            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, "NULL"))
 
             val q = realm.where(T_Photo::class.java)
                 .equalTo("listID", ListID)
@@ -257,15 +257,15 @@ class ShowPhotoActivity : AppCompatActivity() {
             }
         }
         if (data.get(lastPos - 1).viewType != 2) {
-            data.add(lastPos, MoneyItem(listID, DayNum, id, -5, "", img, date, viewType))
-            data.add(lastPos + 1, MoneyItem(listID, DayNum, id, -1, "", "", "NULL", 2))
-            data.add(lastPos + 2, MoneyItem(listID, DayNum, id, -1, "", "", "NULL", 2))
+            data.add(lastPos, MoneyItem(listID, DayNum, id, -5, "", img, date, viewType, "NULL"))
+            data.add(lastPos + 1, MoneyItem(listID, DayNum, id, -1, "", "", "NULL", 2, "NULL"))
+            data.add(lastPos + 2, MoneyItem(listID, DayNum, id, -1, "", "", "NULL", 2, "NULL"))
         } else if (data.get(lastPos - 2).viewType == 2) {
             data.removeAt(lastPos - 2)
-            data.add(lastPos - 2, MoneyItem(listID, DayNum, id, -5, "", img, date, viewType))
+            data.add(lastPos - 2, MoneyItem(listID, DayNum, id, -5, "", img, date, viewType, "NULL"))
         } else if (data.get(lastPos - 1).viewType == 2) {
             data.removeAt(lastPos - 1)
-            data.add(lastPos - 1, MoneyItem(listID, DayNum, id, -5, "", img, date, viewType))
+            data.add(lastPos - 1, MoneyItem(listID, DayNum, id, -5, "", img, date, viewType, "NULL"))
         }
         MIadapter.notifyDataSetChanged()
     }
