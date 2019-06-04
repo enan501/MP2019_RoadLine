@@ -84,8 +84,8 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         val polyLine = gMap.addPolyline(
             PolylineOptions()
                 .addAll(latlngList)
-                .width(15f)
-                .color(R.color.colorPrimary)
+                .width(10f)
+                .color(activity!!.getColor(R.color.blackAlpha))
                 .startCap(ButtCap())
                 .endCap(ButtCap())
         )
