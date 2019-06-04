@@ -188,9 +188,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     fun initLayout() {
         TotalPrice = 0;
         data.clear()
-        val layoutManager = GridLayoutManager(this, 3)
-        money_recycleView.layoutManager = layoutManager
-        MIadapter = MoneyItemAdapter(data)
+
 
         Realm.init(this);
         val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
@@ -256,7 +254,9 @@ class ShowMoneyActivity : AppCompatActivity() {
                 )
             }
         }
-        money_recycleView.adapter = MIadapter
+        val layoutManager = GridLayoutManager(this, 3)
+        money_recycleView.layoutManager = layoutManager
+        MIadapter = MoneyItemAdapter(data)
         MIadapter.notifyDataSetChanged()
     }
 
@@ -385,7 +385,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 break;
             }
         }
-        MIadapter.notifyDataSetChanged()
+
     }
 
     fun ShowLayout(item: MoneyItem): Unit {
