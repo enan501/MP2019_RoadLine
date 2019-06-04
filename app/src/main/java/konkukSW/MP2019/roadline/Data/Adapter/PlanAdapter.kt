@@ -35,8 +35,19 @@ class PlanAdapter(val items:ArrayList<Plan>)
         notifyItemRemoved(pos)
     }
     interface OnItemClickListner{
-        fun OnItemClick(data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder0, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder1, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder2, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder3, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder4, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder5, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder6, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder7, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder8, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder9, data: Plan, position: Int)
+        fun OnItemClick(holder:ViewHolder10, data: Plan, position: Int)
     }
+
     var itemClickListener : OnItemClickListner? = null
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -143,7 +154,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
 
@@ -154,7 +165,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -164,7 +175,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -174,7 +185,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -184,7 +195,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -194,7 +205,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -204,7 +215,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -214,7 +225,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -224,7 +235,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -233,7 +244,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
         init{
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }
@@ -243,7 +254,7 @@ class PlanAdapter(val items:ArrayList<Plan>)
             name = itemView.findViewById(R.id.plan_Item_textView)
             itemView.setOnClickListener {
                 val position = adapterPosition
-                itemClickListener?.OnItemClick(items[position],position)
+                itemClickListener?.OnItemClick(this,items[position],position)
             }
         }
     }

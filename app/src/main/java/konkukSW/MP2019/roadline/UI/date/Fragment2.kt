@@ -59,9 +59,50 @@ class Fragment2 : Fragment() {
 
     fun addListener() {
         adapter.itemClickListener = object : PlanAdapter.OnItemClickListner {
-            override fun OnItemClick(data: Plan, position: Int) {
+            override fun OnItemClick(holder:PlanAdapter.ViewHolder0,data: Plan, position: Int) {
                 Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
             }
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder1, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder2, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder3, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder4, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder5, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder6, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder7, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder8, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder9, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder10, data: Plan, position: Int) {
+                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            }
+
+
         }
     }
     fun init()
