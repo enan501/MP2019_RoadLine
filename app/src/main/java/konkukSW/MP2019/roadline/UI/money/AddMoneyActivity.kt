@@ -27,7 +27,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
-
 class AddMoneyActivity : AppCompatActivity() {
     var currencyList: ArrayList<Currency> = ArrayList()
     val SELECT_IMAGE = 100
@@ -146,6 +145,7 @@ class AddMoneyActivity : AppCompatActivity() {
             }
         }
 
+
         priceTxt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -157,8 +157,13 @@ class AddMoneyActivity : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                exchange = currency_rate * s.toString().toDouble()
-                addMoneyExchange.text = exchange.toString() + "원"
+                if (s.toString() == "") {
+                    addMoneyExchange.visibility = View.INVISIBLE
+                } else {
+                    addMoneyExchange.visibility = View.VISIBLE
+                    exchange = currency_rate * s.toString().toDouble()
+                    addMoneyExchange.text = exchange.toString() + "원"
+                }
             }
         })
     }

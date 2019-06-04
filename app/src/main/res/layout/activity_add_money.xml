@@ -48,6 +48,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="7"
                 android:paddingRight="15dp"
+                android:inputType="number"
                 android:textAlignment="textEnd" />
             <TextView
                 android:layout_width="0dp"
