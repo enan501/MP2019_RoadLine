@@ -6,23 +6,47 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".UI.MainListActivity"
-        android:orientation="vertical">
+        android:orientation="vertical"
+    android:background="#ffffff">
 
 
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/grad1">
 
-    <TextView
-            android:text="여행 List"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/ML_title"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="20dp"
-    android:textSize="28sp"
-    android:textColor="@color/black"/>
+            <TextView
+                android:text="여행 리스트"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ML_title"
+                android:layout_gravity="bottom"
+                android:paddingBottom="36dp"
+                android:paddingLeft="20dp"
+                android:textSize="28sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/nanum_square_round_r"
+                />
+            <TextView
+                android:text="- 오늘은 어디로 떠나시나요?"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingBottom="16dp"
+                android:paddingLeft="24dp"
+                android:textSize="14sp"
+                android:textColor="@color/white"
+                android:fontFamily="@font/nanum_square_round_r"
+                />
+
+    </FrameLayout>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="0dp"
+        android:layout_weight="4">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ML_rView"
@@ -39,8 +63,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:backgroundTint="#FFFFFF"
             android:clickable="true"
             app:srcCompat="@drawable/add_bt" />

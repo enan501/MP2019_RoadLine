@@ -18,6 +18,8 @@ import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.Dataclass.MainList
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 
@@ -88,14 +90,52 @@ class MainListActivity : AppCompatActivity() {
                 MLIntent.putExtra("ListID",data.id)
                 startActivity(MLIntent)
             }
+            override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
+                val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+                val addListDialog = layoutInflater.inflate(konkukSW.MP2019.roadline.R.layout.add_list_dialog, null)
+                val addListTitle = addListDialog.findViewById<EditText>(konkukSW.MP2019.roadline.R.id.AL_title)
+                val addListDate = addListDialog.findViewById<DatePicker>(konkukSW.MP2019.roadline.R.id.AL_date)
+                val item = realm.where(T_List::class.java)
+                    .equalTo("id",data.id)
+                    .findFirst()
+                addListTitle.setText(item!!.title)
+                val date = LocalDate.parse(item.date, DateTimeFormatter.ofPattern("yyyy. M. d"))
+                addListDate.updateDate(date.year,date.monthValue,date.dayOfMonth)
+
+                builder.setView(addListDialog)
+                    .setPositiveButton("수정") { dialogInterface, _ ->
+                        realm.beginTransaction()
+                        item.title = addListTitle.text.toString()
+                        item.date = addListDate.year.toString() +". "+ (addListDate.month+1).toString() +". "+ addListDate.dayOfMonth.toString()
+                        val Days = realm.where(T_Day::class.java).equalTo("listID",item.id).findAll()
+                        var i = 0L
+                        for (day in Days){
+                            day.date = LocalDate.parse(item.date, DateTimeFormatter.ofPattern("yyyy. M. d")).plusDays(i++)
+                                .format( DateTimeFormatter.ofPattern("yyyy. M. d"))
+                        }
+                        realm.commitTransaction()
+                        MLArray[position].title = item.title
+                        MLArray[position].date = item.date
+                        MLAdapter.notifyDataSetChanged()
+                    }
+                    .setNegativeButton("취소") { dialogInterface, i ->
+                    }
+                    .show()
+            }
+
+            override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
+
+            }
+
         }
         MLAdapter.itemLongClickListener = object : MainListAdapter.OnItemLongClickListener {
             override fun OnItemLongClick(
                 holder: MainListAdapter.ViewHolder,view: View,data: MainList,position: Int) {
                 Log.d("longclicked", "LongClicked")
             }
-
         }
+
+
 //        var gestureDetector = GestureDetector(this, object : GestureDetector.SimpleOnGestureListener() {
 //            override fun onSingleTapUp(e: MotionEvent): Boolean {
 //                return true

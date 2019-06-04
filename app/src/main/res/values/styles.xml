@@ -10,6 +10,19 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--기본폰트 변경-->
+    <style name="TextViewStyle" parent="android:Widget.TextView">
+        <item name="android:fontFamily">@font/iropkebatang</item>
+    </style>
+
+    <style name="ButtonStyle" parent="android:Widget.Button">
+        <item name="android:fontFamily">@font/iropkebatang</item>
+    </style>
+
+    <style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:fontFamily">@font/iropkebatang</item>
+    </style>
+
 <style name="Splash"
     parent="AppTheme">
     <item name="windowActionBar">false</item>

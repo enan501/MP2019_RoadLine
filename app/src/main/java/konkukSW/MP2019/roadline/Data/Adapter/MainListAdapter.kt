@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import io.realm.Realm
@@ -53,6 +54,8 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
     }
     interface OnItemClickListener{
         fun OnItemClick(holder:ViewHolder, data: MainList, position: Int)
+        fun OnEditClick(holder:ViewHolder, data: MainList, position: Int)
+        fun OnDeleteClick(holder:ViewHolder, data: MainList, position: Int)
     }
     interface OnItemLongClickListener {
         fun OnItemLongClick(holder: ViewHolder, view: View, data: MainList, position: Int)
@@ -65,10 +68,14 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
         var title: TextView
         var date: TextView
         var image: ImageView
+        var edit: ImageButton
+        var delete: ImageButton
         init{
             title = itemView.findViewById(R.id.MLItem_title)
             date = itemView.findViewById(R.id.MLItem_date)
             image = itemView.findViewById(R.id.MLItem_image)
+            edit = itemView.findViewById(R.id.ML_edit)
+            delete = itemView.findViewById(R.id.ML_delete)
             itemView.setOnClickListener{
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this,items[position],position)
@@ -77,6 +84,14 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
                 val position = adapterPosition
                 itemLongClickListener?.OnItemLongClick(this,it, items[position],position)
                 true
+            }
+            edit.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnEditClick(this,items[position],position)
+            }
+            delete.setOnClickListener {
+                val position = adapterPosition
+                itemClickListener?.OnDeleteClick(this,items[position],position)
             }
 
         }
