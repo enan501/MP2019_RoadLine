@@ -257,6 +257,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         val layoutManager = GridLayoutManager(this, 3)
         money_recycleView.layoutManager = layoutManager
         MIadapter = MoneyItemAdapter(data)
+        money_recycleView.adapter = MIadapter
         MIadapter.notifyDataSetChanged()
     }
 
