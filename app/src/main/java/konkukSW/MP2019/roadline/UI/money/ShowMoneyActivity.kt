@@ -146,7 +146,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                         // content
                     }).setNegativeButton("확인",
                     DialogInterface.OnClickListener { dialog, which ->
-                        eraseItem(item.dayNum, item)
+                        eraseItem(position, item)
                         return@OnClickListener
                     })
                 val alert = alert_confirm.create()
