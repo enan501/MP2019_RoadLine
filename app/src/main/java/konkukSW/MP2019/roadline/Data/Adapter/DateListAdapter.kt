@@ -149,13 +149,14 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
             dragBtn.setOnTouchListener { v, event ->
                 if(event.action == MotionEvent.ACTION_DOWN){
                     listener.onStartDrag(this)
-                    //listener.onStartSwipe(this)
                 }
                 false
             }
             spotName.setOnTouchListener { v, event ->
                 if(event.action == MotionEvent.ACTION_DOWN){
+                    //확인창띄우기
                     listener.onStartSwipe(this)
+
                 }
                 false
             }

@@ -126,7 +126,6 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     }
 
     fun initSwipe(){
-        Log.v("planList1", adapter.items.size.toString())
         callback = DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기

@@ -10,6 +10,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.EditText
+import android.widget.TimePicker
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -39,6 +40,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var btnType:Boolean = false
     var time:String = ""
     var memo:String = ""
+    var hour:Int = 0
+    var min:Int = 0
+
     lateinit var bitmapDraw:BitmapDrawable
     lateinit var b:Bitmap
     lateinit var markerIcon:Bitmap
@@ -133,9 +137,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
         }
 
-        as_button_plus.setOnClickListener { //상세정보 추가 버튼
+        as_button_memo.setOnClickListener { //상세정보 추가 버튼
             val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-            val addDialog = layoutInflater.inflate(R.layout.add_plan_dialog, null)
+            val addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
             val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
             val dialogTime = addDialog.findViewById<EditText>(R.id.apd_editText2)
             dialogMemo.setText(memo)
@@ -143,7 +147,23 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             builder.setView(addDialog)
                 .setPositiveButton("추가") { dialogInterface, i ->
                     memo = dialogMemo.text.toString()
-                    time = dialogTime.text.toString()
+                }
+                .setNegativeButton("취소") { dialogInterface, i ->
+                }
+                .show()
+        }
+
+        as_button_time.setOnClickListener { //상세정보 추가 버튼
+            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+            val addDialog = layoutInflater.inflate(R.layout.add_time_dialog, null)
+            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
+            dialogTime.hour = hour
+            dialogTime.minute = min
+            builder.setView(addDialog)
+                .setPositiveButton("추가") { dialogInterface, i ->
+                    hour = dialogTime.hour
+                    min = dialogTime.minute
+                    time = hour.toString() + "/"+min.toString()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }
@@ -161,18 +181,24 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
             spotName = result.name
             time = result.time
+            Log.v("timetag", time)
+            if(time != ""){
+                hour = Integer.parseInt(time.split("/").get(0))
+                min = Integer.parseInt(time.split("/").get(1))
+            }else{
+                time = ""
+            }
             memo = result.memo
             locationX = result.locationX
             locationY = result.locationY
             btnType = true
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spotName)
-
             addMap.addMarker(
                 MarkerOptions()
                         .position(LatLng(locationY,locationX))
                         .title(spotName)
-                        .snippet(time)
+                        .snippet(hour.toString()+"시 "+min.toString()+"분")
                     .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
             )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
