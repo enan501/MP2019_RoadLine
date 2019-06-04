@@ -41,16 +41,16 @@ class PickDateActivity : AppCompatActivity() {
         val layoutManager = CenterZoomLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         val smoothScroller = object : LinearSmoothScroller(this) {
             override fun getHorizontalSnapPreference(): Int {
-                return SNAP_TO_START
+                return SNAP_TO_END
             }
         }
-        smoothScroller.targetPosition = 1
-        smoothScroller.computeScrollVectorForPosition(0)
         PD_rView.layoutManager = layoutManager
+        snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
         PDAdapter = PickDateAdapter(dateList)
         PD_rView.adapter = PDAdapter
+        smoothScroller.targetPosition = 1
+        smoothScroller.computeScrollVectorForPosition(1)
         layoutManager.startSmoothScroll(smoothScroller)
-        snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
         addListener()
     }
     fun initData(){

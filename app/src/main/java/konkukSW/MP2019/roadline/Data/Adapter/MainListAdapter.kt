@@ -26,6 +26,11 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
         changePos()
         notifyItemMoved(pos1,pos2)
     }
+    fun removeItem(pos:Int){
+        items.removeAt(pos)
+        changePos()
+        notifyItemRemoved(pos)
+    }
 
     override fun getItemCount(): Int {
         return items.size

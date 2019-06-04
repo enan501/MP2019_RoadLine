@@ -53,8 +53,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:layout_margin="5dp"
-        android:padding="5dp">
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        >
 
     </android.support.v7.widget.RecyclerView>
 

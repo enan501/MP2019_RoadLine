@@ -11,11 +11,12 @@ import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.TextView
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.MainListAdapter
-import konkukSW.MP2019.roadline.Data.DB.T_Day
-import konkukSW.MP2019.roadline.Data.DB.T_List
+import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.Data.Dataclass.MainList
+import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
 import java.time.LocalDate
@@ -96,22 +97,23 @@ class MainListActivity : AppCompatActivity() {
                 val addListTitle = addListDialog.findViewById<EditText>(konkukSW.MP2019.roadline.R.id.AL_title)
                 val addListDate = addListDialog.findViewById<DatePicker>(konkukSW.MP2019.roadline.R.id.AL_date)
                 val item = realm.where(T_List::class.java)
-                    .equalTo("id",data.id)
+                    .equalTo("id", data.id)
                     .findFirst()
                 addListTitle.setText(item!!.title)
                 val date = LocalDate.parse(item.date, DateTimeFormatter.ofPattern("yyyy. M. d"))
-                addListDate.updateDate(date.year,date.monthValue,date.dayOfMonth)
-
+                addListDate.updateDate(date.year, date.monthValue, date.dayOfMonth)
                 builder.setView(addListDialog)
                     .setPositiveButton("수정") { dialogInterface, _ ->
                         realm.beginTransaction()
                         item.title = addListTitle.text.toString()
-                        item.date = addListDate.year.toString() +". "+ (addListDate.month+1).toString() +". "+ addListDate.dayOfMonth.toString()
-                        val Days = realm.where(T_Day::class.java).equalTo("listID",item.id).findAll()
+                        item.date =
+                            addListDate.year.toString() + ". " + (addListDate.month + 1).toString() + ". " + addListDate.dayOfMonth.toString()
+                        val Days = realm.where(T_Day::class.java).equalTo("listID", item.id).findAll()
                         var i = 0L
-                        for (day in Days){
-                            day.date = LocalDate.parse(item.date, DateTimeFormatter.ofPattern("yyyy. M. d")).plusDays(i++)
-                                .format( DateTimeFormatter.ofPattern("yyyy. M. d"))
+                        for (day in Days) {
+                            day.date =
+                                LocalDate.parse(item.date, DateTimeFormatter.ofPattern("yyyy. M. d")).plusDays(i++)
+                                    .format(DateTimeFormatter.ofPattern("yyyy. M. d"))
                         }
                         realm.commitTransaction()
                         MLArray[position].title = item.title
@@ -119,12 +121,38 @@ class MainListActivity : AppCompatActivity() {
                         MLAdapter.notifyDataSetChanged()
                     }
                     .setNegativeButton("취소") { dialogInterface, i ->
+
                     }
                     .show()
             }
-
             override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
+                val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+                val deleteListDialog =
+                    layoutInflater.inflate(R.layout.delete_list_dialog, null)
+                val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
+                val item = realm.where(T_List::class.java)
+                    .equalTo("id", data.id)
+                    .findFirst()
+                var deleteMessage = "'"+item!!.title+deleteListText.text
+                deleteListText.text = deleteMessage
 
+                builder.setView(deleteListDialog)
+                    .setPositiveButton("삭제") { dialogInterface, _ ->
+                        realm.beginTransaction()
+
+                        realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                        realm.where(T_Money::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                        realm.where(T_Photo::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                        realm.where(T_Plan::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                        item.deleteFromRealm()
+                        realm.commitTransaction()
+                        MLAdapter.removeItem(position)
+                        MLAdapter.notifyDataSetChanged()
+                    }
+                    .setNegativeButton("취소") { dialogInterface, i ->
+
+                    }
+                    .show()
             }
 
         }
