@@ -4,8 +4,11 @@ import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
 import android.support.v4.content.ContextCompat
+import android.support.v7.app.AlertDialog
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.view.LayoutInflater
+import android.widget.TextView
 import konkukSW.MP2019.roadline.R
 
 class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dragDirs:Int, swipeDirs:Int) :ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs){
@@ -25,7 +28,23 @@ class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dra
 
 
     override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
-        dateListAdapter.removeItem(p0.adapterPosition)
+        val builder = AlertDialog.Builder(context) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+        val deleteListDialog = //context 이용해서 레이아웃 인플레이터 생성
+            (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.delete_list_dialog, null)
+        val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
+        var deleteMessage = "일정을 지울까요?"
+        deleteListText.text = deleteMessage
+
+        builder.setView(deleteListDialog)
+            .setPositiveButton("삭제") { dialogInterface, _ ->
+                dateListAdapter.removeItem(p0.adapterPosition)
+                dateListAdapter.notifyItemRemoved(p0.adapterPosition)
+            }
+            .setNegativeButton("취소") { dialogInterface, i ->
+            }
+            .show()
+
+        dateListAdapter.notifyDataSetChanged()
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {
