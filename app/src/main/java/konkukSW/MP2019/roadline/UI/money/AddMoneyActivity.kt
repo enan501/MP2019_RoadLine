@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_show_money.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 
 class AddMoneyActivity : AppCompatActivity() {
@@ -167,7 +168,7 @@ class AddMoneyActivity : AppCompatActivity() {
                 } else {
                     addMoneyExchange.visibility = View.VISIBLE
                     exchange = currency_rate * s.toString().toDouble()
-                    addMoneyExchange.text = exchange.toString() + "원"
+                    addMoneyExchange.text = exchange.roundToInt().toString() + "원"
                 }
             }
         })

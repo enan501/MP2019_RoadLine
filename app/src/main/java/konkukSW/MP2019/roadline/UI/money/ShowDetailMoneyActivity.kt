@@ -141,13 +141,14 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
             chartValues.add(PieEntry(pricePercentList[i], categoryList[i]))
 
         val colors: ArrayList<Int> = ArrayList()
-        colors.add(Color.rgb(156, 254, 230))
-        colors.add(Color.rgb(159, 185, 235))
-        colors.add(Color.rgb(143, 231, 161))
-        colors.add(Color.rgb(160, 239, 136))
-        colors.add(Color.rgb(200, 246, 139))
-        colors.add(Color.rgb(176, 219, 233))
-        colors.add(Color.rgb(183, 176, 253))
+
+        colors.add(Color.rgb(95,157,212))
+        colors.add(Color.rgb(162, 211, 223))
+        colors.add(Color.rgb(96, 176, 214))
+        colors.add(Color.rgb(96, 174, 191))
+        colors.add(Color.rgb(140, 207, 223))
+        colors.add(Color.rgb(96, 209, 214))
+        colors.add(Color.rgb(92, 204, 192))
 
         pieChart.animateY(1000, Easing.EaseInOutCubic) //애니메이션
 
@@ -157,8 +158,8 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         dataSet.setColors(colors)
 
         val data = PieData(dataSet)
-        data.setValueTextSize(15f)
-        data.setValueTextColor(Color.BLACK)
+        data.setValueTextSize(18f)
+        data.setValueTextColor(Color.rgb(82,82,82))
 
         pieChart.setData(data)
     }

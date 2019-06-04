@@ -36,6 +36,7 @@ import konkukSW.MP2019.roadline.Data.DB.*
 import kotlinx.android.synthetic.main.detail_img.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.roundToInt
 
 
 class ShowMoneyActivity : AppCompatActivity() {
@@ -89,8 +90,8 @@ class ShowMoneyActivity : AppCompatActivity() {
             rate = DB?.rate.toString().toDouble()
             println(symbol)
             currencySymbol.text = symbol
-            val exchange = TotalPrice / rate
-            money_totalTextView.text = exchange.toInt().toString()
+            //val exchange = TotalPrice / rate
+            //money_totalTextView.text = exchange.toInt().toString()
 
             if (DayNum != 0) { // 화면에 보여지는 데이가 전체가 아님
                 val c_day = realm.where(T_Day::class.java)
@@ -102,6 +103,8 @@ class ShowMoneyActivity : AppCompatActivity() {
                 realm.commitTransaction()
             } // 데이 전체면 변경 안함
 
+            initLayout() // 어댑터 갱신
+            initListener()
         }
     }
 
@@ -227,10 +230,10 @@ class ShowMoneyActivity : AppCompatActivity() {
                     System.out.println(q.get(i)!!.listID)
                     System.out.println(q.get(i)!!.dayNum)
                     System.out.println(q.get(i)!!.id)
-                    System.out.println(q.get(i)!!.price)
+                    System.out.println((q.get(i)!!.price / rate).roundToInt())
 
                     addItem(
-                        q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.price,
+                        q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, (q.get(i)!!.price / rate).roundToInt(),
                         q.get(i)!!.cate, q.get(i)!!.img, q.get(i)!!.date, 1
                     )
                 }
@@ -257,11 +260,11 @@ class ShowMoneyActivity : AppCompatActivity() {
                 System.out.println(q.get(i)!!.listID)
                 System.out.println(q.get(i)!!.dayNum)
                 System.out.println(q.get(i)!!.id)
-                System.out.println(q.get(i)!!.price)
+                System.out.println((q.get(i)!!.price / rate).roundToInt())
                 System.out.println(q.get(i)!!.img)
 
                 addItem(
-                    q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.price,
+                    q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, (q.get(i)!!.price / rate).roundToInt(),
                     q.get(i)!!.cate, q.get(i)!!.img, q.get(i)!!.date, 1
                 )
             }
