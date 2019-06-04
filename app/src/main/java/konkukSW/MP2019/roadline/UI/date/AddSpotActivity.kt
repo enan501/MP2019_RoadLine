@@ -2,7 +2,10 @@ package konkukSW.MP2019.roadline.UI.date
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -12,6 +15,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
@@ -35,7 +39,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var btnType:Boolean = false
     var time:String = ""
     var memo:String = ""
-
+    lateinit var bitmapDraw:BitmapDrawable
+    lateinit var b:Bitmap
+    lateinit var markerIcon:Bitmap
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
         initData()
@@ -51,6 +57,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
+
+        bitmapDraw = ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable
+        b = bitmapDraw.bitmap
+        markerIcon = Bitmap.createScaledBitmap(b, 71, 100, false)
         if (!Places.isInitialized()) {
             Places.initialize(this, getString(R.string.api_key))
         }
@@ -67,8 +77,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             override fun onPlaceSelected(place: Place) {
                 addMap.clear()
                 addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(place.latLng,12f))
+
                 var marker = MarkerOptions()
                 marker.position(place.latLng!!)
+                    .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
                 addMap.addMarker(marker)
                 spotName = place.name.toString()
                 locationY = (place.latLng as LatLng).latitude
@@ -155,11 +167,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             btnType = true
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             as_searchBox.setText(spotName)
+
             addMap.addMarker(
                 MarkerOptions()
                         .position(LatLng(locationY,locationX))
                         .title(spotName)
                         .snippet(time)
+                    .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
             )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }

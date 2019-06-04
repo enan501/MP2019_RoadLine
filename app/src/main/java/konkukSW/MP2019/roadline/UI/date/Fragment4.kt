@@ -48,9 +48,8 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
         latlngList.clear()
         initData()
         if(ListID != "init"){
-            gMap.clear()
-            addPolylines()
-            addMarkers()
+            val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
+            mapFragment.getMapAsync(this)
         }
     }
     fun initData(){
