@@ -61,7 +61,7 @@ class MainListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
         val results = realm.where<T_List>(T_List::class.java).findAll().sort("pos")
         for(T_List in results){
-            MLArray.add(MainList(T_List.id,T_List.title,T_List.date,""))
+            MLArray.add(MainList(T_List.id,T_List.title,T_List.date,T_List.img))
         }
     }
     fun initSwipe(){

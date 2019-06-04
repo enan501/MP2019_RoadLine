@@ -10,5 +10,5 @@ open class T_List : RealmObject() {
     var title: String = ""
     var date: String = ""
     var pos:Int = 0
-
+    var img: String = ""
 }

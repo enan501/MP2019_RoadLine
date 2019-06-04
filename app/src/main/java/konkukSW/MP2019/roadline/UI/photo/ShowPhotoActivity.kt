@@ -9,11 +9,11 @@ import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.net.Uri
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +22,7 @@ import android.widget.*
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
+import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
@@ -40,6 +41,7 @@ class ShowPhotoActivity : AppCompatActivity() {
     val SELECT_IMAGE = 100
     var day_click = 0
     var img_url: String = "" // 이미지 URI
+    lateinit var realm:Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -109,7 +111,7 @@ class ShowPhotoActivity : AppCompatActivity() {
                 img_url = getPathFromUri(data!!.data)
 
                 Realm.init(this)
-                val realm = Realm.getDefaultInstance()
+                realm = Realm.getDefaultInstance()
                 realm.beginTransaction()
                 val Table: T_Photo = realm.createObject(T_Photo::class.java)//데이터베이스에 저장할 객체 생성
                 Table.listID = ListID
@@ -195,7 +197,7 @@ class ShowPhotoActivity : AppCompatActivity() {
         photo_recycleView.adapter = MIadapter
 
         Realm.init(this);
-        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
+        realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
         if (DayNum == 0) // 리스트내 Day 전부 다 출력
         {
             val q = realm.where(T_Day::class.java)
@@ -251,7 +253,7 @@ class ShowPhotoActivity : AppCompatActivity() {
 
     fun eraseItem(position: Int, item: MoneyItem) {
         Realm.init(this);
-        val realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
+        realm = Realm.getDefaultInstance()   // 현재 스레드에서 Realm의 인스턴스 가져오기
 
         val q = realm.where(T_Photo::class.java)
             .equalTo("listID", item.listID)
@@ -317,8 +319,15 @@ class ShowPhotoActivity : AppCompatActivity() {
         var button = ll.findViewById<Button>(R.id.selectMainImg)
         button.setOnClickListener {
             // 대표사진으로 설정하는 코드
-
-
+            realm.beginTransaction()
+            var list = realm.where(T_List::class.java).equalTo("id",item.listID).findFirst()
+            list!!.img = item.img
+            realm.commitTransaction()
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("대표사진으로 설정되었습니다.")
+            builder.setPositiveButton("확인") { _, _ ->
+            }
+                .show()
         }
     }
 }
