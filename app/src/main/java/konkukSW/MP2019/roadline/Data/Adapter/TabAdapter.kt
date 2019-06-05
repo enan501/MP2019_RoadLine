@@ -11,7 +11,6 @@ class TabAdapter(fm: FragmentManager, val num:Int): FragmentPagerAdapter(fm) {
 //    override fun getItemPosition(p0: Any): Int {
 //        return PagerAdapter.POSITION_NONE
 //    }
-
     override fun getCount(): Int {
         return num
     }
