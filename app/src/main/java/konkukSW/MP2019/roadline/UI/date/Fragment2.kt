@@ -15,6 +15,16 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.fragment_fragment2.*
+import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+import android.graphics.Canvas
+import android.graphics.Color
+import android.support.v7.widget.RecyclerView
+import android.util.Log
+import com.google.android.libraries.places.internal.ll
+
 
 var StartedFlag = false;
 
@@ -40,19 +50,21 @@ class Fragment2 : Fragment() {
     var lastPosition = 0; // 제일 마지막에 추가된 일정
     var foldCount = 0; // 5가되면 foldFlag가 바뀐다.
     var foldFlag = false; // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
+    lateinit var v:View
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        var ll = inflater.inflate(R.layout.fragment_fragment2, container, false)
-        return ll
+        v = inflater.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment2, container, false)
+        Log.v("ttag", "creatview")
+        return v
     }
 
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        Log.v("ttag", "createactivity")
         init()
         addListener()
     }
@@ -216,5 +228,6 @@ class Fragment2 : Fragment() {
                 foldFlag = true
         }
     }
+
 
 }

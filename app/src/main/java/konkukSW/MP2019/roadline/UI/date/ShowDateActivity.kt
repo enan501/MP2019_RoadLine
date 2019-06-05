@@ -1,19 +1,35 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.View
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
-import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
+import com.kakao.util.KakaoParameterException
+import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder
+import com.kakao.kakaolink.KakaoLink
+import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.fragment_fragment2.*
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
+import android.util.DisplayMetrics
+
+
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -28,7 +44,7 @@ class ShowDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_show_date)
+        setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_date)
         init()
     }
 
@@ -41,10 +57,10 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        tabLayer = findViewById(R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
+        tabLayer = findViewById(konkukSW.MP2019.roadline.R.id.sd_layout_tab)
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
 
         ListID = intent.getStringExtra("ListID")
         DayNum = intent.getIntExtra("DayNum", 0)
@@ -62,13 +78,13 @@ class ShowDateActivity : AppCompatActivity() {
         sd_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list)
+                tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline)
+                tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map)
                 when(position) {
-                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
-                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
-                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select)
+                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline_select)
+                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map_select)
                 }
             }
             override fun onPageSelected(position: Int) {
@@ -88,13 +104,13 @@ class ShowDateActivity : AppCompatActivity() {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
-                tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list)
+                tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline)
+                tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map)
                 when(tab.position) {
-                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
-                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
-                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select)
+                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline_select)
+                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map_select)
                 }
                 sd_viewPager.currentItem = tab.position
                 if(tab.position == 1) {
@@ -117,22 +133,22 @@ class ShowDateActivity : AppCompatActivity() {
                 intentToNext.putExtra("DayNum", DayNum - 1)
                 startActivity(intentToNext)
                 overridePendingTransition(
-                    R.anim.anim_slide_in_left,
-                    R.anim.anim_slide_out_right
+                    konkukSW.MP2019.roadline.R.anim.anim_slide_in_left,
+                    konkukSW.MP2019.roadline.R.anim.anim_slide_out_right
                 )
                 finish()
             }
         }
 
         sd_rightImg.setOnClickListener {
-            if(DayNum<maxDayNum) {
+            if(DayNum < maxDayNum) {
                 var intentToNext = Intent(this, ShowDateActivity::class.java)
                 intentToNext.putExtra("ListID", ListID)
                 intentToNext.putExtra("DayNum", DayNum + 1)
                 startActivity(intentToNext)
                 overridePendingTransition(
-                    R.anim.anim_slide_in_right,
-                    R.anim.anim_slide_out_left
+                    konkukSW.MP2019.roadline.R.anim.anim_slide_in_right,
+                    konkukSW.MP2019.roadline.R.anim.anim_slide_out_left
 
                 )
                 finish()
@@ -146,8 +162,8 @@ class ShowDateActivity : AppCompatActivity() {
             Intent.putExtra("DayNum", DayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
             startActivity(Intent)
             overridePendingTransition(
-                R.anim.anim_slide_in_top,
-                R.anim.anim_slide_out_bottom
+                konkukSW.MP2019.roadline.R.anim.anim_slide_in_top,
+                konkukSW.MP2019.roadline.R.anim.anim_slide_out_bottom
             )
         }
 
@@ -158,13 +174,55 @@ class ShowDateActivity : AppCompatActivity() {
             PDIntentToMoney.putExtra("DayNum", DayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
             overridePendingTransition(
-                R.anim.anim_slide_in_top,
-                R.anim.anim_slide_out_bottom
+                konkukSW.MP2019.roadline.R.anim.anim_slide_in_top,
+                konkukSW.MP2019.roadline.R.anim.anim_slide_out_bottom
             )
         }
 
         sd_imgBtn3.setOnClickListener {
             //공유 버튼
+            try {
+                sd_leftImg.visibility = View.INVISIBLE
+                sd_rightImg.visibility = View.INVISIBLE
+                captureLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+                val dm = resources.displayMetrics
+                val width = dm.widthPixels
+                val bitmap = Bitmap.createBitmap(width, captureLayout.measuredHeight, Bitmap.Config.ARGB_8888)
+                val canvas = Canvas(bitmap)
+                val bgDrawable = captureLayout.background
+                if (bgDrawable != null) {
+                    bgDrawable.draw(canvas)
+                } else {
+                    canvas.drawColor(Color.WHITE)
+                }
+                captureLayout.draw(canvas)
+                timeline_imageView.setImageBitmap(bitmap)
+                sd_leftImg.visibility = View.VISIBLE
+                sd_rightImg.visibility = View.VISIBLE
+
+                val storage = this.cacheDir
+                val fileName = "temp.jpg"
+                val tempFile = File(storage, fileName)
+                try{
+                    tempFile.createNewFile()
+                    val out = FileOutputStream(tempFile)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                    out.close()
+                } catch (e: FileNotFoundException){
+                    e.printStackTrace()
+                } catch (e:IOException){
+                    e.printStackTrace()
+                }
+                Log.v("tag", tempFile.absolutePath)
+
+                val kakaoLink = KakaoLink.getKakaoLink(applicationContext)
+                val messageBuilder = kakaoLink.createKakaoTalkLinkMessageBuilder()
+                messageBuilder.addImage(tempFile.absolutePath, bitmap.width, bitmap.height)
+                kakaoLink.sendMessage(messageBuilder, this)
+
+            } catch (e: KakaoParameterException) {
+                e.printStackTrace()
+            }
         }
 
     }

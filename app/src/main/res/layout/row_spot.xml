@@ -40,11 +40,5 @@
             android:backgroundTint="#838383" />
     </LinearLayout>
 
-    <View
-        android:id="@+id/view"
-        style="@style/Divider"
-        android:background="#B0505050"
-        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
-        app:layout_constraintTop_toBottomOf="parent"
-        tools:ignore="MissingConstraints" />
+
 </android.support.constraint.ConstraintLayout>
