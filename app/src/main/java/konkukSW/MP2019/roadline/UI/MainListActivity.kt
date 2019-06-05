@@ -68,6 +68,13 @@ class MainListActivity : AppCompatActivity() {
         for(T_List in results){
             MLArray.add(MainList(T_List.id,T_List.title,T_List.date,T_List.img))
         }
+        if(MLArray.size == 0) {
+            ML_rView.visibility = View.GONE
+            startText.visibility = View.VISIBLE
+        } else {
+            ML_rView.visibility = View.VISIBLE
+            startText.visibility = View.GONE
+        }
     }
     fun updateImg(){
         realm = Realm.getDefaultInstance()
@@ -164,6 +171,13 @@ class MainListActivity : AppCompatActivity() {
                         item.deleteFromRealm()
                         realm.commitTransaction()
                         MLAdapter.removeItem(position)
+                        if(MLArray.size == 0) {
+                            ML_rView.visibility = View.GONE
+                            startText.visibility = View.VISIBLE
+                        } else {
+                            ML_rView.visibility = View.VISIBLE
+                            startText.visibility = View.GONE
+                        }
                         MLAdapter.notifyDataSetChanged()
                     }
                     .setNegativeButton("취소") { dialogInterface, i ->
@@ -222,6 +236,13 @@ class MainListActivity : AppCompatActivity() {
                     newDay.num = 1
                     realm.commitTransaction()
                     MLArray.add(MainList(newList.id,newList.title,newList.date,""))
+                    if(MLArray.size == 0) {
+                        ML_rView.visibility = View.GONE
+                        startText.visibility = View.VISIBLE
+                    } else {
+                        ML_rView.visibility = View.VISIBLE
+                        startText.visibility = View.GONE
+                    }
                     MLAdapter.notifyDataSetChanged()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->

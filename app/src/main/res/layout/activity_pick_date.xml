@@ -24,16 +24,9 @@
         android:fontFamily="@font/nanum_square_round_r"
         android:gravity="center"
         android:text="대만여행"
-        android:textColor="@color/black"
-        android:textSize="36sp"
-        android:textStyle="bold" />
+        android:textColor="@color/places_autocomplete_prediction_secondary_text"
+        android:textSize="36sp" />
 
-    <View
-        android:id="@+id/view"
-        style="@style/Divider"
-        android:layout_width="290dp"
-        android:layout_gravity="center"
-        android:background="#B0505050" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/PD_rView"
