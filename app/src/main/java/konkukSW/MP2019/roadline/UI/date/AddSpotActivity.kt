@@ -155,7 +155,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     memo = dialogMemo.text.toString()
                     hour = dialogTime.hour
                     min = dialogTime.minute
-                    time = hour.toString() + ":"+min.toString()
+                    var min_zero = ""
+                    if(min < 10)
+                        min_zero = "0"
+                    time = hour.toString() + ":" + min_zero + min.toString()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }

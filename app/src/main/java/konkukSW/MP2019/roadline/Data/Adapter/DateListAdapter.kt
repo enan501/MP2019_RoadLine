@@ -86,10 +86,14 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        for(i in 0..items.size-1){
+        for(i in 0..items.size-1)
+        {
             val id = items[i].id
-            val result:T_Plan = realm.where<T_Plan>(T_Plan::class.java).equalTo("id", id).findFirst()!!
-            result.pos = i
+            val result = realm.where<T_Plan>(T_Plan::class.java)
+                    .equalTo("id", id)
+                    .findFirst()
+            items[i].pos = i
+            result!!.pos = i
         }
         realm.commitTransaction()
     }

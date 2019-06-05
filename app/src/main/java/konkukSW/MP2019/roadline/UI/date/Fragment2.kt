@@ -258,6 +258,11 @@ class Fragment2 : Fragment() {
         adapter.notifyDataSetChanged()
         addListener()
 
+        if(data.size == 0)
+            gpsCheck.visibility = View.GONE
+        else
+            gpsCheck.visibility = View.VISIBLE
+
     }
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
