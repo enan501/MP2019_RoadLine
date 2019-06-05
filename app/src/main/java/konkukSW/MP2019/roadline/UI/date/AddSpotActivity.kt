@@ -62,6 +62,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
+        val i = intent
+        if(i.getIntExtra("path", 0) == 1) // 경로 추천 버튼 추가
+            path_bt.visibility = View.VISIBLE
 
         bitmapDraw = ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable
         b = bitmapDraw.bitmap
@@ -152,7 +155,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     memo = dialogMemo.text.toString()
                     hour = dialogTime.hour
                     min = dialogTime.minute
-                    time = hour.toString() + "/"+min.toString()
+                    time = hour.toString() + ":"+min.toString()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }
@@ -189,8 +192,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             time = result.time
             Log.v("timetag", time)
             if(time != ""){
-                hour = Integer.parseInt(time.split("/").get(0))
-                min = Integer.parseInt(time.split("/").get(1))
+                hour = Integer.parseInt(time.split(":").get(0))
+                min = Integer.parseInt(time.split(":").get(1))
             }else{
                 time = ""
             }

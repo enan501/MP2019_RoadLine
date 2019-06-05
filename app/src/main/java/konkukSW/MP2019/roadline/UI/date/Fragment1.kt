@@ -109,6 +109,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
                 i.putExtra("spot", data)
                 i.putExtra("DayNum", DayNum)
                 i.putExtra("ListID", ListID)
+                i.putExtra("path", 1)
                 startActivityForResult(i, 123)
             }
         }
@@ -142,5 +143,11 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
 
             }
         }
+    }
+
+    fun refresh()
+    {
+        val ft = fragmentManager!!.beginTransaction()
+        ft.detach(this).attach(this).commit()
     }
 }

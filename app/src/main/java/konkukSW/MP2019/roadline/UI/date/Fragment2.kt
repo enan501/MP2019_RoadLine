@@ -188,6 +188,7 @@ class Fragment2 : Fragment() {
         i.putExtra("spot", data)
         i.putExtra("DayNum", DayNum)
         i.putExtra("ListID", ListID)
+        i.putExtra("path", 1)
         startActivityForResult(i, 123)
     }
     fun init()

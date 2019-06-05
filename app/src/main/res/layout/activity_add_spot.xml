@@ -15,21 +15,34 @@
 
         <ImageView
             android:id="@+id/cancel_bt2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="1"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
             android:background="@drawable/cancel"
             android:onClick="back" />
 
         <ImageView
-            android:id="@+id/as_button_memo"
+            android:layout_weight="4"
             android:layout_width="50dp"
-            android:layout_height="50dp"
-            app:srcCompat="@drawable/etc_btn" />
+            android:layout_height="50dp" />
+        <ImageView
+            android:id="@+id/as_button_memo"
+            android:layout_weight="1"
+            android:layout_width="20dp"
+            android:layout_height="40dp"
+            app:srcCompat="@drawable/etc" />
+        <ImageView
+            android:layout_weight="4"
+            android:layout_width="50dp"
+            android:layout_height="50dp" />
 
         <ImageView
             android:id="@+id/as_button_check"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:layout_width="30dp"
+            android:layout_height="40dp"
             app:srcCompat="@drawable/checkbt" />
     </LinearLayout>
 
@@ -59,6 +72,13 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <Button
+            android:visibility="gone"
+            android:layout_gravity="right|bottom"
+            android:id="@+id/path_bt"
+            android:text="경로추천"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </FrameLayout>
 
 

@@ -14,6 +14,7 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
+import kotlinx.android.synthetic.main.fragment_fragment2.*
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -83,7 +84,13 @@ class ShowDateActivity : AppCompatActivity() {
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
                     }
                 }
+                if(position == 0) {
+                    (getSupportFragmentManager()
+                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
+                            as Fragment1).refresh()
+                }
                 if(position == 1) {
+                    gps_check.isChecked = false
                     (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
                             as Fragment2).init()
@@ -117,7 +124,13 @@ class ShowDateActivity : AppCompatActivity() {
                     }
                 }
                 sd_viewPager.currentItem = tab.position
+                if(tab.position == 0) {
+                    (getSupportFragmentManager()
+                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
+                            as Fragment1).refresh()
+                }
                 if(tab.position == 1) {
+                    gps_check.isChecked = false
                     (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
                             as Fragment2).init()
