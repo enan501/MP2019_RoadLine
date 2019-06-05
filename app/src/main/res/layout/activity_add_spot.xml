@@ -1,71 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="7dp"
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/cancel_bt2"
-            android:layout_marginLeft="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
-            android:background="@drawable/cancel"
-            android:onClick="back" />
+            android:onClick="back"
+            android:background="@drawable/cancel" />
 
         <ImageView
-            android:layout_weight="4"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
-        <ImageView
             android:id="@+id/as_button_memo"
-            android:layout_weight="1"
-            android:layout_width="20dp"
-            android:layout_height="40dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="7"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
             app:srcCompat="@drawable/etc" />
-        <ImageView
-            android:layout_weight="4"
-            android:layout_width="50dp"
-            android:layout_height="50dp" />
 
         <ImageView
             android:id="@+id/as_button_check"
-            android:layout_marginRight="5dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:layout_width="30dp"
-            android:layout_height="40dp"
-            app:srcCompat="@drawable/checkbt" />
+            android:src="@drawable/checkbt" />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#cccccc" />
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_weight="6"
         android:layout_height="0dp"
-        >
+        android:layout_weight="6">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="5dp"
-            android:layout_margin="3dp">
+            android:layout_margin="3dp"
+            app:cardCornerRadius="5dp">
 
             <fragment
                 android:id="@+id/AS_SearchBox"
+                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:name=
-                    "com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                />
+                android:layout_height="wrap_content" />
         </android.support.v7.widget.CardView>
+
         <fragment xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/AS_MapView"
             android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -73,12 +70,12 @@
             android:layout_height="match_parent" />
 
         <Button
-            android:visibility="gone"
-            android:layout_gravity="right|bottom"
             android:id="@+id/path_bt"
-            android:text="경로추천"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_margin="15dp"
+            android:layout_gravity="right|bottom"
+            android:background="@drawable/route"/>
     </FrameLayout>
 
 

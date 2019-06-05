@@ -49,13 +49,14 @@ class AddMoneyActivity : AppCompatActivity() {
         init()
     }
 
+
     fun initPermission() {
         if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
             askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
         } else {
             Toast.makeText(
-                getApplicationContext(),
-                "권한이 승인되었습니다.", Toast.LENGTH_SHORT
+                    getApplicationContext(),
+                    "권한이 승인되었습니다.", Toast.LENGTH_SHORT
             ).show()
         }
     }
@@ -64,8 +65,8 @@ class AddMoneyActivity : AppCompatActivity() {
         val requestResult = BooleanArray(requestPermission.size)
         for (i in requestResult.indices) {
             requestResult[i] = ContextCompat.checkSelfPermission(
-                this,
-                requestPermission[i]
+                    this,
+                    requestPermission[i]
             ) == PackageManager.PERMISSION_GRANTED
             if (!requestResult[i]) {
                 return false
@@ -76,8 +77,8 @@ class AddMoneyActivity : AppCompatActivity() {
 
     fun askPermission(requestPermission: Array<String>, REQ_PERMISSION: Int) {
         ActivityCompat.requestPermissions(
-            this, requestPermission,
-            REQ_PERMISSION
+                this, requestPermission,
+                REQ_PERMISSION
         )
     } // askPermission
 
@@ -139,12 +140,12 @@ class AddMoneyActivity : AppCompatActivity() {
         val realm = Realm.getDefaultInstance()
 
         val c_day = realm.where(T_Day::class.java)
-            .equalTo("num", dayNum) // 현재 날짜를 골라낸다
-            .findFirst()
+                .equalTo("num", dayNum) // 현재 날짜를 골라낸다
+                .findFirst()
         currenyCode = c_day?.currency.toString() // 데이에 저장된 통화 코드 알아냄
 
         val find = realm.where(T_Currency::class.java)
-            .equalTo("code", currenyCode).findFirst()
+                .equalTo("code", currenyCode).findFirst()
 
         currency.text = find?.symbol.toString() // 출력변경
         val currency_rate = find!!.rate
@@ -221,8 +222,8 @@ class AddMoneyActivity : AppCompatActivity() {
     fun cancelBtn(view: View) {
         val builder = AlertDialog.Builder(this)
         builder.setMessage("지금 돌아가면 데이터 입력 내용이 삭제됩니다.")
-            .setTitle("뒤로가기")
-            .setIcon(konkukSW.MP2019.roadline.R.drawable.ic_keyboard_backspace_black_24dp)
+                .setTitle("뒤로가기")
+                .setIcon(konkukSW.MP2019.roadline.R.drawable.ic_keyboard_backspace_black_24dp)
         builder.setPositiveButton("OK") { _, _ ->
             finish()
         }

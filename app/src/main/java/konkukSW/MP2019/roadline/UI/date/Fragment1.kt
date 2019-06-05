@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -112,6 +111,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
                 i.putExtra("DayNum", DayNum)
                 i.putExtra("ListID", ListID)
                 i.putExtra("path", 1)
+                i.putExtra("pos", position)
                 startActivityForResult(i, 123)
             }
         }

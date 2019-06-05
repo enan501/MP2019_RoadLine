@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
@@ -43,7 +44,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var memo:String = ""
     var hour:Int = 0
     var min:Int = 0
-
+    var pos = -1
     lateinit var bitmapDraw:BitmapDrawable
     lateinit var b:Bitmap
     lateinit var markerIcon:Bitmap
@@ -63,7 +64,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun init(){
         val i = intent
-        if(i.getIntExtra("path", 0) == 1) // 경로 추천 버튼 추가
+        pos = intent.getIntExtra("pos", -1)
+        if(i.getIntExtra("path", 0) == 1 && pos > 0) // 경로 추천 버튼 추가
             path_bt.visibility = View.VISIBLE
 
         bitmapDraw = ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable
@@ -116,7 +118,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     plan.memo = memo
                     plan.locationX = locationX
                     plan.locationY = locationY
-                    plan.pos = intent.getIntExtra("pos", -1)
+                    plan.pos = pos
                 }
                 else{ //수정
                     val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
@@ -137,9 +139,16 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             else{ //아무값 입력하지 않으면
                 onBackPressed()
             }
-
         }
+        path_bt.setOnClickListener {
+            var prev = realm.where(T_Plan::class.java).equalTo("pos",pos-1).findFirst()
+            var cur = realm.where(T_Plan::class.java).equalTo("pos",pos).findFirst()
 
+            var uri = "http://maps.google.com/maps?saddr="+prev!!.locationY+","+prev!!.locationX+"&daddr="+cur!!.locationY+","+cur!!.locationX+"&dirflg=r"
+            var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+            mapIntent.setPackage("com.google.android.apps.maps")
+            startActivity(mapIntent)
+        }
         as_button_memo.setOnClickListener { //상세정보 추가 버튼
             val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
             val addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
