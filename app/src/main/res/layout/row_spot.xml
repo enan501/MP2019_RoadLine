@@ -20,8 +20,19 @@
             app:srcCompat="@drawable/ver_mid" />
 
         <TextView
+            android:id="@+id/rs_spotTime"
+            android:layout_width="18dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="11dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="5dp"
+            android:layout_weight="15"
+            android:text="13:00"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp" />
+        <TextView
             android:id="@+id/rs_spotName"
-            android:layout_width="0dp"
+            android:layout_width="224dp"
             android:layout_height="35dp"
             android:layout_marginTop="11dp"
             android:layout_marginRight="8dp"
@@ -39,5 +50,16 @@
             android:background="@drawable/drag_icon"/>
     </LinearLayout>
 
+    <View
+        android:id="@+id/view"
+        style="@style/Divider"
+        android:layout_width="365dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:background="#B0505050"
+        app:layout_constraintBottom_toBottomOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        tools:ignore="MissingConstraints" />
 
 </android.support.constraint.ConstraintLayout>

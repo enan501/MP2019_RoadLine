@@ -18,6 +18,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
+import kotlinx.android.synthetic.main.fragment_fragment2.*
 import com.kakao.util.KakaoParameterException
 import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder
 import com.kakao.kakaolink.KakaoLink
@@ -44,7 +45,7 @@ class ShowDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_date)
+        setContentView(R.layout.activity_show_date)
         init()
     }
 
@@ -57,17 +58,18 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        tabLayer = findViewById(konkukSW.MP2019.roadline.R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
+        tabLayer = findViewById(R.id.sd_layout_tab)
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
 
         ListID = intent.getStringExtra("ListID")
         DayNum = intent.getIntExtra("DayNum", 0)
         Realm.init(this)
         realm = Realm.getDefaultInstance()
         maxDayNum = realm.where<T_Day>(T_Day::class.java).equalTo("listID",ListID).findAll().size
-        sd_textView1.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title + " - DAY " + DayNum.toString())
+        title_view.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title.toString())
+        sd_textView1.setText("DAY " + DayNum.toString())
         sd_textView2.setText(realm.where<T_Day>(T_Day::class.java).equalTo("listID",ListID).equalTo("num",DayNum).findFirst()!!.date)
     }
 
@@ -78,17 +80,33 @@ class ShowDateActivity : AppCompatActivity() {
         sd_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list)
-                tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline)
-                tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map)
-                when(position) {
-                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select)
-                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline_select)
-                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map_select)
-                }
+
             }
             override fun onPageSelected(position: Int) {
+                when(position) {
+                    0   -> {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    1   ->{
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    2   ->    {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    }
+                }
+                if(position == 0) {
+                    (getSupportFragmentManager()
+                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
+                            as Fragment1).refresh()
+                }
                 if(position == 1) {
+                    gps_check.isChecked = false
                     (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
                             as Fragment2).init()
@@ -104,16 +122,31 @@ class ShowDateActivity : AppCompatActivity() {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
-                tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list)
-                tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline)
-                tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map)
                 when(tab.position) {
-                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select)
-                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline_select)
-                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map_select)
+                    0   -> {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    1   ->{
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    2   ->    {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    }
                 }
                 sd_viewPager.currentItem = tab.position
+                if(tab.position == 0) {
+                    (getSupportFragmentManager()
+                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
+                            as Fragment1).refresh()
+                }
                 if(tab.position == 1) {
+                    gps_check.isChecked = false
                     (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
                             as Fragment2).init()
@@ -133,22 +166,22 @@ class ShowDateActivity : AppCompatActivity() {
                 intentToNext.putExtra("DayNum", DayNum - 1)
                 startActivity(intentToNext)
                 overridePendingTransition(
-                    konkukSW.MP2019.roadline.R.anim.anim_slide_in_left,
-                    konkukSW.MP2019.roadline.R.anim.anim_slide_out_right
+                    R.anim.anim_slide_in_left,
+                    R.anim.anim_slide_out_right
                 )
                 finish()
             }
         }
 
         sd_rightImg.setOnClickListener {
-            if(DayNum < maxDayNum) {
+            if(DayNum<maxDayNum) {
                 var intentToNext = Intent(this, ShowDateActivity::class.java)
                 intentToNext.putExtra("ListID", ListID)
                 intentToNext.putExtra("DayNum", DayNum + 1)
                 startActivity(intentToNext)
                 overridePendingTransition(
-                    konkukSW.MP2019.roadline.R.anim.anim_slide_in_right,
-                    konkukSW.MP2019.roadline.R.anim.anim_slide_out_left
+                    R.anim.anim_slide_in_right,
+                    R.anim.anim_slide_out_left
 
                 )
                 finish()
@@ -162,8 +195,8 @@ class ShowDateActivity : AppCompatActivity() {
             Intent.putExtra("DayNum", DayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
             startActivity(Intent)
             overridePendingTransition(
-                konkukSW.MP2019.roadline.R.anim.anim_slide_in_top,
-                konkukSW.MP2019.roadline.R.anim.anim_slide_out_bottom
+                R.anim.anim_slide_in_top,
+                R.anim.anim_slide_out_bottom
             )
         }
 
@@ -174,8 +207,8 @@ class ShowDateActivity : AppCompatActivity() {
             PDIntentToMoney.putExtra("DayNum", DayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
             overridePendingTransition(
-                konkukSW.MP2019.roadline.R.anim.anim_slide_in_top,
-                konkukSW.MP2019.roadline.R.anim.anim_slide_out_bottom
+                R.anim.anim_slide_in_top,
+                R.anim.anim_slide_out_bottom
             )
         }
 

@@ -22,6 +22,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import kotlinx.android.synthetic.main.activity_add_money.*
+import kotlinx.android.synthetic.main.activity_add_spot.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import java.text.SimpleDateFormat
 import java.util.*

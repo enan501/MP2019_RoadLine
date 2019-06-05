@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.TimePicker
 import com.google.android.gms.common.api.Status
@@ -61,6 +62,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
+        val i = intent
+        if(i.getIntExtra("path", 0) == 1) // 경로 추천 버튼 추가
+            path_bt.visibility = View.VISIBLE
 
         bitmapDraw = ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable
         b = bitmapDraw.bitmap
@@ -140,34 +144,43 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
             val addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
             val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
-            //val dialogTime = addDialog.findViewById<EditText>(R.id.apd_editText2)
+            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
+
             dialogMemo.setText(memo)
-            //dialogTime.setText(time)
+            dialogTime.hour = hour
+            dialogTime.minute = min
+
             builder.setView(addDialog)
                 .setPositiveButton("추가") { dialogInterface, i ->
                     memo = dialogMemo.text.toString()
+                    hour = dialogTime.hour
+                    min = dialogTime.minute
+                    var min_zero = ""
+                    if(min < 10)
+                        min_zero = "0"
+                    time = hour.toString() + ":" + min_zero + min.toString()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }
                 .show()
         }
 
-        as_button_time.setOnClickListener { //상세정보 추가 버튼
-            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-            val addDialog = layoutInflater.inflate(R.layout.add_time_dialog, null)
-            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
-            dialogTime.hour = hour
-            dialogTime.minute = min
-            builder.setView(addDialog)
-                .setPositiveButton("추가") { dialogInterface, i ->
-                    hour = dialogTime.hour
-                    min = dialogTime.minute
-                    time = hour.toString() + "/"+min.toString()
-                }
-                .setNegativeButton("취소") { dialogInterface, i ->
-                }
-                .show()
-        }
+//        as_button_time.setOnClickListener { //상세정보 추가 버튼
+//            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+//            val addDialog = layoutInflater.inflate(R.layout.add_time_dialog, null)
+//            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
+//            dialogTime.hour = hour
+//            dialogTime.minute = min
+//            builder.setView(addDialog)
+//                .setPositiveButton("추가") { dialogInterface, i ->
+//                    hour = dialogTime.hour
+//                    min = dialogTime.minute
+//                    time = hour.toString() + "/"+min.toString()
+//                }
+//                .setNegativeButton("취소") { dialogInterface, i ->
+//                }
+//                .show()
+//        }
     }
 
     fun initData(){
@@ -182,8 +195,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             time = result.time
             Log.v("timetag", time)
             if(time != ""){
-                hour = Integer.parseInt(time.split("/").get(0))
-                min = Integer.parseInt(time.split("/").get(1))
+                hour = Integer.parseInt(time.split(":").get(0))
+                min = Integer.parseInt(time.split(":").get(1))
             }else{
                 time = ""
             }
@@ -202,6 +215,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }
+    }
+
+    fun back(v: View?):Unit{
+        finish()
     }
 
 }

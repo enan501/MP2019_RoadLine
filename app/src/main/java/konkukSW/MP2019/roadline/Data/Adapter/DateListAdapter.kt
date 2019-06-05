@@ -86,10 +86,14 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        for(i in 0..items.size-1){
+        for(i in 0..items.size-1)
+        {
             val id = items[i].id
-            val result:T_Plan = realm.where<T_Plan>(T_Plan::class.java).equalTo("id", id).findFirst()!!
-            result.pos = i
+            val result = realm.where<T_Plan>(T_Plan::class.java)
+                    .equalTo("id", id)
+                    .findFirst()
+            items[i].pos = i
+            result!!.pos = i
         }
         realm.commitTransaction()
     }
@@ -115,6 +119,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         if(p0 is ItemViewHolder) {
             p0.spotName.text = items.get(p1).name
+            p0.spotTime.text = items.get(p1).time
 
             if(items.get(p1).viewType == -1)
                 p0.listimg.setImageResource(R.drawable.ver_mid)
@@ -139,11 +144,13 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
 
     inner class ItemViewHolder(itemView: View, listener: ItemDragListener) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var spotName: TextView
+        var spotTime: TextView
         var dragBtn: ImageView
         var listimg: ImageView
 
         init {
             spotName = itemView.findViewById(R.id.rs_spotName)
+            spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
             listimg = itemView.findViewById(R.id.list_img)
             dragBtn.setOnTouchListener { v, event ->
