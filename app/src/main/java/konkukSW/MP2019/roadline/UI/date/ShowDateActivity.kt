@@ -63,16 +63,26 @@ class ShowDateActivity : AppCompatActivity() {
         sd_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-                tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                when(position) {
-                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
-                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
-                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
-                }
+
             }
             override fun onPageSelected(position: Int) {
+                when(position) {
+                    0   -> {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    1   ->{
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    2   ->    {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    }
+                }
                 if(position == 1) {
                     (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(position))
@@ -89,13 +99,22 @@ class ShowDateActivity : AppCompatActivity() {
             override fun onTabReselected(p0: TabLayout.Tab?) {}
             override fun onTabUnselected(p0: TabLayout.Tab?) {}
             override fun onTabSelected(tab: TabLayout.Tab) {
-                tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
                 when(tab.position) {
-                    0   ->    tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
-                    1   ->    tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
-                    2   ->    tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    0   -> {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    1   ->{
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                    }
+                    2   ->    {
+                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
+                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
+                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                    }
                 }
                 sd_viewPager.currentItem = tab.position
                 if(tab.position == 1) {
