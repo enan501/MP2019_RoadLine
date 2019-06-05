@@ -71,23 +71,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/replace_bt"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="right|bottom"
-            android:layout_marginBottom="80dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/navigation" />
+        <LinearLayout
+            android:layout_width="70dp"
+            android:layout_gravity="bottom|left"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/path_bt"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="right|bottom"
-            android:layout_margin="15dp"
-            android:background="@drawable/route"
-            android:visibility="gone"/>
+            <Button
+                android:id="@+id/replace_bt"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/navigation" />
+
+            <Button
+                android:id="@+id/path_bt"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="10dp"
+                android:background="@drawable/route"
+                android:visibility="gone" />
+        </LinearLayout>
     </FrameLayout>
 
 
