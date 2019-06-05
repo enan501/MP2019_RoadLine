@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:id="@+id/DL_textView"
-    android:text="' 기록을 삭제할까요?"
+    android:text="기록을 삭제할까요?"
     android:textSize="20dp"
     android:textColor="@color/black"
     android:padding="20dp"

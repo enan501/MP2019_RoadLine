@@ -38,6 +38,7 @@
             android:layout_height="wrap_content"
             android:text="1000원"
             android:textColor="@color/white"
+            android:fontFamily="@font/nanum_square_round_r"
             android:textSize="22sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

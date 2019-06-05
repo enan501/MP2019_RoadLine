@@ -20,13 +20,18 @@
             android:orientation="vertical"
             android:gravity="center_vertical"
             android:layout_gravity="center_vertical">
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_weight="1"
-                android:id="@+id/MLItem_title" android:textSize="24dp"
-                android:text="대만옇앵"
-                android:paddingLeft="10dp"
-                android:textColor="@color/black"
+
+            <TextView
+                android:id="@+id/MLItem_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nanum_square_round_r"
                 android:gravity="center_vertical"
-                android:fontFamily="@font/nanum_square_round_r"/>
+                android:paddingLeft="10dp"
+                android:text="대만여행"
+                android:textColor="@color/black"
+                android:textSize="24dp" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:id="@+id/MLItem_date" android:textSize="12dp"
                 android:paddingLeft="12dp"

@@ -19,17 +19,19 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:onClick="back"
-            android:background="@drawable/cancel" />
+            android:background="@drawable/cancel"
+            android:onClick="back" />
 
-        <ImageView
+        <TextView
             android:id="@+id/as_button_memo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
             android:layout_weight="7"
+            android:fontFamily="@font/nanum_square_round_r"
             android:gravity="center"
-            android:layout_height="match_parent"
-            android:layout_width="0dp"
-            app:srcCompat="@drawable/etc" />
+            android:text="상세정보 추가"
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/as_button_check"
@@ -70,12 +72,21 @@
             android:layout_height="match_parent" />
 
         <Button
+            android:id="@+id/replace_bt"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="right|bottom"
+            android:layout_marginBottom="80dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/navigation" />
+
+        <Button
             android:id="@+id/path_bt"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_margin="15dp"
             android:layout_gravity="right|bottom"
-            android:background="@drawable/route"/>
+            android:layout_margin="15dp"
+            android:background="@drawable/route" />
     </FrameLayout>
 
 

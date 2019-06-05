@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="27dp"
+            android:fontFamily="@font/nanum_square_round_r"
             android:text="DAY1"
             android:textSize="43sp" />
 
@@ -35,6 +36,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:text="2019.05.03"
+            android:fontFamily="@font/nanum_square_round_r"
             android:textColor="@color/colorPrimary"
             android:textSize="17sp" />
 

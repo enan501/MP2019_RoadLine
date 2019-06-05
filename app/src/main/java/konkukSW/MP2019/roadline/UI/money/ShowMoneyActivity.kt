@@ -55,6 +55,10 @@ class ShowMoneyActivity : AppCompatActivity() {
         currencySpinner.onItemSelectedListener = SpinnerSelectedListener()
     }
 
+    fun back(v: View?):Unit{
+        finish()
+    }
+
     inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener { // 오버라이딩 단축키 alt + enter
         override fun onNothingSelected(parent: AdapterView<*>?) {
             // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -97,9 +101,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
     }
 
-    fun back(v: View?): Unit {
-        finish()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
