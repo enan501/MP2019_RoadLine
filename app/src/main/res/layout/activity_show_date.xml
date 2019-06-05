@@ -10,26 +10,43 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_marginVertical="7dp"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="10dp">
 
         <ImageView
-            android:id="@+id/cancel_bt"
-            android:layout_width="40dp"
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:background="@drawable/cancel"
-            android:onClick="back" />
+            android:onClick="back"
+            android:background="@drawable/cancel" />
 
         <TextView
-            android:id="@+id/title_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
+            android:layout_weight="7"
+            android:id="@+id/title_view"
             android:fontFamily="@font/nanum_square_round_r"
             android:gravity="center"
-            android:text="유럽 여행"
+            android:text="유럽여행"
+            android:textAlignment="textStart"
             android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/add_btn"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:visibility="invisible"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#cccccc" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -54,11 +71,11 @@
                 android:id="@+id/sd_textView1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="10dp"
                 android:gravity="bottom|left"
                 android:text="DAY3"
                 android:textColor="@color/colorPrimary"
-                android:textSize="38sp" />
+                android:textSize="40sp" />
 
             <TextView
                 android:id="@+id/sd_textView2"

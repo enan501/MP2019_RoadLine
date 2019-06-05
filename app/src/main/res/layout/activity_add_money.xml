@@ -7,23 +7,62 @@
     android:orientation="vertical"
     tools:context=".UI.money.AddMoneyActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginVertical="7dp"
+        android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/cancel_btn"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@drawable/cancel"
+            android:onClick="cancelBtn" />
+
+        <TextView
+            android:id="@+id/title_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="7"
+            android:fontFamily="@font/nanum_square_round_r"
+            android:gravity="center"
+            android:text="유럽여행"
+            android:textAlignment="textStart"
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/addMoneySubmit"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:onClick="submitBtn"
+            android:src="@drawable/checkbt" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="#cccccc" />
+
     <ImageView
         android:id="@+id/addMoneyImage"
-        android:layout_width="299dp"
-        android:layout_height="88dp"
-        android:layout_marginHorizontal="55dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="5dp"
-        android:layout_weight="2.5"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_gravity="center"
+        android:layout_marginVertical="40dp"
         android:onClick="addImg"
-        android:scaleType="fitCenter"
+        android:scaleType="centerCrop"
         android:src="@drawable/photo_default" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="100dp"
         android:layout_marginHorizontal="30dp"
-        android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
@@ -46,17 +85,19 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
-                android:paddingRight="15dp"
                 android:inputType="number"
+                android:paddingRight="15dp"
                 android:textAlignment="textEnd" />
+
             <TextView
+                android:id="@+id/currency"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textSize="20sp"
-                android:id="@+id/currency"
-                android:text="₩"/>
+                android:text="₩"
+                android:textColor="#60aebf"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -66,15 +107,15 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:paddingRight="30dp"
-            android:textAlignment="textEnd" />
+            android:textAlignment="textEnd"
+            android:textStyle="italic" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="13dp"
+        android:layout_height="90dp"
         android:layout_marginHorizontal="30dp"
-        android:layout_marginVertical="10dp"
-        android:layout_weight="1"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <TextView
@@ -84,84 +125,141 @@
             android:textColor="#60aebf"
             android:textSize="23sp"
             android:textStyle="bold" />
+
         <RadioGroup
             android:id="@+id/categoryGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="9dp"
+            android:layout_marginTop="15dp"
             android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/mealBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:text="식사" />
-            <!--android:button="@drawable/meal_btn"-->
+                android:button="@drawable/radio_meal" />
+
             <RadioButton
                 android:id="@+id/shoppingBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:text="쇼핑" />
-            <!--android:button="@drawable/shopping_btn"-->
+                android:button="@drawable/radio_shopping" />
+
             <RadioButton
                 android:id="@+id/transportBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:text="교통" />
-            <!--android:button="@drawable/transport_btn"-->
+                android:button="@drawable/radio_transport" />
+
             <RadioButton
                 android:id="@+id/tourBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:text="관광" />
-            <!--android:button="@drawable/tour_btn"-->
+                android:button="@drawable/radio_lodgment" />
+
             <RadioButton
                 android:id="@+id/lodgmentBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:text="숙박" />
-            <!--android:button="@drawable/lodgment_btn"-->
+                android:button="@drawable/radio_tour" />
+
             <RadioButton
                 android:id="@+id/etcBtn"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:text="기타" />
-            <!--android:button="@drawable/etc_btn"-->
+                android:button="@drawable/radio_etc" />
         </RadioGroup>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center">
+        android:layout_height="100dp"
+        android:layout_marginHorizontal="40dp"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/addMoneyCancel"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:backgroundTint="#eeeeee"
-            android:onClick="cancelBtn"
-            android:text="CANCEL"
-            android:textColor="#777777" />
+            android:layout_weight="1"
+            android:text="식사"
+            android:textAlignment="center" />
 
-        <Button
-            android:id="@+id/addMoneySubmit"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:backgroundTint="#eeeeee"
-            android:onClick="submitBtn"
-            android:text="SUBMIT"
-            android:textColor="#60aebf"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:text="쇼핑"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="교통"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="숙박"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="관광"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="기타"
+            android:textAlignment="center" />
+
     </LinearLayout>
+
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center">-->
+
+    <!--<Button-->
+    <!--android:id="@+id/addMoneyCancel"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginHorizontal="20dp"-->
+    <!--android:backgroundTint="#eeeeee"-->
+    <!--android:onClick="cancelBtn"-->
+    <!--android:text="CANCEL"-->
+    <!--android:textColor="#777777" />-->
+
+    <!--<Button-->
+    <!--android:id="@+id/addMoneySubmit"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginHorizontal="20dp"-->
+    <!--android:backgroundTint="#eeeeee"-->
+    <!--android:onClick="submitBtn"-->
+    <!--android:text="SUBMIT"-->
+    <!--android:textColor="#60aebf"-->
+    <!--android:textStyle="bold" />-->
+    <!--</LinearLayout>-->
 </LinearLayout>
