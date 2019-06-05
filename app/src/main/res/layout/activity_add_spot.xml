@@ -86,7 +86,8 @@
             android:layout_height="50dp"
             android:layout_gravity="right|bottom"
             android:layout_margin="15dp"
-            android:background="@drawable/route" />
+            android:background="@drawable/route"
+            android:visibility="gone"/>
     </FrameLayout>
 
 

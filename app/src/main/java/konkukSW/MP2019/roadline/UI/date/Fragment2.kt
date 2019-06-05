@@ -7,33 +7,22 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import android.widget.CheckBox
+import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
-import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.fragment_fragment2.*
-import android.graphics.drawable.Drawable
-import android.graphics.Bitmap
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.graphics.Canvas
-import android.graphics.Color
-import android.support.v7.widget.RecyclerView
-import android.util.Log
-import com.google.android.libraries.places.internal.ll
-import kotlinx.android.synthetic.main.activity_show_date.*
 
 
 
@@ -359,8 +348,8 @@ class Fragment2 : Fragment() {
     } // checkAppPermission
     fun askPermission(requestPermission: Array<String>,
                       REQ_PERMISSION: Int) {
-        ActivityCompat.requestPermissions(
-                activity!!, requestPermission,
+        requestPermissions(
+                requestPermission,
                 REQ_PERMISSION
         )
     } // askPermission
@@ -371,7 +360,7 @@ class Fragment2 : Fragment() {
             LOCATION_REQUEST -> {
                 if (checkAppPermission (permissions)) {
                     // 퍼미션 동의했을 때 할 일
-                    Toast.makeText(context!!.applicationContext,"승인되었습니다",Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,"승인되었습니다",Toast.LENGTH_SHORT).show()
                     human()
                 } else {
                     Toast.makeText(context,"거부됨",Toast.LENGTH_SHORT).show()

@@ -1,39 +1,29 @@
 package konkukSW.MP2019.roadline.UI.date
 
+//import com.kakao.util.KakaoParameterException
+//import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder
+//import com.kakao.kakaolink.KakaoLink
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
+import android.graphics.*
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.view.View
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
+import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
-import kotlinx.android.synthetic.main.fragment_fragment2.*
-//import com.kakao.util.KakaoParameterException
-//import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder
-//import com.kakao.kakaolink.KakaoLink
-import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.fragment_fragment2.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
-import android.util.DisplayMetrics
-import android.opengl.ETC1.getWidth
-import android.opengl.ETC1.getHeight
-import android.graphics.Paint.ANTI_ALIAS_FLAG
-import android.graphics.*
-import android.net.Uri
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -292,7 +282,7 @@ class ShowDateActivity : AppCompatActivity() {
             try {
                 tempFile.createNewFile()
                 val out = FileOutputStream(tempFile)
-                resultBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                resultBitmap.compress(Bitmap.CompressFormat.JPEG,300, out)
                 out.close()
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()

@@ -1,11 +1,15 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +17,7 @@ import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.TimePicker
+import android.widget.Toast
 import com.google.android.gms.common.api.Status
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -45,6 +50,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var hour:Int = 0
     var min:Int = 0
     var pos = -1
+    val LOCATION_REQUEST = 1234
     lateinit var bitmapDraw:BitmapDrawable
     lateinit var b:Bitmap
     lateinit var markerIcon:Bitmap
@@ -173,6 +179,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 .show()
         }
+        replace_bt.setOnClickListener {
+            getCurLoc()
+        }
 
 //        as_button_time.setOnClickListener { //상세정보 추가 버튼
 //            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
@@ -190,6 +199,27 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 //                }
 //                .show()
 //        }
+
+
+    }
+    fun getCurLoc(){
+        if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
+
+            val lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
+            val providers = lm!!.getProviders(true)
+            var location: android.location.Location? = null
+            for (provider in providers) {
+                val l = lm!!.getLastKnownLocation(provider) ?: continue
+                if (location == null || l.getAccuracy() < location!!.getAccuracy()) {
+                    // Found best last known location: %s", l);
+                    location = l
+                }
+            }
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location!!.latitude,location!!.longitude),12f))
+        }
+        else{
+            initPermission()
+        }
     }
 
     fun initData(){
@@ -223,11 +253,67 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
             )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
+        }else{
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.552420, 126.984719),12f))
         }
     }
 
     fun back(v: View?):Unit{
         finish()
+    }
+
+    fun checkAppPermission(requestPermission: Array<String>): Boolean {
+        val requestResult = BooleanArray(requestPermission.size)
+        for (i in requestResult.indices) {
+            requestResult[i] = ContextCompat.checkSelfPermission(
+                    this,
+                    requestPermission[i]
+            ) == PackageManager.PERMISSION_GRANTED
+            if (!requestResult[i]) {
+                return false
+            }
+        }
+        return true
+    } // checkAppPermission
+    fun askPermission(requestPermission: Array<String>,
+                      REQ_PERMISSION: Int) {
+        ActivityCompat.requestPermissions(
+                this, requestPermission,
+                REQ_PERMISSION
+        )
+    } // askPermission
+    override fun onRequestPermissionsResult(requestCode: Int, permissions:
+    Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when(requestCode){
+            LOCATION_REQUEST -> {
+                if (checkAppPermission (permissions)) {
+                    // 퍼미션 동의했을 때 할 일
+                    Toast.makeText(this,"승인되었습니다", Toast.LENGTH_SHORT).show()
+                    getCurLoc()
+                } else {
+                    Toast.makeText(this,"거부됨", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+    fun initPermission(){
+        if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
+        }
+        else{
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("GPS 권한을 허용할까요?")
+                    .setTitle("권한 요청")
+                    .setIcon(konkukSW.MP2019.roadline.R.drawable.notification_action_background)
+                    .setPositiveButton("OK"){
+                        _,_ ->
+                        askPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST)
+                    }
+            val dialog = builder.create()
+            dialog.show()
+
+
+        }
     }
 
 }
