@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@color/white"
+    android:background="#fafafa"
     android:orientation="vertical">
 
     <LinearLayout
@@ -36,8 +36,7 @@
             android:layout_height="30dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="8dp"
-            android:background="@drawable/drag_icon"
-            android:backgroundTint="#838383" />
+            android:background="@drawable/drag_icon"/>
     </LinearLayout>
 
 
