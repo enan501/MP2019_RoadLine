@@ -4,6 +4,7 @@ package konkukSW.MP2019.roadline.UI.date
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,72 +52,86 @@ class Fragment2 : Fragment() {
     var lastPosition = 0; // 제일 마지막에 추가된 일정
     var foldCount = 0; // 5가되면 foldFlag가 바뀐다.
     var foldFlag = false; // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
+
     lateinit var v:View
+    lateinit var timelineView :RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        v = inflater.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment2, container, false)
-        Log.v("ttag", "creatview")
+        v = inflater.inflate(R.layout.fragment_fragment2, container, false)
+
+        init()
         return v
     }
 
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        Log.v("ttag", "createactivity")
-        sd_imgBtn3.visibility = View.VISIBLE
-        init()
-        addListener()
-    }
-
     fun addListener() {
-        adapter.itemClickListener = object : PlanAdapter.OnItemClickListner {
-            override fun OnItemClick(holder:PlanAdapter.ViewHolder0,data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+        adapter.itemClickListener = object : PlanAdapter.OnItemClickListener {
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder0, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
             }
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder1, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
-            }
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder1, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder2, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder3, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder4, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder2, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder5, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder3, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder6, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder4, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder7, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder5, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder8, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder6, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder9, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder7, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder10, data: Plan, position: Int) {
-                Toast.makeText(context,"야ㅑ",Toast.LENGTH_SHORT).show()
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder8, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
             }
 
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder9, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
 
+            }
+
+            override fun OnItemClick(holder: PlanAdapter.ViewHolder10, view: View, data: Plan, position: Int) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                System.out.println("zzzzzzzzz")
+
+            }
         }
     }
     fun init()
@@ -146,10 +161,11 @@ class Fragment2 : Fragment() {
             .findAll()
             .sort("pos")
 
-        val layoutManager = GridLayoutManager(getActivity(), 5)
-        timeline_recycleView.layoutManager = layoutManager
+        timelineView = v!!.findViewById(R.id.timeline_recycleView) as RecyclerView
+        val layoutManager = GridLayoutManager(activity!!, 5)
+        timelineView.layoutManager = layoutManager
         adapter = PlanAdapter(data)
-        timeline_recycleView.adapter = adapter
+        timelineView.adapter = adapter
 
         for(i in 0..q.size-1)
         {
@@ -180,7 +196,10 @@ class Fragment2 : Fragment() {
         {
             data.get(lastPosition).viewType = 10
         }
+
         adapter.notifyDataSetChanged()
+        addListener()
+
     }
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
@@ -216,7 +235,7 @@ class Fragment2 : Fragment() {
             else if(foldCount == 4) {
                 data.removeAt(position-4)
                 data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
-                lastPosition = position - 4;
+                lastPosition = position - 4
             }
         }
         position++
@@ -230,6 +249,5 @@ class Fragment2 : Fragment() {
                 foldFlag = true
         }
     }
-
 
 }

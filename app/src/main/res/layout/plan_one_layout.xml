@@ -20,6 +20,18 @@
         android:background="@drawable/plan_one"
         android:visibility="visible">
 
+        <ImageView
+            android:id="@+id/man_img"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.333"
+            app:srcCompat="@drawable/run" />
+
         <TextView
             android:id="@+id/plan_Item_textView"
             android:layout_width="wrap_content"
@@ -32,6 +44,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.735" />
+
     </android.support.constraint.ConstraintLayout>
 
 </LinearLayout>

@@ -1,22 +1,26 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="konkukSW.MP2019.roadline.UI.date.Fragment2">
 
     <!-- TODO: Update blank fragment layout -->
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/timeline_recycleView"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
-    <ImageView
-        android:id="@+id/timeline_imageView"
-        android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp" />
+        android:layout_height="match_parent">
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/timeline_recycleView"
+            android:layout_width="match_parent"
+            android:layout_height="290dp" />
+
+        <CheckBox
+            android:id="@+id/gps_check"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+</FrameLayout>
