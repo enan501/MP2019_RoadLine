@@ -24,7 +24,18 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key"/>
-
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_path" />
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="konkukSW.MP2019.roadline.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_path" />
+        </provider>
         <activity android:name=".UI.money.ShowDetailMoneyActivity" />
         <activity android:name=".UI.date.AddSpotActivity" />
         <activity android:name=".UI.money.AddMoneyActivity">

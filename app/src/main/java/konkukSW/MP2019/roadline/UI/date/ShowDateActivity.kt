@@ -7,6 +7,7 @@ import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.content.FileProvider
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -282,7 +283,7 @@ class ShowDateActivity : AppCompatActivity() {
             try {
                 tempFile.createNewFile()
                 val out = FileOutputStream(tempFile)
-                resultBitmap.compress(Bitmap.CompressFormat.JPEG,300, out)
+                resultBitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
                 out.close()
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
@@ -290,11 +291,11 @@ class ShowDateActivity : AppCompatActivity() {
                 e.printStackTrace()
             }
             Log.v("tag", tempFile.toURI().toString())
-
+            var uri = FileProvider.getUriForFile(this,"konkukSW.MP2019.roadline.fileprovider",tempFile)
             val shareIntent = Intent(Intent.ACTION_SEND)
             shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
             shareIntent.type = "image/*"
-            shareIntent.putExtra(Intent.EXTRA_STREAM, tempFile.toURI())
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
             startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
         }
     }

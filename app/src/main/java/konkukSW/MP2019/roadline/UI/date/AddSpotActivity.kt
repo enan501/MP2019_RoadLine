@@ -50,6 +50,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     var hour:Int = 0
     var min:Int = 0
     var pos = -1
+    var listID = ""
+    var DayNum = 0
     val LOCATION_REQUEST = 1234
     lateinit var bitmapDraw:BitmapDrawable
     lateinit var b:Bitmap
@@ -70,7 +72,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
     fun init(){
         val i = intent
-        pos = intent.getIntExtra("pos", -1)
+        pos = i.getIntExtra("pos", -1)
+        listID = i.getStringExtra("ListID")
+        DayNum = i.getIntExtra("DayNum",0)
         if(i.getIntExtra("path", 0) == 1 && pos > 0) // 경로 추천 버튼 추가
             path_bt.visibility = View.VISIBLE
 
@@ -116,8 +120,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 realm.beginTransaction()
                 if(btnType == false){ //추가
                     val plan: T_Plan = realm.createObject(T_Plan::class.java)
-                    plan.listID = intent.getStringExtra("ListID")
-                    plan.dayNum = intent.getIntExtra("DayNum", -1)
+                    plan.listID = listID
+                    plan.dayNum = DayNum
                     plan.id = UUID.randomUUID().toString()
                     plan.name = spotName
                     plan.time = time
@@ -147,8 +151,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         path_bt.setOnClickListener {
-            var prev = realm.where(T_Plan::class.java).equalTo("pos",pos-1).findFirst()
-            var cur = realm.where(T_Plan::class.java).equalTo("pos",pos).findFirst()
+            var prev = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).equalTo("pos",pos-1).findFirst()
+            var cur = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).equalTo("pos",pos).findFirst()
 
             var uri = "http://maps.google.com/maps?saddr="+prev!!.locationY+","+prev!!.locationX+"&daddr="+cur!!.locationY+","+cur!!.locationX+"&dirflg=r"
             var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
