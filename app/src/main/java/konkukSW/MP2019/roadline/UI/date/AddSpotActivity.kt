@@ -9,6 +9,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.EditText
 import android.widget.TimePicker
 import com.google.android.gms.common.api.Status
@@ -140,26 +141,15 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
             val addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
             val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
-            //val dialogTime = addDialog.findViewById<EditText>(R.id.apd_editText2)
+            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
+
             dialogMemo.setText(memo)
-            //dialogTime.setText(time)
+            dialogTime.hour = hour
+            dialogTime.minute = min
+
             builder.setView(addDialog)
                 .setPositiveButton("추가") { dialogInterface, i ->
                     memo = dialogMemo.text.toString()
-                }
-                .setNegativeButton("취소") { dialogInterface, i ->
-                }
-                .show()
-        }
-
-        as_button_time.setOnClickListener { //상세정보 추가 버튼
-            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-            val addDialog = layoutInflater.inflate(R.layout.add_time_dialog, null)
-            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
-            dialogTime.hour = hour
-            dialogTime.minute = min
-            builder.setView(addDialog)
-                .setPositiveButton("추가") { dialogInterface, i ->
                     hour = dialogTime.hour
                     min = dialogTime.minute
                     time = hour.toString() + "/"+min.toString()
@@ -168,6 +158,23 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
                 .show()
         }
+
+//        as_button_time.setOnClickListener { //상세정보 추가 버튼
+//            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
+//            val addDialog = layoutInflater.inflate(R.layout.add_time_dialog, null)
+//            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
+//            dialogTime.hour = hour
+//            dialogTime.minute = min
+//            builder.setView(addDialog)
+//                .setPositiveButton("추가") { dialogInterface, i ->
+//                    hour = dialogTime.hour
+//                    min = dialogTime.minute
+//                    time = hour.toString() + "/"+min.toString()
+//                }
+//                .setNegativeButton("취소") { dialogInterface, i ->
+//                }
+//                .show()
+//        }
     }
 
     fun initData(){
@@ -202,6 +209,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
         }
+    }
+
+    fun back(v: View?):Unit{
+        finish()
     }
 
 }

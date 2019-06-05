@@ -72,7 +72,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
         planList = ArrayList<Plan>()
         for(T_Plan in results){
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
-                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
+                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
         }
         if(planList.size == 1)
             planList.get(0).viewType = -2

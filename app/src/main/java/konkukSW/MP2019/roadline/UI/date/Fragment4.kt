@@ -70,7 +70,7 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
             .sort("pos")
         for(T_Plan in results){
             spotList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
-                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1))
+                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
             latlngList.add(LatLng(T_Plan.locationY,T_Plan.locationX))
         }
     }

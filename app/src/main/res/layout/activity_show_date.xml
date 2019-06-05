@@ -21,6 +21,7 @@
             android:onClick="back" />
 
         <TextView
+            android:id="@+id/title_view"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="10dp"
@@ -54,9 +55,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:gravity="bottom|left"
-                android:text="대만여행-DAY3"
+                android:text="DAY3"
                 android:textColor="@color/colorPrimary"
-                android:textSize="32sp" />
+                android:textSize="38sp" />
 
             <TextView
                 android:id="@+id/sd_textView2"

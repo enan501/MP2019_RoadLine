@@ -51,7 +51,8 @@ class ShowDateActivity : AppCompatActivity() {
         Realm.init(this)
         realm = Realm.getDefaultInstance()
         maxDayNum = realm.where<T_Day>(T_Day::class.java).equalTo("listID",ListID).findAll().size
-        sd_textView1.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title + " - DAY " + DayNum.toString())
+        title_view.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title.toString())
+        sd_textView1.setText("DAY " + DayNum.toString())
         sd_textView2.setText(realm.where<T_Day>(T_Day::class.java).equalTo("listID",ListID).equalTo("num",DayNum).findFirst()!!.date)
     }
 

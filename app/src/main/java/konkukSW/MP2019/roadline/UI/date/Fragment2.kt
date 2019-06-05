@@ -1,6 +1,8 @@
 package konkukSW.MP2019.roadline.UI.date
 
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
@@ -48,7 +50,6 @@ class Fragment2 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(R.layout.fragment_fragment2, container, false)
-
         init()
         return v
     }
@@ -58,68 +59,77 @@ class Fragment2 : Fragment() {
         adapter.itemClickListener = object : PlanAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PlanAdapter.ViewHolder0, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
             }
             override fun OnItemClick(holder: PlanAdapter.ViewHolder1, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder2, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder3, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder4, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder5, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder6, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder7, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder8, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder9, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder10, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                System.out.println("zzzzzzzzz")
+                showAddSpot(data)
 
             }
         }
+    }
+
+    fun showAddSpot(data:Plan)
+    {
+        val i = Intent(activity, AddSpotActivity::class.java)
+        i.putExtra("spot", data)
+        i.putExtra("DayNum", DayNum)
+        i.putExtra("ListID", ListID)
+        startActivityForResult(i, 123)
     }
     fun init()
     {
@@ -191,40 +201,41 @@ class Fragment2 : Fragment() {
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
         if(foldFlag == false) { // 오른쪽으로 추가
-            data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
+            data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
             lastPosition = position;
         }
         else // 왼쪽으로 추가
         {
             if(foldCount == 0) {
-                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9))
-                data.add(position + 1, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9))
-                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9))
-                data.add(position + 3, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9))
-                data.add(position + 4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
+                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9, false))
+                data.add(position + 1, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9, false))
+                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9, false))
+                data.add(position + 3, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9, false))
+                data.add(position + 4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
                 lastPosition = position + 4;
             }
             else if(foldCount == 1) {
                 data.removeAt(position+2)
-                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time,memo, 0, ViewTypeArray[position]))
+                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time,memo, 0, ViewTypeArray[position], false))
                 lastPosition = position + 2;
             }
             else if(foldCount == 2) {
                 data.removeAt(position)
-                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
+                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
                 lastPosition = position;
             }
             else if(foldCount == 3) {
                 data.removeAt(position-2)
-                data.add(position-2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
+                data.add(position-2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
                 lastPosition = position - 2;
             }
             else if(foldCount == 4) {
                 data.removeAt(position-4)
-                data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
+                data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
                 lastPosition = position - 4
             }
         }
+
         position++
         foldCount++
         if (foldCount == 5)
@@ -234,6 +245,18 @@ class Fragment2 : Fragment() {
                 foldFlag = false
             else
                 foldFlag = true
+        }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { // 애드스팟 하고나서 돌아왔을때 어댑터뷰 바로 갱신
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == 123)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                val ft = fragmentManager!!.beginTransaction()
+                ft.detach(this).attach(this).commit()
+
+            }
         }
     }
 

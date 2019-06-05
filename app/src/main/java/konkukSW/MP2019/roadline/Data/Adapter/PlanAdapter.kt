@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
@@ -107,42 +108,82 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
 
         if (holder is ViewHolder0) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder1) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder2) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder3) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder4) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder5) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder6) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder7) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder8) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
         if (holder is ViewHolder10) // 이미지 아이템
         {
+            if(items.get(position).humanFlag == true)
+                holder.humanImg.visibility = View.VISIBLE
+            else
+                holder.humanImg.visibility = View.GONE
             holder.name.text = items.get(position).name.toString()
         }
 
@@ -150,8 +191,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
 
     inner class ViewHolder0(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -161,8 +204,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder1(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -171,8 +216,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder2(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -181,8 +228,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder3(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -191,8 +240,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder4(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -201,8 +252,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder5(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -211,8 +264,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder6(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -221,8 +276,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder7(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -231,8 +288,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder8(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
@@ -246,8 +305,10 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     inner class ViewHolder10(itemView: View): RecyclerView.ViewHolder(itemView) {
         var name: TextView
+        var humanImg : ImageView
         init{
             name = itemView.findViewById(R.id.plan_Item_textView)
+            humanImg = itemView.findViewById(R.id.man_img)
             itemView.setOnClickListener {
                 val position = adapterPosition
                 itemClickListener?.OnItemClick(this, it, items[position], position)
