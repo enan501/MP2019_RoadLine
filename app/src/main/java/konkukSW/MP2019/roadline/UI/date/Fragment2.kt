@@ -5,21 +5,15 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmResults
-import konkukSW.MP2019.roadline.Data.Adapter.MoneyItemAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_show_money.*
-import kotlinx.android.synthetic.main.fragment_fragment2.*
 
 var StartedFlag = false;
 
@@ -228,7 +222,7 @@ class Fragment2 : Fragment() {
             else if(foldCount == 4) {
                 data.removeAt(position-4)
                 data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position]))
-                lastPosition = position - 4;
+                lastPosition = position - 4
             }
         }
         position++
