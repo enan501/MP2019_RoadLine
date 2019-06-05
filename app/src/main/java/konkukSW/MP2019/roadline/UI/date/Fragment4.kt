@@ -36,7 +36,6 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
     ): View? {
         val view: View = inflater!!.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment4, container, false)
         val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
-        sd_imgBtn3.visibility = View.INVISIBLE
         initData()
         mapFragment.getMapAsync(this)
         return view

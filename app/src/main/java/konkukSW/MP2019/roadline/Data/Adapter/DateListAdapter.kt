@@ -13,6 +13,7 @@ import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.row_spot.view.*
 
 class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -30,6 +31,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val listener: ItemDragListener,
         fun onStartDrag(holder: RecyclerView.ViewHolder)
         fun onStartSwipe(holder: RecyclerView.ViewHolder)
     }
+
 
     fun moveItem(pos1:Int, pos2:Int){ //객체 두개 바꾸기 함수
         if(pos2 <= items.size - 1){

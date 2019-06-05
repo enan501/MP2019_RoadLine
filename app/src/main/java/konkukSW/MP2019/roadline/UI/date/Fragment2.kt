@@ -115,6 +115,13 @@ class Fragment2 : Fragment() {
         }
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        Log.v("ttag", "createactivity")
+        init()
+        addListener()
+    }
+
     fun addListener() {
         adapter.itemClickListener = object : PlanAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PlanAdapter.ViewHolder0, view: View, data: Plan, position: Int) {
@@ -390,5 +397,6 @@ class Fragment2 : Fragment() {
 
         }
     }
+
 
 }

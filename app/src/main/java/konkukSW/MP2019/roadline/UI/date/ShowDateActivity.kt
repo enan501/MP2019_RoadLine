@@ -29,8 +29,10 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import android.util.DisplayMetrics
-
-
+import android.opengl.ETC1.getWidth
+import android.opengl.ETC1.getHeight
+import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.graphics.*
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -42,10 +44,11 @@ class ShowDateActivity : AppCompatActivity() {
     lateinit var adapter:TabAdapter
     lateinit var realm: Realm
     private var tabLayer:TabLayout?= null
+    var tabPos:Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_show_date)
+        setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_date)
         init()
     }
 
@@ -58,10 +61,10 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        tabLayer = findViewById(R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
+        tabLayer = findViewById(konkukSW.MP2019.roadline.R.id.sd_layout_tab)
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
 
         ListID = intent.getStringExtra("ListID")
         DayNum = intent.getIntExtra("DayNum", 0)
@@ -140,6 +143,7 @@ class ShowDateActivity : AppCompatActivity() {
                     }
                 }
                 sd_viewPager.currentItem = tab.position
+                tabPos = tab.position
                 if(tab.position == 0) {
                     (getSupportFragmentManager()
                             .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
@@ -166,15 +170,15 @@ class ShowDateActivity : AppCompatActivity() {
                 intentToNext.putExtra("DayNum", DayNum - 1)
                 startActivity(intentToNext)
                 overridePendingTransition(
-                    R.anim.anim_slide_in_left,
-                    R.anim.anim_slide_out_right
+                    konkukSW.MP2019.roadline.R.anim.anim_slide_in_left,
+                    konkukSW.MP2019.roadline.R.anim.anim_slide_out_right
                 )
                 finish()
             }
         }
 
         sd_rightImg.setOnClickListener {
-            if(DayNum<maxDayNum) {
+            if(DayNum < maxDayNum) {
                 var intentToNext = Intent(this, ShowDateActivity::class.java)
                 intentToNext.putExtra("ListID", ListID)
                 intentToNext.putExtra("DayNum", DayNum + 1)
@@ -215,23 +219,52 @@ class ShowDateActivity : AppCompatActivity() {
         sd_imgBtn3.setOnClickListener {
             //공유 버튼
             try {
-                sd_leftImg.visibility = View.INVISIBLE
-                sd_rightImg.visibility = View.INVISIBLE
-                captureLayout.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
+                sd_leftImg.visibility = View.GONE
+                sd_rightImg.visibility = View.GONE
+                cancel_bt.visibility = View.GONE
+                captureLayout1.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
                 val dm = resources.displayMetrics
                 val width = dm.widthPixels
-                val bitmap = Bitmap.createBitmap(width, captureLayout.measuredHeight, Bitmap.Config.ARGB_8888)
+                val bitmap = Bitmap.createBitmap(width, captureLayout1.measuredHeight, Bitmap.Config.ARGB_8888)
                 val canvas = Canvas(bitmap)
-                val bgDrawable = captureLayout.background
+                val bgDrawable = captureLayout1.background
                 if (bgDrawable != null) {
                     bgDrawable.draw(canvas)
                 } else {
                     canvas.drawColor(Color.WHITE)
                 }
-                captureLayout.draw(canvas)
-                timeline_imageView.setImageBitmap(bitmap)
+                captureLayout1.draw(canvas)
+
+                //imageView.setImageBitmap(bitmap)
                 sd_leftImg.visibility = View.VISIBLE
+                cancel_bt.visibility = View.VISIBLE
                 sd_rightImg.visibility = View.VISIBLE
+
+                lateinit var bitmap2:Bitmap
+                if(tabPos == 0){ //Fragment1
+                    //val bitmap2 = (getSupportFragmentManager().findFragmentByTag("fragmentTag") as Fragment1).getScreenshotFromRecyclerView()
+                    bitmap2 = (getSupportFragmentManager()
+                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
+                            as Fragment1).getScreenshotFromRecyclerView()!!
+                }
+
+                val option = BitmapFactory.Options()
+                option.inDither = true
+                option.inPurgeable = true
+                var resultBitmap: Bitmap? = null
+                resultBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight()+bitmap.getHeight(), true);
+
+                val p = Paint()
+                p.setDither(true)
+                p.setFlags(Paint.ANTI_ALIAS_FLAG)
+                val c = Canvas(resultBitmap!!)
+                c.drawBitmap(bitmap, 0f, 0f, p)
+                c.drawBitmap(bitmap2, 0f, bitmap.getHeight().toFloat(), p)
+                bitmap.recycle()
+                bitmap2.recycle()
+                //imageView.setImageBitmap(resultBitmap)
+
+
 
                 val storage = this.cacheDir
                 val fileName = "temp.jpg"
@@ -239,7 +272,7 @@ class ShowDateActivity : AppCompatActivity() {
                 try{
                     tempFile.createNewFile()
                     val out = FileOutputStream(tempFile)
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                    resultBitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
                     out.close()
                 } catch (e: FileNotFoundException){
                     e.printStackTrace()
