@@ -3,16 +3,14 @@ package konkukSW.MP2019.roadline.Data.Adapter
 import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
-import android.support.v4.view.PagerAdapter
 import konkukSW.MP2019.roadline.UI.date.Fragment1
 import konkukSW.MP2019.roadline.UI.date.Fragment2
 import konkukSW.MP2019.roadline.UI.date.Fragment4
 
 class TabAdapter(fm: FragmentManager, val num:Int): FragmentPagerAdapter(fm) {
-    override fun getItemPosition(p0: Any): Int {
-        return PagerAdapter.POSITION_NONE
-    }
-
+//    override fun getItemPosition(p0: Any): Int {
+//        return PagerAdapter.POSITION_NONE
+//    }
     override fun getCount(): Int {
         return num
     }

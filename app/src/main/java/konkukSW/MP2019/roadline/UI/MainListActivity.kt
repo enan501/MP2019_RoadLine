@@ -27,12 +27,17 @@ import java.util.*
 
 class MainListActivity : AppCompatActivity() {
 
+
     var MLArray:ArrayList<MainList> = arrayListOf(
         )
     lateinit var MLAdapter:MainListAdapter
     lateinit var realm: Realm
 
-
+    override fun onResume() {
+        super.onResume()
+        updateImg()
+        MLAdapter.notifyDataSetChanged()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,9 +66,19 @@ class MainListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
         val results = realm.where<T_List>(T_List::class.java).findAll().sort("pos")
         for(T_List in results){
-            MLArray.add(MainList(T_List.id,T_List.title,T_List.date,""))
+            MLArray.add(MainList(T_List.id,T_List.title,T_List.date,T_List.img))
         }
     }
+    fun updateImg(){
+        realm = Realm.getDefaultInstance()
+        val results = realm.where<T_List>(T_List::class.java).findAll().sort("pos")
+        for(i in 0..MLArray.size-1){
+            if(MLArray[i].image != results[i]!!.img) {
+                MLArray[i].image = results[i]!!.img
+            }
+        }
+    }
+
     fun initSwipe(){
         val simpleItemTouchCallback = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT){
             override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {

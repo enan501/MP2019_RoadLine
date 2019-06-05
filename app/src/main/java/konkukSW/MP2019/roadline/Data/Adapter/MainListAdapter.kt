@@ -1,6 +1,7 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
+import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -31,7 +32,6 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
         changePos()
         notifyItemRemoved(pos)
     }
-
     override fun getItemCount(): Int {
         return items.size
     }
@@ -54,7 +54,7 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
             p0.image.setImageResource(R.drawable.ml_default_image)
         }
         else{
-            //p0.image.setImageResource(items.get(p1).image)
+            p0.image.setImageURI(Uri.parse(items.get(p1).image))
         }
     }
     interface OnItemClickListener{
