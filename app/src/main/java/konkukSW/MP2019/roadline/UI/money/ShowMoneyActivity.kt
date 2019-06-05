@@ -406,12 +406,12 @@ class ShowMoneyActivity : AppCompatActivity() {
         textView2.text = item.date.toString()
         if (item.img == "") {
             when (item.cate) {
-                "식사" -> imageView.setImageResource(R.drawable.meal)
-                "쇼핑" -> imageView.setImageResource(R.drawable.shopping)
-                "교통" -> imageView.setImageResource(R.drawable.transport)
-                "관광" -> imageView.setImageResource(R.drawable.tour)
-                "숙박" -> imageView.setImageResource(R.drawable.lodgment)
-                "기타" -> imageView.setImageResource(R.drawable.etc)
+                "식사" -> imageView.setImageResource(R.drawable.meal_big)
+                "쇼핑" -> imageView.setImageResource(R.drawable.shopping_big)
+                "교통" -> imageView.setImageResource(R.drawable.transport_big)
+                "관광" -> imageView.setImageResource(R.drawable.tour_big)
+                "숙박" -> imageView.setImageResource(R.drawable.lodgment_big)
+                "기타" -> imageView.setImageResource(R.drawable.etc_big)
             }
         } else
             imageView.setImageBitmap(BitmapFactory.decodeFile(item.img))
