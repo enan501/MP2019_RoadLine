@@ -24,6 +24,7 @@ import android.graphics.Color
 import android.support.v7.widget.RecyclerView
 import android.util.Log
 import com.google.android.libraries.places.internal.ll
+import kotlinx.android.synthetic.main.activity_show_date.*
 
 
 var StartedFlag = false;
@@ -65,6 +66,7 @@ class Fragment2 : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         Log.v("ttag", "createactivity")
+        sd_imgBtn3.visibility = View.VISIBLE
         init()
         addListener()
     }

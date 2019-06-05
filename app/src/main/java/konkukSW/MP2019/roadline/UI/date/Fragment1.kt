@@ -19,6 +19,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.activity_show_date.*
 
 
 /**
@@ -48,6 +49,7 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     }
 
     fun init(){
+        sd_imgBtn3.visibility = View.INVISIBLE
         initData()
         initLayout()
         addListener()
