@@ -30,7 +30,7 @@
             android:layout_weight="7"
             android:fontFamily="@font/nanum_square_round_r"
             android:gravity="center"
-            android:text="유럽여행"
+            android:text="가계부 추가"
             android:textAlignment="textStart"
             android:textSize="24sp" />
 
