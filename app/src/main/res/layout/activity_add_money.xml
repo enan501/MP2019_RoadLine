@@ -215,14 +215,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="숙박"
+            android:text="관광"
             android:textAlignment="center" />
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="관광"
+            android:text="숙박"
             android:textAlignment="center" />
 
         <TextView
