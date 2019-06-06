@@ -119,65 +119,65 @@ class Fragment2 : Fragment() {
         adapter.itemClickListener = object : PlanAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PlanAdapter.ViewHolder0, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
             }
             override fun OnItemClick(holder: PlanAdapter.ViewHolder1, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder2, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder3, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder4, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder5, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder6, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder7, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder8, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder9, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
 
             override fun OnItemClick(holder: PlanAdapter.ViewHolder10, view: View, data: Plan, position: Int) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data)
+                showAddSpot(data, position)
 
             }
         }
@@ -194,7 +194,7 @@ class Fragment2 : Fragment() {
         }
     }
 
-    fun showAddSpot(data:Plan)
+    fun showAddSpot(data:Plan, position:Int)
     {
         val i = Intent(activity, AddSpotActivity::class.java)
         i.putExtra("spot", data)

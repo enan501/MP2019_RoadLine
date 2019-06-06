@@ -3,7 +3,6 @@ package konkukSW.MP2019.roadline.UI
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -31,22 +30,6 @@ class SplashActivity : AppCompatActivity() {
         Thread.sleep(2500)
         startActivity(Intent(this, MainListActivity::class.java))
         finish()
-        Realm.init(this)
-        realm = Realm.getDefaultInstance()
-        if (realm.where(T_Currency::class.java).findAll().size < 142) {
-            val builder = AlertDialog.Builder(this)
-            builder.setOnDismissListener {
-                finish()
-            }
-            builder.setMessage("환율 정보를 받아오기 위해 네트워크 연결된 상태에서 최초 1회 실행이 필요합니다.\n네트워크 연결 상태를 확인해 주세요!")
-            builder.setPositiveButton("닫기") { _, _ ->
-            }
-                    .show()
-
-        } else {
-            startActivity(Intent(this, MainListActivity::class.java))
-            finish()
-        }
     }
     fun checkNetwork(){
         val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -57,9 +40,7 @@ class SplashActivity : AppCompatActivity() {
     }
     fun getCurrency() {
         realm = Realm.getDefaultInstance()
-//        realm.beginTransaction()
-//        realm.deleteAll()
-//        realm.commitTransaction()
+
         println("size : " + realm.where(T_Currency::class.java).findAll().size.toString())
         if (realm.where(T_Currency::class.java).findAll().size == 142) {
             //이미 db 구성되어 있으면 환율정보만 업데이트
@@ -119,17 +100,7 @@ class SplashActivity : AppCompatActivity() {
             }
 
         }
-        //DB에 담긴 환율 리스트 출력
-//        var results = realm.where(T_Currency::class.java).findAll()
-//        for(T_currency in results) {
-//            println(T_currency.name)
-//            println(T_currency.code)
-//            println(T_currency.symbol)
-//            println(T_currency.rate)
-//
-//        }
     }
-
 
 }
 
