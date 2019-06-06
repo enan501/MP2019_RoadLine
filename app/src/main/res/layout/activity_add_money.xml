@@ -164,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:button="@drawable/radio_lodgment" />
+                android:button="@drawable/radio_tour" />
 
             <RadioButton
                 android:id="@+id/lodgmentBtn"
@@ -172,7 +172,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="9dp"
                 android:layout_weight="1"
-                android:button="@drawable/radio_tour" />
+                android:button="@drawable/radio_lodgment" />
 
             <RadioButton
                 android:id="@+id/etcBtn"
