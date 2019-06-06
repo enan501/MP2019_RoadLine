@@ -5,6 +5,10 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.location.LocationManager
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -13,6 +17,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.Log
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,8 +28,7 @@ import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
-
-
+import kotlinx.android.synthetic.main.fragment_fragment2.*
 
 
 var StartedFlag = false;
@@ -385,6 +389,65 @@ class Fragment2 : Fragment() {
 
 
         }
+    }
+
+    fun getScreenshotFromRecyclerView(): Bitmap? {
+        //view.rs_dragBtn.visibility = View.INVISIBLE
+        var bigBitmap: Bitmap? = null
+
+        if (adapter != null) {
+            val size = adapter.itemCount
+            if(size == 0)
+                return null
+            var height = 0
+            val paint = Paint()
+            var iHeight = 0
+            var width = 0
+            var iWidth = 0
+            val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+
+            // Use 1/8th of the available memory for this memory cache.
+            val cacheSize = maxMemory / 8
+            val bitmaCache = LruCache<String, Bitmap>(cacheSize)
+            var count:Int = 0
+            for (i in 0 until size) {
+                val holder = adapter.createViewHolder(timeline_recycleView, adapter.getItemViewType(i))
+                adapter.onBindViewHolder(holder, i)
+                holder.itemView.measure(
+                        View.MeasureSpec.makeMeasureSpec(timeline_recycleView.width, View.MeasureSpec.UNSPECIFIED),
+                        View.MeasureSpec.makeMeasureSpec(timeline_recycleView.height, View.MeasureSpec.UNSPECIFIED)
+                )
+                holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
+                holder.itemView.isDrawingCacheEnabled = true
+                holder.itemView.buildDrawingCache()
+                val drawingCache = holder.itemView.drawingCache
+                if (drawingCache != null) {
+                    bitmaCache.put(i.toString(), drawingCache)
+                }
+                if(count % 5 == 0){
+                    height += holder.itemView.measuredHeight
+                    width = holder.itemView.measuredWidth
+                }else{
+                    width += holder.itemView.measuredWidth
+                }
+                count++
+            }
+
+            bigBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            val bigCanvas = Canvas(bigBitmap!!)
+            bigCanvas.drawColor(Color.WHITE)
+
+            for (i in 0 until size) {
+                val bitmap = bitmaCache.get(i.toString())
+                iHeight = (i/5)*height
+                iWidth = (i%5)*width
+                bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
+                bitmap.recycle()
+            }
+
+        }
+        //view.rs_dragBtn.visibility = View.VISIBLE
+        return bigBitmap
     }
 
 

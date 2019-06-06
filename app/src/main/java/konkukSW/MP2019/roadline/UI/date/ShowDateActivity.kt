@@ -227,9 +227,9 @@ class ShowDateActivity : AppCompatActivity() {
 
         sd_imgBtn3.setOnClickListener {
 
-            sd_leftImg.visibility = View.GONE
-            sd_rightImg.visibility = View.GONE
-            cancel_btn.visibility = View.GONE
+//            sd_leftImg.visibility = View.GONE
+//            sd_rightImg.visibility = View.GONE
+//            cancel_bt.visibility = View.GONE
             captureLayout1.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
             val dm = resources.displayMetrics
             val width = dm.widthPixels
@@ -244,9 +244,9 @@ class ShowDateActivity : AppCompatActivity() {
             captureLayout1.draw(canvas)
 
             //imageView.setImageBitmap(bitmap)
-            sd_leftImg.visibility = View.VISIBLE
-            cancel_btn.visibility = View.VISIBLE
-            sd_rightImg.visibility = View.VISIBLE
+//            sd_leftImg.visibility = View.VISIBLE
+//            cancel_bt.visibility = View.VISIBLE
+//            sd_rightImg.visibility = View.VISIBLE
 
             lateinit var bitmap2: Bitmap
             if (tabPos == 0) { //Fragment1
@@ -254,6 +254,11 @@ class ShowDateActivity : AppCompatActivity() {
                 bitmap2 = (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
                         as Fragment1).getScreenshotFromRecyclerView()!!
+            }
+            else if(tabPos == 1){ //Fragment2
+                bitmap2 = (getSupportFragmentManager()
+                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
+                        as Fragment2).getScreenshotFromRecyclerView()!!
             }
 
             val option = BitmapFactory.Options()
@@ -263,7 +268,7 @@ class ShowDateActivity : AppCompatActivity() {
             resultBitmap = Bitmap.createScaledBitmap(
                     bitmap,
                     bitmap.getWidth(),
-                    bitmap.getHeight() + bitmap.getHeight(),
+                    bitmap.getHeight() + bitmap2.getHeight(),
                     true
             );
 
@@ -273,8 +278,8 @@ class ShowDateActivity : AppCompatActivity() {
             val c = Canvas(resultBitmap!!)
             c.drawBitmap(bitmap, 0f, 0f, p)
             c.drawBitmap(bitmap2, 0f, bitmap.getHeight().toFloat(), p)
-            bitmap.recycle()
-            bitmap2.recycle()
+            //bitmap.recycle()
+            //bitmap2.recycle()
             //imageView.setImageBitmap(resultBitmap)
 
             val storage = this.cacheDir
@@ -283,7 +288,7 @@ class ShowDateActivity : AppCompatActivity() {
             try {
                 tempFile.createNewFile()
                 val out = FileOutputStream(tempFile)
-                resultBitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
+                bitmap2.compress(Bitmap.CompressFormat.JPEG,100, out)
                 out.close()
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()

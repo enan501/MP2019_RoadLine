@@ -165,8 +165,11 @@ class Fragment1 : Fragment(), DateListAdapter.ItemDragListener {  //리스트
     fun getScreenshotFromRecyclerView(): Bitmap? {
         //view.rs_dragBtn.visibility = View.INVISIBLE
         var bigBitmap: Bitmap? = null
+
         if (adapter != null) {
             val size = adapter.itemCount - 1
+            if(size == 0)
+                return null
             var height = 0
             val paint = Paint()
             var iHeight = 0
