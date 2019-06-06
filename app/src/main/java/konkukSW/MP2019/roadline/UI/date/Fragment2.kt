@@ -404,6 +404,8 @@ class Fragment2 : Fragment() {
             var iHeight = 0
             var width = 0
             var iWidth = 0
+            var rheight = 0
+            var rwidth = 0
             val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
             // Use 1/8th of the available memory for this memory cache.
@@ -431,16 +433,18 @@ class Fragment2 : Fragment() {
                     width += holder.itemView.measuredWidth
                 }
                 count++
+                rheight = holder.itemView.measuredHeight
+                rwidth = holder.itemView.measuredWidth
             }
 
-            bigBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+            bigBitmap = Bitmap.createBitmap(rwidth*5, height, Bitmap.Config.ARGB_8888)
             val bigCanvas = Canvas(bigBitmap!!)
             bigCanvas.drawColor(Color.WHITE)
 
             for (i in 0 until size) {
                 val bitmap = bitmaCache.get(i.toString())
-                iHeight = (i/5)*height
-                iWidth = (i%5)*width
+                iHeight = (i/5)*rheight
+                iWidth = (i%5)*rwidth
                 bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
                 bitmap.recycle()
             }
@@ -449,6 +453,5 @@ class Fragment2 : Fragment() {
         //view.rs_dragBtn.visibility = View.VISIBLE
         return bigBitmap
     }
-
 
 }

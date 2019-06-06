@@ -3,11 +3,16 @@ package konkukSW.MP2019.roadline.UI.date
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -18,17 +23,6 @@ import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_show_date.*
-import com.google.android.libraries.places.internal.i
-import android.graphics.Bitmap
-import android.opengl.ETC1.getHeight
-import android.opengl.ETC1.getWidth
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.util.LruCache
-import kotlinx.android.synthetic.main.fragment_fragment1.*
-import kotlinx.android.synthetic.main.row_spot.view.*
 
 
 /**

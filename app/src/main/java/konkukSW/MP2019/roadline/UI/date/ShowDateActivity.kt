@@ -4,7 +4,7 @@ package konkukSW.MP2019.roadline.UI.date
 //import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder
 //import com.kakao.kakaolink.KakaoLink
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.support.design.widget.TabLayout
 import android.support.v4.content.FileProvider
@@ -140,16 +140,19 @@ class ShowDateActivity : AppCompatActivity() {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                        sd_imgBtn3.visibility = View.VISIBLE
                     }
                     1 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
+                        sd_imgBtn3.visibility = View.VISIBLE
                     }
                     2 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+                        sd_imgBtn3.visibility = View.INVISIBLE
                     }
                 }
                 sd_viewPager.currentItem = tab.position
@@ -227,81 +230,43 @@ class ShowDateActivity : AppCompatActivity() {
 
         sd_imgBtn3.setOnClickListener {
 
-//            sd_leftImg.visibility = View.GONE
-//            sd_rightImg.visibility = View.GONE
-//            cancel_bt.visibility = View.GONE
-            captureLayout1.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED)
-            val dm = resources.displayMetrics
-            val width = dm.widthPixels
-            val bitmap = Bitmap.createBitmap(width, captureLayout1.measuredHeight, Bitmap.Config.ARGB_8888)
-            val canvas = Canvas(bitmap)
-            val bgDrawable = captureLayout1.background
-            if (bgDrawable != null) {
-                bgDrawable.draw(canvas)
-            } else {
-                canvas.drawColor(Color.WHITE)
-            }
-            captureLayout1.draw(canvas)
-
-            //imageView.setImageBitmap(bitmap)
-//            sd_leftImg.visibility = View.VISIBLE
-//            cancel_bt.visibility = View.VISIBLE
-//            sd_rightImg.visibility = View.VISIBLE
-
-            lateinit var bitmap2: Bitmap
+            var bitmap2: Bitmap? = null
             if (tabPos == 0) { //Fragment1
-                //val bitmap2 = (getSupportFragmentManager().findFragmentByTag("fragmentTag") as Fragment1).getScreenshotFromRecyclerView()
+                sd_imgBtn3.visibility = View.VISIBLE
                 bitmap2 = (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
-                        as Fragment1).getScreenshotFromRecyclerView()!!
+                        as Fragment1).getScreenshotFromRecyclerView()
+
             }
             else if(tabPos == 1){ //Fragment2
+                sd_imgBtn3.visibility = View.VISIBLE
                 bitmap2 = (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
-                        as Fragment2).getScreenshotFromRecyclerView()!!
+                        as Fragment2).getScreenshotFromRecyclerView()
             }
 
-            val option = BitmapFactory.Options()
-            option.inDither = true
-            option.inPurgeable = true
-            var resultBitmap: Bitmap? = null
-            resultBitmap = Bitmap.createScaledBitmap(
-                    bitmap,
-                    bitmap.getWidth(),
-                    bitmap.getHeight() + bitmap2.getHeight(),
-                    true
-            );
-
-            val p = Paint()
-            p.setDither(true)
-            p.setFlags(Paint.ANTI_ALIAS_FLAG)
-            val c = Canvas(resultBitmap!!)
-            c.drawBitmap(bitmap, 0f, 0f, p)
-            c.drawBitmap(bitmap2, 0f, bitmap.getHeight().toFloat(), p)
-            //bitmap.recycle()
-            //bitmap2.recycle()
-            //imageView.setImageBitmap(resultBitmap)
-
-            val storage = this.cacheDir
-            val fileName = "temp.jpg"
-            val tempFile = File(storage, fileName)
-            try {
-                tempFile.createNewFile()
-                val out = FileOutputStream(tempFile)
-                bitmap2.compress(Bitmap.CompressFormat.JPEG,100, out)
-                out.close()
-            } catch (e: FileNotFoundException) {
-                e.printStackTrace()
-            } catch (e: IOException) {
-                e.printStackTrace()
+            if(bitmap2 != null){
+                val storage = this.cacheDir
+                val fileName = "temp.jpg"
+                val tempFile = File(storage, fileName)
+                try {
+                    tempFile.createNewFile()
+                    val out = FileOutputStream(tempFile)
+                    bitmap2?.compress(Bitmap.CompressFormat.JPEG,100, out)
+                    out.close()
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                Log.v("tag", tempFile.toURI().toString())
+                var uri = FileProvider.getUriForFile(this,"konkukSW.MP2019.roadline.fileprovider",tempFile)
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
+                shareIntent.type = "image/*"
+                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
             }
-            Log.v("tag", tempFile.toURI().toString())
-            var uri = FileProvider.getUriForFile(this,"konkukSW.MP2019.roadline.fileprovider",tempFile)
-            val shareIntent = Intent(Intent.ACTION_SEND)
-            shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
-            shareIntent.type = "image/*"
-            shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-            startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
         }
     }
 }

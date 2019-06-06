@@ -26,27 +26,27 @@ class SplashActivity : AppCompatActivity() {
                 RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
         Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
         GlobalScope.launch(Dispatchers.Default) {
-            getCurrency()
+            checkNetwork()
         }
         Thread.sleep(2500)
         startActivity(Intent(this, MainListActivity::class.java))
         finish()
-//        Realm.init(this)
-//        realm = Realm.getDefaultInstance()
-//        if (realm.where(T_Currency::class.java).findAll().size < 142) {
-//            val builder = AlertDialog.Builder(this)
-//            builder.setOnDismissListener {
-//                finish()
-//            }
-//            builder.setMessage("환율 정보를 받아오기 위해 네트워크 연결된 상태에서 최초 1회 실행이 필요합니다.\n네트워크 연결 상태를 확인해 주세요!")
-//            builder.setPositiveButton("닫기") { _, _ ->
-//            }
-//                    .show()
-//
-//        } else {
-//            startActivity(Intent(this, MainListActivity::class.java))
-//            finish()
-//        }
+        Realm.init(this)
+        realm = Realm.getDefaultInstance()
+        if (realm.where(T_Currency::class.java).findAll().size < 142) {
+            val builder = AlertDialog.Builder(this)
+            builder.setOnDismissListener {
+                finish()
+            }
+            builder.setMessage("환율 정보를 받아오기 위해 네트워크 연결된 상태에서 최초 1회 실행이 필요합니다.\n네트워크 연결 상태를 확인해 주세요!")
+            builder.setPositiveButton("닫기") { _, _ ->
+            }
+                    .show()
+
+        } else {
+            startActivity(Intent(this, MainListActivity::class.java))
+            finish()
+        }
     }
     fun checkNetwork(){
         val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
