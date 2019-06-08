@@ -7,60 +7,59 @@
     android:background="@color/white"
     android:orientation="vertical"
     tools:context=".UI.date.PickDateActivity">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1.5"
         android:background="@drawable/grad1"
         android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginVertical="7dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp">
 
-        <ImageView
-            android:id="@+id/cancel_btn"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="match_parent"
-            android:onClick="back"
-            android:background="@drawable/cancel" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="7dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:id="@+id/cancel_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/cancel"
+                android:onClick="back" />
+
+            <TextView
+                android:id="@+id/title_view"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
+                android:layout_weight="7"
+                android:fontFamily="@font/nanum_square_round_r"
+                android:gravity="center"
+                android:textAlignment="textStart"
+                android:textSize="24sp"
+                android:visibility="invisible" />
+
+            <ImageView
+                android:id="@+id/add_btn"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:visibility="invisible" />
+
+        </LinearLayout>
 
         <TextView
-            android:id="@+id/title_view"
-            android:layout_width="0dp"
+            android:id="@+id/PD_title"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="7"
             android:fontFamily="@font/nanum_square_round_r"
             android:gravity="center"
-            android:visibility="invisible"
-            android:textAlignment="textStart"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/add_btn"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:visibility="invisible"
-            android:layout_height="match_parent" />
-
-    </LinearLayout>
-
-
-    <TextView
-        android:id="@+id/PD_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="60dp"
-        android:paddingBottom="50dp"
-        android:fontFamily="@font/nanum_square_round_r"
-        android:gravity="center"
-        android:text="대만여행"
-        android:textColor="@color/white"
-        android:textSize="36sp" />
+            android:text="대만여행"
+            android:textColor="@color/white"
+            android:textSize="36sp" />
     </LinearLayout>
 
 
@@ -68,15 +67,16 @@
         android:id="@+id/PD_rView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="30dp"
-        android:layout_marginTop="60dp"
-        android:layout_weight="2.5"></android.support.v7.widget.RecyclerView>
+        android:layout_marginTop="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_weight="2.5"
+        android:paddingTop="30dp"></android.support.v7.widget.RecyclerView>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="10dp"
         android:layout_marginHorizontal="15dp"
+        android:layout_marginVertical="10dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
