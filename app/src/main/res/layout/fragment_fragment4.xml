@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context="konkukSW.MP2019.roadline.UI.date.Fragment4">
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <fragment
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/mapView"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"

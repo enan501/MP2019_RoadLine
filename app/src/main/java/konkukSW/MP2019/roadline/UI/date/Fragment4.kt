@@ -2,11 +2,15 @@ package konkukSW.MP2019.roadline.UI.date
 
 
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.util.Log
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,6 +25,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_date.*
+import kotlinx.android.synthetic.main.fragment_fragment4.*
 
 
 class Fragment4 : Fragment(),OnMapReadyCallback {
@@ -116,6 +121,8 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
             gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
         }
     }
+
+
 
 
 
