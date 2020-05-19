@@ -3,10 +3,7 @@ package konkukSW.MP2019.roadline.UI.date
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -18,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
+import android.widget.Adapter
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
@@ -205,25 +203,41 @@ class Fragment1 : Fragment() {  //리스트
         ft.detach(this).attach(this).commit()
     }
 
-    fun getScreenshotFromRecyclerView(): Bitmap? {
+    fun combineImage(first:Bitmap, second:Bitmap):Bitmap?{
+        val result = Bitmap.createBitmap(first.width + second.width, first.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(result)
+        val paint = Paint()
+        canvas.drawBitmap(first, 0.0f, 0.0f, paint)
+        canvas.drawBitmap(second, first.width.toFloat(), 0.0f, paint)
+        return result
+    }
+
+    fun getScreenshot() : Bitmap?{
+        val first = getScreenshotFromRecyclerView(rIconView, iconAdapter)
+        val second = getScreenshotFromRecyclerView(rView, adapter)
+        val result = combineImage(first!!, second!!)
+        return result
+    }
+
+    fun getScreenshotFromRecyclerView(view:RecyclerView, ad:RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
         var bigBitmap: Bitmap? = null
 
-        if (adapter != null) {
-            val size = adapter.itemCount - 1
+        if (ad != null) {
+            val size = ad.itemCount - 1
             if(size == 0)
                 return null
             var height = 0
-            val paint = Paint()
             var iHeight = 0
+            val paint = Paint()
             val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
             val cacheSize = maxMemory / 8
-            val bitmaCache = LruCache<String, Bitmap>(cacheSize)
+            val bitmapCache = LruCache<String, Bitmap>(cacheSize)
             for (i in 0 until size) {
-                val holder = adapter.createViewHolder(rView, adapter.getItemViewType(i))
-                adapter.onBindViewHolder(holder, i)
+                val holder = ad.createViewHolder(view, ad.getItemViewType(i))
+                ad.onBindViewHolder(holder, i)
                 holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(rView.width, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY),
                         View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
                 )
                 holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
@@ -231,17 +245,17 @@ class Fragment1 : Fragment() {  //리스트
                 holder.itemView.buildDrawingCache()
                 val drawingCache = holder.itemView.drawingCache
                 if (drawingCache != null) {
-                    bitmaCache.put(i.toString(), drawingCache)
+                    bitmapCache.put(i.toString(), drawingCache)
                 }
                 height += holder.itemView.measuredHeight
             }
 
-            bigBitmap = Bitmap.createBitmap(rView.measuredWidth, height, Bitmap.Config.ARGB_8888)
+            bigBitmap = Bitmap.createBitmap(view.measuredWidth, height, Bitmap.Config.ARGB_8888)
             val bigCanvas = Canvas(bigBitmap!!)
             bigCanvas.drawColor(Color.WHITE)
 
             for (i in 0 until size) {
-                val bitmap = bitmaCache.get(i.toString())
+                val bitmap = bitmapCache.get(i.toString())
                 bigCanvas.drawBitmap(bitmap, 0f, iHeight.toFloat(), paint)
                 iHeight += bitmap.getHeight()
                 bitmap.recycle()

@@ -85,26 +85,13 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         notifyItemRangeRemoved(pos, items.size + 1)
         changePos()
         itemChangeListener!!.onItemChange()
-
-//        for(i in 0..items.size-1) {
-//            if (items.size == 1 && i == 0)
-//                items.get(i).viewType = TYPE_ONE
-//            else if (items.size > 1 && i == items.size - 1)
-//                items.get(i).viewType = TYPE_END
-//            else if (items.size > 1 && i == 0)
-//                items.get(i).viewType = TYPE_START
-//            else if (items.size > 1)
-//                items.get(i).viewType = TYPE_MID
-//        }
-       // notifyDataSetChanged()
     }
 
     fun changePos(){
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
-        for(i in 0..items.size-1)
-        {
+        for(i in 0..items.size-1) {
             val id = items[i].id
             val result = realm.where<T_Plan>(T_Plan::class.java)
                     .equalTo("id", id)
@@ -134,15 +121,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         if(p0 is ItemViewHolder) {
             p0.spotName.text = items.get(p1).name
             p0.spotTime.text = items.get(p1).time
-
-//            if(items.get(p1).viewType == TYPE_MID) //mid
-//                p0.listimg.setImageResource(R.drawable.ver_mid)
-//            else if(items.get(p1).viewType == TYPE_ONE) //한개
-//                p0.listimg.setImageResource(R.drawable.ver_one)
-//            else if(items.get(p1).viewType == TYPE_END) //end
-//                p0.listimg.setImageResource(R.drawable.ver_down)
-//            else if(items.get(p1).viewType == TYPE_START) //start
-//                p0.listimg.setImageResource(R.drawable.ver_top)
         }
     }
 
@@ -159,7 +137,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         var spotName: TextView
         var spotTime: TextView
         var dragBtn: ImageView
-       // var listimg: ImageView
         var deleteBtn:ImageView
 
         init {
@@ -167,7 +144,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
             deleteBtn = itemView.findViewById(R.id.rs_deleteBtn)
             spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
-            //listimg = itemView.findViewById(R.id.list_img)
             if(Fragment1.editMode == true){
                 dragBtn.visibility = View.VISIBLE
                 deleteBtn.visibility = View.VISIBLE
@@ -189,12 +165,11 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
                 builder.setView(deleteListDialog)
                         .setPositiveButton("삭제") { dialogInterface, _ ->
                             removeItem(adapterPosition)
-                            notifyItemRemoved(adapterPosition)
                         }
                         .setNegativeButton("취소") { dialogInterface, i ->
                         }
                         .show()
-                itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
+                //itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
             }
             itemView.setOnClickListener {
                 Log.d("mytest", adapterPosition.toString())

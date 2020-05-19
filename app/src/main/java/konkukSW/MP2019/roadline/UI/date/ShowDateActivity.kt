@@ -28,8 +28,6 @@ import java.io.IOException
 
 
 class ShowDateActivity : AppCompatActivity() {
-
-
     var ListID = "a"
     var DayNum = 0
     var maxDayNum = 0
@@ -235,7 +233,7 @@ class ShowDateActivity : AppCompatActivity() {
                 sd_imgBtn3.visibility = View.VISIBLE
                 bitmap2 = (getSupportFragmentManager()
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
-                        as Fragment1).getScreenshotFromRecyclerView()
+                        as Fragment1).getScreenshot()
 
             }
             else if(tabPos == 1){ //Fragment2
