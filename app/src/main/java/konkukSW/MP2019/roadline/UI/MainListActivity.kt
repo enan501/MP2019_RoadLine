@@ -28,8 +28,7 @@ import java.util.*
 class MainListActivity : AppCompatActivity() {
 
 
-    var MLArray:ArrayList<MainList> = arrayListOf(
-        )
+    var MLArray:ArrayList<MainList> = arrayListOf()
     lateinit var MLAdapter:MainListAdapter
     lateinit var realm: Realm
 

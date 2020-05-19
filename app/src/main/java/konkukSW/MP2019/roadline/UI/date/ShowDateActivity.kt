@@ -40,7 +40,7 @@ class ShowDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(konkukSW.MP2019.roadline.R.layout.activity_show_date)
+        setContentView(R.layout.activity_show_date)
         init()
     }
 
@@ -49,7 +49,7 @@ class ShowDateActivity : AppCompatActivity() {
         initListener()
     }
 
-    fun back(v: View?): Unit {
+    fun back(){
         finish()
     }
 

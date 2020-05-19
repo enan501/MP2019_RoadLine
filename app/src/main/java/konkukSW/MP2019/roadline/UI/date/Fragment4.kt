@@ -49,15 +49,13 @@ class Fragment4 : Fragment(),OnMapReadyCallback {
     fun refresh(){
 //        val ft = fragmentManager!!.beginTransaction()
 //        ft.detach(this).attach(this).commit()
-
         spotList.clear()
         latlngList.clear()
         val mapFragment = this.childFragmentManager.findFragmentById(konkukSW.MP2019.roadline.R.id.mapView) as SupportMapFragment
         mapFragment.getMapAsync(this)
         initData()
-
-
     }
+
     fun initData(){
         if(activity != null){
             val intent = activity!!.intent

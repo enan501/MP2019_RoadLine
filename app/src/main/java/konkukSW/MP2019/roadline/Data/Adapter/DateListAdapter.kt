@@ -19,8 +19,13 @@ import kotlinx.android.synthetic.main.row_spot.view.*
 
 class DateListAdapter(val items:ArrayList<Plan>, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private val TYPE_ITEM:Int = 0
-    private val TYPE_FOOTER:Int = 1
+    private val TYPE_ITEM = 0
+    private val TYPE_FOOTER = 1
+
+    private val TYPE_ONE  = -2
+    private val TYPE_START = -4
+    private val TYPE_END = -3
+    private val TYPE_MID = -1
 
     interface OnItemClickListener{
         fun OnItemClick(holder:ItemViewHolder, view:View, data: Plan, position: Int)
@@ -35,9 +40,14 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         fun onItemLongClick()
     }
 
+    interface OnItemChangeListener{
+        fun onItemChange()
+    }
+
     var itemClickListener :OnItemClickListener? = null
     var itemDragListener :OnItemDragListener? = null
     var itemLongClickListener:OnItemLongClickListener? = null
+    var itemChangeListener:OnItemChangeListener? = null
 
     fun moveItem(pos1:Int, pos2:Int){  //객체 두개 바꾸기 함수
         if(pos2 <= items.size - 1){
@@ -48,44 +58,45 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
             changePos()
             for(i in 0..items.size-1) {
                 if (items.size == 1 && i == 0)
-                    items.get(i).viewType = -2
+                    items.get(i).viewType = TYPE_ONE
                 else if (items.size > 1 && i == items.size - 1)
-                    items.get(i).viewType = -3
+                    items.get(i).viewType = TYPE_END
                 else if (items.size > 1 && i == 0)
-                    items.get(i).viewType = -4
+                    items.get(i).viewType = TYPE_START
                 else if (items.size > 1)
-                    items.get(i).viewType = -1
+                    items.get(i).viewType = TYPE_MID
             }
-            notifyDataSetChanged()
+            //notifyDataSetChanged()
         }
     }
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
-            Realm.init(context)
-            val realm = Realm.getDefaultInstance()
-            realm.beginTransaction()
-            val q = realm.where(T_Plan::class.java).findAll()
-            val tuple = realm.where(T_Plan::class.java)
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        val tuple = realm.where(T_Plan::class.java)
                 .equalTo("id", items.get(pos).id)
                 .equalTo("pos", pos)
                 .findFirst()
-            tuple!!.deleteFromRealm()
-            realm.commitTransaction()
-            items.removeAt(pos)
-            notifyItemRemoved(pos)
-            changePos()
+        tuple!!.deleteFromRealm()
+        realm.commitTransaction()
+        items.removeAt(pos)
 
-        for(i in 0..items.size-1) {
-            if (items.size == 1 && i == 0)
-                items.get(i).viewType = -2
-            else if (items.size > 1 && i == items.size - 1)
-                items.get(i).viewType = -3
-            else if (items.size > 1 && i == 0)
-                items.get(i).viewType = -4
-            else if (items.size > 1)
-                items.get(i).viewType = -1
-        }
-        notifyDataSetChanged()
+        notifyItemRangeRemoved(pos, items.size + 1)
+        changePos()
+        itemChangeListener!!.onItemChange()
+
+//        for(i in 0..items.size-1) {
+//            if (items.size == 1 && i == 0)
+//                items.get(i).viewType = TYPE_ONE
+//            else if (items.size > 1 && i == items.size - 1)
+//                items.get(i).viewType = TYPE_END
+//            else if (items.size > 1 && i == 0)
+//                items.get(i).viewType = TYPE_START
+//            else if (items.size > 1)
+//                items.get(i).viewType = TYPE_MID
+//        }
+       // notifyDataSetChanged()
     }
 
     fun changePos(){
@@ -105,7 +116,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
     }
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         var v:View
         if(p1 == TYPE_ITEM){
             v = LayoutInflater.from(p0.context).inflate(R.layout.row_spot, p0, false)
@@ -117,25 +127,22 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
     }
 
     override fun getItemCount(): Int {
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         return items.size + 1
     }
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
-        //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         if(p0 is ItemViewHolder) {
             p0.spotName.text = items.get(p1).name
             p0.spotTime.text = items.get(p1).time
 
-            if(items.get(p1).viewType == -1)
-                p0.listimg.setImageResource(R.drawable.ver_mid)
-            else if(items.get(p1).viewType == -2)
-                p0.listimg.setImageResource(R.drawable.ver_one)
-            else if(items.get(p1).viewType == -3)
-                p0.listimg.setImageResource(R.drawable.ver_down)
-            else if(items.get(p1).viewType == -4)
-                p0.listimg.setImageResource(R.drawable.ver_top)
-
+//            if(items.get(p1).viewType == TYPE_MID) //mid
+//                p0.listimg.setImageResource(R.drawable.ver_mid)
+//            else if(items.get(p1).viewType == TYPE_ONE) //한개
+//                p0.listimg.setImageResource(R.drawable.ver_one)
+//            else if(items.get(p1).viewType == TYPE_END) //end
+//                p0.listimg.setImageResource(R.drawable.ver_down)
+//            else if(items.get(p1).viewType == TYPE_START) //start
+//                p0.listimg.setImageResource(R.drawable.ver_top)
         }
     }
 
@@ -152,7 +159,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         var spotName: TextView
         var spotTime: TextView
         var dragBtn: ImageView
-        var listimg: ImageView
+       // var listimg: ImageView
         var deleteBtn:ImageView
 
         init {
@@ -160,7 +167,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
             deleteBtn = itemView.findViewById(R.id.rs_deleteBtn)
             spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
-            listimg = itemView.findViewById(R.id.list_img)
+            //listimg = itemView.findViewById(R.id.list_img)
             if(Fragment1.editMode == true){
                 dragBtn.visibility = View.VISIBLE
                 deleteBtn.visibility = View.VISIBLE

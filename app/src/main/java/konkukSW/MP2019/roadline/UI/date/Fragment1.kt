@@ -20,6 +20,7 @@ import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
 import io.realm.Realm
 import io.realm.RealmResults
+import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
@@ -28,19 +29,26 @@ import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.row_spot.*
 
 class Fragment1 : Fragment() {  //리스트
+    private val TYPE_ONE  = -2
+    private val TYPE_START = -4
+    private val TYPE_END = -3
+    //private val TYPE_MID = -1
 
     lateinit var planList:ArrayList<Plan>
     lateinit var adapter:DateListAdapter
+    lateinit var iconAdapter: DateIconListAdapter
     lateinit var rView:RecyclerView
+    lateinit var rIconView:RecyclerView
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
+
     companion object{
         var editMode = false
     }
 
-    var ListID = "a"
-    var DayNum = 0;
+    var listID = ""
+    var dayNum = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,6 +56,7 @@ class Fragment1 : Fragment() {  //리스트
     ): View? {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_fragment1, container, false)
+        Log.d("mytest", "oncreateview")
         init()
         return v
     }
@@ -64,27 +73,27 @@ class Fragment1 : Fragment() {  //리스트
         if(activity != null){
             val intent = activity!!.intent
             if(intent != null){
-                ListID = intent.getStringExtra("ListID")
-                DayNum = intent.getIntExtra("DayNum", 0)
+                listID = intent.getStringExtra("ListID")
+                dayNum = intent.getIntExtra("DayNum", 0)
             }
         }
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
         val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
-            .equalTo("listID", ListID)
-            .equalTo("dayNum", DayNum)
+            .equalTo("listID", listID)
+            .equalTo("dayNum", dayNum)
             .findAll()
             .sort("pos")
-        planList = ArrayList<Plan>()
+        planList = ArrayList()
         for(T_Plan in results){
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
                 T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
         }
         if(planList.size == 1)
-            planList.get(0).viewType = -2
+            planList.get(0).viewType = TYPE_ONE
         else if(planList.size > 1){
-            planList.get(0).viewType = -4
-            planList.get(planList.size - 1).viewType = -3
+            planList.get(0).viewType = TYPE_START
+            planList.get(planList.size - 1).viewType = TYPE_END
         }
     }
 
@@ -94,7 +103,11 @@ class Fragment1 : Fragment() {  //리스트
         rView.layoutManager = layoutManager
         adapter = DateListAdapter(planList, context!!)
         rView.adapter = adapter
-
+        rIconView = v!!.findViewById(R.id.f1_rViewIcon) as RecyclerView
+        val layoutManager2 = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
+        rIconView.layoutManager = layoutManager2
+        iconAdapter = DateIconListAdapter(planList.size, context!!)
+        rIconView.adapter = iconAdapter
     }
 
     fun addListener(){
@@ -103,8 +116,8 @@ class Fragment1 : Fragment() {  //리스트
             override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
                 i.putExtra("pos", planList.size)
-                i.putExtra("DayNum", DayNum)
-                i.putExtra("ListID", ListID)
+                i.putExtra("DayNum", dayNum)
+                i.putExtra("ListID", listID)
                 startActivityForResult(i,123)
             }
 
@@ -114,8 +127,8 @@ class Fragment1 : Fragment() {  //리스트
                 if(!editMode){
                     val i = Intent(activity, AddSpotActivity::class.java)
                     i.putExtra("spot", data)
-                    i.putExtra("DayNum", DayNum)
-                    i.putExtra("ListID", ListID)
+                    i.putExtra("DayNum", dayNum)
+                    i.putExtra("ListID", listID)
                     i.putExtra("path", 1)
                     i.putExtra("pos", position)
                     startActivityForResult(i, 123)
@@ -141,7 +154,6 @@ class Fragment1 : Fragment() {  //리스트
             override fun onStartDrag(holder: RecyclerView.ViewHolder) {
                 itemTouchHelper.startDrag(holder)
             }
-
         }
         adapter.itemLongClickListener = object : DateListAdapter.OnItemLongClickListener {
             override fun onItemLongClick() {
@@ -162,6 +174,15 @@ class Fragment1 : Fragment() {  //리스트
                 }
             }
         }
+
+        adapter.itemChangeListener = object :DateListAdapter.OnItemChangeListener{
+            override fun onItemChange() {
+                Log.d("mytest", "planlist size(delete) : " + planList.size.toString())
+                iconAdapter = DateIconListAdapter(planList.size, context!!)
+                rIconView.adapter = iconAdapter
+                refresh()
+            }
+        }
     }
 
     fun initSwipe(){
@@ -170,27 +191,21 @@ class Fragment1 : Fragment() {  //리스트
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { // 애드스팟 하고나서 돌아왔을때 어댑터뷰 바로 갱신
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 123)
-        {
-            if(resultCode == Activity.RESULT_OK)
-            {
-                val ft = fragmentManager!!.beginTransaction()
-                ft.detach(this).attach(this).commit()
-
+        if(requestCode == 123) {
+            if(resultCode == Activity.RESULT_OK) {
+                refresh()
             }
         }
     }
 
-    fun refresh()
-    {
+    fun refresh() {
         val ft = fragmentManager!!.beginTransaction()
         ft.detach(this).attach(this).commit()
     }
 
     fun getScreenshotFromRecyclerView(): Bitmap? {
-        //view.rs_dragBtn.visibility = View.INVISIBLE
         var bigBitmap: Bitmap? = null
 
         if (adapter != null) {
@@ -202,7 +217,6 @@ class Fragment1 : Fragment() {  //리스트
             var iHeight = 0
             val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
-            // Use 1/8th of the available memory for this memory cache.
             val cacheSize = maxMemory / 8
             val bitmaCache = LruCache<String, Bitmap>(cacheSize)
             for (i in 0 until size) {
@@ -232,9 +246,7 @@ class Fragment1 : Fragment() {  //리스트
                 iHeight += bitmap.getHeight()
                 bitmap.recycle()
             }
-
         }
-        //view.rs_dragBtn.visibility = View.VISIBLE
         return bigBitmap
     }
 
