@@ -4,7 +4,6 @@ import android.Manifest
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
@@ -13,17 +12,16 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.MenuItem
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.Toast
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
+import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
-import kotlinx.android.synthetic.main.activity_add_spot.*
-import kotlinx.android.synthetic.main.activity_show_money.*
+import kotlinx.android.synthetic.main.activity_show_date.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -44,7 +42,7 @@ class AddMoneyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(konkukSW.MP2019.roadline.R.layout.activity_add_money)
+        setContentView(R.layout.activity_add_money)
         initPermission()
         init()
     }
@@ -100,8 +98,21 @@ class AddMoneyActivity : AppCompatActivity() {
         dayNum = i.getIntExtra("DayNum", 0)
         listID = i.getStringExtra("ListID")
 
+        initToolbar()
         category_click()
         money_calculation()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun initToolbar(){
+        setSupportActionBar(am_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     fun addImg(view: View) {

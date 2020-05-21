@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,30 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-
-        <!-- 가로 줄 -->
-
-        <LinearLayout
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_marginVertical="7dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp">
-
-            <ImageView
-                android:id="@+id/cancel_btn"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:onClick="back"
-                android:background="@drawable/cancel" />
-
+            android:layout_height="?attr/actionBarSize">
             <LinearLayout
-                android:layout_width="0dp"
-                android:layout_weight="8"
-                android:layout_marginLeft="5dp"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent">
-
                 <TextView
                     android:id="@+id/day"
                     android:layout_width="0dp"
@@ -52,7 +34,6 @@
                     android:layout_weight="1"
                     android:text="총지출"
                     android:fontFamily="@font/nanum_square_round_r"
-                    android:textAlignment="textStart"
                     android:gravity="center"
                     android:textSize="25sp" />
 
@@ -62,16 +43,14 @@
                     android:layout_height="match_parent"
                     android:layout_weight="2"
                     android:text="392300원"
-                    android:layout_marginRight="10dp"
-                    android:textAlignment="textEnd"
                     android:fontFamily="@font/nanum_square_round_r"
                     android:textColor="#60AEBF"
-                    android:gravity="center"
+                    android:paddingEnd="15dp"
+                    android:gravity="end|center_vertical"
                     android:textSize="25sp"
                     android:textStyle="bold" />
             </LinearLayout>
-
-        </LinearLayout>
+        </android.support.v7.widget.Toolbar>
 
         <View
         android:layout_width="wrap_content"
@@ -84,14 +63,14 @@
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="10dp"></com.github.mikephil.charting.charts.PieChart>
+            android:layout_marginVertical="10dp"/>
 
         <ListView
             android:id="@+id/categoryMoneyListView"
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:layout_marginHorizontal="40dp"
-            android:layout_marginVertical="20dp"></ListView>
+            android:layout_marginVertical="20dp"/>
 
     </LinearLayout>
 </ScrollView>

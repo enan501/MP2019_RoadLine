@@ -33,7 +33,7 @@
             android:gravity="left|center_vertical"
             android:paddingHorizontal="5dp"
             android:text="null"
-            android:textSize="15sp" />
+            android:textSize="17sp" />
 
         <ImageView
             android:visibility="gone"

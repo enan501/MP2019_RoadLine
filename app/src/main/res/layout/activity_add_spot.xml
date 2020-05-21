@@ -7,40 +7,32 @@
     android:orientation="vertical"
     tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/as_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="7dp"
-        android:layout_marginTop="10dp">
+        android:layout_height="?attr/actionBarSize">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/as_button_memo"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/nanum_square_round_r"
+                android:gravity="center"
+                android:text="상세정보 추가"
+                android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/cancel_bt2"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/cancel"
-            android:onClick="back" />
-
-        <TextView
-            android:id="@+id/as_button_memo"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="7"
-            android:fontFamily="@font/nanum_square_round_r"
-            android:gravity="center"
-            android:text="상세정보 추가"
-            android:textSize="20sp" />
-
-        <ImageView
-            android:id="@+id/as_button_check"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:src="@drawable/checkbt" />
-
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/as_button_check"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_marginVertical="8dp"
+                android:layout_weight="0"
+                android:src="@drawable/checkbt" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
     <View
         android:layout_width="wrap_content"

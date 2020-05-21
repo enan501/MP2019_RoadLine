@@ -1,11 +1,18 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.LinearSmoothScroller
 import android.support.v7.widget.LinearSnapHelper
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
@@ -30,7 +37,7 @@ class PickDateActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(konkukSW.MP2019.roadline.R.layout.activity_pick_date)
+        setContentView(R.layout.activity_pick_date)
         init()
 
     }
@@ -38,11 +45,23 @@ class PickDateActivity : AppCompatActivity() {
         initData()
         initLayout()
     }
-    fun back(v: View?):Unit{
-        finish()
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun initLayout(){
+        setSupportActionBar(PD_toolbar)
+        val backArrow = ContextCompat.getDrawable(applicationContext, R.drawable.abc_ic_ab_back_material)
+        backArrow!!.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_ATOP)
+        supportActionBar!!.setHomeAsUpIndicator(backArrow)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.title = ""
+
         val layoutManager = CenterZoomLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         val smoothScroller = object : LinearSmoothScroller(this) {
             override fun getHorizontalSnapPreference(): Int {
@@ -60,6 +79,7 @@ class PickDateActivity : AppCompatActivity() {
         PDAdapter.notifyDataSetChanged()
         addListener()
     }
+
     fun initData(){
         ListID = intent.getStringExtra("ListID")
         dateList = arrayListOf(PickDate(ListID,0,"blank"),PickDate(ListID,0,"first"))

@@ -84,7 +84,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
 
         notifyItemRangeRemoved(pos, items.size + 1)
         changePos()
-        itemChangeListener!!.onItemChange()
+        itemChangeListener!!.onItemChange() //iconAdapter 다시 달기
     }
 
     fun changePos(){
@@ -118,6 +118,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
     }
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
+        Log.d("mytest", "onbindeviewholder " + p1.toString())
         if(p0 is ItemViewHolder) {
             p0.spotName.text = items.get(p1).name
             p0.spotTime.text = items.get(p1).time
@@ -144,11 +145,11 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
             deleteBtn = itemView.findViewById(R.id.rs_deleteBtn)
             spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
-            if(Fragment1.editMode == true){
+            if(Fragment1.editMode){
                 dragBtn.visibility = View.VISIBLE
                 deleteBtn.visibility = View.VISIBLE
             }
-            dragBtn.setOnTouchListener { v, event ->
+            dragBtn.setOnTouchListener { _, event ->
                 if(event.action == MotionEvent.ACTION_DOWN){
                     itemDragListener?.onStartDrag(this)
                 }
@@ -163,10 +164,10 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
                 deleteListText.text = deleteMessage
 
                 builder.setView(deleteListDialog)
-                        .setPositiveButton("삭제") { dialogInterface, _ ->
+                        .setPositiveButton("삭제") { _, _->
                             removeItem(adapterPosition)
                         }
-                        .setNegativeButton("취소") { dialogInterface, i ->
+                        .setNegativeButton("취소") { _, _ ->
                         }
                         .show()
                 //itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
@@ -175,7 +176,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
                 Log.d("mytest", adapterPosition.toString())
                 itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
             }
-            itemView.setOnLongClickListener {v ->
+            itemView.setOnLongClickListener {_ ->
                 itemLongClickListener?.onItemLongClick()
                 true
             }

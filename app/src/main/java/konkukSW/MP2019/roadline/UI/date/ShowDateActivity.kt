@@ -1,16 +1,21 @@
 package konkukSW.MP2019.roadline.UI.date
 
-//import com.kakao.util.KakaoParameterException
-//import com.kakao.kakaolink.KakaoTalkLinkMessageBuilder
-//import com.kakao.kakaolink.KakaoLink
+
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.TabLayout
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.FileProvider
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.view.MotionEvent
 import android.view.View
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
@@ -19,6 +24,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+import kotlinx.android.synthetic.main.activity_pick_date.*
 import kotlinx.android.synthetic.main.activity_show_date.*
 import kotlinx.android.synthetic.main.fragment_fragment2.*
 import java.io.File
@@ -28,6 +34,9 @@ import java.io.IOException
 
 
 class ShowDateActivity : AppCompatActivity() {
+    private val TYPE_BEFORE = 0
+    private val TYPE_NEXT = 1
+
     var ListID = "a"
     var DayNum = 0
     var maxDayNum = 0
@@ -35,6 +44,10 @@ class ShowDateActivity : AppCompatActivity() {
     lateinit var realm: Realm
     private var tabLayer: TabLayout? = null
     var tabPos: Int = 0
+    var down_x = 0f
+    var up_x = 0f
+    var title = ""
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,14 +57,23 @@ class ShowDateActivity : AppCompatActivity() {
 
     fun init() {
         initData()
+        initLayout()
         initListener()
     }
 
-    fun back(){
-        finish()
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
+
+
     fun initData() {
+        setSupportActionBar(sd_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         tabLayer = findViewById(konkukSW.MP2019.roadline.R.id.sd_layout_tab)
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
@@ -62,7 +84,8 @@ class ShowDateActivity : AppCompatActivity() {
         Realm.init(this)
         realm = Realm.getDefaultInstance()
         maxDayNum = realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).findAll().size
-        title_view.setText(realm.where<T_List>(T_List::class.java).equalTo("id", ListID).findFirst()!!.title.toString())
+        title = realm.where<T_List>(T_List::class.java).equalTo("id", ListID).findFirst()!!.title
+        title_view.text = title
         sd_textView1.setText("DAY " + DayNum.toString())
         sd_textView2.setText(
                 realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).equalTo(
@@ -72,10 +95,19 @@ class ShowDateActivity : AppCompatActivity() {
         )
     }
 
+    fun initLayout(){
+        if(DayNum == maxDayNum){
+            sd_rightImg.visibility = View.INVISIBLE
+        }
+        else if(DayNum == 1){
+            sd_leftImg.visibility = View.INVISIBLE
+        }
+    }
+
+
     fun initListener() {
         adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
         sd_viewPager.adapter = adapter
-        //sd_viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayer))
         sd_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
@@ -174,32 +206,11 @@ class ShowDateActivity : AppCompatActivity() {
         })
 
         sd_leftImg.setOnClickListener {
-            if (DayNum > 1) {
-                var intentToNext = Intent(this, ShowDateActivity::class.java)
-                intentToNext.putExtra("ListID", ListID)
-                intentToNext.putExtra("DayNum", DayNum - 1)
-                startActivity(intentToNext)
-                overridePendingTransition(
-                        konkukSW.MP2019.roadline.R.anim.anim_slide_in_left,
-                        konkukSW.MP2019.roadline.R.anim.anim_slide_out_right
-                )
-                finish()
-            }
+            goIntent(TYPE_BEFORE)
         }
 
         sd_rightImg.setOnClickListener {
-            if (DayNum < maxDayNum) {
-                var intentToNext = Intent(this, ShowDateActivity::class.java)
-                intentToNext.putExtra("ListID", ListID)
-                intentToNext.putExtra("DayNum", DayNum + 1)
-                startActivity(intentToNext)
-                overridePendingTransition(
-                        R.anim.anim_slide_in_right,
-                        R.anim.anim_slide_out_left
-
-                )
-                finish()
-            }
+            goIntent(TYPE_NEXT)
         }
 
         sd_imgBtn1.setOnClickListener {
@@ -227,7 +238,6 @@ class ShowDateActivity : AppCompatActivity() {
         }
 
         sd_imgBtn3.setOnClickListener {
-
             var bitmap2: Bitmap? = null
             if (tabPos == 0) { //Fragment1
                 sd_imgBtn3.visibility = View.VISIBLE
@@ -266,7 +276,49 @@ class ShowDateActivity : AppCompatActivity() {
                 startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
             }
         }
+
+        sd_day_layout.setOnTouchListener { v, event ->
+            if(event.action == MotionEvent.ACTION_DOWN){
+                down_x = event.rawX
+            }
+            else if(event.action == MotionEvent.ACTION_UP){
+                up_x = event.rawX
+                if(up_x - down_x > 100){
+                    //왼쪽으로 넘어가기
+                    goIntent(TYPE_BEFORE)
+                }
+                else if(up_x - down_x < -100){
+                    //오른쪽으로 넘어가기
+                    goIntent(TYPE_NEXT)
+                }
+            }
+
+            true
+        }
     }
+
+    fun goIntent(type:Int){
+        var anim1:Int
+        var anim2:Int
+        var nextDay:Int
+        if(type == TYPE_BEFORE){
+            anim1 =  R.anim.anim_slide_in_left
+            anim2 =  R.anim.anim_slide_out_right
+            nextDay = DayNum - 1
+        }
+        else{
+            anim1 = R.anim.anim_slide_in_right
+            anim2 = R.anim.anim_slide_out_left
+            nextDay = DayNum + 1
+        }
+        var intentToNext = Intent(this, ShowDateActivity::class.java)
+        intentToNext.putExtra("ListID", ListID)
+        intentToNext.putExtra("DayNum", nextDay)
+        startActivity(intentToNext)
+        overridePendingTransition(anim1, anim2)
+        finish()
+    }
+
 }
 
 

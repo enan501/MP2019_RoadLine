@@ -16,6 +16,7 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewManager
 import android.widget.*
@@ -26,6 +27,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.activity_show_date.*
 import kotlinx.android.synthetic.main.activity_show_photo.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -56,9 +58,6 @@ class ShowPhotoActivity : AppCompatActivity() {
         initListener()
     }
 
-    fun back(v: View?): Unit {
-        finish()
-    }
 
     fun initPermission() {
         if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
@@ -189,7 +188,17 @@ class ShowPhotoActivity : AppCompatActivity() {
         startActivityForResult(intent, SELECT_IMAGE)
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     fun initLayout() {
+        setSupportActionBar(sp_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
         data.clear()
         val layoutManager = GridLayoutManager(this, 3)
         photo_recycleView.layoutManager = layoutManager

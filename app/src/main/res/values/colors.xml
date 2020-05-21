@@ -6,6 +6,9 @@
 
     <color name="black">#000000</color>
     <color name="lightGray">#AAAAAA</color>
+    <color name="darkGray">#565656</color>
     <color name="blackAlpha">#4B000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="background">#fafafa</color>
+    <color name="transparent">#00ffffff</color>
 </resources>

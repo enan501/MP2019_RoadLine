@@ -6,6 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import io.realm.Realm
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 
 class DateIconListAdapter(val size:Int, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -17,7 +19,6 @@ class DateIconListAdapter(val size:Int, val context: Context): RecyclerView.Adap
             icon = itemView.findViewById(R.id.ri_icon)
         }
     }
-
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.row_icon,p0,false)

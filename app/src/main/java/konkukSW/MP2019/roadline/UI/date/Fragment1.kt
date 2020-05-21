@@ -75,7 +75,7 @@ class Fragment1 : Fragment() {  //리스트
                 dayNum = intent.getIntExtra("DayNum", 0)
             }
         }
-        Realm.init(context)
+        Realm.init(context!!)
         val realm = Realm.getDefaultInstance()
         val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
             .equalTo("listID", listID)
@@ -96,12 +96,12 @@ class Fragment1 : Fragment() {  //리스트
     }
 
     fun initLayout(){
-        rView = v!!.findViewById(R.id.f1_rView) as RecyclerView
+        rView = v.findViewById(R.id.f1_rView) as RecyclerView
         val layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         rView.layoutManager = layoutManager
         adapter = DateListAdapter(planList, context!!)
         rView.adapter = adapter
-        rIconView = v!!.findViewById(R.id.f1_rViewIcon) as RecyclerView
+        rIconView = v.findViewById(R.id.f1_rViewIcon) as RecyclerView
         val layoutManager2 = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
         rIconView.layoutManager = layoutManager2
         iconAdapter = DateIconListAdapter(planList.size, context!!)
@@ -178,7 +178,6 @@ class Fragment1 : Fragment() {  //리스트
                 Log.d("mytest", "planlist size(delete) : " + planList.size.toString())
                 iconAdapter = DateIconListAdapter(planList.size, context!!)
                 rIconView.adapter = iconAdapter
-                refresh()
             }
         }
     }
@@ -221,45 +220,42 @@ class Fragment1 : Fragment() {  //리스트
 
     fun getScreenshotFromRecyclerView(view:RecyclerView, ad:RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
         var bigBitmap: Bitmap? = null
+        val size = ad.itemCount - 1
+        if(size == 0)
+            return null
+        var height = 0
+        var iHeight = 0
+        val paint = Paint()
+        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
-        if (ad != null) {
-            val size = ad.itemCount - 1
-            if(size == 0)
-                return null
-            var height = 0
-            var iHeight = 0
-            val paint = Paint()
-            val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
-
-            val cacheSize = maxMemory / 8
-            val bitmapCache = LruCache<String, Bitmap>(cacheSize)
-            for (i in 0 until size) {
-                val holder = ad.createViewHolder(view, ad.getItemViewType(i))
-                ad.onBindViewHolder(holder, i)
-                holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY),
-                        View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-                )
-                holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
-                holder.itemView.isDrawingCacheEnabled = true
-                holder.itemView.buildDrawingCache()
-                val drawingCache = holder.itemView.drawingCache
-                if (drawingCache != null) {
-                    bitmapCache.put(i.toString(), drawingCache)
-                }
-                height += holder.itemView.measuredHeight
+        val cacheSize = maxMemory / 8
+        val bitmapCache = LruCache<String, Bitmap>(cacheSize)
+        for (i in 0 until size) {
+            val holder = ad.createViewHolder(view, ad.getItemViewType(i))
+            ad.onBindViewHolder(holder, i)
+            holder.itemView.measure(
+                    View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            )
+            holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
+            holder.itemView.isDrawingCacheEnabled = true
+            holder.itemView.buildDrawingCache()
+            val drawingCache = holder.itemView.drawingCache
+            if (drawingCache != null) {
+                bitmapCache.put(i.toString(), drawingCache)
             }
+            height += holder.itemView.measuredHeight
+        }
 
-            bigBitmap = Bitmap.createBitmap(view.measuredWidth, height, Bitmap.Config.ARGB_8888)
-            val bigCanvas = Canvas(bigBitmap!!)
-            bigCanvas.drawColor(Color.WHITE)
+        bigBitmap = Bitmap.createBitmap(view.measuredWidth, height, Bitmap.Config.ARGB_8888)
+        val bigCanvas = Canvas(bigBitmap!!)
+        bigCanvas.drawColor(Color.WHITE)
 
-            for (i in 0 until size) {
-                val bitmap = bitmapCache.get(i.toString())
-                bigCanvas.drawBitmap(bitmap, 0f, iHeight.toFloat(), paint)
-                iHeight += bitmap.getHeight()
-                bitmap.recycle()
-            }
+        for (i in 0 until size) {
+            val bitmap = bitmapCache.get(i.toString())
+            bigCanvas.drawBitmap(bitmap, 0f, iHeight.toFloat(), paint)
+            iHeight += bitmap.getHeight()
+            bitmap.recycle()
         }
         return bigBitmap
     }

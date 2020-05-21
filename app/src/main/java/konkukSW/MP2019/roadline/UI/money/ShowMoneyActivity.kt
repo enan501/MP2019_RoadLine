@@ -13,6 +13,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewManager
 import android.widget.*
@@ -53,10 +54,6 @@ class ShowMoneyActivity : AppCompatActivity() {
         initListener()
         initCurrencyAdapter()
         currencySpinner.onItemSelectedListener = SpinnerSelectedListener()
-    }
-
-    fun back(v: View?):Unit{
-        finish()
     }
 
     inner class SpinnerSelectedListener : AdapterView.OnItemSelectedListener { // 오버라이딩 단축키 alt + enter
@@ -185,7 +182,18 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
     }
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     fun initLayout() {
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.title = "가계부"
+
         TotalPrice = 0
         data.clear()
 

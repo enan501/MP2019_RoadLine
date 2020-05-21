@@ -17,7 +17,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/logo_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -39,15 +39,12 @@
         </provider>
         <activity android:name=".UI.money.ShowDetailMoneyActivity" />
         <activity android:name=".UI.date.AddSpotActivity" />
-        <activity android:name=".UI.money.AddMoneyActivity">
-        </activity>
+        <activity android:name=".UI.money.AddMoneyActivity"/>
         <activity android:name=".UI.photo.ShowPhotoActivity" />
         <activity android:name=".UI.money.ShowMoneyActivity" />
         <activity android:name=".UI.date.ShowDateActivity" />
         <activity android:name=".UI.date.PickDateActivity" />
-        <activity android:name=".UI.MainListActivity">
-
-        </activity>
+        <activity android:name=".UI.MainListActivity"/>
         <activity
             android:name=".UI.SplashActivity"
             android:screenOrientation="portrait"

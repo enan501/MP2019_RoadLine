@@ -1,48 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".UI.money.AddMoneyActivity">
 
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/am_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginHorizontal="10dp"
-        android:layout_marginVertical="7dp"
-        android:layout_marginTop="10dp">
-
-        <ImageView
-            android:id="@+id/cancel_btn"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/cancel"
-            android:onClick="cancelBtn" />
-
-        <TextView
-            android:id="@+id/title_view"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="7"
-            android:fontFamily="@font/nanum_square_round_r"
-            android:gravity="center"
-            android:text="가계부 추가"
-            android:textAlignment="textStart"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/addMoneySubmit"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:onClick="submitBtn"
-            android:src="@drawable/checkbt" />
-
-    </LinearLayout>
+        android:layout_height="?attr/actionBarSize">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/title_view"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/nanum_square_round_r"
+                android:gravity="start|center_vertical"
+                android:text="가계부 추가"
+                android:textSize="24sp" />
+            <ImageView
+                android:id="@+id/addMoneySubmit"
+                android:layout_marginVertical="8dp"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:onClick="submitBtn"
+                android:src="@drawable/checkbt" />
+        </LinearLayout>
+    </android.support.v7.widget.Toolbar>
 
     <View
         android:layout_width="wrap_content"
@@ -78,15 +67,16 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:orientation="horizontal"
-            android:paddingLeft="10dp">
+            android:paddingStart="10dp">
 
             <EditText
                 android:id="@+id/priceTxt"
+                android:hint="가격을 입력하세요"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="7"
                 android:inputType="number"
-                android:paddingRight="15dp"
+                android:paddingEnd="15dp"
                 android:textAlignment="textEnd" />
 
             <TextView
@@ -106,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
-            android:paddingRight="30dp"
+            android:paddingEnd="30dp"
             android:textAlignment="textEnd"
             android:textStyle="italic" />
     </LinearLayout>
@@ -233,33 +223,4 @@
             android:textAlignment="center" />
 
     </LinearLayout>
-
-
-    <!--<LinearLayout-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="0dp"-->
-    <!--android:layout_weight="1"-->
-    <!--android:gravity="center">-->
-
-    <!--<Button-->
-    <!--android:id="@+id/addMoneyCancel"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginHorizontal="20dp"-->
-    <!--android:backgroundTint="#eeeeee"-->
-    <!--android:onClick="cancelBtn"-->
-    <!--android:text="CANCEL"-->
-    <!--android:textColor="#777777" />-->
-
-    <!--<Button-->
-    <!--android:id="@+id/addMoneySubmit"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_marginHorizontal="20dp"-->
-    <!--android:backgroundTint="#eeeeee"-->
-    <!--android:onClick="submitBtn"-->
-    <!--android:text="SUBMIT"-->
-    <!--android:textColor="#60aebf"-->
-    <!--android:textStyle="bold" />-->
-    <!--</LinearLayout>-->
 </LinearLayout>

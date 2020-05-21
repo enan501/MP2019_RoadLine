@@ -1,28 +1,20 @@
 package konkukSW.MP2019.roadline.UI.money
 
-import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import konkukSW.MP2019.roadline.R
 import com.github.mikephil.charting.data.PieData
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.animation.Easing.EaseInOutCubic
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.charts.PieChart
 import android.graphics.Color
-import android.opengl.Visibility
+import android.view.MenuItem
 import android.view.View
-import com.github.mikephil.charting.components.Description
-import com.google.android.libraries.places.internal.da
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.CategoryPrintAdapter
-import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.Dataclass.CategoryToatal
 import kotlinx.android.synthetic.main.activity_show_detail_money.*
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -46,13 +38,23 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         val i = getIntent()
         ListID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum", 0)
-
+        initToolbar()
         showPieChart()
         showCategoryList()
         showLineChart()
     }
-    fun back(v: View?):Unit{
-        finish()
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun initToolbar(){
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.title = ""
     }
 
     fun initDB() {
@@ -106,7 +108,6 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         for (i in 0..5)
             toatalMoneyValue += priceList[i]
 
-        //day.text =
         if(DayNum == 0) {
             day.visibility = View.GONE
         } else {

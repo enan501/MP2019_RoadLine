@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TimePicker
@@ -34,7 +35,9 @@ import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_add_spot.*
+import kotlinx.android.synthetic.main.activity_show_date.*
 import java.util.*
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -67,7 +70,20 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_spot)
+        initToolbar()
         init()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if(item!!.itemId == android.R.id.home){
+            finish()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    fun initToolbar(){
+        setSupportActionBar(as_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     fun init(){
@@ -262,9 +278,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun back(v: View?):Unit{
-        finish()
-    }
 
     fun checkAppPermission(requestPermission: Array<String>): Boolean {
         val requestResult = BooleanArray(requestPermission.size)
