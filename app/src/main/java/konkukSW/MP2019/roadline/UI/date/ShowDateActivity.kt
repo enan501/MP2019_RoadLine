@@ -285,11 +285,13 @@ class ShowDateActivity : AppCompatActivity() {
                 up_x = event.rawX
                 if(up_x - down_x > 100){
                     //왼쪽으로 넘어가기
-                    goIntent(TYPE_BEFORE)
+                    if(DayNum != 1)
+                        goIntent(TYPE_BEFORE)
                 }
                 else if(up_x - down_x < -100){
                     //오른쪽으로 넘어가기
-                    goIntent(TYPE_NEXT)
+                    if(DayNum != maxDayNum)
+                        goIntent(TYPE_NEXT)
                 }
             }
 
