@@ -18,6 +18,7 @@ import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
@@ -29,6 +30,7 @@ import java.time.format.DateTimeFormatter
 
 class PickDateActivity : AppCompatActivity() {
     var ListID = ""
+    var listPos = -1
 
     var snapHelper = LinearSnapHelper()
     lateinit var dateList:ArrayList<PickDate>
@@ -49,6 +51,7 @@ class PickDateActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(item!!.itemId == android.R.id.home){
+            setResult(listPos)
             finish()
         }
         return super.onOptionsItemSelected(item)
@@ -82,6 +85,7 @@ class PickDateActivity : AppCompatActivity() {
 
     fun initData(){
         ListID = intent.getStringExtra("ListID")
+        listPos = intent.getIntExtra("listPos", -1)
         dateList = arrayListOf(PickDate(ListID,0,"blank"),PickDate(ListID,0,"first"))
 
         Realm.init(this)
@@ -90,7 +94,7 @@ class PickDateActivity : AppCompatActivity() {
         PD_title.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title)
         val results = realm.where<T_Day>(T_Day::class.java)
             .equalTo("listID",ListID)
-            .findAll()
+            .findAll().sort("num")
         for(T_Day in results){
             dateList.add(PickDate(ListID,T_Day.num,T_Day.date))
         }
@@ -101,10 +105,10 @@ class PickDateActivity : AppCompatActivity() {
         PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
                 if(data.day > 0){
-                var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
-                PDIntentToSD.putExtra("ListID", ListID)
-                PDIntentToSD.putExtra("DayNum", data.day)
-                startActivity(PDIntentToSD)
+                    var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
+                    PDIntentToSD.putExtra("ListID", ListID)
+                    PDIntentToSD.putExtra("DayNum", data.day)
+                    startActivity(PDIntentToSD)
                 }
                 else if(data.day == -1){ //추가
                     //db에다 여행 날짜 추가
@@ -112,8 +116,12 @@ class PickDateActivity : AppCompatActivity() {
                     val newDay: T_Day = realm.createObject(T_Day::class.java)
                     newDay.listID = data.listid
                     newDay.num = dateList[position-1].day + 1
-                    newDay.date = LocalDate.parse(dateList[position-1].date, DateTimeFormatter.ofPattern("yyyy. M. d")).plusDays(1)
-                        .format( DateTimeFormatter.ofPattern("yyyy. M. d"))
+                    newDay.date = LocalDate.parse(dateList[position-1].date, DateTimeFormatter.ofPattern("yyyy.MM.dd")).plusDays(1)
+                        .format( DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+
+                    val list = realm.where<T_List>(T_List::class.java).equalTo("id", data.listid).findFirst()
+                    list!!.dateEnd = newDay.date
+
                     realm.commitTransaction()
 
                     dateList.add(position,PickDate(ListID,newDay.num,newDay.date))

@@ -53,17 +53,17 @@
             android:layout_marginLeft="5dp"
             android:layout_marginRight="5dp">
 
-    </android.support.v7.widget.RecyclerView>
-<TextView
-    android:id="@+id/startText"
-    android:visibility="gone"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:textColor="@color/colorPrimary"
-    android:layout_gravity="center"
-    android:textSize="24sp"
-    android:text="첫 여행을 기록해 보세요"
-    />
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/startText"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:layout_gravity="center"
+            android:textSize="24sp"
+            android:text="첫 여행을 기록해 보세요"
+            />
 
 
         <android.support.design.widget.FloatingActionButton
@@ -78,4 +78,5 @@
             android:src="@drawable/add" />
 
     </android.support.design.widget.CoordinatorLayout>
+
 </LinearLayout>

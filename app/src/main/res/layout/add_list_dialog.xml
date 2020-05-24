@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:orientation="vertical"
     android:padding="30dp">
 
@@ -10,29 +10,93 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/AL_text"
+        android:textStyle="bold"
+        android:layout_marginBottom="30dp"
+        android:layout_gravity="start|top"
         android:text="여행 추가"
-        android:textSize="30dp" />
+        android:textSize="30sp" />
 
     <EditText
+        android:cursorVisible="false"
         android:id="@+id/AL_title"
-        android:layout_width="match_parent"
+        android:inputType="text"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:hint="Title"
+        android:hint="  여행 제목을 입력하세요  "
+        android:layout_marginBottom="50dp"
         android:padding="10dp"
         android:textSize="20dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:text="출발 날짜 :"
-        android:textSize="20dp" />
+        android:layout_marginBottom="10dp"
+        android:text="여행 날짜"
+        android:textSize="25sp" />
 
-    <DatePicker
-        android:id="@+id/AL_date"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    </DatePicker>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:layout_weight="0"
+                android:text="시작일" />
+
+            <TextView
+                android:id="@+id/editStart"
+                android:textColor="@color/lightGray"
+                android:text="시작일 입력하기"
+                android:textSize="20sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:ems="10"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:paddingHorizontal="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:text="종료일" />
+
+            <TextView
+                android:id="@+id/editEnd"
+                android:textColor="@color/lightGray"
+                android:textSize="20sp"
+                android:text="종료일 입력하기"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:ems="10"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--<DatePicker-->
+        <!--android:id="@+id/AL_date"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content">-->
+
+    <!--</DatePicker>-->
 
 </LinearLayout>

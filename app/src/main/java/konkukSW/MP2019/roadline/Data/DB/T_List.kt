@@ -8,7 +8,8 @@ open class T_List : RealmObject() {
     var id :String = ""
 
     var title: String = ""
-    var date: String = ""
+    var dateStart: String = "" //시작일
+    var dateEnd:String = ""//종료일
     var pos:Int = 0
     var img: String = ""
 }

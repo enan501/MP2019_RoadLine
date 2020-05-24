@@ -294,7 +294,6 @@ class ShowDateActivity : AppCompatActivity() {
                         goIntent(TYPE_NEXT)
                 }
             }
-
             true
         }
     }

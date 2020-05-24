@@ -48,7 +48,7 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
     }
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         p0.title.text =items.get(p1).title
-        p0.date.text = items.get(p1).date
+        p0.date.text = items.get(p1).dateStart + "~" + items.get(p1).dateEnd
         if(items.get(p1).image.isEmpty()){
             //TODO("대표이미지 설정")
             p0.image.setImageResource(R.drawable.ml_default_image)
