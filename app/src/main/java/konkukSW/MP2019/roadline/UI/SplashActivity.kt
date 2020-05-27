@@ -98,9 +98,7 @@ class SplashActivity : AppCompatActivity() {
                     realm.commitTransaction()
                 }
             }
-
         }
     }
-
 }
 

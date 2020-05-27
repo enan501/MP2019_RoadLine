@@ -10,6 +10,4 @@ open class T_Currency : RealmObject() {
     var name:String = ""
     var rate:Double = 0.0
     var symbol:String = ""
-
-
 }

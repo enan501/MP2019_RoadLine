@@ -12,12 +12,14 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
+import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
@@ -29,7 +31,6 @@ import kotlin.math.roundToInt
 
 
 class AddMoneyActivity : AppCompatActivity() {
-    var currencyList: ArrayList<Currency> = ArrayList()
     val SELECT_IMAGE = 100
     var listID = ""
     var dayNum = 0
@@ -144,19 +145,15 @@ class AddMoneyActivity : AppCompatActivity() {
         return path
     }
 
-    //currencyList'
     fun money_calculation() { // 현재 환율 불러와서 원 단위로 환산
 
         Realm.init(this)
         val realm = Realm.getDefaultInstance()
 
-        val c_day = realm.where(T_Day::class.java)
-                .equalTo("num", dayNum) // 현재 날짜를 골라낸다
-                .findFirst()
-        currenyCode = c_day?.currency.toString() // 데이에 저장된 통화 코드 알아냄
+        val c_day = realm.where(T_List::class.java).equalTo("id", listID).findFirst()
+        currenyCode = c_day!!.currencys[0]!!.code // 데이에 저장된 통화 코드 알아냄
 
-        val find = realm.where(T_Currency::class.java)
-                .equalTo("code", currenyCode).findFirst()
+        val find = realm.where(T_Currency::class.java).equalTo("code", currenyCode).findFirst()
 
         currency.text = find?.symbol.toString() // 출력변경
         val currency_rate = find!!.rate

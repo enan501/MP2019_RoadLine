@@ -72,7 +72,7 @@
                     android:layout_width="40dp"
                     android:layout_height="match_parent"
                     android:fontFamily="@font/nanum_square_round_r"
-                    android:prompt="@string/spin_prompt"/>
+                    android:prompt="@string/spin_prompt" />
 
                 <ImageView
                     android:id="@+id/detail_money"

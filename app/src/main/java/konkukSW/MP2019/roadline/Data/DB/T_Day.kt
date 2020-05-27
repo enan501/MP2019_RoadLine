@@ -8,6 +8,6 @@ open class T_Day : RealmObject() {
 
     var num: Int = 0 //day num
     var date: String = ""
-    var currency: String = "KRW"
+   // var currency: String = "KRW"
 
 }
