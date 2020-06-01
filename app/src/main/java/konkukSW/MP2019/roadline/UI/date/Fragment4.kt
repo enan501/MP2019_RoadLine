@@ -7,8 +7,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
 import android.util.Log
 import android.util.LruCache
 import android.view.LayoutInflater
@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.activity_show_date.*
 import kotlinx.android.synthetic.main.fragment_fragment4.*
 
 
-class Fragment4 : Fragment(),OnMapReadyCallback {
+class Fragment4 : androidx.fragment.app.Fragment(),OnMapReadyCallback {
     var ListID = "init"
     var DayNum = 0;
     var spotList:ArrayList<Plan> = arrayListOf()

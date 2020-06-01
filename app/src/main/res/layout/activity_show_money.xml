@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".UI.money.ShowMoneyActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:layout_weight="0"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:gravity="left|center_vertical"
             android:text="가계부"
             android:textSize="24sp" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
         android:layout_weight="0"
@@ -42,7 +42,7 @@
                 android:descendantFocusability="blocksDescendants"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/money_recycleView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

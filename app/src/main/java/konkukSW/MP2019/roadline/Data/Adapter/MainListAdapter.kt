@@ -2,7 +2,7 @@ package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
 import android.net.Uri
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,7 +14,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.Dataclass.MainList
 import konkukSW.MP2019.roadline.R
 
-class MainListAdapter(var items:ArrayList<MainList>, val context: Context): RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
+class MainListAdapter(var items:ArrayList<MainList>, val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<MainListAdapter.ViewHolder>() {
     
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_main_list,p0,false)
@@ -69,7 +69,7 @@ class MainListAdapter(var items:ArrayList<MainList>, val context: Context): Recy
     var itemLongClickListener : OnItemLongClickListener? = null
 
     inner class ViewHolder(itemView: View)
-        :RecyclerView.ViewHolder(itemView){
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView){
         var title: TextView
         var date: TextView
         var image: ImageView

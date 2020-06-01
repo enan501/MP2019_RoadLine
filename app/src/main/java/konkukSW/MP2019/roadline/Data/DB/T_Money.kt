@@ -12,7 +12,7 @@ open class T_Money : RealmObject() {
     var id : String = "" //기본키
     var currency: T_Currency? = null
     var img: String = ""
-    var price: Double = 0.0 //한화
+    var price: Double = 0.0 //원화
     var cate: String = ""
     var date: String = ""
 }

@@ -1,11 +1,11 @@
 package konkukSW.MP2019.roadline.UI.date
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 
-class CenterZoomLayoutManager : LinearLayoutManager {
+class CenterZoomLayoutManager : androidx.recyclerview.widget.LinearLayoutManager {
 
     private val mShrinkAmount = 0.8f
     private val mShrinkDistance = 1.6f
@@ -16,7 +16,7 @@ class CenterZoomLayoutManager : LinearLayoutManager {
         reverseLayout
     )
 
-    override fun scrollHorizontallyBy(dx: Int, recycler: RecyclerView.Recycler?, state: RecyclerView.State?): Int {
+    override fun scrollHorizontallyBy(dx: Int, recycler: androidx.recyclerview.widget.RecyclerView.Recycler?, state: androidx.recyclerview.widget.RecyclerView.State?): Int {
         val orientation = orientation
         if (orientation == HORIZONTAL) {
             val scrolled = super.scrollHorizontallyBy(dx, recycler, state)

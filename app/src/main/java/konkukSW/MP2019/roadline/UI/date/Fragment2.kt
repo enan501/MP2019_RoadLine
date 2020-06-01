@@ -11,11 +11,11 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.location.LocationManager
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.fragment.app.Fragment
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.util.LruCache
 import android.view.LayoutInflater
@@ -33,7 +33,7 @@ import kotlinx.android.synthetic.main.fragment_fragment2.*
 
 var StartedFlag = false;
 
-class Fragment2 : Fragment() {
+class Fragment2 : androidx.fragment.app.Fragment() {
 
     var ListID = "";
     var DayNum = 0;
@@ -57,7 +57,7 @@ class Fragment2 : Fragment() {
     var foldFlag = false; // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
 
     lateinit var v:View
-    lateinit var timelineView :RecyclerView
+    lateinit var timelineView : androidx.recyclerview.widget.RecyclerView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -231,8 +231,8 @@ class Fragment2 : Fragment() {
             .findAll()
             .sort("pos")
 
-        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as RecyclerView
-        val layoutManager = GridLayoutManager(activity!!, 5)
+        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
+        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)
         timelineView.layoutManager = layoutManager
         adapter = PlanAdapter(data)
         timelineView.adapter = adapter

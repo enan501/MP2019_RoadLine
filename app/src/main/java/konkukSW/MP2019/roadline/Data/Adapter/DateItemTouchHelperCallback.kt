@@ -3,10 +3,10 @@ package konkukSW.MP2019.roadline.Data.Adapter
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.BitmapDrawable
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.view.LayoutInflater
 import android.widget.TextView
 import konkukSW.MP2019.roadline.R
@@ -20,12 +20,12 @@ class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dra
     var dateListAdapter = adapter
     var context = context
 
-    override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+    override fun onMove(p0: androidx.recyclerview.widget.RecyclerView, p1: androidx.recyclerview.widget.RecyclerView.ViewHolder, p2: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
         dateListAdapter.moveItem(p1.adapterPosition, p2.adapterPosition)
         return true
     }
 
-    override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+    override fun onSwiped(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) {
     }
 
     override fun isItemViewSwipeEnabled(): Boolean {

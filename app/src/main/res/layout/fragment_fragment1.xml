@@ -24,27 +24,27 @@
                     android:descendantFocusability="blocksDescendants"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content">
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
                         android:id="@+id/f1_rViewIcon"
                         android:layout_width="50dp"
                         android:layout_height="wrap_content">
 
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </RelativeLayout>
                 <RelativeLayout
                     android:descendantFocusability="blocksDescendants"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
-                    <android.support.v7.widget.RecyclerView
+                    <androidx.recyclerview.widget.RecyclerView
                         android:nestedScrollingEnabled="false"
                         android:overScrollMode="never"
                         android:id="@+id/f1_rView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
-                    </android.support.v7.widget.RecyclerView>
+                    </androidx.recyclerview.widget.RecyclerView>
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>

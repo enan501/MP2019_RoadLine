@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".UI.money.AddMoneyActivity">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/am_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
@@ -31,7 +31,7 @@
                 android:onClick="submitBtn"
                 android:src="@drawable/checkbt" />
         </LinearLayout>
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
     <View
         android:layout_width="wrap_content"

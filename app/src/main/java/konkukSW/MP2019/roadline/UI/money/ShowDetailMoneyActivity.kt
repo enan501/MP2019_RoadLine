@@ -1,6 +1,6 @@
 package konkukSW.MP2019.roadline.UI.money
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet

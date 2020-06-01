@@ -5,10 +5,10 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import android.util.LruCache
 import android.view.LayoutInflater
@@ -26,7 +26,7 @@ import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.row_spot.*
 
-class Fragment1 : Fragment() {  //리스트
+class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     private val TYPE_ONE  = -2
     private val TYPE_START = -4
     private val TYPE_END = -3
@@ -35,8 +35,8 @@ class Fragment1 : Fragment() {  //리스트
     lateinit var planList:ArrayList<Plan>
     lateinit var adapter:DateListAdapter
     lateinit var iconAdapter: DateIconListAdapter
-    lateinit var rView:RecyclerView
-    lateinit var rIconView:RecyclerView
+    lateinit var rView: androidx.recyclerview.widget.RecyclerView
+    lateinit var rIconView: androidx.recyclerview.widget.RecyclerView
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
@@ -96,13 +96,21 @@ class Fragment1 : Fragment() {  //리스트
     }
 
     fun initLayout(){
-        rView = v.findViewById(R.id.f1_rView) as RecyclerView
-        val layoutManager = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
+        rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                activity!!,
+                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+                false
+        )
         rView.layoutManager = layoutManager
         adapter = DateListAdapter(planList, context!!)
         rView.adapter = adapter
-        rIconView = v.findViewById(R.id.f1_rViewIcon) as RecyclerView
-        val layoutManager2 = LinearLayoutManager(activity!!, LinearLayoutManager.VERTICAL, false)
+        rIconView = v.findViewById(R.id.f1_rViewIcon) as androidx.recyclerview.widget.RecyclerView
+        val layoutManager2 = androidx.recyclerview.widget.LinearLayoutManager(
+                activity!!,
+                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+                false
+        )
         rIconView.layoutManager = layoutManager2
         iconAdapter = DateIconListAdapter(planList.size, context!!)
         rIconView.adapter = iconAdapter
@@ -149,7 +157,7 @@ class Fragment1 : Fragment() {  //리스트
         }
 
         adapter.itemDragListener = object : DateListAdapter.OnItemDragListener {
-            override fun onStartDrag(holder: RecyclerView.ViewHolder) {
+            override fun onStartDrag(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
                 itemTouchHelper.startDrag(holder)
             }
         }
@@ -218,7 +226,7 @@ class Fragment1 : Fragment() {  //리스트
         return result
     }
 
-    fun getScreenshotFromRecyclerView(view:RecyclerView, ad:RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
+    fun getScreenshotFromRecyclerView(view: androidx.recyclerview.widget.RecyclerView, ad: androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>): Bitmap? {
         var bigBitmap: Bitmap? = null
         val size = ad.itemCount - 1
         if(size == 0)

@@ -7,18 +7,19 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.SimpleItemAnimator
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.SimpleItemAnimator
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import android.view.*
 import android.widget.*
 import io.realm.Realm
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
@@ -43,7 +44,8 @@ class ShowMoneyActivity : AppCompatActivity() {
     var ListID = ""
     var DayNum = 0
     var isAll = false
-    var dayList:ArrayList<T_Day> = ArrayList()
+    lateinit var dayList:RealmResults<T_Day>
+    lateinit var moneyResults: RealmResults<T_Money>
     lateinit var selectedCurrency:T_Currency
     var totalMoney = 0.0
     val shortFormat = DecimalFormat("###,###")
@@ -64,40 +66,24 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        val i = getIntent()
+        val i = intent
         ListID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum", 0)
         if(DayNum == 0){ //모든 날짜
-            val dayItems = realm.where(T_Day::class.java).equalTo("listID", ListID).findAll()!!.sort("num")
-            dayList.addAll(dayItems)
+            dayList = realm.where(T_Day::class.java).equalTo("listID", ListID).findAll()!!.sort("num")
+            moneyResults = realm.where(T_Money::class.java).equalTo("listID", ListID).findAll()!!
             isAll = true
         }
         else{
-            val dayItem = realm.where(T_Day::class.java).equalTo("listID", ListID).equalTo("num", DayNum).findFirst()!!
-            dayList.add(dayItem)
+            dayList =  realm.where(T_Day::class.java).equalTo("listID", ListID).equalTo("num", DayNum).findAll()!!
+            moneyResults = realm.where(T_Money::class.java).equalTo("listID", ListID).equalTo("dayNum", DayNum).findAll()!!
             isAll = false
         }
-
-        for(i in dayList){
-            for(j in i.moneyList){
-                totalMoney += j.price
-            }
+        for(j in moneyResults){
+            totalMoney += (j.price * j.currency!!.rate)
         }
-        rViewAdapter = MoneyListAdapter(this@ShowMoneyActivity, dayList, isAll)
-    }
+        rViewAdapter = MoneyListAdapter(dayList, this@ShowMoneyActivity, isAll)
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 123) {
-            if(resultCode == Activity.RESULT_OK){
-                val pos = data!!.getIntExtra("pos", -1)
-                val price = data!!.getDoubleExtra("price", 0.0)
-                rViewAdapter.notifyItemChanged(pos)
-                totalMoney += price
-                val num = totalMoney * (1 / selectedCurrency.rate)
-                inputTotalTextView(num)
-            }
-        }
     }
 
     fun initListener() {
@@ -108,11 +94,16 @@ class ShowMoneyActivity : AppCompatActivity() {
                 intent.putExtra("ListID", data.listID)
                 intent.putExtra("DayNum", data.num)
                 intent.putExtra("cur", selectedCurrency.code)
-                startActivityForResult(intent, 123)
+                startActivity(intent)
             }
 
             override fun onItemClick(data: T_Money) {
                 showImage(data)
+            }
+        }
+        rViewAdapter.totalViewChangeListener = object :MoneyListAdapter.OnTotalViewChangeListener{
+            override fun onTotalViewChange(position: Int) {
+                changeTotalView(position)
             }
         }
 
@@ -121,6 +112,13 @@ class ShowMoneyActivity : AppCompatActivity() {
             intent.putExtra("ListID", ListID)
             intent.putExtra("DayNum", DayNum)
             startActivityForResult(intent, 123)
+        }
+        moneyResults.addChangeListener { _ ->
+            totalMoney = 0.0
+            for(j in moneyResults){
+                totalMoney += (j.price * j.currency!!.rate)
+            }
+            inputTotalTextView(totalMoney / selectedCurrency.rate)
         }
     }
 
@@ -136,13 +134,13 @@ class ShowMoneyActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = "가계부"
 
-        money_recycleView.layoutManager = LinearLayoutManager(this, LinearLayout.VERTICAL, false)
+        money_recycleView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
         money_recycleView.adapter = rViewAdapter
         val animator = money_recycleView.itemAnimator
         if(animator is SimpleItemAnimator){
             animator.supportsChangeAnimations = false
         }
-        val num = totalMoney * (1 / selectedCurrency.rate)
+        val num = totalMoney / selectedCurrency.rate
         inputTotalTextView(num)
     }
 
@@ -168,19 +166,35 @@ class ShowMoneyActivity : AppCompatActivity() {
         currencySpinner.adapter = cAdapter
         currencySpinner.onItemSelectedListener = object :AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                Toast.makeText(parent?.context, parent?.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
                 val result = parent!!.getItemAtPosition(position).toString()
                 val selectedCode = result.split(" - ")[0].trim()
                 selectedCurrency = realm.where(T_Currency::class.java).equalTo("code", selectedCode).findFirst()!!
-                rViewAdapter.notifyDataSetChanged()
                 val num = totalMoney * (1 / selectedCurrency.rate)
                 inputTotalTextView(num)
+
+                if(isAll){
+                    for(i in 0 until rViewAdapter.itemCount){
+                        changeTotalView(i)
+                    }
+                }
             }
+        }
+    }
+
+    fun changeTotalView(pos:Int){
+        val results = realm.where(T_Money::class.java).equalTo("listID", ListID).equalTo("dayNum", pos + 1).findAll()!!
+        var total = 0.0
+        for(j in results){
+            total += j.price * j.currency!!.rate
+        }
+        if(total.roundToInt().toString().length >= 6 || selectedCurrency.code == "KRW"){
+            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyListAdapter.ViewHolder).totalText.text = shortFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
+        }
+        else{
+            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyListAdapter.ViewHolder).totalText.text = longFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
         }
     }
 
@@ -191,14 +205,13 @@ class ShowMoneyActivity : AppCompatActivity() {
         val paramll = LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT)
         addContentView(ll, paramll) //레이아웃 위에 겹치기
         ll.setOnClickListener {
-            (ll.getParent() as ViewManager).removeView(ll)
+            (ll.parent as ViewManager).removeView(ll)
         }
         var imageView = ll.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
         var textView1 = ll.findViewById<TextView>(R.id.textView1)
         var textView2 = ll.findViewById<TextView>(R.id.textView2)
-        textView1.text = item.price.toString() + " " + item.currency!!.symbol
-        val num = item.price * (1 / item.currency!!.rate)
-        if(num.toString().length >= 6){
+        val num = item.price
+        if(num.roundToInt().toString().length >= 6){
             textView1.text = shortFormat.format(num) + " " + item.currency!!.symbol
         }
         else{
@@ -219,7 +232,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun inputTotalTextView(num:Double){
-        if(num.roundToInt().toString().length >= 6){
+        if(num.roundToInt().toString().length >= 6 || selectedCurrency.code == "KRW"){
             money_totalTextView.text = "Total " +  shortFormat.format(num)
         }
         else{

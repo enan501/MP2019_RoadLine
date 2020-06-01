@@ -2,23 +2,25 @@ package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
 import android.graphics.BitmapFactory
-import android.support.v7.app.AlertDialog
-import android.support.v7.widget.RecyclerView
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmList
+import io.realm.RealmRecyclerViewAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class MoneyGridAdapter (val context: Context, val items: RealmList<T_Money>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class MoneyGridAdapter (realmResult: OrderedRealmCollection<T_Money>, val context: Context) : RealmRecyclerViewAdapter<T_Money, MoneyGridAdapter.ViewHolder>(realmResult, true) {
     interface OnItemClickListener {
         fun onItemClick(holder: ViewHolder, view: View, data: T_Money, position: Int)
     }
@@ -27,14 +29,14 @@ class MoneyGridAdapter (val context: Context, val items: RealmList<T_Money>) : R
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var priceImage:ImageView
         var priceText:TextView
         init {
             priceImage = itemView.findViewById(R.id.priceImage)
             priceText = itemView.findViewById(R.id.priceText)
             itemView.setOnClickListener {
-                itemClickListener.onItemClick(this, it, items[adapterPosition]!!, adapterPosition)
+                itemClickListener.onItemClick(this, it, getItem(adapterPosition)!!, adapterPosition)
             }
             itemView.setOnLongClickListener {
                 removeItem(adapterPosition)
@@ -43,15 +45,16 @@ class MoneyGridAdapter (val context: Context, val items: RealmList<T_Money>) : R
         }
     }
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
-        val v = LayoutInflater.from(p0.context).inflate(R.layout.grid_money_item, p0, false)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.grid_money_item, parent, false)
         return ViewHolder(v)
     }
 
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
+    override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         if(p0 is ViewHolder){
-            if(items.get(p1)!!.img == ""){
-                when(items.get(p1)!!.cate){
+            val item = getItem(p1)!!
+            if(item.img == ""){
+                when(item.cate){
                     "식사" -> p0.priceImage.setImageResource(R.drawable.meal)
                     "쇼핑" -> p0.priceImage.setImageResource(R.drawable.shopping)
                     "교통" -> p0.priceImage.setImageResource(R.drawable.transport)
@@ -61,25 +64,20 @@ class MoneyGridAdapter (val context: Context, val items: RealmList<T_Money>) : R
                 }
             }
             else{
-                p0.priceImage.setImageBitmap(BitmapFactory.decodeFile(items.get(p1)!!.img))
+                p0.priceImage.setImageBitmap(BitmapFactory.decodeFile(item.img))
             }
-            val num = items.get(p1)!!.price * (1 / items.get(p1)!!.currency!!.rate)
-            if(num.toString().length >= 6){
-                p0.priceText.text = shortFormat.format(num) + " " + items.get(p1)!!.currency!!.symbol
+            val num = item.price
+            if(num.roundToInt().toString().length >= 6){
+                p0.priceText.text = shortFormat.format(num) + " " + item.currency!!.symbol
             }
             else{
-                p0.priceText.text = longFormat.format(num) + " " + items.get(p1)!!.currency!!.symbol
+                p0.priceText.text = longFormat.format(num) + " " + item.currency!!.symbol
             }
         }
     }
 
-    override fun getItemCount(): Int {
-        return items.count()
-    }
-
     fun removeItem(position: Int){
-        val listId = items[position]!!.listID
-        val dayNum = items[position]!!.dayNum
+        val item = getItem(position)!!
 
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
@@ -89,14 +87,8 @@ class MoneyGridAdapter (val context: Context, val items: RealmList<T_Money>) : R
         builder.setMessage("삭제하시겠습니까?")
                 .setPositiveButton("삭제") { dialogInterface, _ ->
                     realm.beginTransaction()
-                    items.removeAt(position)
+                    realm.where(T_Money::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
                     realm.commitTransaction()
-
-                    realm.beginTransaction()
-                    realm.where(T_Money::class.java).equalTo("listID", listId).equalTo("dayNum", dayNum).findFirst()!!.deleteFromRealm()
-                    realm.commitTransaction()
-
-                    notifyItemRangeRemoved(0, itemCount + 1)
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }

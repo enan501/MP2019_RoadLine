@@ -6,10 +6,10 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -111,15 +111,8 @@ class AddMoneyActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(item!!.itemId == android.R.id.home){
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("지금 돌아가면 데이터 입력 내용이 삭제됩니다.")
-                    .setTitle("뒤로가기")
-                    .setIcon(konkukSW.MP2019.roadline.R.drawable.ic_keyboard_backspace_black_24dp)
-            builder.setPositiveButton("OK") { _, _ ->
-                finish()
-            }
-            val dialog = builder.create()
-            dialog.show()
+            finish()
+
         }
         return super.onOptionsItemSelected(item)
     }
@@ -169,7 +162,6 @@ class AddMoneyActivity : AppCompatActivity() {
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 selectedCurrency = curList[position]!!
-                Log.d("mytag", "itemselected " + position.toString())
                 if(priceTxt.text.toString() != ""){
                     exchange = selectedCurrency.rate * priceTxt.text.toString().toDouble()
                     inputExchangeTextView(exchange)
@@ -194,15 +186,12 @@ class AddMoneyActivity : AppCompatActivity() {
 
         priceTxt.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 if (s.toString() == "") {
                     addMoneyExchange.visibility = View.INVISIBLE
                 } else {
@@ -244,32 +233,43 @@ class AddMoneyActivity : AppCompatActivity() {
     }
 
     fun submitBtn(view: View) {
-        realm.beginTransaction()
+        if(priceTxt.text.isEmpty() || cate.isEmpty()){
+            var message = ""
+            if(priceTxt.text.isEmpty()){
+                message = "가격을 입력하세요"
+            }
+            else{
+                message = "카테고리를 선택하세요"
+            }
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage(message)
+            builder.setNegativeButton("확인"){ _, _ ->
 
-        val moneyTable = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
-
-        moneyTable.listID = listID
-        moneyTable.dayNum = dayNum
-        moneyTable.id = UUID.randomUUID().toString();
-        moneyTable.currency = selectedCurrency
-        if (img_url == "") { // 사진 선택 안했으면
-            moneyTable.img = ""
-        } else {
-            moneyTable.img = img_url
+            }
+            val dialog = builder.create()
+            dialog.show()
         }
-        moneyTable.price = exchange //한화로 계산
-        moneyTable.cate = cate
-        moneyTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+        else{
+            realm.beginTransaction()
 
-        val dayItem = realm.where(T_Day::class.java).equalTo("listID", listID).equalTo("num", dayNum).findFirst()!!
-        dayItem.moneyList.add(moneyTable)
-        realm.commitTransaction()
+            val moneyTable = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
 
-        val s = Intent()
-        s.putExtra("pos", pos)
-        s.putExtra("price", moneyTable.price)
-        setResult(Activity.RESULT_OK, s)
-        finish()
+            moneyTable.listID = listID
+            moneyTable.dayNum = dayNum
+            moneyTable.id = UUID.randomUUID().toString();
+            moneyTable.currency = selectedCurrency
+            if (img_url == "") { // 사진 선택 안했으면
+                moneyTable.img = ""
+            } else {
+                moneyTable.img = img_url
+            }
+            moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
+            moneyTable.cate = cate
+            moneyTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+
+            realm.commitTransaction()
+            finish()
+        }
     }
 
     fun inputExchangeTextView(num:Double){

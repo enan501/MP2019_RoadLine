@@ -1,12 +1,12 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.MotionEvent
 
 
-class mViewPager : ViewPager {
+class mViewPager : androidx.viewpager.widget.ViewPager {
 
     constructor(context: Context) : super(context)
 

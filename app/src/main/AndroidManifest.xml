@@ -29,7 +29,7 @@
             android:name="android.support.FILE_PROVIDER_PATHS"
             android:resource="@xml/file_path" />
         <provider
-            android:name="android.support.v4.content.FileProvider"
+            android:name="androidx.core.content.FileProvider"
             android:authorities="konkukSW.MP2019.roadline.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">

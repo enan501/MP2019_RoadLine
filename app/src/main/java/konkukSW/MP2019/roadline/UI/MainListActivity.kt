@@ -3,12 +3,12 @@ package konkukSW.MP2019.roadline.UI
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -103,7 +103,11 @@ class MainListActivity : AppCompatActivity() {
     }
 
     fun initLayout(){
-        val layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                this,
+                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+                false
+        )
         ML_rView.layoutManager = layoutManager
         MLAdapter = MainListAdapter(MLArray,this)
         ML_rView.adapter = MLAdapter
@@ -138,10 +142,10 @@ class MainListActivity : AppCompatActivity() {
 
     fun initSwipe(){
         val simpleItemTouchCallback = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT){
-            override fun onSwiped(p0: RecyclerView.ViewHolder, p1: Int) {
+            override fun onSwiped(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) {
             }
 
-            override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
+            override fun onMove(p0: androidx.recyclerview.widget.RecyclerView, p1: androidx.recyclerview.widget.RecyclerView.ViewHolder, p2: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
                 MLAdapter.moveItem(p1.adapterPosition,p2.adapterPosition)
                 return true
             }

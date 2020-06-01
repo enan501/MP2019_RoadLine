@@ -7,11 +7,11 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.design.widget.TabLayout
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.FileProvider
-import android.support.v4.view.ViewPager
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.tabs.TabLayout
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.viewpager.widget.ViewPager
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -108,7 +108,7 @@ class ShowDateActivity : AppCompatActivity() {
     fun initListener() {
         adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
         sd_viewPager.adapter = adapter
-        sd_viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+        sd_viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
 

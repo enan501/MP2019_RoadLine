@@ -3,7 +3,7 @@ package konkukSW.MP2019.roadline.UI
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import konkukSW.MP2019.roadline.Data.DB.T_Currency

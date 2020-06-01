@@ -1,6 +1,5 @@
 package konkukSW.MP2019.roadline.Data.DB
 
-import io.realm.RealmList
 import io.realm.RealmObject
 
 open class T_Day : RealmObject() {
@@ -9,7 +8,4 @@ open class T_Day : RealmObject() {
 
     var num: Int = 0 //day num
     var date: String = ""
-    var moneyList:RealmList<T_Money> = RealmList()
-   // var currency: String = "KRW"
-
 }

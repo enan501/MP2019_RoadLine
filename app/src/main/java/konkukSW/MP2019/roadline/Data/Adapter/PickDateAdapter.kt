@@ -1,6 +1,6 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +8,7 @@ import android.widget.TextView
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 
-class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickDateAdapter.ViewHolder>() {
+class PickDateAdapter(var items:ArrayList<PickDate>): androidx.recyclerview.widget.RecyclerView.Adapter<PickDateAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_pick_date,p0,false)
@@ -42,7 +42,7 @@ class PickDateAdapter(var items:ArrayList<PickDate>): RecyclerView.Adapter<PickD
     }
     var itemClickListener : OnItemClickListener? = null
     inner class ViewHolder(itemView: View)
-        :RecyclerView.ViewHolder(itemView){
+        : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView){
         var day: TextView
         var date: TextView
         init{

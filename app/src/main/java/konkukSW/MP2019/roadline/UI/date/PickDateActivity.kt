@@ -6,11 +6,11 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.LinearSmoothScroller
-import android.support.v7.widget.LinearSnapHelper
+import androidx.core.content.ContextCompat
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearSmoothScroller
+import androidx.recyclerview.widget.LinearSnapHelper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -32,7 +32,7 @@ class PickDateActivity : AppCompatActivity() {
     var ListID = ""
     var listPos = -1
 
-    var snapHelper = LinearSnapHelper()
+    var snapHelper = androidx.recyclerview.widget.LinearSnapHelper()
     lateinit var dateList:ArrayList<PickDate>
     lateinit var PDAdapter: PickDateAdapter
     lateinit var realm: Realm
@@ -65,8 +65,9 @@ class PickDateActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = ""
 
-        val layoutManager = CenterZoomLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
-        val smoothScroller = object : LinearSmoothScroller(this) {
+        val layoutManager = CenterZoomLayoutManager(this,
+                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,false)
+        val smoothScroller = object : androidx.recyclerview.widget.LinearSmoothScroller(this) {
             override fun getHorizontalSnapPreference(): Int {
                 return SNAP_TO_END
             }

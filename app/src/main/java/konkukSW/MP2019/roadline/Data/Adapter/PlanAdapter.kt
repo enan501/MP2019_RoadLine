@@ -1,6 +1,6 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +22,8 @@ val VIEW_TYPE_8 = 8
 val VIEW_TYPE_9 = 9
 val VIEW_TYPE_10 = 10
 
-class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class PlanAdapter(val items:ArrayList<Plan>) :
+        androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
     fun moveItem(pos1:Int, pos2:Int)
     {
 //        val item1 = items.get(pos1)
@@ -50,7 +51,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
     }
     var itemClickListener : OnItemClickListener? = null
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         if (p1 === 0) {
             val v = LayoutInflater.from(p0.context).inflate(R.layout.plan_middle_layout, p0, false)
@@ -103,7 +104,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
         return items.size
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder, position: Int) {
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
 
         if (holder is ViewHolder0) // 이미지 아이템
@@ -189,7 +190,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
 
     }
 
-    inner class ViewHolder0(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder0(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -202,7 +203,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
         }
 
     }
-    inner class ViewHolder1(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder1(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -214,7 +215,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder2(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder2(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -226,7 +227,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder3(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder3(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -238,7 +239,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder4(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder4(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -250,7 +251,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder5(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder5(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -262,7 +263,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder6(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder6(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -274,7 +275,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder7(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder7(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -286,7 +287,7 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder8(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder8(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{
@@ -298,12 +299,12 @@ class PlanAdapter(val items:ArrayList<Plan>) :RecyclerView.Adapter<RecyclerView.
             }
         }
     }
-    inner class ViewHolder9(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder9(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         init{
 
         }
     }
-    inner class ViewHolder10(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder10(itemView: View): androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
         init{

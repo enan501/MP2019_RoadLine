@@ -2,7 +2,7 @@ package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.app.AlertDialog
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -17,7 +17,7 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.Fragment1
 import kotlinx.android.synthetic.main.row_spot.view.*
 
-class DateListAdapter(val items:ArrayList<Plan>, val context: Context): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>() {
 
     private val TYPE_ITEM = 0
     private val TYPE_FOOTER = 1
@@ -33,7 +33,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
     }
 
     interface OnItemDragListener{
-        fun onStartDrag(holder: RecyclerView.ViewHolder)
+        fun onStartDrag(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder)
     }
 
     interface OnItemLongClickListener{
@@ -102,7 +102,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         realm.commitTransaction()
     }
 
-    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(p0: ViewGroup, p1: Int): androidx.recyclerview.widget.RecyclerView.ViewHolder {
         var v:View
         if(p1 == TYPE_ITEM){
             v = LayoutInflater.from(p0.context).inflate(R.layout.row_spot, p0, false)
@@ -117,7 +117,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         return items.size + 1
     }
 
-    override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
+    override fun onBindViewHolder(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
         Log.d("mytest", "onbindeviewholder " + p1.toString())
         if(p0 is ItemViewHolder) {
             p0.spotName.text = items.get(p1).name
@@ -134,7 +134,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
         }
     }
 
-    inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
+    inner class ItemViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var spotName: TextView
         var spotTime: TextView
         var dragBtn: ImageView
@@ -182,7 +182,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): Recycler
             }
         }
     }
-    inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
+    inner class FooterViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var addBtn: ImageView
 
         init {
