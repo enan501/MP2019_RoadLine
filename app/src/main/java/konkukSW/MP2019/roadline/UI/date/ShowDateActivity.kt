@@ -23,7 +23,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
-import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+//import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
 import kotlinx.android.synthetic.main.activity_show_date.*
 import kotlinx.android.synthetic.main.fragment_fragment2.*
@@ -214,15 +214,15 @@ class ShowDateActivity : AppCompatActivity() {
         }
 
         sd_imgBtn1.setOnClickListener {
-            //사진첩 버튼
-            var Intent = Intent(this, ShowPhotoActivity::class.java)
-            Intent.putExtra("ListID", ListID)
-            Intent.putExtra("DayNum", DayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
-            startActivity(Intent)
-            overridePendingTransition(
-                    R.anim.anim_slide_in_top,
-                    R.anim.anim_slide_out_bottom
-            )
+//            //사진첩 버튼
+//            var Intent = Intent(this, ShowPhotoActivity::class.java)
+//            Intent.putExtra("ListID", ListID)
+//            Intent.putExtra("DayNum", DayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
+//            startActivity(Intent)
+//            overridePendingTransition(
+//                    R.anim.anim_slide_in_top,
+//                    R.anim.anim_slide_out_bottom
+//            )
         }
 
         sd_imgBtn2.setOnClickListener {

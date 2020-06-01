@@ -3,12 +3,14 @@ package konkukSW.MP2019.roadline.UI
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.helper.ItemTouchHelper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
@@ -61,29 +63,41 @@ class MainListActivity : AppCompatActivity() {
 
     fun initAdapter(){
         currencyAdapter = object :ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item){
-//            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-//                val v = super.getView(position, convertView, parent)
-//                if(position == count){
-//                    v.findViewById<TextView>(R.id.text).text = ""
-//                    v.findViewById<TextView>(R.id.text).hint = getItem(count)
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                var convertView = convertView
+                if(convertView == null){
+                    convertView = LayoutInflater.from(this@MainListActivity).inflate(android.R.layout.simple_spinner_item, null)
+                }
+                (convertView as TextView).text = "추가하기"
+                convertView.setTextColor(ContextCompat.getColor(this@MainListActivity, R.color.colorPrimary))
+                convertView.gravity = View.TEXT_ALIGNMENT_CENTER
+                convertView.textSize = 15f
+                return convertView
+            }
+
+//            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+//                var itemView:View
+//                if(convertView == null){
+//                    itemView = LayoutInflater.from(this@MainListActivity).inflate(android.R.layout.simple_spinner_dropdown_item, null)
 //                }
-//                return v
+//                else{
+//                    itemView = convertView
+//                }
+//                (itemView as TextView).text = getItem(position)
+//                if(position == 0){
+//                    (itemView as TextView).setTextColor(ContextCompat.getColor(this@MainListActivity, android.R.color.holo_red_dark))
+//                }
+//                return itemView
 //            }
 
             override fun getCount(): Int {
                 return super.getCount() - 1
             }
         }
-        //currencyAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, ArrayList<String>())
 
         var curTable = realm.where(T_Currency::class.java).findAll()
-        //var i = 0
         for (T_currency in curTable) {
-//            if(T_currency.code == "KRW"){
-//                korIndex = i
-//            }
             currencyAdapter.add(T_currency.code + " - " + T_currency.name)
-            //i++
         }
         currencyAdapter.add("추가하기")
     }
@@ -171,7 +185,6 @@ class MainListActivity : AppCompatActivity() {
                 val editStart = addListDialog.findViewById<TextView>(R.id.editStart)
                 val editEnd = addListDialog.findViewById<TextView>(R.id.editEnd)
 
-                val curEditButton = addListDialog.findViewById<TextView>(R.id.curEditButton)
                 val curTextArray = arrayListOf<TextView>()
                 curTextArray.add(addListDialog.findViewById(R.id.curText0))
                 curTextArray.add(addListDialog.findViewById(R.id.curText1))
@@ -382,7 +395,6 @@ class MainListActivity : AppCompatActivity() {
             val editStart = addListDialog.findViewById<TextView>(R.id.editStart)
             val editEnd = addListDialog.findViewById<TextView>(R.id.editEnd)
 
-            val curEditButton = addListDialog.findViewById<TextView>(R.id.curEditButton)
             val curTextArray = arrayListOf<TextView>()
             curTextArray.add(addListDialog.findViewById(R.id.curText0))
             curTextArray.add(addListDialog.findViewById(R.id.curText1))
@@ -501,10 +513,6 @@ class MainListActivity : AppCompatActivity() {
                 }
 
                 dialog.show()
-            }
-
-            curEditButton.setOnClickListener {
-
             }
 
             builder.setView(addListDialog)

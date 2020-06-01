@@ -13,7 +13,6 @@
         android:layout_height="wrap_content">
 
     <android.support.constraint.ConstraintLayout
-
         android:id="@+id/money_layout1"
         android:layout_width="130dp"
         android:layout_height="130dp"
@@ -22,7 +21,7 @@
 
         <ImageView
 
-            android:id="@+id/money_Item_imageView"
+            android:id="@+id/priceImage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
@@ -33,7 +32,7 @@
             android:layout_height="match_parent"
             android:background="@color/blackAlpha" />
         <TextView
-            android:id="@+id/money_Item_textView"
+            android:id="@+id/priceText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1000원"

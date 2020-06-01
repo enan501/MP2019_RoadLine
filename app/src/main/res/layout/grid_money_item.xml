@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/colorPrimary"
+    android:layout_width="130dp" android:layout_height="130dp">
+
+    <ImageView
+        android:id="@+id/priceImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/img_cover"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blackAlpha" />
+    <TextView
+        android:id="@+id/priceText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="1000원"
+        android:textColor="@color/white"
+        android:fontFamily="@font/nanum_square_round_r"
+        android:textSize="22sp"/>
+
+</FrameLayout>

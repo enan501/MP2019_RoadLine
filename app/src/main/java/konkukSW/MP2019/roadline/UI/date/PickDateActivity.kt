@@ -22,7 +22,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
-import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+//import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -130,14 +130,14 @@ class PickDateActivity : AppCompatActivity() {
             }
         }
         PD_photoBtn.setOnClickListener {
-            var intent = Intent(this, ShowPhotoActivity::class.java)
-            intent.putExtra("ListID", ListID)
-            intent.putExtra("DayNum",0) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
-            startActivity(intent)
-            overridePendingTransition(
-                R.anim.anim_slide_in_top,
-                R.anim.anim_slide_out_bottom
-            )
+//            var intent = Intent(this, ShowPhotoActivity::class.java)
+//            intent.putExtra("ListID", ListID)
+//            intent.putExtra("DayNum",0) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
+//            startActivity(intent)
+//            overridePendingTransition(
+//                R.anim.anim_slide_in_top,
+//                R.anim.anim_slide_out_bottom
+//            )
         }
         PD_moneyBtn.setOnClickListener {
             var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)

@@ -41,23 +41,23 @@
             android:text="화폐"
             android:textSize="25sp" />
 
-        <TextView
-            android:id="@+id/curEditButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_marginHorizontal="10dp"
-            android:gravity="center"
-            android:text="추가하기"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="15sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/curEditButton"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_gravity="center"-->
+            <!--android:layout_marginHorizontal="10dp"-->
+            <!--android:gravity="center"-->
+            <!--android:text="추가하기"-->
+            <!--android:textColor="@color/colorPrimaryDark"-->
+            <!--android:textSize="15sp" />-->
 
         <Spinner
             android:id="@+id/currencySpinner"
+            android:background="@null"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:fontFamily="@font/nanum_square_round_r"
-            android:prompt="@string/spin_prompt"
             android:spinnerMode="dialog" />
     </LinearLayout>
 
