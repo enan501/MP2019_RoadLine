@@ -104,9 +104,7 @@ class MainListActivity : AppCompatActivity() {
 
     fun initLayout(){
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                this,
-                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
-                false
+                this, RecyclerView.VERTICAL, false
         )
         ML_rView.layoutManager = layoutManager
         MLAdapter = MainListAdapter(MLArray,this)
