@@ -77,7 +77,6 @@
             android:background="@drawable/button_background"
             android:gravity="center"
             android:text="KRW"
-            android:textColor="@color/darkGray"
             android:textSize="17sp" />
 
         <TextView

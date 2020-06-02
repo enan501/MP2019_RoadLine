@@ -1,76 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:context="konkukSW.MP2019.roadline.UI.money.ShowDetailMoneyActivity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="konkukSW.MP2019.roadline.UI.money.ShowDetailMoneyActivity">
-
-    <LinearLayout
+    android:orientation="vertical">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+        android:layout_height="?attr/actionBarSize">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-            <LinearLayout
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/day"
+                android:paddingLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:fontFamily="@font/nanum_square_round_r"
+                android:layout_weight="0"
+                android:text="DAY1"
+                android:textSize="25sp"
+                android:gravity="center"
+                android:textStyle="italic" />
+
+            <TextView
+                android:paddingLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:text="총지출"
+                android:fontFamily="@font/nanum_square_round_r"
+                android:gravity="center_vertical|start"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/totalMoney"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <TextView
-                    android:id="@+id/day"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:fontFamily="@font/nanum_square_round_r"
-                    android:layout_weight="1"
-                    android:text="DAY1"
-                    android:textSize="25sp"
-                    android:gravity="center"
-                    android:textStyle="italic" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="392300원"
+                android:fontFamily="@font/nanum_square_round_r"
+                android:textColor="#60AEBF"
+                android:paddingEnd="15dp"
+                android:gravity="end|center_vertical"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </androidx.appcompat.widget.Toolbar>
 
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="총지출"
-                    android:fontFamily="@font/nanum_square_round_r"
-                    android:gravity="center"
-                    android:textSize="25sp" />
-
-                <TextView
-                    android:id="@+id/totalMoney"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="2"
-                    android:text="392300원"
-                    android:fontFamily="@font/nanum_square_round_r"
-                    android:textColor="#60AEBF"
-                    android:paddingEnd="15dp"
-                    android:gravity="end|center_vertical"
-                    android:textSize="25sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
-
-        <View
+    <View
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:background="#cccccc" />
 
-
+    <LinearLayout
+        android:padding="30dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChart"
+            android:layout_weight="1"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginVertical="10dp"/>
-
-        <ListView
-            android:id="@+id/categoryMoneyListView"
+            android:layout_height="0dp"/>
+        <LinearLayout
+            android:layout_weight="1"
+            android:gravity="center"
             android:layout_width="match_parent"
-            android:layout_height="230dp"
-            android:layout_marginHorizontal="40dp"
-            android:layout_marginVertical="20dp"/>
-
+            android:layout_height="0dp">
+            <ListView
+                android:id="@+id/categoryMoneyListView"
+                android:scrollbars="none"
+                android:overScrollMode="never"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</LinearLayout>
+

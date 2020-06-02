@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.TextView
 import io.realm.OrderedRealmCollection
@@ -15,16 +16,22 @@ import io.realm.RealmRecyclerViewAdapter
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
+import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
-class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Context, val isAll: Boolean) : RealmRecyclerViewAdapter<T_Day, MoneyListAdapter.ViewHolder>(realmResult, true) {
+class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Context, val isAll: Boolean, val isMoneyType: Boolean) : RealmRecyclerViewAdapter<T_Day, MoneyListAdapter.ViewHolder>(realmResult, true) {
 
 
-    interface OnItemClickListener {
+    interface OnMoneyItemClickListener {
         fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
-        fun onItemClick(data: T_Money)
+        fun onMoneyItemClick(data: T_Money)
+    }
+
+    interface OnPhotoItemClickListener {
+        fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
+        fun onPhotoItemClick(data: T_Photo)
     }
 
     interface OnTotalViewChangeListener{
@@ -35,8 +42,9 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
         Realm.init(context)
     }
 
-    lateinit var itemClickListener: OnItemClickListener
-    lateinit var totalViewChangeListener: OnTotalViewChangeListener
+    var photoItemClickListener: OnPhotoItemClickListener? = null
+    var moneyItemClickListener: OnMoneyItemClickListener? = null
+    var totalViewChangeListener: OnTotalViewChangeListener? = null
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
     val realm = Realm.getDefaultInstance()
@@ -55,7 +63,10 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
             rView = itemView.findViewById(R.id.rView)
             totalText = itemView.findViewById(R.id.totalText)
             addButton.setOnClickListener {
-                itemClickListener.onButtonClick(this, it, getItem(adapterPosition)!!, adapterPosition)
+                if(isMoneyType)
+                    moneyItemClickListener!!.onButtonClick(this, it, getItem(adapterPosition)!!, adapterPosition)
+                else
+                    photoItemClickListener!!.onButtonClick(this, it, getItem(adapterPosition)!!, adapterPosition)
             }
         }
     }
@@ -70,33 +81,53 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
             val item = getItem(p1)!!
             p0.dayNumText.text = "DAY" + item.num.toString()
             p0.dateText.text = item.date
-            val result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("date")
-            result.addChangeListener{ _ ->
-                totalViewChangeListener.onTotalViewChange(p1)
-            }
-            val moneyAdapter = MoneyGridAdapter(result, context)
-            moneyAdapter.itemClickListener = object :MoneyGridAdapter.OnItemClickListener{
-                override fun onItemClick(
-                        holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int) {
-                    itemClickListener.onItemClick(data)
+
+            if(isMoneyType){
+                val result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("date")
+                result.addChangeListener{ _ ->
+                    totalViewChangeListener!!.onTotalViewChange(p1)
+                }
+                val moneyAdapter = MoneyGridAdapter(result, context)
+                moneyAdapter.itemClickListener = object :MoneyGridAdapter.OnItemClickListener{
+                    override fun onItemClick(
+                            holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int) {
+                        moneyItemClickListener!!.onMoneyItemClick(data)
+                    }
+                }
+                p0.rView.adapter = moneyAdapter
+                var totalKorPrice = 0.0
+                for(i in result){
+                    totalKorPrice += i.price * i.currency!!.rate
+                }
+                if(isAll){
+                    p0.totalText.text = shortFormat.format(totalKorPrice) + "₩"
+                }
+                else{
+                    p0.totalText.visibility = View.GONE
                 }
             }
-            p0.rView.adapter = moneyAdapter
+            else{
+                val result = realm.where(T_Photo::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("date")
+                val photoAdapter = PhotoGridAdapter(result, context)
+                photoAdapter.itemClickListener = object :PhotoGridAdapter.OnItemClickListener{
+                    override fun onItemClick(
+                            holder: PhotoGridAdapter.ViewHolder,
+                            view: View,
+                            data: T_Photo,
+                            position: Int
+                    ) {
+                        photoItemClickListener!!.onPhotoItemClick(data)
+
+                    }
+                }
+                p0.rView.adapter = photoAdapter
+                p0.totalText.visibility = View.GONE
+            }
             val animator = p0.rView.itemAnimator
             if(animator is SimpleItemAnimator){
                 animator.supportsChangeAnimations = false
             }
             p0.rView.layoutManager = GridLayoutManager(context, 3)
-            var totalKorPrice = 0.0
-            for(i in result){
-                totalKorPrice += i.price * i.currency!!.rate
-            }
-            if(isAll){
-                p0.totalText.text = shortFormat.format(totalKorPrice) + "₩"
-            }
-            else{
-                p0.totalText.visibility = View.GONE
-            }
         }
     }
 }

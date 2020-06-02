@@ -1,23 +1,18 @@
 package konkukSW.MP2019.roadline.UI.money
 
-import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
 import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
-import androidx.recyclerview.widget.ItemTouchHelper
-import android.util.Log
 import android.view.*
 import android.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyListAdapter
@@ -25,20 +20,14 @@ import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Money
-import konkukSW.MP2019.roadline.Data.Dataclass.MoneyItem
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_show_money.*
-import org.w3c.dom.Text
 import java.text.DecimalFormat
-import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
 class ShowMoneyActivity : AppCompatActivity() {
 
-    var data: ArrayList<MoneyItem> = ArrayList()
     lateinit var rViewAdapter: MoneyListAdapter
     var realm = Realm.getDefaultInstance()
     var ListID = ""
@@ -82,12 +71,12 @@ class ShowMoneyActivity : AppCompatActivity() {
         for(j in moneyResults){
             totalMoney += (j.price * j.currency!!.rate)
         }
-        rViewAdapter = MoneyListAdapter(dayList, this@ShowMoneyActivity, isAll)
+        rViewAdapter = MoneyListAdapter(dayList, this@ShowMoneyActivity, isAll, true)
 
     }
 
     fun initListener() {
-        rViewAdapter.itemClickListener = object :MoneyListAdapter.OnItemClickListener{
+        rViewAdapter.moneyItemClickListener = object :MoneyListAdapter.OnMoneyItemClickListener{
             override fun onButtonClick(holder: MoneyListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
                 val intent = Intent(this@ShowMoneyActivity, AddMoneyActivity::class.java)
                 intent.putExtra("pos", position)
@@ -97,7 +86,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 startActivity(intent)
             }
 
-            override fun onItemClick(data: T_Money) {
+            override fun onMoneyItemClick(data: T_Money) {
                 showImage(data)
             }
         }
@@ -200,16 +189,16 @@ class ShowMoneyActivity : AppCompatActivity() {
 
     fun showImage(item: T_Money){
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
-        val ll = inflater.inflate(R.layout.detail_money_img, null) as LinearLayout //레이아웃 객체생성
-        ll.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
-        val paramll = LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT)
-        addContentView(ll, paramll) //레이아웃 위에 겹치기
-        ll.setOnClickListener {
-            (ll.parent as ViewManager).removeView(ll)
+        val layout = inflater.inflate(R.layout.detail_money_img, null) as ConstraintLayout //레이아웃 객체생성
+        layout.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
+        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+        addContentView(layout, lp) //레이아웃 위에 겹치기
+        layout.setOnClickListener {
+            (layout.parent as ViewManager).removeView(layout)
         }
-        var imageView = ll.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
-        var textView1 = ll.findViewById<TextView>(R.id.textView1)
-        var textView2 = ll.findViewById<TextView>(R.id.textView2)
+        var imageView = layout.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
+        var textView1 = layout.findViewById<TextView>(R.id.textView1)
+        var textView2 = layout.findViewById<TextView>(R.id.textView2)
         val num = item.price
         if(num.roundToInt().toString().length >= 6){
             textView1.text = shortFormat.format(num) + " " + item.currency!!.symbol

@@ -24,10 +24,7 @@ import android.widget.Toast
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.kotlin.where
-import konkukSW.MP2019.roadline.Data.DB.T_Currency
-import konkukSW.MP2019.roadline.Data.DB.T_Day
-import konkukSW.MP2019.roadline.Data.DB.T_List
-import konkukSW.MP2019.roadline.Data.DB.T_Money
+import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_show_money.*
@@ -35,6 +32,7 @@ import kotlinx.coroutines.selects.select
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
 
 
@@ -52,6 +50,7 @@ class AddMoneyActivity : AppCompatActivity() {
     var pos = -1
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
+    var textViewList:ArrayList<TextView> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,6 +124,12 @@ class AddMoneyActivity : AppCompatActivity() {
         listID = i.getStringExtra("ListID")
         selectedCurrency = realm.where(T_Currency::class.java).equalTo("code", i.getStringExtra("cur")).findFirst()!!
         curList = realm.where(T_List::class.java).equalTo("id", listID).findFirst()!!.currencys
+        textViewList.add(textView1)
+        textViewList.add(textView2)
+        textViewList.add(textView3)
+        textViewList.add(textView4)
+        textViewList.add(textView5)
+        textViewList.add(textView6)
     }
 
 
@@ -181,6 +186,12 @@ class AddMoneyActivity : AppCompatActivity() {
                     R.id.lodgmentBtn -> cate = "숙박"
                     R.id.etcBtn -> cate = "기타"
                 }
+            }
+        }
+
+        for(i in 0 until textViewList.size){
+            textViewList[i].setOnClickListener {
+                categoryGroup.check(categoryGroup.getChildAt(i).id)
             }
         }
 
@@ -251,9 +262,7 @@ class AddMoneyActivity : AppCompatActivity() {
         }
         else{
             realm.beginTransaction()
-
             val moneyTable = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
-
             moneyTable.listID = listID
             moneyTable.dayNum = dayNum
             moneyTable.id = UUID.randomUUID().toString();
@@ -266,8 +275,18 @@ class AddMoneyActivity : AppCompatActivity() {
             moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
             moneyTable.cate = cate
             moneyTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
-
             realm.commitTransaction()
+
+            if(img_url != ""){
+                realm.beginTransaction()
+                val photoTable = realm.createObject(T_Photo::class.java)
+                photoTable.listID = listID
+                photoTable.dayNum = dayNum
+                photoTable.id = UUID.randomUUID().toString()
+                photoTable.img = img_url
+                photoTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+                realm.commitTransaction()
+            }
             finish()
         }
     }
