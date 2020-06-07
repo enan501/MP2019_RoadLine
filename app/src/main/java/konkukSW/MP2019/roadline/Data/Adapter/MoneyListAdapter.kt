@@ -19,10 +19,12 @@ import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import kotlin.math.roundToInt
 
 class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Context, val isAll: Boolean, val isMoneyType: Boolean) : RealmRecyclerViewAdapter<T_Day, MoneyListAdapter.ViewHolder>(realmResult, true) {
 
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     interface OnMoneyItemClickListener {
         fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
@@ -80,7 +82,7 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
         if(p0 is ViewHolder){
             val item = getItem(p1)!!
             p0.dayNumText.text = "DAY" + item.num.toString()
-            p0.dateText.text = item.date
+            p0.dateText.text = dateFormat.format(item.date)
 
             if(isMoneyType){
                 val result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("date")

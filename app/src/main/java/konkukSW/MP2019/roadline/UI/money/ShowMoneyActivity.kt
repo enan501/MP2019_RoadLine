@@ -23,6 +23,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_money.*
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import kotlin.math.roundToInt
 
 
@@ -206,7 +207,8 @@ class ShowMoneyActivity : AppCompatActivity() {
         else{
             textView1.text =longFormat.format(num) + " " + item.currency!!.symbol
         }
-        textView2.text = item.date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        textView2.text = dateFormat.format(item!!.date)
         if (item.img == "") {
             when (item.cate) {
                 "식사" -> imageView.setImageResource(R.drawable.meal_big)

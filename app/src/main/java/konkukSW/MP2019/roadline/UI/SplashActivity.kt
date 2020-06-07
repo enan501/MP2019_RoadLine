@@ -3,6 +3,7 @@ package konkukSW.MP2019.roadline.UI
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.RealmConfiguration
@@ -34,6 +35,7 @@ class SplashActivity : AppCompatActivity() {
     fun checkNetwork(){
         val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = connectivityManager.activeNetworkInfo
+        Log.d("mytag", networkInfo.toString())
         if (networkInfo != null && networkInfo.isConnected) {
             getCurrency()
         }

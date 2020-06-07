@@ -33,7 +33,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
     }
 
     interface OnItemDragListener{
-        fun onStartDrag(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder)
+        fun onStartDrag(holder: RecyclerView.ViewHolder)
     }
 
     interface OnItemLongClickListener{
@@ -66,7 +66,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
                 else if (items.size > 1)
                     items.get(i).viewType = TYPE_MID
             }
-            //notifyDataSetChanged()
         }
     }
 
@@ -170,7 +169,6 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
                         .setNegativeButton("취소") { _, _ ->
                         }
                         .show()
-                //itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
             }
             itemView.setOnClickListener {
                 Log.d("mytest", adapterPosition.toString())
@@ -182,7 +180,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
             }
         }
     }
-    inner class FooterViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
+    inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var addBtn: ImageView
 
         init {

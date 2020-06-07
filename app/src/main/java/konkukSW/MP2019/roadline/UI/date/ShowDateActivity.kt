@@ -24,6 +24,8 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.DateFormat
+import java.text.SimpleDateFormat
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -40,6 +42,7 @@ class ShowDateActivity : AppCompatActivity() {
     var down_x = 0f
     var up_x = 0f
     var title = ""
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,12 +83,7 @@ class ShowDateActivity : AppCompatActivity() {
         title = realm.where<T_List>(T_List::class.java).equalTo("id", ListID).findFirst()!!.title
         title_view.text = title
         sd_textView1.setText("DAY " + DayNum.toString())
-        sd_textView2.setText(
-                realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).equalTo(
-                        "num",
-                        DayNum
-                ).findFirst()!!.date
-        )
+        sd_textView2.setText(dateFormat.format( realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).equalTo("num", DayNum).findFirst()!!.date))
     }
 
     fun initLayout(){

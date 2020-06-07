@@ -15,7 +15,6 @@ import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.RealmRecyclerViewAdapter
-import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import java.text.DecimalFormat
@@ -79,7 +78,6 @@ class MoneyGridAdapter (realmResult: OrderedRealmCollection<T_Money>, val contex
 
     fun removeItem(position: Int){
         val item = getItem(position)!!
-
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
 
@@ -87,7 +85,8 @@ class MoneyGridAdapter (realmResult: OrderedRealmCollection<T_Money>, val contex
         builder.setMessage("삭제하시겠습니까?")
                 .setPositiveButton("삭제") { dialogInterface, _ ->
                     realm.beginTransaction()
-                    realm.where(T_Money::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
+                    item.deleteFromRealm()
+//                    realm.where(T_Money::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
                     realm.commitTransaction()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->

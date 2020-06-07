@@ -6,7 +6,6 @@ import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
 import android.util.Log
@@ -16,14 +15,17 @@ import android.view.ViewGroup
 import android.widget.*
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
+import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.MainListAdapter
 import konkukSW.MP2019.roadline.Data.DB.*
-import konkukSW.MP2019.roadline.Data.Dataclass.MainList
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
-import kotlinx.android.synthetic.main.add_list_dialog.*
+import java.sql.Date
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -33,19 +35,13 @@ import java.util.*
 class MainListActivity : AppCompatActivity() {
 
 
-    var MLArray:ArrayList<MainList> = arrayListOf()
     lateinit var MLAdapter:MainListAdapter
     lateinit var currencyAdapter: ArrayAdapter<String>
     var realm = Realm.getDefaultInstance()
     private val REQUEST_CODE = 123
     private val CURRENCY_MAX_SIZE = 5
-    //var korIndex = 0
-
-//    override fun onResume() {
-//        super.onResume()
-//        updateImg()
-//        MLAdapter.notifyDataSetChanged()
-//    }
+    lateinit var listResults: RealmResults<T_List>
+    lateinit var curResults: RealmResults<T_Currency>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +53,31 @@ class MainListActivity : AppCompatActivity() {
     fun init() {
         initData()
         initLayout()
+        initListener()
         initAdapter()
-        initSwipe()
+    }
+
+    fun initData(){
+        listResults = realm.where<T_List>(T_List::class.java).findAll().sort("dateStart", Sort.DESCENDING)
+        curResults = realm.where<T_Currency>(T_Currency::class.java).findAll()
+    }
+
+    fun initLayout(){
+        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+                this, RecyclerView.VERTICAL, false
+        )
+        ML_rView.layoutManager = layoutManager
+        MLAdapter = MainListAdapter(listResults,this)
+        ML_rView.adapter = MLAdapter
+        ML_rView.setHasFixedSize(false)
+
+        if(listResults.size == 0) {
+            ML_rView.visibility = View.GONE
+            startText.visibility = View.VISIBLE
+        } else {
+            ML_rView.visibility = View.VISIBLE
+            startText.visibility = View.GONE
+        }
     }
 
     fun initAdapter(){
@@ -95,94 +114,29 @@ class MainListActivity : AppCompatActivity() {
             }
         }
 
-        var curTable = realm.where(T_Currency::class.java).findAll()
-        for (T_currency in curTable) {
+        for (T_currency in curResults) {
             currencyAdapter.add(T_currency.code + " - " + T_currency.name)
         }
         currencyAdapter.add("추가하기")
     }
 
-    fun initLayout(){
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
-                this, RecyclerView.VERTICAL, false
-        )
-        ML_rView.layoutManager = layoutManager
-        MLAdapter = MainListAdapter(MLArray,this)
-        ML_rView.adapter = MLAdapter
-        addListener()
-    }
-    fun initData(){
-        val results = realm.where<T_List>(T_List::class.java).findAll().sort("pos")
-        for(T_List in results){
-            MLArray.add(MainList(T_List.id, T_List.title, T_List.dateStart, T_List.dateEnd, T_List.img, T_List.currencys))
-        }
-        if(MLArray.size == 0) {
-            ML_rView.visibility = View.GONE
-            startText.visibility = View.VISIBLE
-        } else {
-            ML_rView.visibility = View.VISIBLE
-            startText.visibility = View.GONE
-        }
-    }
-    fun updateImg(pos:Int){
-        val result = realm.where<T_List>(T_List::class.java).equalTo("id", MLArray[pos].id).findFirst()
-//        for(i in 0..MLArray.size-1){
-//            if(MLArray[i].image != results[i]!!.img) {
-//                MLArray[i].image = results[i]!!.img
-//            }
-//        }
 
-        if(result!!.img != MLArray[pos].image){
-            MLArray[pos].image = result!!.img
-        }
-        MLArray[pos].dateEnd = result!!.dateEnd
-    }
-
-    fun initSwipe(){
-        val simpleItemTouchCallback = object: ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT){
-            override fun onSwiped(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) {
-            }
-
-            override fun onMove(p0: androidx.recyclerview.widget.RecyclerView, p1: androidx.recyclerview.widget.RecyclerView.ViewHolder, p2: androidx.recyclerview.widget.RecyclerView.ViewHolder): Boolean {
-                MLAdapter.moveItem(p1.adapterPosition,p2.adapterPosition)
-                return true
-            }
-
-            override fun isItemViewSwipeEnabled(): Boolean {
-                return false
-            }
-
-        } // 객체 생성
-        val itemTouchHelper = ItemTouchHelper(simpleItemTouchCallback)
-        itemTouchHelper.attachToRecyclerView(ML_rView)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == REQUEST_CODE){
-            val pos = resultCode
-            Log.d("mytag", pos.toString())
-            updateImg(pos)
-            MLAdapter.notifyItemChanged(pos)
-        }
-    }
-
-    fun addListener() {
+    fun initListener() {
         MLAdapter.itemClickListener = object : MainListAdapter.OnItemClickListener {
-            override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
+            override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 val MLIntent = Intent(applicationContext, PickDateActivity::class.java)
-                MLIntent.putExtra("ListID",data.id)
+                MLIntent.putExtra("ListID", data.id)
                 MLIntent.putExtra("listPos", position)
                 startActivityForResult(MLIntent, REQUEST_CODE)
             }
-            override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
+            override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
                 val addListDialog = layoutInflater.inflate(konkukSW.MP2019.roadline.R.layout.add_list_dialog, null)
                 val addListText = addListDialog.findViewById<TextView>(konkukSW.MP2019.roadline.R.id.AL_text)
                 val addListTitle = addListDialog.findViewById<EditText>(konkukSW.MP2019.roadline.R.id.AL_title)
                 addListText.text = "여행 수정"
-                val item = realm.where(T_List::class.java).equalTo("id", data.id).findFirst()!!
-                addListTitle.setText(item.title)
+                val item = listResults[position]
+                addListTitle.setText(item!!.title)
 
                 val editStart = addListDialog.findViewById<TextView>(R.id.editStart)
                 val editEnd = addListDialog.findViewById<TextView>(R.id.editEnd)
@@ -209,7 +163,7 @@ class MainListActivity : AppCompatActivity() {
                             val result = parent!!.getItemAtPosition(position).toString()
                             val code = result.split(" - ")[0].trim()
 
-                            val curTuple = realm.where(T_Currency::class.java).equalTo("code", code).findFirst()
+                            val curTuple = curResults.where().equalTo("code", code).findFirst()
                             var exist = false
                             for(i in curArray){
                                 if(curTuple!!.code == i.code){
@@ -266,11 +220,11 @@ class MainListActivity : AppCompatActivity() {
                     }
                 }
 
-                var dateStart:LocalDate = LocalDate.parse(item!!.dateStart, DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                var dateEnd:LocalDate = LocalDate.parse(item!!.dateEnd, DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                var dateStart = item!!.dateStart.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
+                var dateEnd = item!!.dateEnd.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
 
-                editStart.setText(item!!.dateStart)
-                editEnd.setText(item!!.dateEnd)
+                editStart.setText(dateStart.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
+                editEnd.setText(dateEnd.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
 
                 val startListener = DatePickerDialog.OnDateSetListener{ view, year, month, dayOfMonth ->
                     dateStart = LocalDate.of(year, month + 1, dayOfMonth)
@@ -314,8 +268,8 @@ class MainListActivity : AppCompatActivity() {
                             if (dateStart!!.isBefore(dateEnd) || dateStart!!.isEqual(dateEnd)) {
                                 realm.beginTransaction()
                                 item.title = addListTitle.text.toString()
-                                item.dateStart = dateStart.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                                item.dateEnd = dateEnd.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                                item.dateStart = java.util.Date.from(dateStart!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                                item.dateEnd = java.util.Date.from(dateEnd!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
                                 item.currencys.clear()
                                 for(i in curArray){
                                     item.currencys.add(i)
@@ -325,16 +279,10 @@ class MainListActivity : AppCompatActivity() {
                                 for (i in 1..pnum) {
                                     val newDay = realm.createObject(T_Day::class.java)
                                     newDay.listID = item.id
-                                    newDay.date = dateStart.plusDays((i - 1).toLong())
-                                            .format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                                    newDay.date = java.util.Date.from(dateStart!!.plusDays((i - 1).toLong()).atStartOfDay(ZoneId.systemDefault()).toInstant())
                                     newDay.num = i
                                 }
                                 realm.commitTransaction()
-                                MLArray[position].title = item.title
-                                MLArray[position].dateStart = item.dateStart
-                                MLArray[position].dateEnd = item.dateEnd
-                                MLArray[position].currencys = item.currencys
-                                MLAdapter.notifyItemChanged(position)
                                 cbuilder.dismiss()
                             } else {
                                 Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
@@ -345,14 +293,12 @@ class MainListActivity : AppCompatActivity() {
                     }
                 }
             }
-            override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: MainList, position: Int) {
+            override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
                 val deleteListDialog =
                     layoutInflater.inflate(R.layout.delete_list_dialog, null)
                 val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
-                val item = realm.where(T_List::class.java)
-                    .equalTo("id", data.id)
-                    .findFirst()
+                val item = listResults[position]
                 var deleteMessage = "'"+item!!.title+deleteListText.text
                 deleteListText.text = deleteMessage
 
@@ -366,15 +312,13 @@ class MainListActivity : AppCompatActivity() {
                         realm.where(T_Plan::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
                         item.deleteFromRealm()
                         realm.commitTransaction()
-                        MLAdapter.removeItem(position)
-                        if(MLArray.size == 0) {
+                        if(listResults.size == 0) {
                             ML_rView.visibility = View.GONE
                             startText.visibility = View.VISIBLE
                         } else {
                             ML_rView.visibility = View.VISIBLE
                             startText.visibility = View.GONE
                         }
-                        MLAdapter.notifyDataSetChanged()
                     }
                     .setNegativeButton("취소") { dialogInterface, i ->
 
@@ -382,12 +326,6 @@ class MainListActivity : AppCompatActivity() {
                     .show()
             }
 
-        }
-        MLAdapter.itemLongClickListener = object : MainListAdapter.OnItemLongClickListener {
-            override fun OnItemLongClick(
-                holder: MainListAdapter.ViewHolder,view: View,data: MainList,position: Int) {
-                Log.d("longclicked", "LongClicked")
-            }
         }
 
         ML_addListBtn.setOnClickListener {
@@ -406,10 +344,8 @@ class MainListActivity : AppCompatActivity() {
             val curArray = arrayListOf<T_Currency>()
             val currencySpinner = addListDialog.findViewById<Spinner>(R.id.currencySpinner)
             currencySpinner.adapter = currencyAdapter
-            val korCur = realm.where(T_Currency::class.java).equalTo("code", "KRW").findFirst()!!
+            val korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
             curArray.add(korCur)
-//            curTextArray[0].visibility = View.VISIBLE
-//            curTextArray[0].text = korCur.code
             currencySpinner.setSelection(currencyAdapter.count)
             currencySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -418,7 +354,7 @@ class MainListActivity : AppCompatActivity() {
                         val result = parent?.getItemAtPosition(position).toString()
                         val code = result.split(" - ")[0].trim()
 
-                        val curTuple = realm.where(T_Currency::class.java).equalTo("code", code).findFirst()
+                        val curTuple = curResults.where().equalTo("code", code).findFirst()
                         var exist = false
                         for(i in curArray){
                             if(curTuple!!.code == i.code){
@@ -534,37 +470,34 @@ class MainListActivity : AppCompatActivity() {
                 else{
                     if(dateStart != null && dateEnd != null) {
                         if(dateStart!!.isBefore(dateEnd) || dateStart!!.isEqual(dateEnd)){
-                            realm.beginTransaction()
 
+                            realm.beginTransaction()
                             val newList = realm.createObject(T_List::class.java, UUID.randomUUID().toString())
                             newList.title = addListTitle.text.toString()
-                            newList.dateStart = dateStart!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                            newList.dateEnd = dateEnd!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                            newList.dateStart = java.util.Date.from(dateStart!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                            newList.dateEnd = java.util.Date.from(dateEnd!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
                             for(i in curArray){
                                 newList.currencys.add(i)
                             }
+                            realm.commitTransaction()
 
                             val pnum = (dateStart!!.until(dateEnd, ChronoUnit.DAYS) + 1).toInt()
                             for(i in 1..pnum){
+                                realm.beginTransaction()
                                 val newDay  = realm.createObject(T_Day::class.java)
                                 newDay.listID = newList.id
-                                newDay.date = dateStart!!.plusDays((i - 1).toLong()).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                                newDay.date = java.util.Date.from(dateStart!!.plusDays((i - 1).toLong()).atStartOfDay(ZoneId.systemDefault()).toInstant())
                                 newDay.num = i
+                                realm.commitTransaction()
                             }
 
-
-                            realm.commitTransaction()
-
-
-                            MLArray.add(MainList(newList.id, newList.title,newList.dateStart, newList.dateEnd,"", newList.currencys))
-                            if(MLArray.size == 0) {
+                            if(listResults.size == 0) {
                                 ML_rView.visibility = View.GONE
                                 startText.visibility = View.VISIBLE
                             } else {
                                 ML_rView.visibility = View.VISIBLE
                                 startText.visibility = View.GONE
                             }
-                            MLAdapter.notifyDataSetChanged()
                             cbuilder.dismiss()
                         }
                         else{

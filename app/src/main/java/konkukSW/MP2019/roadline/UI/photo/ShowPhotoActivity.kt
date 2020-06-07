@@ -31,6 +31,8 @@ import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_photo.*
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 
 class ShowPhotoActivity : AppCompatActivity() {
@@ -124,12 +126,11 @@ class ShowPhotoActivity : AppCompatActivity() {
         if (requestCode == SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 realm.beginTransaction()
-                val Table: T_Photo = realm.createObject(T_Photo::class.java)//데이터베이스에 저장할 객체 생성
+                val Table: T_Photo = realm.createObject(T_Photo::class.java, UUID.randomUUID().toString())//데이터베이스에 저장할 객체 생성
                 Table.listID = ListID
                 Table.dayNum = day_click
-                Table.id = UUID.randomUUID().toString()
                 Table.img = getPathFromUri(data!!.data)
-                Table.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+                Table.date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
                 realm.commitTransaction()
             }
         }
@@ -303,7 +304,8 @@ class ShowPhotoActivity : AppCompatActivity() {
         }
         var imageView = layout.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
         var textView2 = layout.findViewById<TextView>(R.id.textView2)
-        textView2.text = item.date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+        textView2.text = dateFormat.format(item!!.date)
         if (item.img == "")
             imageView.setImageResource(R.drawable.logo)
         else

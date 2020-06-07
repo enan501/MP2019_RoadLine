@@ -97,18 +97,18 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
     fun initLayout(){
         rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
+        val layoutManager = LinearLayoutManager(
                 activity!!,
-                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
         )
         rView.layoutManager = layoutManager
         adapter = DateListAdapter(planList, context!!)
         rView.adapter = adapter
         rIconView = v.findViewById(R.id.f1_rViewIcon) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager2 = androidx.recyclerview.widget.LinearLayoutManager(
+        val layoutManager2 = LinearLayoutManager(
                 activity!!,
-                androidx.recyclerview.widget.LinearLayoutManager.VERTICAL,
+                RecyclerView.VERTICAL,
                 false
         )
         rIconView.layoutManager = layoutManager2

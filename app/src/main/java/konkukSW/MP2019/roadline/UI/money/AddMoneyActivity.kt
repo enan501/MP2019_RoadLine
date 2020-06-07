@@ -31,6 +31,8 @@ import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.coroutines.selects.select
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.roundToInt
@@ -262,10 +264,9 @@ class AddMoneyActivity : AppCompatActivity() {
         }
         else{
             realm.beginTransaction()
-            val moneyTable = realm.createObject(T_Money::class.java)//데이터베이스에 저장할 객체 생성
+            val moneyTable = realm.createObject(T_Money::class.java, UUID.randomUUID().toString())//데이터베이스에 저장할 객체 생성
             moneyTable.listID = listID
             moneyTable.dayNum = dayNum
-            moneyTable.id = UUID.randomUUID().toString();
             moneyTable.currency = selectedCurrency
             if (img_url == "") { // 사진 선택 안했으면
                 moneyTable.img = ""
@@ -274,17 +275,16 @@ class AddMoneyActivity : AppCompatActivity() {
             }
             moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
             moneyTable.cate = cate
-            moneyTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+            moneyTable.date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
             realm.commitTransaction()
 
             if(img_url != ""){
                 realm.beginTransaction()
-                val photoTable = realm.createObject(T_Photo::class.java)
+                val photoTable = realm.createObject(T_Photo::class.java, UUID.randomUUID().toString())
                 photoTable.listID = listID
                 photoTable.dayNum = dayNum
-                photoTable.id = UUID.randomUUID().toString()
                 photoTable.img = img_url
-                photoTable.date = SimpleDateFormat("HH:mm:ss", Locale.KOREA).format(Date())
+                photoTable.date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
                 realm.commitTransaction()
             }
             finish()
