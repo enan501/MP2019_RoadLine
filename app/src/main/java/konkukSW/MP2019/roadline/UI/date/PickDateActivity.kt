@@ -15,6 +15,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import io.realm.Realm
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
@@ -41,6 +42,8 @@ class PickDateActivity : AppCompatActivity() {
     lateinit var PDAdapter: PickDateAdapter
     lateinit var realm: Realm
     val dateFormat = SimpleDateFormat("yyyy.MM.dd")
+    lateinit var thisList:T_List
+    lateinit var dayResults: RealmResults<T_Day>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,8 +52,10 @@ class PickDateActivity : AppCompatActivity() {
         init()
     }
     fun init(){
+        Realm.init(this)
         initData()
         initLayout()
+        addListener()
     }
 
 
@@ -62,6 +67,24 @@ class PickDateActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun initData(){
+        ListID = intent.getStringExtra("ListID")
+        listPos = intent.getIntExtra("listPos", -1)
+
+        dateList = arrayListOf(PickDate(ListID,0,"blank"),PickDate(ListID,0,"first"))
+
+        realm = Realm.getDefaultInstance()
+        thisList = realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!
+        dayResults = realm.where<T_Day>(T_Day::class.java)
+                .equalTo("listID", ListID)
+                .findAll().sort("num")
+        for(T_Day in dayResults){
+            dateList.add(PickDate(ListID, T_Day.num, dateFormat.format(T_Day.date)))
+        }
+        dateList.add(PickDate(ListID,-1,"ADD"))
+        dateList.add(PickDate(ListID,0,"last"))
+    }
+
     fun initLayout(){
         setSupportActionBar(PD_toolbar)
         val backArrow = ContextCompat.getDrawable(applicationContext, R.drawable.abc_ic_ab_back_material)
@@ -69,6 +92,8 @@ class PickDateActivity : AppCompatActivity() {
         supportActionBar!!.setHomeAsUpIndicator(backArrow)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         supportActionBar!!.title = ""
+
+        PD_title.text = thisList.title
 
         val layoutManager = CenterZoomLayoutManager(this,
                 androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,false)
@@ -86,27 +111,9 @@ class PickDateActivity : AppCompatActivity() {
         layoutManager.startSmoothScroll(smoothScroller)
         dateList.removeAt(0)
         PDAdapter.notifyDataSetChanged()
-        addListener()
     }
 
-    fun initData(){
-        ListID = intent.getStringExtra("ListID")
-        listPos = intent.getIntExtra("listPos", -1)
-        dateList = arrayListOf(PickDate(ListID,0,"blank"),PickDate(ListID,0,"first"))
 
-        Realm.init(this)
-        realm = Realm.getDefaultInstance()
-
-        PD_title.setText(realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!.title)
-        val results = realm.where<T_Day>(T_Day::class.java)
-            .equalTo("listID",ListID)
-            .findAll().sort("num")
-        for(T_Day in results){
-            dateList.add(PickDate(ListID, T_Day.num, dateFormat.format(T_Day.date)))
-        }
-        dateList.add(PickDate(ListID,-1,"ADD"))
-        dateList.add(PickDate(ListID,0,"last"))
-    }
     fun addListener() {
         PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
@@ -123,10 +130,10 @@ class PickDateActivity : AppCompatActivity() {
                     newDay.listID = data.listid
                     newDay.num = dateList[position-1].day + 1
                     newDay.date = Date.from(LocalDate.parse(dateList[position - 1].date, DateTimeFormatter.ofPattern("yyyy.MM.dd")).plusDays(1)!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                    realm.commitTransaction()
 
-                    val list = realm.where<T_List>(T_List::class.java).equalTo("id", data.listid).findFirst()
-                    list!!.dateEnd = newDay.date
-
+                    realm.beginTransaction()
+                    thisList!!.dateEnd = newDay.date
                     realm.commitTransaction()
 
                     dateList.add(position,PickDate(ListID, newDay.num, dateFormat.format(newDay.date)))

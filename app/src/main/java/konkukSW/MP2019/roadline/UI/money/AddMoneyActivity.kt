@@ -119,7 +119,6 @@ class AddMoneyActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        Realm.init(applicationContext)
         val i = intent
         pos = i.getIntExtra("pos", -1)
         dayNum = i.getIntExtra("DayNum", 0)

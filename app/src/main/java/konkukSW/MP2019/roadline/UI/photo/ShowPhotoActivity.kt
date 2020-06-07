@@ -160,50 +160,6 @@ class ShowPhotoActivity : AppCompatActivity() {
                 showImage(data)
             }
         }
-
-
-
-//
-//
-//        MIadapter.itemLongClickListener = object : MoneyItemAdapter.OnItemLongClickListener {
-//            override fun OnItemLongClick(
-//                holder: MoneyItemAdapter.ViewHolder1,
-//                view: View,
-//                item: MoneyItem,
-//                position: Int
-//            ) {
-//                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                val alert_confirm = AlertDialog.Builder(this@ShowPhotoActivity)
-//                alert_confirm.setMessage("삭제할래?").setCancelable(false).setPositiveButton("취소",
-//                    DialogInterface.OnClickListener { dialog, which ->
-//                        // content
-//                    }).setNegativeButton("확인",
-//                    DialogInterface.OnClickListener { dialog, which ->
-//                        eraseItem(item.dayNum, item)
-//                        return@OnClickListener
-//                    })
-//                val alert = alert_confirm.create()
-//                alert.show()
-//            }
-//        }
-//        MIadapter.itemClickListener = object : MoneyItemAdapter.OnItemClickListener {
-//            override fun OnItemClick(holder: MoneyItemAdapter.ViewHolder4, view: View, item: MoneyItem, position: Int) {
-//                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                day_click = item.dayNum
-//                addImg()
-//            }
-//        }
-//        MIadapter.itemClickListener2 = object : MoneyItemAdapter.OnItemClickListener2 {
-//            override fun OnItemClick2(
-//                holder: MoneyItemAdapter.ViewHolder1,
-//                view: View,
-//                item: MoneyItem,
-//                position: Int
-//            ) {
-//                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-//                ShowLayout(item)
-//            }
-//        }
     }
 
     fun addImg() {
@@ -232,64 +188,6 @@ class ShowPhotoActivity : AppCompatActivity() {
         if(animator is SimpleItemAnimator){
             animator.supportsChangeAnimations = false
         }
-//
-//        data.clear()
-//        val layoutManager = GridLayoutManager(this, 3)
-//        photo_recycleView.layoutManager = layoutManager
-//        MIadapter = MoneyItemAdapter(data)
-//        photo_recycleView.adapter = MIadapter
-//
-//        if (DayNum == 0) // 리스트내 Day 전부 다 출력
-//        {
-//            val q = realm.where(T_Day::class.java)
-//                .equalTo("listID", ListID)
-//                .findAll()
-//            dayCount = q.size
-//            for (i in 1..dayCount) {
-//                val q2 = realm.where(T_Day::class.java)
-//                    .equalTo("listID", ListID)
-//                    .equalTo("num", i)
-//                    .findFirst()
-//                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, "NULL"))
-//                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
-//                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, "NULL"))
-//
-//                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, "NULL"))
-//                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
-//                data.add(MoneyItem(ListID, i, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, "NULL"))
-//
-//                val q = realm.where(T_Photo::class.java)
-//                    .equalTo("listID", ListID)
-//                    .equalTo("dayNum", i)
-//                    .findAll()
-//
-//                for (i in 0..q.size - 1) {
-//                    addItem(q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.img, q.get(i)!!.date, 1)
-//                }
-//            }
-//        } else // 한개의 Day만 출력
-//        {
-//            val q2 = realm.where(T_Day::class.java)
-//                .equalTo("listID", ListID)
-//                .equalTo("num", DayNum)
-//                .findFirst()
-//            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", q2!!.date, 0, "NULL"))
-//            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
-//            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 4, "NULL"))
-//
-//            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 5, "NULL"))
-//            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), -1, "", "", "NULL", 2, "NULL"))
-//            data.add(MoneyItem(ListID, DayNum, UUID.randomUUID().toString(), 0, "", "", "NULL", 2, "NULL"))
-//
-//            val q = realm.where(T_Photo::class.java)
-//                .equalTo("listID", ListID)
-//                .equalTo("dayNum", DayNum)
-//                .findAll()
-//            for (i in 0..q.size - 1) {
-//                addItem(q.get(i)!!.listID, q.get(i)!!.dayNum, q.get(i)!!.id, q.get(i)!!.img, q.get(i)!!.date, 1)
-//            }
-//        }
-//        MIadapter.notifyDataSetChanged()
     }
 
 

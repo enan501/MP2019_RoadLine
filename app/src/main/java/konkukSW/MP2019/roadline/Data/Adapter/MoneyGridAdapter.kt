@@ -86,7 +86,6 @@ class MoneyGridAdapter (realmResult: OrderedRealmCollection<T_Money>, val contex
                 .setPositiveButton("삭제") { dialogInterface, _ ->
                     realm.beginTransaction()
                     item.deleteFromRealm()
-//                    realm.where(T_Money::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
                     realm.commitTransaction()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->

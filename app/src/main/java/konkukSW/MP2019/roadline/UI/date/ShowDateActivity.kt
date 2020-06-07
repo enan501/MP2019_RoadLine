@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import io.realm.Realm
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
@@ -43,6 +44,8 @@ class ShowDateActivity : AppCompatActivity() {
     var up_x = 0f
     var title = ""
     val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+    lateinit var thisList: T_List
+    lateinit var dayResults: RealmResults<T_Day>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,11 +82,13 @@ class ShowDateActivity : AppCompatActivity() {
         DayNum = intent.getIntExtra("DayNum", 0)
         Realm.init(this)
         realm = Realm.getDefaultInstance()
-        maxDayNum = realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).findAll().size
-        title = realm.where<T_List>(T_List::class.java).equalTo("id", ListID).findFirst()!!.title
+        thisList = realm.where<T_List>(T_List::class.java).equalTo("id", ListID).findFirst()!!
+        dayResults = realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).findAll()!!
+        maxDayNum = dayResults.size
+        title = thisList.title
         title_view.text = title
-        sd_textView1.setText("DAY " + DayNum.toString())
-        sd_textView2.setText(dateFormat.format( realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).equalTo("num", DayNum).findFirst()!!.date))
+        sd_textView1.text = "DAY " + DayNum.toString()
+        sd_textView2.text = dateFormat.format( dayResults.where().equalTo("num", DayNum).findFirst()!!.date)
     }
 
     fun initLayout(){

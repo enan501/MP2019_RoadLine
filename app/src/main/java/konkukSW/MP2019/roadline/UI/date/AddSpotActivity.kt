@@ -59,6 +59,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var bitmapDraw:BitmapDrawable
     lateinit var b:Bitmap
     lateinit var markerIcon:Bitmap
+    lateinit var thisPlan:T_Plan
+
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
         initData()
@@ -87,6 +89,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun init(){
+        Realm.init(this)
+        realm = Realm.getDefaultInstance()
         val i = intent
         pos = i.getIntExtra("pos", -1)
         listID = i.getStringExtra("ListID")
@@ -127,9 +131,42 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         addMapView.getMapAsync(this)
     }
 
+    fun initData(){
+        var spot = intent.getSerializableExtra("spot")
+        if(spot!=null){ //수정
+            spot = spot as Plan
+            spotId = spot.id
+
+            thisPlan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
+            spotName = thisPlan.name
+            time = thisPlan.time
+            Log.v("timetag", time)
+            if(time != ""){
+                hour = Integer.parseInt(time.split(":").get(0))
+                min = Integer.parseInt(time.split(":").get(1))
+            }else{
+                time = ""
+            }
+            memo = thisPlan.memo
+            locationX = thisPlan.locationX
+            locationY = thisPlan.locationY
+            btnType = true
+            val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
+            as_searchBox.setText(spotName)
+            addMap.addMarker(
+                    MarkerOptions()
+                            .position(LatLng(locationY,locationX))
+                            .title(spotName)
+                            .snippet(hour.toString()+"시 "+min.toString()+"분")
+                            .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
+            )
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
+        }else{
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.552420, 126.984719),12f))
+        }
+    }
+
     fun initListener(){
-        Realm.init(this)
-        realm = Realm.getDefaultInstance()
         as_button_check.setOnClickListener { //체크 등록 버튼
             val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
             if(as_searchBox.text.toString() != ""){
@@ -147,12 +184,11 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     plan.pos = pos
                 }
                 else{ //수정
-                    val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
-                    result.name = spotName
-                    result.time = time
-                    result.memo = memo
-                    result.locationX = locationX
-                    result.locationY = locationY
+                    thisPlan.name = spotName
+                    thisPlan.time = time
+                    thisPlan.memo = memo
+                    thisPlan.locationX = locationX
+                    thisPlan.locationY = locationY
                 }
                 realm.commitTransaction()
                 val s = Intent()
@@ -167,8 +203,9 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
         path_bt.setOnClickListener {
-            var prev = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).equalTo("pos",pos-1).findFirst()
-            var cur = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).equalTo("pos",pos).findFirst()
+            val plans = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).findAll()!!
+            var prev = plans.where().equalTo("pos",pos-1).findFirst()
+            var cur = plans.where().equalTo("pos",pos).findFirst()
 
             var uri = "http://maps.google.com/maps?saddr="+prev!!.locationY+","+prev!!.locationX+"&daddr="+cur!!.locationY+","+cur!!.locationX+"&dirflg=r"
             var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
@@ -242,41 +279,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    fun initData(){
-        var spot = intent.getSerializableExtra("spot")
-        if(spot!=null){ //수정
-            spot = spot as Plan
-            spotId = spot.id
-            Realm.init(this)
-            realm = Realm.getDefaultInstance()
-            val result:T_Plan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
-            spotName = result.name
-            time = result.time
-            Log.v("timetag", time)
-            if(time != ""){
-                hour = Integer.parseInt(time.split(":").get(0))
-                min = Integer.parseInt(time.split(":").get(1))
-            }else{
-                time = ""
-            }
-            memo = result.memo
-            locationX = result.locationX
-            locationY = result.locationY
-            btnType = true
-            val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
-            as_searchBox.setText(spotName)
-            addMap.addMarker(
-                MarkerOptions()
-                        .position(LatLng(locationY,locationX))
-                        .title(spotName)
-                        .snippet(hour.toString()+"시 "+min.toString()+"분")
-                    .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
-            )
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
-        }else{
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.552420, 126.984719),12f))
-        }
-    }
+
 
 
     fun checkAppPermission(requestPermission: Array<String>): Boolean {

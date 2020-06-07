@@ -40,6 +40,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
+    lateinit var planResults:RealmResults<T_Plan>
 
     companion object{
         var editMode = false
@@ -77,13 +78,13 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         }
         Realm.init(context!!)
         val realm = Realm.getDefaultInstance()
-        val results:RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
+        planResults = realm.where<T_Plan>(T_Plan::class.java)
             .equalTo("listID", listID)
             .equalTo("dayNum", dayNum)
             .findAll()
             .sort("pos")
         planList = ArrayList()
-        for(T_Plan in results){
+        for(T_Plan in planResults){
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
                 T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
         }

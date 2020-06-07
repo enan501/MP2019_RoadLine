@@ -175,7 +175,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun changeTotalView(pos:Int){
-        val results = realm.where(T_Money::class.java).equalTo("listID", ListID).equalTo("dayNum", pos + 1).findAll()!!
+        val results = moneyResults.where().equalTo("dayNum", pos + 1).findAll()!!
         var total = 0.0
         for(j in results){
             total += j.price * j.currency!!.rate

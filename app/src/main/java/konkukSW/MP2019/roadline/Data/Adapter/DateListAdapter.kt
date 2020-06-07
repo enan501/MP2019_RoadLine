@@ -48,6 +48,12 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
     var itemDragListener :OnItemDragListener? = null
     var itemLongClickListener:OnItemLongClickListener? = null
     var itemChangeListener:OnItemChangeListener? = null
+    var realm: Realm
+
+    init {
+        Realm.init(context)
+        realm = Realm.getDefaultInstance()
+    }
 
     fun moveItem(pos1:Int, pos2:Int){  //객체 두개 바꾸기 함수
         if(pos2 <= items.size - 1){
@@ -70,12 +76,9 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
     }
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
-        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         val tuple = realm.where(T_Plan::class.java)
-                .equalTo("id", items.get(pos).id)
-                .equalTo("pos", pos)
+                .equalTo("id", items[pos].id)
                 .findFirst()
         tuple!!.deleteFromRealm()
         realm.commitTransaction()
@@ -87,12 +90,10 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
     }
 
     fun changePos(){
-        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
         realm.beginTransaction()
         for(i in 0..items.size-1) {
             val id = items[i].id
-            val result = realm.where<T_Plan>(T_Plan::class.java)
+            val result = realm.where(T_Plan::class.java)
                     .equalTo("id", id)
                     .findFirst()
             items[i].pos = i
