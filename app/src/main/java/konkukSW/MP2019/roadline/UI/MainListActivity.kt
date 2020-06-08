@@ -37,7 +37,7 @@ class MainListActivity : AppCompatActivity() {
 
     lateinit var MLAdapter:MainListAdapter
     lateinit var currencyAdapter: ArrayAdapter<String>
-    var realm = Realm.getDefaultInstance()
+    lateinit var realm:Realm
     private val REQUEST_CODE = 123
     private val CURRENCY_MAX_SIZE = 5
     lateinit var listResults: RealmResults<T_List>
@@ -58,7 +58,8 @@ class MainListActivity : AppCompatActivity() {
     }
 
     fun initData(){
-        listResults = realm.where<T_List>(T_List::class.java).findAll().sort("dateStart", Sort.DESCENDING)
+        realm = Realm.getDefaultInstance()
+        listResults = realm.where<T_List>(T_List::class.java).findAll().sort("dateStart")
         curResults = realm.where<T_Currency>(T_Currency::class.java).findAll()
     }
 

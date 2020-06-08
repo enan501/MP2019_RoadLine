@@ -4,10 +4,13 @@ import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import io.realm.Realm
 import io.realm.RealmConfiguration
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
+import konkukSW.MP2019.roadline.NetworkStatus
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -17,34 +20,43 @@ import org.jsoup.Jsoup
 class SplashActivity : AppCompatActivity() {
 
     lateinit var realm:Realm
+    var netStatus = -1
+    private val TYPE_WIFI = 1
+    private val TYPE_MOBILE = 2
+    private val TYPE_NOT_CONNECTED = 3
+    lateinit var curResults:RealmResults<T_Currency>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(konkukSW.MP2019.roadline.R.layout.activity_splash)
 
         Realm.init(this)
-        val config =
-                RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
+        val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
         Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
         GlobalScope.launch(Dispatchers.Default) {
             checkNetwork()
         }
         Thread.sleep(2500)
-        startActivity(Intent(this, MainListActivity::class.java))
+        startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
         finish()
     }
     fun checkNetwork(){
-        val connectivityManager = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-        val networkInfo = connectivityManager.activeNetworkInfo
-        Log.d("mytag", networkInfo.toString())
-        if (networkInfo != null && networkInfo.isConnected) {
+        netStatus = NetworkStatus.getConnectivityStatus(this)
+        realm = Realm.getDefaultInstance()
+        curResults = realm.where(T_Currency::class.java).findAll()
+
+        if(netStatus == TYPE_WIFI || netStatus == TYPE_MOBILE){
             getCurrency()
+        }
+        else{
+            if(curResults.size == 0){
+                Toast.makeText(this, "네트워크에 연결해주세요", Toast.LENGTH_LONG).show()
+            }
         }
     }
     fun getCurrency() {
-        realm = Realm.getDefaultInstance()
-
         println("size : " + realm.where(T_Currency::class.java).findAll().size.toString())
-        if (realm.where(T_Currency::class.java).findAll().size == 142) {
+        if (curResults.size == 142) {
             //이미 db 구성되어 있으면 환율정보만 업데이트
             Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
                 select("tbody >tr").forEach {element ->
@@ -52,7 +64,7 @@ class SplashActivity : AppCompatActivity() {
                     var curRate = element.select("td:nth-child(4)").text()
 
                     realm.beginTransaction()
-                    realm.where(T_Currency::class.java).equalTo("code",curCode).findFirst()!!.rate = curRate.toDouble()
+                    curResults.where().equalTo("code",curCode).findFirst()!!.rate = curRate.toDouble()
                     realm.commitTransaction()
                 }
             }
@@ -81,7 +93,7 @@ class SplashActivity : AppCompatActivity() {
                     var curSymbol = element.select("td:nth-child(3)").text()
                     if (curCode.isNotEmpty()) {
                         realm.beginTransaction()
-                        realm.where(T_Currency::class.java).equalTo("code",curCode).findFirst()!!.symbol = curSymbol
+                        curResults.where().equalTo("code",curCode).findFirst()!!.symbol = curSymbol
                         realm.commitTransaction()
 
                         //println(index.toString() + " : " + curCode + "/" + curSymbol)
@@ -90,8 +102,7 @@ class SplashActivity : AppCompatActivity() {
             }
             //기호가 없는 화폐는 코드를 기호로 대체
 
-            var results = realm.where(T_Currency::class.java).findAll()
-            for(T_currency in results){
+            for(T_currency in curResults){
                 if(T_currency.symbol.isEmpty())
                 {
                     realm.beginTransaction()

@@ -30,7 +30,7 @@ import kotlin.math.roundToInt
 class ShowMoneyActivity : AppCompatActivity() {
 
     lateinit var rViewAdapter: MoneyListAdapter
-    var realm = Realm.getDefaultInstance()
+    lateinit var realm :Realm
     var ListID = ""
     var DayNum = 0
     var isAll = false
@@ -56,6 +56,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initData(){
+        realm = Realm.getDefaultInstance()
         val i = intent
         ListID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum", 0)

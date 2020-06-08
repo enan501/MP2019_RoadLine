@@ -40,16 +40,17 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
         fun onTotalViewChange(position: Int)
     }
 
-    init {
-        Realm.init(context)
-    }
-
     var photoItemClickListener: OnPhotoItemClickListener? = null
     var moneyItemClickListener: OnMoneyItemClickListener? = null
     var totalViewChangeListener: OnTotalViewChangeListener? = null
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
-    val realm = Realm.getDefaultInstance()
+    var realm:Realm
+
+    init {
+        Realm.init(context)
+        realm = Realm.getDefaultInstance()
+    }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var dayNumText:TextView

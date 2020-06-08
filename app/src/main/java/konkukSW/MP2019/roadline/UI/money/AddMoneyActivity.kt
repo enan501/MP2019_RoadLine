@@ -44,7 +44,7 @@ class AddMoneyActivity : AppCompatActivity() {
     var dayNum = 0
     var img_url: String = "" // 이미지 URI
     var cate: String = "" // 카테고리
-    var realm = Realm.getDefaultInstance()
+    lateinit var realm:Realm
     lateinit var selectedCurrency: T_Currency
     lateinit var spinnerAdapter: ArrayAdapter<String>
     lateinit var curList:RealmList<T_Currency>
@@ -119,6 +119,7 @@ class AddMoneyActivity : AppCompatActivity() {
     }
 
     fun initData(){
+        realm = Realm.getDefaultInstance()
         val i = intent
         pos = i.getIntExtra("pos", -1)
         dayNum = i.getIntExtra("DayNum", 0)

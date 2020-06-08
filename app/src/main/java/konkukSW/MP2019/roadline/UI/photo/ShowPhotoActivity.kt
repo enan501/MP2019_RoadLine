@@ -38,7 +38,7 @@ import java.util.*
 class ShowPhotoActivity : AppCompatActivity() {
 
     lateinit var rViewAdapter: MoneyListAdapter
-    var realm = Realm.getDefaultInstance()
+    lateinit var realm :Realm
     var ListID = ""
     var DayNum = 0
     var isAll = false
@@ -62,6 +62,7 @@ class ShowPhotoActivity : AppCompatActivity() {
     }
 
     fun initData(){
+        realm = Realm.getDefaultInstance()
         val i = intent
         ListID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum", 0)
