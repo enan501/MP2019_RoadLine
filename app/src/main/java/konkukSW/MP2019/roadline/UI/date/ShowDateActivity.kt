@@ -104,57 +104,12 @@ class ShowDateActivity : AppCompatActivity() {
     fun initListener() {
         adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
         sd_viewPager.adapter = adapter
-        sd_viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener {
+        sd_viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener { //tab select같이해줘야함
             override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
             override fun onPageSelected(position: Int) {
-                when (position) {
-                    0 -> {
-                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
-                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                    }
-                    1 -> {
-                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
-                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                    }
-                    2 -> {
-                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
-                    }
-                }
-                if (position == 0) {
-                    (getSupportFragmentManager()
-                            .findFragmentByTag(
-                                    "android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(
-                                            position
-                                    )
-                            )
-                            as Fragment1).refresh()
-                }
-                if (position == 1) {
-                    gps_check.isChecked = false
-                    (getSupportFragmentManager()
-                            .findFragmentByTag(
-                                    "android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(
-                                            position
-                                    )
-                            )
-                            as Fragment2).init()
-                } else if (position == 2) {
-                    (getSupportFragmentManager()
-                            .findFragmentByTag(
-                                    "android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(
-                                            position
-                                    )
-                            )
-                            as Fragment4).refresh()
-                }
+                val tab = tabLayer!!.getTabAt(position)
+                tab!!.select()
             }
         })
         tabLayer!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -167,37 +122,33 @@ class ShowDateActivity : AppCompatActivity() {
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
                         sd_imgBtn3.visibility = View.VISIBLE
+
+                        (supportFragmentManager
+                                .findFragmentByTag("android:switcher:" + sd_viewPager.id + ":" + adapter.getItemId(tab.position))
+                                as Fragment1).refresh()
                     }
                     1 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
                         sd_imgBtn3.visibility = View.VISIBLE
+
+                        gps_check.isChecked = false
+                        (supportFragmentManager
+                                .findFragmentByTag("android:switcher:" + sd_viewPager.id + ":" + adapter.getItemId(tab.position))
+                                as Fragment2).refresh()
                     }
                     2 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
                         sd_imgBtn3.visibility = View.INVISIBLE
+
+                        (supportFragmentManager.findFragmentByTag("android:switcher:" + sd_viewPager.id + ":" + adapter.getItemId(tab.position)) as Fragment4).refresh()
                     }
                 }
                 sd_viewPager.currentItem = tab.position
                 tabPos = tab.position
-                if (tab.position == 0) {
-                    (getSupportFragmentManager()
-                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
-                            as Fragment1).refresh()
-                }
-                if (tab.position == 1) {
-                    gps_check.isChecked = false
-                    (getSupportFragmentManager()
-                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
-                            as Fragment2).init()
-                } else if (tab.position == 2) {
-                    (getSupportFragmentManager()
-                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(tab.position))
-                            as Fragment4).refresh()
-                }
             }
         })
 

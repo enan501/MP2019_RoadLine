@@ -20,7 +20,6 @@ class TabAdapter(fm: FragmentManager, val num:Int): androidx.fragment.app.Fragme
         when(position){
             0->return Fragment1()
             1->return Fragment2()
-            //2->return Fragment3()
             2->return Fragment4()
             else -> {
                 Log.d("mytag", "Error : fragment null")

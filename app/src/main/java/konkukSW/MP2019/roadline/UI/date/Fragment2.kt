@@ -55,19 +55,198 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     var lastPosition = 0; // 제일 마지막에 추가된 일정
     var foldCount = 0; // 5가되면 foldFlag가 바뀐다.
     var foldFlag = false; // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
+    var humanIndex = -1
 
     lateinit var v:View
-    lateinit var timelineView : androidx.recyclerview.widget.RecyclerView
+    lateinit var timelineView : RecyclerView
+    lateinit var planResults: RealmResults<T_Plan>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment2, container, false)
-
-        init()
+        Log.d("mytag", "fragment2 : oncreateview")
+        initData()
+        initLayout()
+//        init()
+        addListener()
         return v
     }
+
+
+
+    fun refresh(){
+        data.clear()
+        position = 0
+        foldFlag = false
+        foldCount = 0
+
+        for(i in 0 until planResults.size) {
+            addItem(ListID, DayNum, planResults.get(i)!!.id, planResults.get(i)!!.name, planResults.get(i)!!.locationX, planResults.get(i)!!.locationY,
+                    planResults.get(i)!!.time, planResults.get(i)!!.memo)
+        }
+
+        if(data.size > 1) {
+            // 마지막 일정 모양 바꿔주기
+            if (foldFlag == true) {
+                if (foldCount == 0)
+                    data.get(lastPosition).viewType = 1
+                else if (foldCount == 1)
+                    data.get(lastPosition).viewType = 3
+                else
+                    data.get(lastPosition).viewType = 2
+
+            } else {
+                if (foldCount == 0)
+                    data.get(lastPosition).viewType = 2
+                else if (foldCount == 1)
+                    data.get(lastPosition).viewType = 4
+                else
+                    data.get(lastPosition).viewType = 1
+            }
+        }
+        else if(data.size == 1)
+        {
+            data.get(lastPosition).viewType = 10
+        }
+        adapter.notifyDataSetChanged()
+    }
+
+    fun initData(){
+        if(activity != null){
+            val intent = activity!!.intent
+            if(intent != null){
+                ListID = intent.getStringExtra("ListID")
+                DayNum = intent.getIntExtra("DayNum", 0)
+            }
+        }
+
+        Realm.init(context)
+        val realm = Realm.getDefaultInstance()
+        planResults = realm.where<T_Plan>(T_Plan::class.java).equalTo("listID", ListID).equalTo("dayNum", DayNum).findAll().sort("pos")
+
+
+
+        for(i in 0 until planResults.size) {
+            addItem(ListID, DayNum, planResults.get(i)!!.id, planResults.get(i)!!.name, planResults.get(i)!!.locationX, planResults.get(i)!!.locationY,
+                    planResults.get(i)!!.time, planResults.get(i)!!.memo)
+        }
+
+        if(data.size > 1) {
+            // 마지막 일정 모양 바꿔주기
+            if (foldFlag == true) {
+                if (foldCount == 0)
+                    data.get(lastPosition).viewType = 1
+                else if (foldCount == 1)
+                    data.get(lastPosition).viewType = 3
+                else
+                    data.get(lastPosition).viewType = 2
+
+            } else {
+                if (foldCount == 0)
+                    data.get(lastPosition).viewType = 2
+                else if (foldCount == 1)
+                    data.get(lastPosition).viewType = 4
+                else
+                    data.get(lastPosition).viewType = 1
+            }
+        }
+        else if(data.size == 1)
+        {
+            data.get(lastPosition).viewType = 10
+        }
+    }
+
+    fun initLayout(){
+        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
+        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)
+        timelineView.layoutManager = layoutManager
+        adapter = PlanAdapter(data)
+        timelineView.adapter = adapter
+
+        gpsCheck = v!!.findViewById<CheckBox>(konkukSW.MP2019.roadline.R.id.gps_check)
+        if(data.size == 0){
+            gpsCheck.visibility = View.GONE
+        }
+        else{
+            gpsCheck.visibility = View.VISIBLE
+        }
+    }
+
+//    fun init()
+//    {
+//        //tab 이동해서 돌아왔을때
+//        Log.d("mytag", StartedFlag.toString())
+//        if(StartedFlag == true) {
+//            data.clear()
+//            position = 0;
+//            foldFlag = false;
+//            foldCount = 0;
+//        }
+//        StartedFlag = true
+//        // 이거 안하면 계속 중복되서 아이템 추가됨
+//
+//        if(activity != null){
+//            val intent = activity!!.intent
+//            if(intent != null){
+//                ListID = intent.getStringExtra("ListID")
+//                DayNum = intent.getIntExtra("DayNum", 0)
+//            }
+//        }
+//
+//        Realm.init(context)
+//        val realm = Realm.getDefaultInstance()
+//        planResults = realm.where<T_Plan>(T_Plan::class.java).equalTo("listID", ListID).equalTo("dayNum", DayNum).findAll().sort("pos")
+//
+//
+//        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
+//        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)
+//        timelineView.layoutManager = layoutManager
+//        adapter = PlanAdapter(data)
+//        timelineView.adapter = adapter
+//
+//        for(i in 0..planResults.size-1)
+//        {
+//            addItem(ListID, DayNum, planResults.get(i)!!.id, planResults.get(i)!!.name, planResults.get(i)!!.locationX, planResults.get(i)!!.locationY,
+//                    planResults.get(i)!!.time, planResults.get(i)!!.memo)
+//        }
+//
+//        if(data.size > 1) {
+//            // 마지막 일정 모양 바꿔주기
+//            if (foldFlag == true) {
+//                if (foldCount == 0)
+//                    data.get(lastPosition).viewType = 1
+//                else if (foldCount == 1)
+//                    data.get(lastPosition).viewType = 3
+//                else
+//                    data.get(lastPosition).viewType = 2
+//
+//            } else {
+//                if (foldCount == 0)
+//                    data.get(lastPosition).viewType = 2
+//                else if (foldCount == 1)
+//                    data.get(lastPosition).viewType = 4
+//                else
+//                    data.get(lastPosition).viewType = 1
+//            }
+//        }
+//        else if(data.size == 1)
+//        {
+//            data.get(lastPosition).viewType = 10
+//        }
+//
+//        gpsCheck = v!!.findViewById<CheckBox>(konkukSW.MP2019.roadline.R.id.gps_check)
+//        adapter.notifyDataSetChanged()
+//
+//        if(data.size == 0){
+//            gpsCheck.visibility = View.GONE
+//        }
+//        else{
+//            gpsCheck.visibility = View.VISIBLE
+//        }
+//    }
+
     fun human(){
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
 
@@ -100,19 +279,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
                 }
             }
             data[minIndex].humanFlag = true
-            adapter.notifyDataSetChanged()
-
+            adapter.notifyItemChanged(minIndex)
+            humanIndex = minIndex
+//            adapter.notifyDataSetChanged()
         }
         else{
             initPermission()
         }
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        Log.v("ttag", "createactivity")
-        init()
-        addListener()
     }
 
     fun addListener() {
@@ -185,10 +358,14 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             if(isChecked)
                 human()
             else{
-                for(plan in data){
-                    plan.humanFlag = false
-                }
-                adapter.notifyDataSetChanged()
+                data[humanIndex].humanFlag = false
+                adapter.notifyItemChanged(humanIndex)
+                humanIndex = -1
+
+//                for(plan in data){
+//                    plan.humanFlag = false
+//                }
+//                adapter.notifyDataSetChanged()
             }
 
         }
@@ -204,79 +381,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         i.putExtra("pos", position)
         startActivityForResult(i, 123)
     }
-    fun init()
-    {
-        if(StartedFlag == true) {
-            data.clear()
-            position = 0;
-            foldFlag = false;
-            foldCount = 0;
-        }
-        StartedFlag = true
-        // 이거 안하면 계속 중복되서 아이템 추가됨
 
-        if(activity != null){
-            val intent = activity!!.intent
-            if(intent != null){
-                ListID = intent.getStringExtra("ListID")
-                DayNum = intent.getIntExtra("DayNum", 0)
-            }
-        }
-
-        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
-        val q: RealmResults<T_Plan> = realm.where<T_Plan>(T_Plan::class.java)
-            .equalTo("listID", ListID)
-            .equalTo("dayNum", DayNum)
-            .findAll()
-            .sort("pos")
-
-        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)
-        timelineView.layoutManager = layoutManager
-        adapter = PlanAdapter(data)
-        timelineView.adapter = adapter
-
-        for(i in 0..q.size-1)
-        {
-            addItem(ListID, DayNum, q.get(i)!!.id, q.get(i)!!.name, q.get(i)!!.locationX, q.get(i)!!.locationY,
-                q.get(i)!!.time, q.get(i)!!.memo)
-        }
-
-        if(data.size > 1) {
-            // 마지막 일정 모양 바꿔주기
-            if (foldFlag == true) {
-                if (foldCount == 0)
-                    data.get(lastPosition).viewType = 1
-                else if (foldCount == 1)
-                    data.get(lastPosition).viewType = 3
-                else
-                    data.get(lastPosition).viewType = 2
-
-            } else {
-                if (foldCount == 0)
-                    data.get(lastPosition).viewType = 2
-                else if (foldCount == 1)
-                    data.get(lastPosition).viewType = 4
-                else
-                    data.get(lastPosition).viewType = 1
-            }
-        }
-        else if(data.size == 1)
-        {
-            data.get(lastPosition).viewType = 10
-        }
-
-        gpsCheck = v!!.findViewById<CheckBox>(konkukSW.MP2019.roadline.R.id.gps_check)
-        adapter.notifyDataSetChanged()
-        addListener()
-
-        if(data.size == 0)
-            gpsCheck.visibility = View.GONE
-        else
-            gpsCheck.visibility = View.VISIBLE
-
-    }
     fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
     {
         if(foldFlag == false) { // 오른쪽으로 추가
@@ -327,13 +432,9 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { // 애드스팟 하고나서 돌아왔을때 어댑터뷰 바로 갱신
         super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 123)
-        {
-            if(resultCode == Activity.RESULT_OK)
-            {
-                val ft = fragmentManager!!.beginTransaction()
-                ft.detach(this).attach(this).commit()
-
+        if(requestCode == 123) {
+            if(resultCode == Activity.RESULT_OK) {
+                refresh()
             }
         }
     }

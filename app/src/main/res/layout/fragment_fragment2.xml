@@ -4,7 +4,8 @@
     android:layout_height="match_parent"
     tools:context="konkukSW.MP2019.roadline.UI.date.Fragment2">
 
-    <!-- TODO: Update blank fragment layout -->
+
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -24,9 +25,9 @@
         android:id="@+id/gps_check"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="450dp"
-        android:layout_marginRight="15dp"
-        android:layout_gravity="right"
+        android:layout_gravity="end|bottom"
+        android:layout_marginBottom="100dp"
+        android:layout_marginRight="20dp"
         android:background="@drawable/checkbox_custom"
         android:button="@null" />
 
