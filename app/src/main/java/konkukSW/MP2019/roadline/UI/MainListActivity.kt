@@ -417,6 +417,7 @@ class MainListActivity : AppCompatActivity() {
 
             val startListener = DatePickerDialog.OnDateSetListener{ view, year, month, dayOfMonth ->
                 dateStart = LocalDate.of(year, month + 1, dayOfMonth)
+                dateStart = LocalDate.of(year, month + 1, dayOfMonth)
                 editStart.setText(dateStart!!.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
             }
 

@@ -40,11 +40,13 @@
                 android:text="장소이름"
                 android:textColor="@color/black"
                 android:textSize="11sp"
+                android:gravity="center"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.619"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.235" />
+                app:layout_constraintVertical_bias="0.777" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>

@@ -30,9 +30,6 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import kotlinx.android.synthetic.main.fragment_fragment2.*
 
-
-var StartedFlag = false;
-
 class Fragment2 : androidx.fragment.app.Fragment() {
 
     var ListID = "";
@@ -51,10 +48,10 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         0,0,0,5,6,0,0,0,7,8,
         0,0,0,5,6,0,0,0,7,8,
         0,0,0,5,6,0,0,0,7,8)
-    var position = 0;
-    var lastPosition = 0; // 제일 마지막에 추가된 일정
-    var foldCount = 0; // 5가되면 foldFlag가 바뀐다.
-    var foldFlag = false; // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
+    var position = 0
+    var lastPosition = 0 // 제일 마지막에 추가된 일정
+    var foldCount = 0 // 5가되면 foldFlag가 바뀐다.
+    var foldFlag = false // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
     var humanIndex = -1
 
     lateinit var v:View
@@ -69,7 +66,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         Log.d("mytag", "fragment2 : oncreateview")
         initData()
         initLayout()
-//        init()
         addListener()
         return v
     }
@@ -82,35 +78,8 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         foldFlag = false
         foldCount = 0
 
-        for(i in 0 until planResults.size) {
-            addItem(ListID, DayNum, planResults.get(i)!!.id, planResults.get(i)!!.name, planResults.get(i)!!.locationX, planResults.get(i)!!.locationY,
-                    planResults.get(i)!!.time, planResults.get(i)!!.memo)
-        }
-
-        if(data.size > 1) {
-            // 마지막 일정 모양 바꿔주기
-            if (foldFlag == true) {
-                if (foldCount == 0)
-                    data.get(lastPosition).viewType = 1
-                else if (foldCount == 1)
-                    data.get(lastPosition).viewType = 3
-                else
-                    data.get(lastPosition).viewType = 2
-
-            } else {
-                if (foldCount == 0)
-                    data.get(lastPosition).viewType = 2
-                else if (foldCount == 1)
-                    data.get(lastPosition).viewType = 4
-                else
-                    data.get(lastPosition).viewType = 1
-            }
-        }
-        else if(data.size == 1)
-        {
-            data.get(lastPosition).viewType = 10
-        }
-        adapter.notifyDataSetChanged()
+        val ft = fragmentManager!!.beginTransaction()
+        ft.detach(this).attach(this).commit()
     }
 
     fun initData(){
@@ -165,7 +134,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         adapter = PlanAdapter(data)
         timelineView.adapter = adapter
 
-        gpsCheck = v!!.findViewById<CheckBox>(konkukSW.MP2019.roadline.R.id.gps_check)
+        gpsCheck = v!!.findViewById(konkukSW.MP2019.roadline.R.id.gps_check)
         if(data.size == 0){
             gpsCheck.visibility = View.GONE
         }
@@ -174,78 +143,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         }
     }
 
-//    fun init()
-//    {
-//        //tab 이동해서 돌아왔을때
-//        Log.d("mytag", StartedFlag.toString())
-//        if(StartedFlag == true) {
-//            data.clear()
-//            position = 0;
-//            foldFlag = false;
-//            foldCount = 0;
-//        }
-//        StartedFlag = true
-//        // 이거 안하면 계속 중복되서 아이템 추가됨
-//
-//        if(activity != null){
-//            val intent = activity!!.intent
-//            if(intent != null){
-//                ListID = intent.getStringExtra("ListID")
-//                DayNum = intent.getIntExtra("DayNum", 0)
-//            }
-//        }
-//
-//        Realm.init(context)
-//        val realm = Realm.getDefaultInstance()
-//        planResults = realm.where<T_Plan>(T_Plan::class.java).equalTo("listID", ListID).equalTo("dayNum", DayNum).findAll().sort("pos")
-//
-//
-//        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
-//        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)
-//        timelineView.layoutManager = layoutManager
-//        adapter = PlanAdapter(data)
-//        timelineView.adapter = adapter
-//
-//        for(i in 0..planResults.size-1)
-//        {
-//            addItem(ListID, DayNum, planResults.get(i)!!.id, planResults.get(i)!!.name, planResults.get(i)!!.locationX, planResults.get(i)!!.locationY,
-//                    planResults.get(i)!!.time, planResults.get(i)!!.memo)
-//        }
-//
-//        if(data.size > 1) {
-//            // 마지막 일정 모양 바꿔주기
-//            if (foldFlag == true) {
-//                if (foldCount == 0)
-//                    data.get(lastPosition).viewType = 1
-//                else if (foldCount == 1)
-//                    data.get(lastPosition).viewType = 3
-//                else
-//                    data.get(lastPosition).viewType = 2
-//
-//            } else {
-//                if (foldCount == 0)
-//                    data.get(lastPosition).viewType = 2
-//                else if (foldCount == 1)
-//                    data.get(lastPosition).viewType = 4
-//                else
-//                    data.get(lastPosition).viewType = 1
-//            }
-//        }
-//        else if(data.size == 1)
-//        {
-//            data.get(lastPosition).viewType = 10
-//        }
-//
-//        gpsCheck = v!!.findViewById<CheckBox>(konkukSW.MP2019.roadline.R.id.gps_check)
-//        adapter.notifyDataSetChanged()
-//
-//        if(data.size == 0){
-//            gpsCheck.visibility = View.GONE
-//        }
-//        else{
-//            gpsCheck.visibility = View.VISIBLE
-//        }
-//    }
 
     fun human(){
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
@@ -281,7 +178,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             data[minIndex].humanFlag = true
             adapter.notifyItemChanged(minIndex)
             humanIndex = minIndex
-//            adapter.notifyDataSetChanged()
         }
         else{
             initPermission()
@@ -289,69 +185,9 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
 
     fun addListener() {
-        adapter.itemClickListener = object : PlanAdapter.OnItemClickListener {
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder0, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        adapter.itemClickListener = object : PlanAdapter.OnItemClickListener{
+            override fun OnItemClick(holder: PlanAdapter.ItemViewHolder, view: View, data: Plan, position: Int) {
                 showAddSpot(data, position)
-            }
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder1, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder2, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder3, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder4, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder5, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder6, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder7, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder8, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder9, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
-            }
-
-            override fun OnItemClick(holder: PlanAdapter.ViewHolder10, view: View, data: Plan, position: Int) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                showAddSpot(data, position)
-
             }
         }
         gpsCheck.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -361,11 +197,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
                 data[humanIndex].humanFlag = false
                 adapter.notifyItemChanged(humanIndex)
                 humanIndex = -1
-
-//                for(plan in data){
-//                    plan.humanFlag = false
-//                }
-//                adapter.notifyDataSetChanged()
             }
 
         }
@@ -424,7 +255,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         if (foldCount == 5)
         {
             foldCount = 0;
-            if(foldFlag == true)
+            if(foldFlag)
                 foldFlag = false
             else
                 foldFlag = true
@@ -493,7 +324,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
 
     fun getScreenshotFromRecyclerView(): Bitmap? {
-        //view.rs_dragBtn.visibility = View.INVISIBLE
         var bigBitmap: Bitmap? = null
 
         if (adapter != null) {
@@ -551,7 +381,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             }
 
         }
-        //view.rs_dragBtn.visibility = View.VISIBLE
         return bigBitmap
     }
 
