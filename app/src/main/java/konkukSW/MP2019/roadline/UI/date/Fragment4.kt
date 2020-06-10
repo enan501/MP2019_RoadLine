@@ -46,6 +46,11 @@ class Fragment4 : androidx.fragment.app.Fragment(),OnMapReadyCallback {
         return view
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        refresh()
+        super.onHiddenChanged(hidden)
+    }
+
     fun refresh(){
 //        val ft = fragmentManager!!.beginTransaction()
 //        ft.detach(this).attach(this).commit()

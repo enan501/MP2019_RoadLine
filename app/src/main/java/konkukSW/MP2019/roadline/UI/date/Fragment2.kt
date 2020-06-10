@@ -70,7 +70,10 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         return v
     }
 
-
+    override fun onHiddenChanged(hidden: Boolean) {
+        refresh()
+        super.onHiddenChanged(hidden)
+    }
 
     fun refresh(){
         data.clear()

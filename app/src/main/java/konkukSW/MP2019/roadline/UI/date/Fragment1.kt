@@ -60,6 +60,11 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         return v
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        refresh()
+        super.onHiddenChanged(hidden)
+    }
+
     fun init(){
         initData()
         initLayout()

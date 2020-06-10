@@ -122,10 +122,6 @@ class ShowDateActivity : AppCompatActivity() {
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
                         sd_imgBtn3.visibility = View.VISIBLE
-
-                        (supportFragmentManager
-                                .findFragmentByTag("android:switcher:" + sd_viewPager.id + ":" + adapter.getItemId(tab.position))
-                                as Fragment1).refresh()
                     }
                     1 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
@@ -134,9 +130,6 @@ class ShowDateActivity : AppCompatActivity() {
                         sd_imgBtn3.visibility = View.VISIBLE
 
                         gps_check.isChecked = false
-                        (supportFragmentManager
-                                .findFragmentByTag("android:switcher:" + sd_viewPager.id + ":" + adapter.getItemId(tab.position))
-                                as Fragment2).refresh()
                     }
                     2 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
@@ -144,7 +137,6 @@ class ShowDateActivity : AppCompatActivity() {
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
                         sd_imgBtn3.visibility = View.INVISIBLE
 
-                        (supportFragmentManager.findFragmentByTag("android:switcher:" + sd_viewPager.id + ":" + adapter.getItemId(tab.position)) as Fragment4).refresh()
                     }
                 }
                 sd_viewPager.currentItem = tab.position
