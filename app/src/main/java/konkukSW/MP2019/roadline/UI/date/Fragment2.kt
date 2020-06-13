@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
+import androidx.lifecycle.Observer
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
@@ -56,7 +57,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
     lateinit var v:View
     lateinit var timelineView : RecyclerView
-    lateinit var planResults: RealmResults<T_Plan>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -64,16 +64,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     ): View? {
         v = inflater.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment2, container, false)
         Log.d("mytag", "fragment2 : oncreateview")
+        setObserve()
         initData()
         initLayout()
         addListener()
         return v
     }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        refresh()
-        super.onHiddenChanged(hidden)
-    }
 
     fun refresh(){
         data.clear()
@@ -84,7 +81,12 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         val ft = fragmentManager!!.beginTransaction()
         ft.detach(this).attach(this).commit()
     }
-
+    fun setObserve(){
+        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer{
+            setList()
+            adapter.notifyDataSetChanged()
+        })
+    }
     fun initData(){
         if(activity != null){
             val intent = activity!!.intent
@@ -94,16 +96,18 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             }
         }
 
-        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
-        planResults = realm.where<T_Plan>(T_Plan::class.java).equalTo("listID", ListID).equalTo("dayNum", DayNum).findAll().sort("pos")
-
-
-
-        for(i in 0 until planResults.size) {
-            addItem(ListID, DayNum, planResults.get(i)!!.id, planResults.get(i)!!.name, planResults.get(i)!!.locationX, planResults.get(i)!!.locationY,
-                    planResults.get(i)!!.time, planResults.get(i)!!.memo)
+        setList()
+    }
+    fun setList(){
+        data.clear()
+        position = 0
+        foldFlag = false
+        foldCount = 0
+        for(T_Plan in (activity!! as ShowDateActivity).planResults){
+            addItem(ListID, DayNum, T_Plan.id, T_Plan.name, T_Plan.locationX, T_Plan.locationY,
+                    T_Plan.time, T_Plan.memo)
         }
+
 
         if(data.size > 1) {
             // 마지막 일정 모양 바꿔주기
@@ -128,8 +132,8 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         {
             data.get(lastPosition).viewType = 10
         }
-    }
 
+    }
     fun initLayout(){
         timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
         val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)

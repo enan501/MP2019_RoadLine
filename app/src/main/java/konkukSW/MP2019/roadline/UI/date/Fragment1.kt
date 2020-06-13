@@ -16,6 +16,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
 import android.widget.Adapter
+import androidx.lifecycle.Observer
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
@@ -32,7 +33,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     private val TYPE_END = -3
     //private val TYPE_MID = -1
 
-    lateinit var planList:ArrayList<Plan>
+    var planList:ArrayList<Plan> = arrayListOf()
     lateinit var adapter:DateListAdapter
     lateinit var iconAdapter: DateIconListAdapter
     lateinit var rView: androidx.recyclerview.widget.RecyclerView
@@ -40,7 +41,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
-    lateinit var planResults:RealmResults<T_Plan>
+
 
     companion object{
         var editMode = false
@@ -60,18 +61,20 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         return v
     }
 
-    override fun onHiddenChanged(hidden: Boolean) {
-        refresh()
-        super.onHiddenChanged(hidden)
-    }
 
     fun init(){
+        setObserve()
         initData()
         initLayout()
         addListener()
         initSwipe()
     }
-
+    fun setObserve(){
+        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer{
+            setList()
+            adapter.notifyDataSetChanged()
+        })
+    }
     fun initData(){
         editMode = false
         if(activity != null){
@@ -81,17 +84,13 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 dayNum = intent.getIntExtra("DayNum", 0)
             }
         }
-        Realm.init(context!!)
-        val realm = Realm.getDefaultInstance()
-        planResults = realm.where<T_Plan>(T_Plan::class.java)
-            .equalTo("listID", listID)
-            .equalTo("dayNum", dayNum)
-            .findAll()
-            .sort("pos")
-        planList = ArrayList()
-        for(T_Plan in planResults){
+        setList()
+    }
+    fun setList(){
+        planList.clear()
+        for(T_Plan in (activity!! as ShowDateActivity).planResults){
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
-                T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
+                    T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
         }
         if(planList.size == 1)
             planList.get(0).viewType = TYPE_ONE
@@ -100,7 +99,6 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             planList.get(planList.size - 1).viewType = TYPE_END
         }
     }
-
     fun initLayout(){
         rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
         val layoutManager = LinearLayoutManager(

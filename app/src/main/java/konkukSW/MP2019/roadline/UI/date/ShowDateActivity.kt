@@ -11,11 +11,13 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import androidx.lifecycle.MutableLiveData
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
+import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
@@ -33,8 +35,8 @@ class ShowDateActivity : AppCompatActivity() {
     private val TYPE_BEFORE = 0
     private val TYPE_NEXT = 1
 
-    var ListID = "a"
-    var DayNum = 0
+    var listID = "a"
+    var dayNum = 0
     var maxDayNum = 0
     lateinit var adapter: TabAdapter
     lateinit var realm: Realm
@@ -46,8 +48,8 @@ class ShowDateActivity : AppCompatActivity() {
     val dateFormat = SimpleDateFormat("yyyy-MM-dd")
     lateinit var thisList: T_List
     lateinit var dayResults: RealmResults<T_Day>
-
-
+    lateinit var planResults:RealmResults<T_Plan>
+    val planResultsData = MutableLiveData<RealmResults<T_Plan>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_date)
@@ -78,24 +80,33 @@ class ShowDateActivity : AppCompatActivity() {
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
 
-        ListID = intent.getStringExtra("ListID")
-        DayNum = intent.getIntExtra("DayNum", 0)
+        listID = intent.getStringExtra("ListID")
+        dayNum = intent.getIntExtra("DayNum", 0)
         Realm.init(this)
         realm = Realm.getDefaultInstance()
-        thisList = realm.where<T_List>(T_List::class.java).equalTo("id", ListID).findFirst()!!
-        dayResults = realm.where<T_Day>(T_Day::class.java).equalTo("listID", ListID).findAll()!!
+        thisList = realm.where<T_List>(T_List::class.java).equalTo("id", listID).findFirst()!!
+        dayResults = realm.where<T_Day>(T_Day::class.java).equalTo("listID", listID).findAll()!!
         maxDayNum = dayResults.size
         title = thisList.title
         title_view.text = title
-        sd_textView1.text = "DAY " + DayNum.toString()
-        sd_textView2.text = dateFormat.format( dayResults.where().equalTo("num", DayNum).findFirst()!!.date)
+        sd_textView1.text = "DAY " + dayNum.toString()
+        sd_textView2.text = dateFormat.format( dayResults.where().equalTo("num", dayNum).findFirst()!!.date)
+        planResults = realm.where<T_Plan>(T_Plan::class.java)
+                .equalTo("listID", listID)
+                .equalTo("dayNum", dayNum)
+                .findAll()
+                .sort("pos")
+        planResultsData.postValue(planResults)
+        planResults.addChangeListener { t->
+            planResultsData.postValue(t)
+        }
     }
 
     fun initLayout(){
-        if(DayNum == maxDayNum){
+        if(dayNum == maxDayNum){
             sd_rightImg.visibility = View.INVISIBLE
         }
-        else if(DayNum == 1){
+        else if(dayNum == 1){
             sd_leftImg.visibility = View.INVISIBLE
         }
     }
@@ -154,8 +165,8 @@ class ShowDateActivity : AppCompatActivity() {
 
         sd_imgBtn1.setOnClickListener {
             var Intent = Intent(this, ShowPhotoActivity::class.java)
-            Intent.putExtra("ListID", ListID)
-            Intent.putExtra("DayNum", DayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
+            Intent.putExtra("ListID", listID)
+            Intent.putExtra("DayNum", dayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
             startActivity(Intent)
             overridePendingTransition(
                     R.anim.anim_slide_in_top,
@@ -166,8 +177,8 @@ class ShowDateActivity : AppCompatActivity() {
         sd_imgBtn2.setOnClickListener {
             //가계부 버튼
             var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
-            PDIntentToMoney.putExtra("ListID", ListID)
-            PDIntentToMoney.putExtra("DayNum", DayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+            PDIntentToMoney.putExtra("ListID", listID)
+            PDIntentToMoney.putExtra("DayNum", dayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
             startActivity(PDIntentToMoney)
             overridePendingTransition(
                     R.anim.anim_slide_in_top,
@@ -223,12 +234,12 @@ class ShowDateActivity : AppCompatActivity() {
                 up_x = event.rawX
                 if(up_x - down_x > 100){
                     //왼쪽으로 넘어가기
-                    if(DayNum != 1)
+                    if(dayNum != 1)
                         goIntent(TYPE_BEFORE)
                 }
                 else if(up_x - down_x < -100){
                     //오른쪽으로 넘어가기
-                    if(DayNum != maxDayNum)
+                    if(dayNum != maxDayNum)
                         goIntent(TYPE_NEXT)
                 }
             }
@@ -243,15 +254,15 @@ class ShowDateActivity : AppCompatActivity() {
         if(type == TYPE_BEFORE){
             anim1 =  R.anim.anim_slide_in_left
             anim2 =  R.anim.anim_slide_out_right
-            nextDay = DayNum - 1
+            nextDay = dayNum - 1
         }
         else{
             anim1 = R.anim.anim_slide_in_right
             anim2 = R.anim.anim_slide_out_left
-            nextDay = DayNum + 1
+            nextDay = dayNum + 1
         }
         var intentToNext = Intent(this, ShowDateActivity::class.java)
-        intentToNext.putExtra("ListID", ListID)
+        intentToNext.putExtra("ListID", listID)
         intentToNext.putExtra("DayNum", nextDay)
         startActivity(intentToNext)
         overridePendingTransition(anim1, anim2)
