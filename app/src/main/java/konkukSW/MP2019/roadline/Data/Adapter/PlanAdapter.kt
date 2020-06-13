@@ -59,7 +59,10 @@ class PlanAdapter(val items:ArrayList<Plan>) : androidx.recyclerview.widget.Recy
             else
                 holder.humanImg.visibility = View.INVISIBLE
             holder.name.text = items[position].name
-
+            if(items[position].viewType!= 9){
+                holder.roadImg.visibility = View.VISIBLE
+                holder.name.visibility = View.VISIBLE
+            }
             when(items[position].viewType){
                 0->{
                     holder.roadImg.setImageResource(R.drawable.road_midle)
