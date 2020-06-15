@@ -46,6 +46,24 @@ class MainListActivity : AppCompatActivity() {
     var nowMonth = 0
     var nowDay = 0
 
+    //여행추가 dialog
+    lateinit var builder:AlertDialog.Builder
+    lateinit var addListDialog: View
+    lateinit var addListTitle: EditText
+    lateinit var editStart: TextView
+    lateinit var editEnd: TextView
+    val curTextArray = arrayListOf<TextView>()
+    lateinit var addListText: TextView
+
+    val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
+    lateinit var currencySpinner:Spinner
+    lateinit var korCur: T_Currency
+    var dateStartEpoch: Long? = null
+    var dateEndEpoch: Long? = null
+
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,8 +75,9 @@ class MainListActivity : AppCompatActivity() {
     fun init() {
         initData()
         initLayout()
-        initListener()
         initAdapter()
+        initDialog()
+        initListener()
     }
 
     fun initData(){
@@ -135,395 +154,198 @@ class MainListActivity : AppCompatActivity() {
         currencyAdapter.add("추가하기")
     }
 
+    fun initDialog(){
+        var dateStartYear: Int? = null
+        var dateStartMonth :Int? = null
+        var dateStartDay: Int? = null
+        var dateEndYear :Int? = null
+        var dateEndMonth :Int? = null
+        var dateEndDay :Int? = null
 
-    fun initListener() {
-        MLAdapter.itemClickListener = object : MainListAdapter.OnItemClickListener {
-            override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val MLIntent = Intent(applicationContext, PickDateActivity::class.java)
-                MLIntent.putExtra("ListID", data.id)
-                MLIntent.putExtra("listPos", position)
-                startActivityForResult(MLIntent, REQUEST_CODE)
-            }
-            override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-//                val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-//                val addListDialog = layoutInflater.inflate(konkukSW.MP2019.roadline.R.layout.add_list_dialog, null)
-//                val addListText = addListDialog.findViewById<TextView>(konkukSW.MP2019.roadline.R.id.AL_text)
-//                val addListTitle = addListDialog.findViewById<EditText>(konkukSW.MP2019.roadline.R.id.AL_title)
-//                addListText.text = "여행 수정"
-//                val item = listResults[position]
-//                addListTitle.setText(item!!.title)
-//
-//                val editStart = addListDialog.findViewById<TextView>(R.id.editStart)
-//                val editEnd = addListDialog.findViewById<TextView>(R.id.editEnd)
-//
-//                val curTextArray = arrayListOf<TextView>()
-//                curTextArray.add(addListDialog.findViewById(R.id.curText0))
-//                curTextArray.add(addListDialog.findViewById(R.id.curText1))
-//                curTextArray.add(addListDialog.findViewById(R.id.curText2))
-//                curTextArray.add(addListDialog.findViewById(R.id.curText3))
-//                curTextArray.add(addListDialog.findViewById(R.id.curText4))
-//                val curArray = arrayListOf<T_Currency>()
-//                val currencySpinner = addListDialog.findViewById<Spinner>(R.id.currencySpinner)
-//                currencySpinner.adapter = currencyAdapter
-//                currencySpinner.setSelection(currencyAdapter.count)
-//                for(i in 0 until item.currencys.size){
-//                    curArray.add(item.currencys[i]!!)
-//                    curTextArray[i].text = item.currencys[i]!!.code
-//                    curTextArray[i].visibility = View.VISIBLE
-//                }
-//                currencySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-//                        currencySpinner.setSelection(currencyAdapter.count)
-//                        if(position < currencySpinner.count){
-//                            val result = parent!!.getItemAtPosition(position).toString()
-//                            val code = result.split(" - ")[0].trim()
-//
-//                            val curTuple = curResults.where().equalTo("code", code).findFirst()
-//                            var exist = false
-//                            for(i in curArray){
-//                                if(curTuple!!.code == i.code){
-//                                    exist = true
-//                                }
-//                            }
-//                            if(curArray.size < CURRENCY_MAX_SIZE){
-//                                if(exist){
-//                                    Toast.makeText(applicationContext, "이미 선택한 화폐입니다", Toast.LENGTH_SHORT).show()
-//                                }
-//                                else{
-//                                    curArray.add(curTuple!!)
-//                                    val index = curArray.size - 1
-//                                    curTextArray[index].visibility = View.VISIBLE
-//                                    curTextArray[index].text = curTuple!!.code
-//                                }
-//                            }
-//                            else{
-//                                Toast.makeText(applicationContext, "화폐는 5개까지 설정할 수 있습니다 ", Toast.LENGTH_SHORT).show()
-//                            }
-//                        }
-//                    }
-//
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {
-//                    }
-//                }
-//
-//
-//                curTextArray[0].setOnLongClickListener{
-//                    Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
-//                    false
-//                }
-//
-//                for(i in 1 until CURRENCY_MAX_SIZE){
-//                    curTextArray[i].setOnLongClickListener {
-//                        val ynBuilder = AlertDialog.Builder(this@MainListActivity)
-//                        ynBuilder.setMessage(curTextArray[i].text.toString() + " 화폐를 삭제하시겠습니까?")
-//                                .setPositiveButton("삭제") { dialogInterface, _ ->
-//                                    Log.d("mytag", "cur longclick")
-//                                    val index = curArray.size - 1
-//                                    curArray.removeAt(i)
-//                                    curTextArray[index].visibility = View.INVISIBLE
-//                                    curTextArray[index].text = ""
-//                                    for(j in 1 until curArray.size){
-//                                        curTextArray[j].text = curArray[j].code
-//                                    }
-//                                }
-//                                .setNegativeButton("취소") { dialogInterface, i ->
-//                                }
-//                        val ynDialog = ynBuilder.create()
-//                        ynDialog.show()
-//
-//                        false
-//                    }
-//                }
-//
-//                var dateStart = item!!.dateStart.toInstant().atZone(org.threeten.bp.ZoneId.systemDefault()).toLocalDate()
-//                var dateEnd = item!!.dateEnd.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()
-//
-//                editStart.setText(dateStart.format(org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-//                editEnd.setText(dateEnd.format(org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-//
-//                val startListener = DatePickerDialog.OnDateSetListener{ view, year, month, dayOfMonth ->
-//                    dateStart = org.threeten.bp.LocalDate.of(year, month + 1, dayOfMonth)
-//                    editStart.setText(dateStart.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-//                }
-//
-//                val endListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-//                    dateEnd = LocalDate.of(year, month + 1, dayOfMonth)
-//                    editEnd.setText(dateEnd.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")))
-//                }
-//
-//                editStart.setOnClickListener {
-//                    var dialog = DatePickerDialog(this@MainListActivity, startListener, dateStart.year, dateStart.monthValue - 1, dateStart.dayOfMonth)
-//                    dialog.show()
-//                }
-//
-//                editEnd.setOnClickListener {
-//                    var dialog = DatePickerDialog(this@MainListActivity, endListener, dateEnd.year, dateEnd.monthValue - 1, dateEnd.dayOfMonth)
-//                    val c = Calendar.getInstance()
-//                    c.set(dateStart!!.year, dateStart!!.monthValue - 1, dateStart!!.dayOfMonth)
-//                    dialog.datePicker.minDate = c.timeInMillis
-//                    dialog.show()
-//                }
-//
-//                builder.setView(addListDialog)
-//                    .setPositiveButton("수정") { dialogInterface, _ ->
-//                    }
-//                    .setNegativeButton("취소") { dialogInterface, i ->
-//                    }
-//
-//                val cbuilder = builder.create()
-//                cbuilder.setCanceledOnTouchOutside(false)
-//                cbuilder.show()
-//
-//                cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-//                    if(addListTitle.text.trim().toString() == ""){
-//                        Toast.makeText(applicationContext, "여행 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
-//                    }
-//                    else {
-//                        if (dateStart != null && dateEnd != null) {
-//                            if (dateStart!!.isBefore(dateEnd) || dateStart!!.isEqual(dateEnd)) {
-//                                realm.beginTransaction()
-//                                item.title = addListTitle.text.toString()
-//                                item.dateStart = java.util.Date.from(dateStart!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
-//                                item.dateEnd = java.util.Date.from(dateEnd!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
-//                                item.currencys.clear()
-//                                for(i in curArray){
-//                                    item.currencys.add(i)
-//                                }
-//                                realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
-//                                val pnum = (dateStart.until(dateEnd, ChronoUnit.DAYS) + 1).toInt()
-//                                for (i in 1..pnum) {
-//                                    val newDay = realm.createObject(T_Day::class.java)
-//                                    newDay.listID = item.id
-//                                    newDay.date = java.util.Date.from(dateStart!!.plusDays((i - 1).toLong()).atStartOfDay(ZoneId.systemDefault()).toInstant())
-//                                    newDay.num = i
-//                                }
-//                                realm.commitTransaction()
-//                                cbuilder.dismiss()
-//                            } else {
-//                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
-//                            }
-//                        } else {
-//                            Toast.makeText(applicationContext, "시작일과 종료일 모두 입력해주세요", Toast.LENGTH_SHORT).show()
-//                        }
-//                    }
-//                }
-            }
-            override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val builder = AlertDialog.Builder(this@MainListActivity) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-                val deleteListDialog =
-                    layoutInflater.inflate(R.layout.delete_list_dialog, null)
-                val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
-                val item = listResults[position]
-                var deleteMessage = "'"+item!!.title+deleteListText.text
-                deleteListText.text = deleteMessage
-
-                builder.setView(deleteListDialog)
-                    .setPositiveButton("삭제") { dialogInterface, _ ->
-                        realm.beginTransaction()
-
-                        realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
-                        realm.where(T_Money::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
-                        realm.where(T_Photo::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
-                        realm.where(T_Plan::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
-                        item.deleteFromRealm()
-                        realm.commitTransaction()
-                        if(listResults.size == 0) {
-                            ML_rView.visibility = View.GONE
-                            startText.visibility = View.VISIBLE
-                        } else {
-                            ML_rView.visibility = View.VISIBLE
-                            startText.visibility = View.GONE
-                        }
-                    }
-                    .setNegativeButton("취소") { dialogInterface, i ->
-
-                    }
-                    .show()
-            }
-
+        builder = AlertDialog.Builder(this) //여행 추가 dialog
+        addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
+        if(addListDialog.parent != null){
+            (addListDialog.parent as ViewGroup).removeView(addListDialog)
         }
+        builder.setView(addListDialog)
+                .setPositiveButton("추가") { _, _ -> }
+                .setNegativeButton("취소") { _, _ -> }
+        addListText = addListDialog.findViewById(R.id.AL_text)
+        addListTitle = addListDialog.findViewById(R.id.AL_title)
+        editStart = addListDialog.findViewById(R.id.editStart)
+        editEnd = addListDialog.findViewById(R.id.editEnd)
 
-        ML_addListBtn.setOnClickListener {
-            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-            val addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
-            val addListTitle = addListDialog.findViewById<EditText>(R.id.AL_title)
-            val editStart = addListDialog.findViewById<TextView>(R.id.editStart)
-            val editEnd = addListDialog.findViewById<TextView>(R.id.editEnd)
+        curTextArray.add(addListDialog.findViewById(R.id.curText0))
+        curTextArray.add(addListDialog.findViewById(R.id.curText1))
+        curTextArray.add(addListDialog.findViewById(R.id.curText2))
+        curTextArray.add(addListDialog.findViewById(R.id.curText3))
+        curTextArray.add(addListDialog.findViewById(R.id.curText4))
 
-            val curTextArray = arrayListOf<TextView>()
-            curTextArray.add(addListDialog.findViewById(R.id.curText0))
-            curTextArray.add(addListDialog.findViewById(R.id.curText1))
-            curTextArray.add(addListDialog.findViewById(R.id.curText2))
-            curTextArray.add(addListDialog.findViewById(R.id.curText3))
-            curTextArray.add(addListDialog.findViewById(R.id.curText4))
-            val curArray = arrayListOf<T_Currency>()
-            val currencySpinner = addListDialog.findViewById<Spinner>(R.id.currencySpinner)
-            currencySpinner.adapter = currencyAdapter
-            val korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
-            curArray.add(korCur)
-            currencySpinner.setSelection(currencyAdapter.count)
-            currencySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
-                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    currencySpinner.setSelection(currencyAdapter.count)
-                    if(position < currencySpinner.count){
-                        val result = parent?.getItemAtPosition(position).toString()
-                        val code = result.split(" - ")[0].trim()
+        currencySpinner = addListDialog.findViewById(R.id.currencySpinner)
+        currencySpinner.adapter = currencyAdapter
+        korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
 
-                        val curTuple = curResults.where().equalTo("code", code).findFirst()
-                        var exist = false
-                        for(i in curArray){
-                            if(curTuple!!.code == i.code){
-                                exist = true
-                            }
+        currencySpinner.setSelection(currencyAdapter.count)
+
+        currencySpinner.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                currencySpinner.setSelection(currencyAdapter.count)
+                if(position < currencySpinner.count){
+                    val result = parent?.getItemAtPosition(position).toString()
+                    val code = result.split(" - ")[0].trim()
+
+                    val curTuple = curResults.where().equalTo("code", code).findFirst()
+                    var exist = false
+                    for(i in curArray){
+                        if(curTuple!!.code == i.code){
+                            exist = true
                         }
-                        if(curArray.size < CURRENCY_MAX_SIZE){
-                            if(exist){
-                                Toast.makeText(applicationContext, "이미 선택한 화폐입니다", Toast.LENGTH_SHORT).show()
-                            }
-                            else{
-                                curArray.add(curTuple!!)
-                                val index = curArray.size - 1
-                                curTextArray[index].visibility = View.VISIBLE
-                                curTextArray[index].text = curTuple!!.code
-                            }
+                    }
+                    if(curArray.size < CURRENCY_MAX_SIZE){
+                        if(exist){
+                            Toast.makeText(applicationContext, "이미 선택한 화폐입니다", Toast.LENGTH_SHORT).show()
                         }
                         else{
-                            Toast.makeText(applicationContext, "화폐는 5개까지 설정할 수 있습니다 ", Toast.LENGTH_SHORT).show()
+                            curArray.add(curTuple!!)
+                            val index = curArray.size - 1
+                            curTextArray[index].visibility = View.VISIBLE
+                            curTextArray[index].text = curTuple!!.code
                         }
                     }
-                }
-
-                override fun onNothingSelected(parent: AdapterView<*>?) {
+                    else{
+                        Toast.makeText(applicationContext, "화폐는 5개까지 설정할 수 있습니다 ", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
 
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
 
-            curTextArray[0].setOnLongClickListener{
-                Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
+
+        curTextArray[0].setOnLongClickListener{
+            Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
+            false
+        }
+
+        for(i in 1 until CURRENCY_MAX_SIZE){
+            curTextArray[i].setOnLongClickListener {
+                val ynBuilder = AlertDialog.Builder(this)
+                ynBuilder.setMessage(curTextArray[i].text.toString() + " 화폐를 삭제하시겠습니까?")
+                        .setPositiveButton("삭제") { dialogInterface, _ ->
+                            Log.d("mytag", "cur longclick")
+                            val index = curArray.size - 1
+                            curArray.removeAt(i)
+                            curTextArray[index].visibility = View.INVISIBLE
+                            curTextArray[index].text = ""
+                            for(j in 1 until curArray.size){
+                                curTextArray[j].text = curArray[j].code
+                            }
+                        }
+                        .setNegativeButton("취소") { dialogInterface, i ->
+                        }
+                val ynDialog = ynBuilder.create()
+                ynDialog.show()
+
                 false
             }
+        }
 
-            for(i in 1 until CURRENCY_MAX_SIZE){
-                curTextArray[i].setOnLongClickListener {
-                    val ynBuilder = AlertDialog.Builder(this)
-                    ynBuilder.setMessage(curTextArray[i].text.toString() + " 화폐를 삭제하시겠습니까?")
-                            .setPositiveButton("삭제") { dialogInterface, _ ->
-                                Log.d("mytag", "cur longclick")
-                                val index = curArray.size - 1
-                                curArray.removeAt(i)
-                                curTextArray[index].visibility = View.INVISIBLE
-                                curTextArray[index].text = ""
-                                for(j in 1 until curArray.size){
-                                    curTextArray[j].text = curArray[j].code
-                                }
-                            }
-                            .setNegativeButton("취소") { dialogInterface, i ->
-                            }
-                    val ynDialog = ynBuilder.create()
-                    ynDialog.show()
-
-                    false
-                }
+        val startListener = DatePickerDialog.OnDateSetListener{ view, year, month, dayOfMonth ->
+            dateStartYear=  year
+            dateStartMonth = month + 1
+            dateStartDay = dayOfMonth
+            if(android.os.Build.VERSION.SDK_INT >= 26) {
+                val dateStart = LocalDate.of(year, month + 1, dayOfMonth)
+                editStart.text = (dateStart as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                dateStartEpoch = dateStart.toEpochDay()
             }
-
-//            var dateStart: Any? = null
-//            var dateEnd:Any? = null
-
-            var dateStartEpoch: Long? = null
-            var dateEndEpoch: Long? = null
-            var dateStartYear: Int? = null
-            var dateStartMonth :Int? = null
-            var dateStartDay: Int? = null
-            var dateEndYear :Int? = null
-            var dateEndMonth :Int? = null
-            var dateEndDay :Int? = null
-
-
-            val startListener = DatePickerDialog.OnDateSetListener{ view, year, month, dayOfMonth ->
-                dateStartYear=  year
-                dateStartMonth = month + 1
-                dateStartDay = dayOfMonth
-                if(android.os.Build.VERSION.SDK_INT >= 26) {
-                    val dateStart = LocalDate.of(year, month + 1, dayOfMonth)
-                    editStart.text = (dateStart as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                    dateStartEpoch = dateStart.toEpochDay()
-                    Log.d("mytest", dateStartEpoch.toString())
-                }
-                else{
-                    val dateStart = org.threeten.bp.LocalDate.of(year, month + 1, dayOfMonth)
-                    editStart.text = (dateStart as org.threeten.bp.LocalDate).format(org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                    dateStartEpoch = dateStart.toEpochDay()
-                    Log.d("mytest", dateStartEpoch.toString())
-                }
+            else{
+                val dateStart = org.threeten.bp.LocalDate.of(year, month + 1, dayOfMonth)
+                editStart.text = (dateStart as org.threeten.bp.LocalDate).format(org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                dateStartEpoch = dateStart.toEpochDay()
             }
+        }
 
-            val endListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                dateEndYear=  year
-                dateEndMonth = month + 1
-                dateEndDay = dayOfMonth
-                if(android.os.Build.VERSION.SDK_INT >= 26) {
-                    val dateEnd = LocalDate.of(year, month + 1, dayOfMonth)
-                    editEnd.text = (dateEnd as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                    dateEndEpoch = dateEnd.toEpochDay()
-                }
-                else{
-                    val dateEnd = org.threeten.bp.LocalDate.of(year, month + 1, dayOfMonth)
-                    editEnd.text = (dateEnd as org.threeten.bp.LocalDate).format(org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd"))
-                    dateEndEpoch = dateEnd.toEpochDay()
-                    Log.d("mytest", dateEndEpoch.toString())
-                }
-
+        val endListener = DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            dateEndYear = year
+            dateEndMonth = month + 1
+            dateEndDay = dayOfMonth
+            if(android.os.Build.VERSION.SDK_INT >= 26) {
+                val dateEnd = LocalDate.of(year, month + 1, dayOfMonth)
+                editEnd.text = (dateEnd as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                dateEndEpoch = dateEnd.toEpochDay()
             }
+            else{
+                val dateEnd = org.threeten.bp.LocalDate.of(year, month + 1, dayOfMonth)
+                editEnd.text = (dateEnd as org.threeten.bp.LocalDate).format(org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd"))
+                dateEndEpoch = dateEnd.toEpochDay()
+            }
+        }
 
-            editStart.setOnClickListener {
-                var dialog:DatePickerDialog
-                if(dateStartEpoch == null) {
+        editStart.setOnClickListener {
+            var dialog:DatePickerDialog
+            if(dateStartEpoch == null) {
+                dialog = DatePickerDialog(
+                        this@MainListActivity,
+                        startListener, nowYear, nowMonth, nowDay)
+            }
+            else {
+                //nullpointerror
+                val date = org.threeten.bp.LocalDate.ofEpochDay(dateStartEpoch!!)
+                dialog = DatePickerDialog(this@MainListActivity, startListener, date.year, date.monthValue - 1, date.dayOfMonth)
+            }
+            dialog.show()
+        }
+
+        editEnd.setOnClickListener {
+            var dialog:DatePickerDialog
+            if(dateEndEpoch == null) {
+                if (dateStartEpoch != null) {
+                    val c = Calendar.getInstance()
                     dialog = DatePickerDialog(
                             this@MainListActivity,
-                            startListener, nowYear, nowMonth, nowDay)
+                            endListener,
+                            dateStartYear!!,
+                            dateStartMonth!! - 1,
+                            dateStartDay!!
+                    )
+                    c.set(
+                            dateStartYear!!,
+                            dateStartMonth!! - 1,
+                            dateStartDay!!
+                    )
+                    dialog.datePicker.minDate = c.timeInMillis
                 }
-                else {
-                    dialog = DatePickerDialog(this@MainListActivity, startListener, dateStartYear!!, dateStartMonth!! - 1, dateStartDay!!)
+                else{
+                    dialog = DatePickerDialog(this@MainListActivity, endListener, nowYear, nowMonth,nowDay)
                 }
-                dialog.show()
             }
-
-            editEnd.setOnClickListener {
-                var dialog:DatePickerDialog
-                if(dateEndEpoch == null) {
-                    if (dateStartEpoch != null) {
-                        val c = Calendar.getInstance()
-                        dialog = DatePickerDialog(
-                                this@MainListActivity,
-                                endListener,
-                                dateStartYear!!,
-                                dateStartMonth!! - 1,
-                                dateStartDay!!
-                        )
-                        c.set(
-                                dateStartYear!!,
-                                dateStartMonth!! - 1,
-                                dateStartDay!!
-                        )
-                        dialog.datePicker.minDate = c.timeInMillis
-                    }
-                    else{
-                        dialog = DatePickerDialog(this@MainListActivity, endListener, nowYear, nowMonth,nowDay)
-                    }
-                }
-                else {
-                    dialog = DatePickerDialog(this@MainListActivity, endListener, dateEndYear!!, dateEndMonth!! - 1, dateEndDay!!)
-                }
-                dialog.show()
+            else {
+                val date = org.threeten.bp.LocalDate.ofEpochDay(dateEndEpoch!!)
+                dialog = DatePickerDialog(this@MainListActivity, endListener, date.year, date.monthValue - 1, date.dayOfMonth)
             }
+            dialog.show()
+        }
 
-            builder.setView(addListDialog)
-                .setPositiveButton("추가") { dialogInterface, _ ->
-                }
-                .setNegativeButton("취소") { dialogInterface, i ->
-                }
+    }
+
+
+    fun initListener() {
+        ML_addListBtn.setOnClickListener {
+            addListText.text = "여행 추가"
             
-            val cbuilder = builder.create()
+            dateStartEpoch = null
+            dateEndEpoch = null
+
+            curArray.clear()
+            curArray.add(korCur)
+
+            if(addListDialog.parent != null){
+                (addListDialog.parent as ViewGroup).removeView(addListDialog)
+            }
+
+            val cbuilder = builder.create() //여행추가 다이얼로그
             cbuilder.setCanceledOnTouchOutside(false)
             cbuilder.show()
 
@@ -573,6 +395,137 @@ class MainListActivity : AppCompatActivity() {
                 }
             }
 
+
         }
+
+        MLAdapter.itemClickListener = object : MainListAdapter.OnItemClickListener {
+            override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
+                val MLIntent = Intent(applicationContext, PickDateActivity::class.java)
+                MLIntent.putExtra("ListID", data.id)
+                MLIntent.putExtra("listPos", position)
+                startActivityForResult(MLIntent, REQUEST_CODE)
+            }
+
+            override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
+                val deleteListDialog =
+                        layoutInflater.inflate(R.layout.delete_list_dialog, null)
+                val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
+                val item = listResults[position]
+                var deleteMessage = "'"+item!!.title+deleteListText.text
+                deleteListText.text = deleteMessage
+
+                if(deleteListDialog.parent != null){
+                    (deleteListDialog.parent as ViewGroup).removeView(deleteListDialog)
+                }
+                builder.setView(deleteListDialog)
+                        .setPositiveButton("삭제") { dialogInterface, _ ->
+                            realm.beginTransaction()
+
+                            realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                            realm.where(T_Money::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                            realm.where(T_Photo::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                            realm.where(T_Plan::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                            item.deleteFromRealm()
+                            realm.commitTransaction()
+                            if(listResults.size == 0) {
+                                ML_rView.visibility = View.GONE
+                                startText.visibility = View.VISIBLE
+                            } else {
+                                ML_rView.visibility = View.VISIBLE
+                                startText.visibility = View.GONE
+                            }
+                        }
+                        .setNegativeButton("취소") { dialogInterface, i ->
+
+                        }
+                        .show()
+            }
+
+
+
+            override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
+                if(addListDialog.parent != null){
+                    (addListDialog.parent as ViewGroup).removeView(addListDialog)
+                }
+                builder.setView(addListDialog)
+
+                addListText.text = "여행 수정"
+
+                val item = listResults[position]!!
+                addListTitle.setText(item!!.title)
+                curArray.clear()
+                for(i in 0 until item.currencys.size){
+                    curArray.add(item.currencys[i]!!)
+                    curTextArray[i].text = item.currencys[i]!!.code
+                    curTextArray[i].visibility = View.VISIBLE
+                }
+
+                dateStartEpoch = item.dateStart
+                dateEndEpoch = item.dateEnd
+
+                if(android.os.Build.VERSION.SDK_INT >= 26) {
+                    val dateFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                    val dateStart = LocalDate.ofEpochDay(dateStartEpoch!!)
+                    val dateEnd = LocalDate.ofEpochDay(dateEndEpoch!!)
+                    editStart.text = dateStart.format(dateFormat)
+                    editEnd.text = dateEnd.format(dateFormat)
+                }
+                else{
+                    val dateForamt = org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
+                    val dateStart = org.threeten.bp.LocalDate.ofEpochDay(dateStartEpoch!!)
+                    val dateEnd = org.threeten.bp.LocalDate.ofEpochDay(dateEndEpoch!!)
+                    editStart.text = dateStart.format(dateForamt)
+                    editEnd.text = dateEnd.format(dateForamt)
+                }
+
+
+
+                val cbuilder = builder.create()
+                cbuilder.setCanceledOnTouchOutside(false)
+                cbuilder.show()
+
+                cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                    if(addListTitle.text.trim().toString() == ""){
+                        Toast.makeText(applicationContext, "여행 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                    }
+                    else {
+                        if (dateStartEpoch != null && dateEndEpoch != null) {
+                            if (dateStartEpoch!! <= dateEndEpoch!!) {
+                                realm.beginTransaction()
+                                item.title = addListTitle.text.toString()
+                                item.dateStart = dateStartEpoch!!
+                                item.dateEnd = dateEndEpoch!!
+                                item.currencys.clear()
+                                for(i in curArray){
+                                    item.currencys.add(i)
+                                }
+                                realm.commitTransaction()
+                                realm.beginTransaction()
+                                realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
+                                realm.commitTransaction()
+                                val pnum = dateEndEpoch!! - dateStartEpoch!! + 1
+                                for (i in 1..pnum) {
+                                    realm.beginTransaction()
+                                    val newDay = realm.createObject(T_Day::class.java)
+                                    newDay.listID = item.id
+                                    newDay.date = dateStartEpoch!! + i -1
+                                    newDay.num = i.toInt()
+                                    realm.commitTransaction()
+                                }
+                                cbuilder.dismiss()
+                            } else {
+                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
+                            }
+                        } else {
+                            Toast.makeText(applicationContext, "시작일과 종료일 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+
+
+        }
+
+
     }
 }

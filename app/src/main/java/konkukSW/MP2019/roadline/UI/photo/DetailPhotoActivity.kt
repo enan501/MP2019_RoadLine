@@ -2,30 +2,22 @@ package konkukSW.MP2019.roadline.UI.photo
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.provider.ContactsContract
-import android.util.Log
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_detail_photo.*
-import kotlinx.coroutines.selects.select
-import java.text.DateFormat
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DetailPhotoActivity : AppCompatActivity() {
     lateinit var realm:Realm
@@ -64,15 +56,24 @@ class DetailPhotoActivity : AppCompatActivity() {
             R.id.first->{ //삭제하기
                 val builder = AlertDialog.Builder(this@DetailPhotoActivity)
                 builder.setMessage("삭제하시겠습니까?")
-                        .setPositiveButton("삭제") { dialogInterface, _ ->
+                        .setPositiveButton("삭제") { _, _ ->
                             val fragment = fAdapter.getItem(viewPager.currentItem) as ImageFragment
                             realm.beginTransaction()
                             photoResults.where().equalTo("id", fragment.getPhotoId()).findFirst()!!.deleteFromRealm()
                             realm.commitTransaction()
 
+                            fAdapter.removeItem(viewPager.currentItem)
+                            if(fAdapter.count == 0){
+                                finish()
+                            }
+                            else if(viewPager.currentItem >= fAdapter.count){
+                                viewPager.currentItem = fAdapter.count - 1
+                            }
+                            else{
+                                viewPager.currentItem = viewPager.currentItem + 1
+                            }
                         }
-                        .setNegativeButton("취소") { dialogInterface, i ->
-                        }
+                        .setNegativeButton("취소") { _, _ -> }
                 val dialog = builder.create()
                 dialog.show()
             }
@@ -88,11 +89,6 @@ class DetailPhotoActivity : AppCompatActivity() {
             }
             else->{ }
         }
-//        switch()
-//        if(item!!.itemId == android.R.id.home){
-//            finish()
-//        }
-//        else if ()
         return super.onOptionsItemSelected(item)
     }
 
@@ -105,7 +101,7 @@ class DetailPhotoActivity : AppCompatActivity() {
         isAll = i.getBooleanExtra("isAll", false)
         listId = i.getStringExtra("listId")
         if(isAll){
-            photoResults = realm.where(T_Photo::class.java).equalTo("listID", listId).findAll()!!.sort("dayNum").sort("dateTime")
+            photoResults = realm.where(T_Photo::class.java).equalTo("listID", listId).findAll()!!.sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
         }
         else{
             dayNum = i.getIntExtra("dayNum", -1)
@@ -138,14 +134,6 @@ class DetailPhotoActivity : AppCompatActivity() {
 
 
     fun initListener(){
-        photoResults.addChangeListener { t, changeSet ->
-            fAdapter.removeItem(viewPager.currentItem)
-            if(viewPager.currentItem >= fAdapter.count)
-                viewPager.currentItem = fAdapter.count - 1
-            else
-                viewPager.currentItem = viewPager.currentItem + 1
-        }
-
         viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -160,25 +148,6 @@ class DetailPhotoActivity : AppCompatActivity() {
                 fAdapter.notifyDataSetChanged()
             }
         })
-//        deleteButton.setOnClickListener {
-//            val builder = AlertDialog.Builder(this@DetailPhotoActivity)
-//            builder.setMessage("삭제하시겠습니까?")
-//                    .setPositiveButton("삭제") { dialogInterface, _ ->
-//                        val fragment = fAdapter.getItem(viewPager.currentItem) as ImageFragment
-//                        realm.beginTransaction()
-//                        photoResults.where().equalTo("id", fragment.getPhotoId()).findFirst()!!.deleteFromRealm()
-//                        realm.commitTransaction()
-//                        fAdapter.removeItem(viewPager.currentItem)
-//                        if(viewPager.currentItem >= fAdapter.count)
-//                            viewPager.currentItem = fAdapter.count - 1
-//                        else
-//                            viewPager.currentItem = viewPager.currentItem + 1
-//                    }
-//                    .setNegativeButton("취소") { dialogInterface, i ->
-//                    }
-//            val dialog = builder.create()
-//            dialog.show()
-//        }
     }
 
     fun setDateView(dateTime: Long){
