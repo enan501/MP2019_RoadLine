@@ -25,7 +25,6 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -41,7 +40,6 @@ class PickDateActivity : AppCompatActivity() {
     lateinit var dateList:ArrayList<PickDate>
     lateinit var PDAdapter: PickDateAdapter
     lateinit var realm: Realm
-    val dateFormat = SimpleDateFormat("yyyy.MM.dd")
     lateinit var thisList:T_List
     lateinit var dayResults: RealmResults<T_Day>
 
@@ -71,7 +69,7 @@ class PickDateActivity : AppCompatActivity() {
         ListID = intent.getStringExtra("ListID")
         listPos = intent.getIntExtra("listPos", -1)
 
-        dateList = arrayListOf(PickDate(ListID,0,"blank"),PickDate(ListID,0,"first"))
+        dateList = arrayListOf(PickDate(ListID,0,-1),PickDate(ListID,0,-1))
 
         realm = Realm.getDefaultInstance()
         thisList = realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!
@@ -79,10 +77,10 @@ class PickDateActivity : AppCompatActivity() {
                 .equalTo("listID", ListID)
                 .findAll().sort("num")
         for(T_Day in dayResults){
-            dateList.add(PickDate(ListID, T_Day.num, dateFormat.format(T_Day.date)))
+            dateList.add(PickDate(ListID, T_Day.num, T_Day.date))
         }
-        dateList.add(PickDate(ListID,-1,"ADD"))
-        dateList.add(PickDate(ListID,0,"last"))
+        dateList.add(PickDate(ListID,-1,-1))
+        dateList.add(PickDate(ListID,0,-1))
     }
 
     fun initLayout(){
@@ -129,14 +127,14 @@ class PickDateActivity : AppCompatActivity() {
                     val newDay: T_Day = realm.createObject(T_Day::class.java)
                     newDay.listID = data.listid
                     newDay.num = dateList[position-1].day + 1
-                    newDay.date = Date.from(LocalDate.parse(dateList[position - 1].date, DateTimeFormatter.ofPattern("yyyy.MM.dd")).plusDays(1)!!.atStartOfDay(ZoneId.systemDefault()).toInstant())
+                    newDay.date = dateList[position - 1].date + 1
                     realm.commitTransaction()
 
                     realm.beginTransaction()
                     thisList!!.dateEnd = newDay.date
                     realm.commitTransaction()
 
-                    dateList.add(position,PickDate(ListID, newDay.num, dateFormat.format(newDay.date)))
+                    dateList.add(position,PickDate(ListID, newDay.num, newDay.date))
                     PDAdapter.notifyDataSetChanged()
                 }
             }

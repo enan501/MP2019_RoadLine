@@ -24,20 +24,19 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import io.realm.Realm
 import io.realm.RealmResults
-import konkukSW.MP2019.roadline.Data.Adapter.MoneyListAdapter
+import konkukSW.MP2019.roadline.Data.Adapter.MoneyPhotoListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_photo.*
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
 
 class ShowPhotoActivity : AppCompatActivity() {
 
-    lateinit var rViewAdapter: MoneyListAdapter
+    lateinit var rViewAdapterPhoto: MoneyPhotoListAdapter
     lateinit var realm :Realm
     var ListID = ""
     var DayNum = 0
@@ -75,7 +74,7 @@ class ShowPhotoActivity : AppCompatActivity() {
             dayList =  realm.where(T_Day::class.java).equalTo("listID", ListID).equalTo("num", DayNum).findAll()!!
             isAll = false
         }
-        rViewAdapter = MoneyListAdapter(dayList, this@ShowPhotoActivity, isAll, false)
+        rViewAdapterPhoto = MoneyPhotoListAdapter(dayList, this@ShowPhotoActivity, isAll, false)
     }
 
     fun initPermission() {
@@ -131,7 +130,13 @@ class ShowPhotoActivity : AppCompatActivity() {
                 Table.listID = ListID
                 Table.dayNum = day_click
                 Table.img = getPathFromUri(data!!.data)
-                Table.date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
+                if(android.os.Build.VERSION.SDK_INT >= 26) {
+//                    Table.dateTime = LocalDate.now().toEpochDay()
+                    Table.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
+                }
+                else{
+                    Table.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
+                }
                 realm.commitTransaction()
             }
         }
@@ -146,8 +151,8 @@ class ShowPhotoActivity : AppCompatActivity() {
     }
 
     fun initListener() {
-        rViewAdapter.photoItemClickListener = object :MoneyListAdapter.OnPhotoItemClickListener{
-            override fun onButtonClick(holder: MoneyListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
+        rViewAdapterPhoto.photoItemClickListener = object :MoneyPhotoListAdapter.OnPhotoItemClickListener{
+            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
                 if(isAll){
                     day_click = position + 1
                 }
@@ -155,10 +160,6 @@ class ShowPhotoActivity : AppCompatActivity() {
                     day_click = DayNum
                 }
                 addImg()
-            }
-
-            override fun onPhotoItemClick(data: T_Photo) {
-                showImage(data)
             }
         }
     }
@@ -184,7 +185,7 @@ class ShowPhotoActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         photo_recycleView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        photo_recycleView.adapter = rViewAdapter
+        photo_recycleView.adapter = rViewAdapterPhoto
         val animator = photo_recycleView.itemAnimator
         if(animator is SimpleItemAnimator){
             animator.supportsChangeAnimations = false
@@ -192,37 +193,41 @@ class ShowPhotoActivity : AppCompatActivity() {
     }
 
 
-    fun showImage(item: T_Photo) {
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
-        val layout = inflater.inflate(R.layout.detail_photo_img, null) as ConstraintLayout //레이아웃 객체생성
-        layout.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-        addContentView(layout, lp) //레이아웃 위에 겹치기
-        layout.setOnClickListener {
-            (layout.parent as ViewManager).removeView(layout)
-        }
-        var imageView = layout.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
-        var textView2 = layout.findViewById<TextView>(R.id.textView2)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        textView2.text = dateFormat.format(item!!.date)
-        if (item.img == "")
-            imageView.setImageResource(R.drawable.logo)
-        else
-            imageView.setImageBitmap(BitmapFactory.decodeFile(item.img))
-
-        var button = layout.findViewById<Button>(R.id.selectMainImg)
-        button.setOnClickListener {
-            // 대표사진으로 설정하는 코드
-            realm.beginTransaction()
-            var list = realm.where(T_List::class.java).equalTo("id",item.listID).findFirst()
-            list!!.img = item.img
-            realm.commitTransaction()
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("대표사진으로 설정되었습니다.")
-            builder.setPositiveButton("확인") { _, _ ->
-            }.show()
-        }
+    fun showImage(item: T_Photo) { //얘를 갤러리뷰로 있는 인텐트로 바꾸기
+//        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
+//        val layout = inflater.inflate(R.layout.detail_photo_img, null) as ConstraintLayout //레이아웃 객체생성
+//        layout.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
+//        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
+//        addContentView(layout, lp) //레이아웃 위에 겹치기
+//        layout.setOnClickListener {
+//            (layout.parent as ViewManager).removeView(layout)
+//        }
+//        var imageView = layout.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
+//        var textView2 = layout.findViewById<TextView>(R.id.textView2)
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+//        textView2.text = dateFormat.format(item!!.date)
+//        if (item.img == "")
+//            imageView.setImageResource(R.drawable.logo)
+//        else
+//            imageView.setImageBitmap(BitmapFactory.decodeFile(item.img))
+//
+//        var button = layout.findViewById<Button>(R.id.selectMainImg)
+//        button.setOnClickListener {
+//            // 대표사진으로 설정하는 코드
+//            realm.beginTransaction()
+//            var list = realm.where(T_List::class.java).equalTo("id",item.listID).findFirst()
+//            list!!.img = item.img
+//            realm.commitTransaction()
+//            val builder = AlertDialog.Builder(this)
+//            builder.setMessage("대표사진으로 설정되었습니다.")
+//            builder.setPositiveButton("확인") { _, _ ->
+//            }.show()
+//        }
     }
+//
+//    fun showDetailImage(data: T_Photo, isAll: Boolean){
+//
+//    }
 }
 
 

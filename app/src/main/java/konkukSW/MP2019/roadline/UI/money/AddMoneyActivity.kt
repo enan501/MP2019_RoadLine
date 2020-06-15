@@ -29,9 +29,10 @@ import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.coroutines.selects.select
+import org.threeten.bp.LocalDate
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneId
 import java.util.*
 import kotlin.collections.ArrayList
@@ -275,7 +276,12 @@ class AddMoneyActivity : AppCompatActivity() {
             }
             moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
             moneyTable.cate = cate
-            moneyTable.date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
+            if(android.os.Build.VERSION.SDK_INT >= 26) {
+                moneyTable.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
+            }
+            else{
+                moneyTable.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
+            }
             realm.commitTransaction()
 
             if(img_url != ""){
@@ -284,7 +290,12 @@ class AddMoneyActivity : AppCompatActivity() {
                 photoTable.listID = listID
                 photoTable.dayNum = dayNum
                 photoTable.img = img_url
-                photoTable.date = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
+                if(android.os.Build.VERSION.SDK_INT >= 26) {
+                    photoTable.dateTime = LocalDate.now().toEpochDay()
+                }
+                else{
+                    photoTable.dateTime = LocalDate.now().toEpochDay()
+                }
                 realm.commitTransaction()
             }
             finish()

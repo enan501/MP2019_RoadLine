@@ -25,8 +25,9 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.DateFormat
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 
 class ShowDateActivity : AppCompatActivity() {
@@ -43,7 +44,6 @@ class ShowDateActivity : AppCompatActivity() {
     var down_x = 0f
     var up_x = 0f
     var title = ""
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
     lateinit var thisList: T_List
     lateinit var dayResults: RealmResults<T_Day>
 
@@ -73,7 +73,7 @@ class ShowDateActivity : AppCompatActivity() {
         setSupportActionBar(sd_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        tabLayer = findViewById(konkukSW.MP2019.roadline.R.id.sd_layout_tab)
+        tabLayer = findViewById(R.id.sd_layout_tab)
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
@@ -88,7 +88,16 @@ class ShowDateActivity : AppCompatActivity() {
         title = thisList.title
         title_view.text = title
         sd_textView1.text = "DAY " + DayNum.toString()
-        sd_textView2.text = dateFormat.format( dayResults.where().equalTo("num", DayNum).findFirst()!!.date)
+        if(android.os.Build.VERSION.SDK_INT >= 26) {
+            val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+            val date = LocalDate.ofEpochDay(dayResults.where().equalTo("num", DayNum).findFirst()!!.date)
+            sd_textView2.text = date.format(dateFormat)
+        }
+        else{
+            val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+            val date = org.threeten.bp.LocalDate.ofEpochDay(dayResults.where().equalTo("num", DayNum).findFirst()!!.date)
+            sd_textView2.text = date.format(dateFormat)
+        }
     }
 
     fun initLayout(){

@@ -15,21 +15,25 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import io.realm.Realm
 import io.realm.RealmResults
-import konkukSW.MP2019.roadline.Data.Adapter.MoneyListAdapter
+import konkukSW.MP2019.roadline.Data.Adapter.MoneyPhotoListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_money.*
+import org.threeten.bp.format.DateTimeFormatter
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.ZoneOffset
 import kotlin.math.roundToInt
 
 
 class ShowMoneyActivity : AppCompatActivity() {
 
-    lateinit var rViewAdapter: MoneyListAdapter
+    lateinit var rViewAdapterPhoto: MoneyPhotoListAdapter
     lateinit var realm :Realm
     var ListID = ""
     var DayNum = 0
@@ -73,13 +77,13 @@ class ShowMoneyActivity : AppCompatActivity() {
         for(j in moneyResults){
             totalMoney += (j.price * j.currency!!.rate)
         }
-        rViewAdapter = MoneyListAdapter(dayList, this@ShowMoneyActivity, isAll, true)
+        rViewAdapterPhoto = MoneyPhotoListAdapter(dayList, this@ShowMoneyActivity, isAll, true)
 
     }
 
     fun initListener() {
-        rViewAdapter.moneyItemClickListener = object :MoneyListAdapter.OnMoneyItemClickListener{
-            override fun onButtonClick(holder: MoneyListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
+        rViewAdapterPhoto.moneyItemClickListener = object :MoneyPhotoListAdapter.OnMoneyItemClickListener{
+            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
                 val intent = Intent(this@ShowMoneyActivity, AddMoneyActivity::class.java)
                 intent.putExtra("pos", position)
                 intent.putExtra("ListID", data.listID)
@@ -92,7 +96,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 showImage(data)
             }
         }
-        rViewAdapter.totalViewChangeListener = object :MoneyListAdapter.OnTotalViewChangeListener{
+        rViewAdapterPhoto.totalViewChangeListener = object :MoneyPhotoListAdapter.OnTotalViewChangeListener{
             override fun onTotalViewChange(position: Int) {
                 changeTotalView(position)
             }
@@ -126,7 +130,7 @@ class ShowMoneyActivity : AppCompatActivity() {
         supportActionBar!!.title = "가계부"
 
         money_recycleView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        money_recycleView.adapter = rViewAdapter
+        money_recycleView.adapter = rViewAdapterPhoto
         val animator = money_recycleView.itemAnimator
         if(animator is SimpleItemAnimator){
             animator.supportsChangeAnimations = false
@@ -167,7 +171,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 inputTotalTextView(num)
 
                 if(isAll){
-                    for(i in 0 until rViewAdapter.itemCount){
+                    for(i in 0 until rViewAdapterPhoto.itemCount){
                         changeTotalView(i)
                     }
                 }
@@ -182,10 +186,10 @@ class ShowMoneyActivity : AppCompatActivity() {
             total += j.price * j.currency!!.rate
         }
         if(total.roundToInt().toString().length >= 6 || selectedCurrency.code == "KRW"){
-            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyListAdapter.ViewHolder).totalText.text = shortFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
+            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyPhotoListAdapter.ViewHolder).totalText.text = shortFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
         }
         else{
-            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyListAdapter.ViewHolder).totalText.text = longFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
+            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyPhotoListAdapter.ViewHolder).totalText.text = longFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
         }
     }
 
@@ -208,8 +212,16 @@ class ShowMoneyActivity : AppCompatActivity() {
         else{
             textView1.text =longFormat.format(num) + " " + item.currency!!.symbol
         }
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
-        textView2.text = dateFormat.format(item!!.date)
+        if(android.os.Build.VERSION.SDK_INT >= 26) {
+            val dateFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val dateTime = LocalDateTime.ofEpochSecond(item!!.dateTime, 0, ZoneOffset.of("+09:00"))
+            textView2.text = dateTime.format(dateFormat)
+        }
+        else{
+            val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            val dateTime = org.threeten.bp.LocalDateTime.ofEpochSecond(item!!.dateTime, 0, org.threeten.bp.ZoneOffset.of("+09:00"))
+            textView2.text = dateTime.format(dateFormat)
+        }
         if (item.img == "") {
             when (item.cate) {
                 "식사" -> imageView.setImageResource(R.drawable.meal_big)

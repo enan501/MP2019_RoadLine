@@ -10,8 +10,10 @@ open class T_List : RealmObject() {
     var id :String = ""
 
     var title: String = ""
-    var dateStart: Date = Date() //시작일
-    var dateEnd: Date = Date()//종료일
+//    var dateStart: Date = Date() //시작일
+//    var dateEnd: Date = Date() //종료일
+    var dateStart: Long = 0 //epochDay
+    var dateEnd: Long = 0
 //    var pos:Int = 0
     var img: String = ""
     var currencys:RealmList<T_Currency> = RealmList()

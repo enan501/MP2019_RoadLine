@@ -16,17 +16,15 @@ import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.R
-import java.text.SimpleDateFormat
+import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Context): RealmRecyclerViewAdapter<T_List, MainListAdapter.ViewHolder>(items, true) {
     var realm: Realm
-    var dateFormat: SimpleDateFormat
 
     init {
         Realm.init(context)
         realm = Realm.getDefaultInstance()
-        dateFormat = SimpleDateFormat("yyyy.MM.dd")
     }
 
     interface OnItemClickListener{
@@ -73,7 +71,19 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val item = getItem(p1)!!
         p0.title.text = item.title
-        p0.date.text = dateFormat.format(item.dateStart) + " ~ " + dateFormat.format(item.dateEnd)
+        if(android.os.Build.VERSION.SDK_INT >= 26) {
+            val dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            val dateSt = LocalDate.ofEpochDay(item.dateStart)
+            val dateEn = LocalDate.ofEpochDay(item.dateEnd)
+            p0.date.text = dateFormat.format(dateSt) + " ~ " + dateFormat.format(dateEn)
+        }
+        else{
+            val dateForamt = org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
+            val dateSt = org.threeten.bp.LocalDate.ofEpochDay(item.dateStart)
+            val dateEn = org.threeten.bp.LocalDate.ofEpochDay(item.dateEnd)
+            p0.date.text = dateSt.format(dateForamt) + " ~ " + dateEn.format(dateForamt)
+            Log.d("mytag", "myt" + item.dateStart.toString())
+        }
         if(getItem(p1)!!.img.isEmpty()){
             //TODO("대표이미지 설정")
             p0.image.setImageResource(R.drawable.ml_default_image)

@@ -152,7 +152,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             var location: android.location.Location? = null
             for (provider in providers) {
                 val l = lm!!.getLastKnownLocation(provider) ?: continue
-                if (location == null || l.getAccuracy() < location!!.getAccuracy()) {
+                if (location == null || l.accuracy < location!!.accuracy) {
                     // Found best last known location: %s", l);
                     location = l
                 }
@@ -318,8 +318,6 @@ class Fragment2 : androidx.fragment.app.Fragment() {
                     }
             val dialog = builder.create()
             dialog.show()
-
-
         }
     }
 

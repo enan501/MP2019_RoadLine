@@ -130,12 +130,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="15dp"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/mealBtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
                         android:button="@drawable/radio_meal" />
@@ -145,6 +147,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
+                        android:gravity="center"
                         android:layout_weight="1"
                         android:button="@drawable/radio_shopping" />
 
@@ -153,6 +156,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
+                        android:gravity="center"
                         android:layout_weight="1"
                         android:button="@drawable/radio_transport" />
 
@@ -161,6 +165,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
+                        android:gravity="center"
                         android:layout_weight="1"
                         android:button="@drawable/radio_tour" />
 
@@ -169,12 +174,14 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
+                        android:gravity="center"
                         android:layout_weight="1"
                         android:button="@drawable/radio_lodgment" />
 
                     <RadioButton
                         android:id="@+id/etcBtn"
                         android:layout_width="0dp"
+                        android:gravity="center"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
