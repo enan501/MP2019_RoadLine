@@ -62,9 +62,6 @@ class MainListActivity : AppCompatActivity() {
     var dateEndEpoch: Long? = null
 
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(konkukSW.MP2019.roadline.R.layout.activity_main_list)
@@ -164,12 +161,7 @@ class MainListActivity : AppCompatActivity() {
 
         builder = AlertDialog.Builder(this) //여행 추가 dialog
         addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
-        if(addListDialog.parent != null){
-            (addListDialog.parent as ViewGroup).removeView(addListDialog)
-        }
-        builder.setView(addListDialog)
-                .setPositiveButton("추가") { _, _ -> }
-                .setNegativeButton("취소") { _, _ -> }
+
         addListText = addListDialog.findViewById(R.id.AL_text)
         addListTitle = addListDialog.findViewById(R.id.AL_title)
         editStart = addListDialog.findViewById(R.id.editStart)
@@ -334,16 +326,19 @@ class MainListActivity : AppCompatActivity() {
     fun initListener() {
         ML_addListBtn.setOnClickListener {
             addListText.text = "여행 추가"
+
+            if(addListDialog.parent != null){
+                (addListDialog.parent as ViewGroup).removeView(addListDialog)
+            }
+            builder.setView(addListDialog)
+                    .setPositiveButton("추가") { _, _ -> }
+                    .setNegativeButton("취소") { _, _ -> }
             
             dateStartEpoch = null
             dateEndEpoch = null
 
             curArray.clear()
             curArray.add(korCur)
-
-            if(addListDialog.parent != null){
-                (addListDialog.parent as ViewGroup).removeView(addListDialog)
-            }
 
             val cbuilder = builder.create() //여행추가 다이얼로그
             cbuilder.setCanceledOnTouchOutside(false)
@@ -448,6 +443,8 @@ class MainListActivity : AppCompatActivity() {
                     (addListDialog.parent as ViewGroup).removeView(addListDialog)
                 }
                 builder.setView(addListDialog)
+                        .setPositiveButton("수정") { _, _ -> }
+                        .setNegativeButton("취소") { _, _ -> }
 
                 addListText.text = "여행 수정"
 
