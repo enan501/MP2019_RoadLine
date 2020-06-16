@@ -52,13 +52,22 @@
             <!--android:textColor="@color/colorPrimaryDark"-->
             <!--android:textSize="15sp" />-->
 
-        <Spinner
+        <!--<Spinner-->
+            <!--android:id="@+id/currencySpinner"-->
+            <!--android:background="@null"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:fontFamily="@font/nanum_square_round_r"-->
+            <!--android:spinnerMode="dialog" />-->
+        <com.toptoche.searchablespinnerlibrary.SearchableSpinner
             android:id="@+id/currencySpinner"
             android:background="@null"
+            android:spinnerMode="dialog"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/nanum_square_round_r"
-            android:spinnerMode="dialog" />
+            android:layout_height="match_parent">
+
+
+        </com.toptoche.searchablespinnerlibrary.SearchableSpinner>
     </LinearLayout>
 
     <LinearLayout

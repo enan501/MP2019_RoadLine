@@ -2,6 +2,7 @@ package konkukSW.MP2019.roadline.UI
 
 import android.app.DatePickerDialog
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
@@ -13,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -56,7 +58,8 @@ class MainListActivity : AppCompatActivity() {
     lateinit var addListText: TextView
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
-    lateinit var currencySpinner:Spinner
+//    lateinit var currencySpinner:Spinner
+    lateinit var currencySpinner: SearchableSpinner
     lateinit var korCur: T_Currency
     var dateStartEpoch: Long? = null
     var dateEndEpoch: Long? = null
@@ -175,6 +178,13 @@ class MainListActivity : AppCompatActivity() {
 
         currencySpinner = addListDialog.findViewById(R.id.currencySpinner)
         currencySpinner.adapter = currencyAdapter
+        if(Build.VERSION.SDK_INT >= 26) {
+            currencySpinner.setAutofillHints("화폐를 검색하세요")
+        }
+        else{
+            currencySpinner.setTitle("")
+        }
+        currencySpinner.setPositiveButton("취소")
         korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
 
         currencySpinner.setSelection(currencyAdapter.count)
@@ -213,6 +223,7 @@ class MainListActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
+
 
 
         curTextArray[0].setOnLongClickListener{
@@ -326,10 +337,14 @@ class MainListActivity : AppCompatActivity() {
     fun initListener() {
         ML_addListBtn.setOnClickListener {
             addListText.text = "여행 추가"
+            addListTitle.text.clear()
+            editStart.text = "시작일 입력하기"
+            editEnd.text = "종료일 입력하기"
 
             if(addListDialog.parent != null){
                 (addListDialog.parent as ViewGroup).removeView(addListDialog)
             }
+
             builder.setView(addListDialog)
                     .setPositiveButton("추가") { _, _ -> }
                     .setNegativeButton("취소") { _, _ -> }
@@ -339,6 +354,11 @@ class MainListActivity : AppCompatActivity() {
 
             curArray.clear()
             curArray.add(korCur)
+            curTextArray[0].text = korCur.code
+            curTextArray[0].visibility = View.VISIBLE
+            for(i in 1 until CURRENCY_MAX_SIZE){
+                curTextArray[i].visibility = View.INVISIBLE
+            }
 
             val cbuilder = builder.create() //여행추가 다이얼로그
             cbuilder.setCanceledOnTouchOutside(false)
@@ -451,6 +471,9 @@ class MainListActivity : AppCompatActivity() {
                 val item = listResults[position]!!
                 addListTitle.setText(item!!.title)
                 curArray.clear()
+                for(i in 0 until CURRENCY_MAX_SIZE){
+                    curTextArray[i].visibility = View.INVISIBLE
+                }
                 for(i in 0 until item.currencys.size){
                     curArray.add(item.currencys[i]!!)
                     curTextArray[i].text = item.currencys[i]!!.code
