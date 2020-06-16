@@ -1,15 +1,16 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
+import android.content.Intent
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat.startActivity
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
@@ -18,13 +19,14 @@ import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.photo.DetailPhotoActivity
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
-import kotlin.math.roundToInt
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
-class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Context, val isAll: Boolean, val isMoneyType: Boolean) : RealmRecyclerViewAdapter<T_Day, MoneyListAdapter.ViewHolder>(realmResult, true) {
+class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Context, val isAll: Boolean, val isMoneyType: Boolean) : RealmRecyclerViewAdapter<T_Day, MoneyPhotoListAdapter.ViewHolder>(realmResult, true) {
 
-    val dateFormat = SimpleDateFormat("yyyy-MM-dd")
 
     interface OnMoneyItemClickListener {
         fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
@@ -33,7 +35,6 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
 
     interface OnPhotoItemClickListener {
         fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
-        fun onPhotoItemClick(data: T_Photo)
     }
 
     interface OnTotalViewChangeListener{
@@ -83,10 +84,19 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
         if(p0 is ViewHolder){
             val item = getItem(p1)!!
             p0.dayNumText.text = "DAY" + item.num.toString()
-            p0.dateText.text = dateFormat.format(item.date)
+            if(android.os.Build.VERSION.SDK_INT >= 26) {
+                val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+                val date = LocalDate.ofEpochDay(item.date)
+                p0.dateText.text = date.format(dateFormat)
+            }
+            else{
+                val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+                val date = org.threeten.bp.LocalDate.ofEpochDay(item.date)
+                p0.dateText.text = date.format(dateFormat)
+            }
 
             if(isMoneyType){
-                val result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("date")
+                val result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("dateTime")
                 result.addChangeListener{ _ ->
                     totalViewChangeListener!!.onTotalViewChange(p1)
                 }
@@ -110,7 +120,8 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
                 }
             }
             else{
-                val result = realm.where(T_Photo::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("date")
+                val result = realm.where(T_Photo::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("dateTime")
+//                photoArray.add(result)
                 val photoAdapter = PhotoGridAdapter(result, context)
                 photoAdapter.itemClickListener = object :PhotoGridAdapter.OnItemClickListener{
                     override fun onItemClick(
@@ -119,8 +130,14 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
                             data: T_Photo,
                             position: Int
                     ) {
-                        photoItemClickListener!!.onPhotoItemClick(data)
-
+                        //intent
+                        val intent = Intent(view.context, DetailPhotoActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        intent.putExtra("isAll", isAll)
+                        intent.putExtra("photoId", data.id)
+                        intent.putExtra("listId", item.listID)
+                        intent.putExtra("dayNum", item.num)
+                        view.context.startActivity(intent)
                     }
                 }
                 p0.rView.adapter = photoAdapter
@@ -129,8 +146,8 @@ class MoneyListAdapter(realmResult:OrderedRealmCollection<T_Day>, val context:Co
             val animator = p0.rView.itemAnimator
             if(animator is SimpleItemAnimator){
                 animator.supportsChangeAnimations = false
-            }
             p0.rView.layoutManager = GridLayoutManager(context, 3)
+            }
         }
     }
 }

@@ -16,5 +16,5 @@ open class T_Money : RealmObject() {
     var img: String = ""
     var price: Double = 0.0 //원화
     var cate: String = ""
-    var date: Date = Date()
+    var dateTime: Long = 0
 }

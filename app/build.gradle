@@ -1,4 +1,3 @@
-
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
@@ -12,7 +11,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "konkuksw.mobileProgramming2019.roadline"
-        minSdkVersion 26
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -74,6 +73,13 @@ dependencies {
 
     //realm adapater
     implementation 'io.realm:android-adapters:2.0.0'
+
+    //localDate(api 25이하)
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
+
+    //gallery
+    implementation 'com.github.chrisbanes:PhotoView:2.1.3'
+
 }
 
 configurations.all {
@@ -87,6 +93,6 @@ configurations.all {
     }
 }
 
-
-
-
+dependencies {
+    implementation 'androidx.legacy:legacy-support-v4:+'
+}

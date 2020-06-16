@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
@@ -31,6 +32,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(konkukSW.MP2019.roadline.R.layout.activity_splash)
 
         Realm.init(this)
+        AndroidThreeTen.init(this)
         val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
         Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
         GlobalScope.launch(Dispatchers.Default) {
@@ -109,6 +111,7 @@ class SplashActivity : AppCompatActivity() {
                     var code = T_currency.code
                     T_currency.symbol = code
                     realm.commitTransaction()
+                    Log.d("mytag", "")
                 }
             }
         }
