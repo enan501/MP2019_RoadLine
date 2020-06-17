@@ -79,6 +79,7 @@ class ShowDateActivity : AppCompatActivity() {
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
         tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
+        tabLayer!!.tabGravity = TabLayout.GRAVITY_FILL
 
         listID = intent.getStringExtra("ListID")
         dayNum = intent.getIntExtra("DayNum", 0)

@@ -92,7 +92,7 @@
         app:tabIndicatorColor="@color/colorPrimary"
         app:tabMode="fixed"
         app:tabSelectedTextColor="@color/colorPrimary"
-        app:tabTextColor="#000000"></com.google.android.material.tabs.TabLayout>
+        app:tabTextColor="@color/black"/>
 
 
     <FrameLayout
