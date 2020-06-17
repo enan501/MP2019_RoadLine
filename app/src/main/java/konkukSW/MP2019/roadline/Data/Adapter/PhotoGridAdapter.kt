@@ -9,6 +9,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import com.bumptech.glide.Glide
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
@@ -48,7 +49,7 @@ class PhotoGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val contex
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         if(p0 is ViewHolder){
             val item = getItem(p1)!!
-            p0.priceImage.setImageBitmap(BitmapFactory.decodeFile(item.img))
+            Glide.with(context).load(item.img).into(p0.priceImage)
             p0.priceText.visibility = View.GONE
             p0.imgCover.visibility = View.GONE
         }

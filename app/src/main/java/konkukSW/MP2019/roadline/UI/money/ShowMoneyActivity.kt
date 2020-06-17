@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.*
 import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyPhotoListAdapter
@@ -232,7 +233,8 @@ class ShowMoneyActivity : AppCompatActivity() {
                 "기타" -> imageView.setImageResource(R.drawable.etc_big)
             }
         } else
-            imageView.setImageBitmap(BitmapFactory.decodeFile(item.img))
+            Glide.with(applicationContext).load(item.img).into(imageView)
+
     }
 
     fun inputTotalTextView(num:Double){

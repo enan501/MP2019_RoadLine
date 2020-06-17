@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmList
@@ -64,7 +65,7 @@ class MoneyGridAdapter (realmResult: OrderedRealmCollection<T_Money>, val contex
                 }
             }
             else{
-                p0.priceImage.setImageBitmap(BitmapFactory.decodeFile(item.img))
+                Glide.with(context).load(item.img).into(p0.priceImage)
             }
             val num = item.price
             if(num.roundToInt().toString().length >= 6){

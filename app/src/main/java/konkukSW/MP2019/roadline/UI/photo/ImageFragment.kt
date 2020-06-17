@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.bumptech.glide.Glide
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 
@@ -47,7 +48,7 @@ class ImageFragment : Fragment() {
 
     fun initLayout(){
         val imageView = v.findViewById<ImageView>(R.id.imageView)
-        imageView.setImageBitmap(BitmapFactory.decodeFile(imgSrc))
+        Glide.with(context).load(imgSrc).into(imageView)
     }
 
     fun getPhotoId() : String{

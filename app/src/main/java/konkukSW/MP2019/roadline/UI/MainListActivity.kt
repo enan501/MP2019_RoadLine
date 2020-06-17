@@ -1,7 +1,10 @@
 package konkukSW.MP2019.roadline.UI
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
+import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
 import androidx.core.content.ContextCompat
@@ -13,17 +16,22 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.recyclerview.widget.GridLayoutManager
+import com.bumptech.glide.Glide
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
-import konkukSW.MP2019.roadline.Data.Adapter.MainListAdapter
+import io.realm.kotlin.where
+import konkukSW.MP2019.roadline.Data.Adapter.*
 import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
+import kotlinx.android.synthetic.main.activity_show_money.*
+import kotlinx.android.synthetic.main.image_pick_dialog.*
 import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -42,8 +50,12 @@ class MainListActivity : AppCompatActivity() {
     lateinit var realm:Realm
     private val REQUEST_CODE = 123
     private val CURRENCY_MAX_SIZE = 5
+    private val TYPE_ADD = true
+    private  val TYPE_EDIT = false
     lateinit var listResults: RealmResults<T_List>
     lateinit var curResults: RealmResults<T_Currency>
+    var clickedPhoto : T_Photo? = null
+    lateinit var photoResults: RealmResults<T_Photo>
     var nowYear = 0
     var nowMonth = 0
     var nowDay = 0
@@ -55,14 +67,14 @@ class MainListActivity : AppCompatActivity() {
     lateinit var editStart: TextView
     lateinit var editEnd: TextView
     val curTextArray = arrayListOf<TextView>()
-    lateinit var addListText: TextView
+    lateinit var imageView: ImageView
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
-//    lateinit var currencySpinner:Spinner
     lateinit var currencySpinner: SearchableSpinner
     lateinit var korCur: T_Currency
     var dateStartEpoch: Long? = null
     var dateEndEpoch: Long? = null
+    lateinit var imm :InputMethodManager
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -84,7 +96,8 @@ class MainListActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
         listResults = realm.where<T_List>(T_List::class.java).findAll().sort("dateStart")
         curResults = realm.where<T_Currency>(T_Currency::class.java).findAll()
-        if(android.os.Build.VERSION.SDK_INT >= 26) {
+
+        if(Build.VERSION.SDK_INT >= 26) {
             nowYear = LocalDate.now().year
             nowMonth = LocalDate.now().monthValue - 1
             nowDay = LocalDate.now().dayOfMonth
@@ -97,6 +110,7 @@ class MainListActivity : AppCompatActivity() {
     }
 
     fun initLayout(){
+        imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val layoutManager = androidx.recyclerview.widget.LinearLayoutManager(
                 this, RecyclerView.VERTICAL, false
         )
@@ -128,21 +142,6 @@ class MainListActivity : AppCompatActivity() {
                 return convertView
             }
 
-//            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-//                var itemView:View
-//                if(convertView == null){
-//                    itemView = LayoutInflater.from(this@MainListActivity).inflate(android.R.layout.simple_spinner_dropdown_item, null)
-//                }
-//                else{
-//                    itemView = convertView
-//                }
-//                (itemView as TextView).text = getItem(position)
-//                if(position == 0){
-//                    (itemView as TextView).setTextColor(ContextCompat.getColor(this@MainListActivity, android.R.color.holo_red_dark))
-//                }
-//                return itemView
-//            }
-
             override fun getCount(): Int {
                 return super.getCount() - 1
             }
@@ -165,10 +164,10 @@ class MainListActivity : AppCompatActivity() {
         builder = AlertDialog.Builder(this) //여행 추가 dialog
         addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
 
-        addListText = addListDialog.findViewById(R.id.AL_text)
         addListTitle = addListDialog.findViewById(R.id.AL_title)
         editStart = addListDialog.findViewById(R.id.editStart)
         editEnd = addListDialog.findViewById(R.id.editEnd)
+        imageView = addListDialog.findViewById(R.id.imageView)
 
         curTextArray.add(addListDialog.findViewById(R.id.curText0))
         curTextArray.add(addListDialog.findViewById(R.id.curText1))
@@ -336,10 +335,10 @@ class MainListActivity : AppCompatActivity() {
 
     fun initListener() {
         ML_addListBtn.setOnClickListener {
-            addListText.text = "여행 추가"
             addListTitle.text.clear()
             editStart.text = "시작일 입력하기"
             editEnd.text = "종료일 입력하기"
+            imageView.setImageResource(R.drawable.ml_default_image)
 
             if(addListDialog.parent != null){
                 (addListDialog.parent as ViewGroup).removeView(addListDialog)
@@ -409,7 +408,10 @@ class MainListActivity : AppCompatActivity() {
                     }
                 }
             }
-
+            imageView.setOnClickListener {
+                showImagePickDialog(TYPE_ADD, null)
+            }
+            imm.hideSoftInputFromWindow(addListTitle.windowToken, 0)
 
         }
 
@@ -459,6 +461,7 @@ class MainListActivity : AppCompatActivity() {
 
 
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
+                photoResults = realm.where(T_Photo::class.java).equalTo("listID", data.id).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
                 if(addListDialog.parent != null){
                     (addListDialog.parent as ViewGroup).removeView(addListDialog)
                 }
@@ -466,10 +469,8 @@ class MainListActivity : AppCompatActivity() {
                         .setPositiveButton("수정") { _, _ -> }
                         .setNegativeButton("취소") { _, _ -> }
 
-                addListText.text = "여행 수정"
-
                 val item = listResults[position]!!
-                addListTitle.setText(item!!.title)
+                addListTitle.setText(item.title)
                 curArray.clear()
                 for(i in 0 until CURRENCY_MAX_SIZE){
                     curTextArray[i].visibility = View.INVISIBLE
@@ -483,7 +484,14 @@ class MainListActivity : AppCompatActivity() {
                 dateStartEpoch = item.dateStart
                 dateEndEpoch = item.dateEnd
 
-                if(android.os.Build.VERSION.SDK_INT >= 26) {
+                if(item.img == ""){
+                    imageView.setImageResource(R.drawable.ml_default_image)
+                }
+                else{
+                    Glide.with(applicationContext).load(item.img).into(imageView)
+                }
+
+                if(Build.VERSION.SDK_INT >= 26) {
                     val dateFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
                     val dateStart = LocalDate.ofEpochDay(dateStartEpoch!!)
                     val dateEnd = LocalDate.ofEpochDay(dateEndEpoch!!)
@@ -515,6 +523,9 @@ class MainListActivity : AppCompatActivity() {
                                 item.title = addListTitle.text.toString()
                                 item.dateStart = dateStartEpoch!!
                                 item.dateEnd = dateEndEpoch!!
+                                if(clickedPhoto != null){
+                                    item.img = clickedPhoto!!.img
+                                }
                                 item.currencys.clear()
                                 for(i in curArray){
                                     item.currencys.add(i)
@@ -541,11 +552,84 @@ class MainListActivity : AppCompatActivity() {
                         }
                     }
                 }
+                imageView.setOnClickListener {
+                    showImagePickDialog(TYPE_EDIT, item)
+                }
+                imm.hideSoftInputFromWindow(addListTitle.windowToken, 0)
             }
+        }
+    }
 
+    fun showImagePickDialog(type:Boolean, list:T_List?){
+        clickedPhoto = null
+        val imagePickBuilder = AlertDialog.Builder(this@MainListActivity)
+        val imagePickView = layoutInflater.inflate(R.layout.image_pick_dialog, null)
+        val pickImageView = imagePickView.findViewById<RecyclerView>(R.id.rView)
+        val backTextView = imagePickView.findViewById<TextView>(R.id.backTextView)
+        var photoAdapter: PhotoPickGridAdapter?
+        var isAvail = false
+        pickImageView.setHasFixedSize(true)
+        if(type == TYPE_ADD){
+            backTextView.visibility = View.VISIBLE
+            pickImageView.visibility = View.INVISIBLE
+        }
+        else{ //TYPE_EDIT
+            if(photoResults.size == 0){
+                backTextView.visibility = View.VISIBLE
+                pickImageView.visibility = View.INVISIBLE
+            }
+            else{
+                isAvail = true
+                backTextView.visibility = View.INVISIBLE
+                pickImageView.visibility = View.VISIBLE
+                photoAdapter = PhotoPickGridAdapter(photoResults, this@MainListActivity)
+                pickImageView.adapter = photoAdapter
+                pickImageView.layoutManager = GridLayoutManager(this@MainListActivity, 3)
 
+                photoAdapter.itemClickListener = object : PhotoPickGridAdapter.OnItemClickListener{
+                    override fun onItemClick(
+                            holder: PhotoPickGridAdapter.ViewHolder,
+                            view: View,
+                            data: T_Photo,
+                            position: Int,
+                            clickedPos: Int
+                    ) {
+                        clickedPhoto = data
+                        if(clickedPos != -1){
+                            (pickImageView.findViewHolderForAdapterPosition(clickedPos) as PhotoPickGridAdapter.ViewHolder).backImage.visibility = View.INVISIBLE
+                            (pickImageView.findViewHolderForAdapterPosition(clickedPos) as PhotoPickGridAdapter.ViewHolder).clickedState = false
+                        }
+                    }
+
+                    override fun onNothingClicked() {
+                        clickedPhoto = null
+                    }
+                }
+            }
         }
 
+        imagePickBuilder.setView(imagePickView)
+        if(isAvail) {
+            imagePickBuilder.setPositiveButton("추가"){_, _->}
+                    .setNegativeButton("취소"){_, _->}
+        }
+        else{
+            imagePickBuilder.setPositiveButton("확인"){_, _->}
+        }
+        val createdBuilder = imagePickBuilder.create() //여행추가 다이얼로그
+        createdBuilder.setCanceledOnTouchOutside(false)
+        createdBuilder.show()
 
+        if(isAvail){
+            createdBuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if(clickedPhoto == null){
+                    Toast.makeText(applicationContext, "사진을 선택해주세요", Toast.LENGTH_LONG).show()
+                }
+                else{
+                    createdBuilder.dismiss()
+                    Glide.with(applicationContext).load(clickedPhoto!!.img).into(imageView)
+                }
+            }
+        }
     }
 }
