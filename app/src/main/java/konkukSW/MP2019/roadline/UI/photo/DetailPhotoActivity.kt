@@ -129,7 +129,9 @@ class DetailPhotoActivity : AppCompatActivity() {
     fun initLayout(){
         setSupportActionBar(adp_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        setDateView(photoResults[selectedPos]!!.dateTime)
+//        setDateView(photoResults[selectedPos]!!.dateTime)
+        dayView.text = "Day" + photoResults[selectedPos]!!.dayNum
+
     }
 
 
@@ -143,27 +145,30 @@ class DetailPhotoActivity : AppCompatActivity() {
             }
 
             override fun onPageSelected(position: Int) {
-                setDateView(photoResults[position]!!.dateTime)
+//                setDateView(photoResults[position]!!.dateTime)
+                dayView.text = "Day" + photoResults[position]!!.dayNum
                 selectedPos = position
                 fAdapter.notifyDataSetChanged()
             }
         })
     }
 
-    fun setDateView(dateTime: Long){
-        if(android.os.Build.VERSION.SDK_INT >= 26) {
-            val dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
-            val dateTimeFormat = DateTimeFormatter.ofPattern("a HH시 mm분 ").withLocale(Locale.forLanguageTag("ko"))
-            val dateTime = LocalDateTime.ofEpochSecond(dateTime, 0, ZoneOffset.of("+09:00"))
-            dateView.text = dateFormat.format(dateTime)
-            dateTimeView.text = dateTimeFormat.format(dateTime)
-        }
-        else{
-            val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
-            val dateTimeFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("a HH시 mm분 ").withLocale(Locale.forLanguageTag("ko"))
-            val dateTime = org.threeten.bp.LocalDateTime.ofEpochSecond(dateTime, 0, org.threeten.bp.ZoneOffset.of("+09:00"))
-            dateView.text = dateFormat.format(dateTime)
-            dateTimeView.text = dateTimeFormat.format(dateTime)
-        }
-    }
+//    fun setDateView(dateTime: Long){
+//        if(android.os.Build.VERSION.SDK_INT >= 26) {
+//            val dateFormat = DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+//            val dateTimeFormat = DateTimeFormatter.ofPattern("a HH시 mm분 ").withLocale(Locale.forLanguageTag("ko"))
+//            val dateTime = LocalDateTime.ofEpochSecond(dateTime, 0, ZoneOffset.of("+09:00"))
+//            dateView.text = dateFormat.format(dateTime)
+//            dateTimeView.text = dateTimeFormat.format(dateTime)
+//        }
+//        else{
+//            val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("yyyy년 MM월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+//            val dateTimeFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("a HH시 mm분 ").withLocale(Locale.forLanguageTag("ko"))
+//            val dateTime = org.threeten.bp.LocalDateTime.ofEpochSecond(dateTime, 0, org.threeten.bp.ZoneOffset.of("+09:00"))
+//            dateView.text = dateFormat.format(dateTime)
+//            dateTimeView.text = dateTimeFormat.format(dateTime)
+//        }
+//    }
+
+
 }

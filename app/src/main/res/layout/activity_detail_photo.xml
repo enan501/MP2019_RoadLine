@@ -31,22 +31,30 @@
                     android:paddingVertical="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
+                    <!--<TextView-->
+                        <!--android:fontFamily="@font/nanum_square_round_r"-->
+                        <!--android:id="@+id/dateView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center|bottom"-->
+                        <!--android:text="6월 3일 토요일" />-->
+                    <!--<TextView-->
+                        <!--android:fontFamily="@font/nanum_square_round_r"-->
+                        <!--android:id="@+id/dateTimeView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="0dp"-->
+                        <!--android:layout_weight="1"-->
+                        <!--android:gravity="center|top"-->
+                        <!--android:text="23시 50분" />-->
                     <TextView
+                        android:id="@+id/dayView"
                         android:fontFamily="@font/nanum_square_round_r"
-                        android:id="@+id/dateView"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center|bottom"
-                        android:text="6월 3일 토요일" />
-                    <TextView
-                        android:fontFamily="@font/nanum_square_round_r"
-                        android:id="@+id/dateTimeView"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:gravity="center|top"
-                        android:text="23시 50분" />
+                        android:text="DAY 1"
+                        android:textSize="23dp"
+                        android:gravity="center"
+                        android:textColor="@color/lightGray"
+                        android:layout_width="match_parent" android:layout_height="match_parent"/>
                 </LinearLayout>
 
             </LinearLayout>
