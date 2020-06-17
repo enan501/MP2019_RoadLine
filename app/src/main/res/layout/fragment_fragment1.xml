@@ -1,58 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="konkukSW.MP2019.roadline.UI.date.Fragment1">
-
-    <LinearLayout
-        android:orientation="vertical"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_marginBottom="75dp"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context="konkukSW.MP2019.roadline.UI.date.Fragment1">
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_marginBottom="75dp"
-        android:layout_height="match_parent">
-
-        <ScrollView
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:overScrollMode="never"
+        android:scrollbars="none"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:overScrollMode="never"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RelativeLayout
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:descendantFocusability="blocksDescendants">
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/f1_rViewIcon"
-                        android:layout_width="50dp"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="never">
-
-                    </androidx.recyclerview.widget.RecyclerView>
-                </RelativeLayout>
-
-                <RelativeLayout
+                android:descendantFocusability="blocksDescendants">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/f1_rViewIcon"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:descendantFocusability="blocksDescendants">
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never">
+                </androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/f1_rView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:overScrollMode="never">
-
-                    </androidx.recyclerview.widget.RecyclerView>
-                </RelativeLayout>
-            </LinearLayout>
-        </ScrollView>
-    </LinearLayout>
-</FrameLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_marginRight="8dp"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/f1_rView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    android:overScrollMode="never">
+                </androidx.recyclerview.widget.RecyclerView>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

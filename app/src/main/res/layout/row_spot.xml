@@ -1,65 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:background="#fafafa"
-    android:orientation="vertical">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:id="@+id/linearLayout3"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="50dp"
+                                                   android:background="#fafafa">
 
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="match_parent"
-        android:layout_height="49.5dp"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_weight="0"
-            android:id="@+id/rs_spotTime"
-            android:layout_width="55dp"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:paddingHorizontal="5dp"
-            android:layout_height="35dp"
-            android:text="13:00"
-            android:textColor="@color/colorPrimary"
-            android:textSize="13sp" />
-        <TextView
-            android:layout_weight="1"
-            android:id="@+id/rs_spotName"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_gravity="center"
-            android:maxLines="1"
-            android:ellipsize="end"
-            android:gravity="left|center_vertical"
-            android:paddingHorizontal="5dp"
-            android:text="null"
-            android:textSize="17sp" />
 
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/rs_deleteBtn"
-            android:layout_gravity="center_vertical|right"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_weight="0"
-            app:srcCompat="@drawable/delete" />
+    <TextView
+        android:id="@+id/rs_spotTime"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        app:layout_constraintHorizontal_chainStyle="spread"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:gravity="center"
+        android:paddingHorizontal="5dp"
+        android:text="13:00" android:textColor="@color/colorPrimary"
+        android:textSize="13sp" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rs_spotName" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <TextView
+        android:id="@+id/rs_spotName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="7dp"
+        android:ellipsize="end"
+        android:gravity="left|center_vertical"
+        android:maxLines="1"
+        android:paddingHorizontal="5dp"
+        android:text="null" android:textSize="17sp"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@id/rs_dragBtn"
+        app:layout_constraintStart_toEndOf="@id/rs_spotTime" app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-            android:visibility="gone"
-            android:id="@+id/rs_dragBtn"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="8dp"
-            android:layout_weight="0"
-            android:background="@drawable/drag_icon" />
-    </LinearLayout>
+    <ImageView
+        android:id="@+id/rs_dragBtn"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/drag_icon"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.619" app:layout_constraintStart_toEndOf="@id/rs_spotName"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/rs_deleteBtn"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/rs_spotName"
+        app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/delete"/>
 
     <View
         android:id="@+id/view"
-        android:layout_marginRight="10dp"
-        style="@style/Divider"
+        android:layout_width="wrap_content"
         android:layout_height="0.5dp"
-        android:background="#A0505050" />
+        android:layout_marginEnd="10dp"
+        android:background="@color/lightGray" app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

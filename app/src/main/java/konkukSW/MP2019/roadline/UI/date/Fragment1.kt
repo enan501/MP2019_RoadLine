@@ -17,6 +17,7 @@ import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
 import android.widget.Adapter
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.DividerItemDecoration
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
@@ -109,6 +110,8 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         rView.layoutManager = layoutManager
         adapter = DateListAdapter(planList, context!!)
         rView.adapter = adapter
+
+
         rIconView = v.findViewById(R.id.f1_rViewIcon) as androidx.recyclerview.widget.RecyclerView
         val layoutManager2 = LinearLayoutManager(
                 activity!!,
@@ -145,14 +148,15 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 }
                 else{
                     for(i in 0..adapter.itemCount){
-                        val anim = ScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, 100.0f, 0.0f)
+//                        val anim = ScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, 100.0f, 0.0f)
+                        val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                         anim.duration = 300
                         val view = rView.findViewHolderForAdapterPosition(i)
                         if(view is DateListAdapter.ItemViewHolder){
-                            view.deleteBtn.startAnimation(anim)
+                            view.deleteBtn.visibility = View.INVISIBLE
+//                            view.deleteBtn.startAnimation(anim)
                             view.dragBtn.startAnimation(anim)
-                            view.deleteBtn.visibility = View.GONE
-                            view.dragBtn.visibility = View.GONE
+                            view.dragBtn.visibility = View.VISIBLE
                         }
                     }
                     editMode = false
@@ -175,9 +179,8 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                         val view = rView.findViewHolderForAdapterPosition(i)
                         if(view is DateListAdapter.ItemViewHolder){
                             view.deleteBtn.visibility = View.VISIBLE
-                            view.dragBtn.visibility = View.VISIBLE
+                            view.dragBtn.visibility = View.INVISIBLE
                             view.deleteBtn.startAnimation(anim)
-                            view.dragBtn.startAnimation(anim)
                         }
                     }
                     editMode = true
