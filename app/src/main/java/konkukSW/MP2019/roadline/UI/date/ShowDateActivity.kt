@@ -49,7 +49,7 @@ class ShowDateActivity : AppCompatActivity() {
     lateinit var thisList: T_List
     lateinit var dayResults: RealmResults<T_Day>
     lateinit var planResults:RealmResults<T_Plan>
-    val planResultsData = MutableLiveData<RealmResults<T_Plan>>()
+//    val planResultsData = MutableLiveData<RealmResults<T_Plan>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_date)
@@ -106,10 +106,10 @@ class ShowDateActivity : AppCompatActivity() {
                 .equalTo("dayNum", dayNum)
                 .findAll()
                 .sort("pos")
-        planResultsData.postValue(planResults)
-        planResults.addChangeListener { t->
-            planResultsData.postValue(t)
-        }
+//        planResultsData.postValue(planResults)
+//        planResults.addChangeListener { t->
+//            planResultsData.postValue(t)
+//        }
     }
 
     fun initLayout(){

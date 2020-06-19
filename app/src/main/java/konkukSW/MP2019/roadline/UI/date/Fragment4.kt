@@ -2,31 +2,23 @@ package konkukSW.MP2019.roadline.UI.date
 
 
 import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.util.Log
-import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import io.realm.Realm
-import io.realm.RealmResults
-import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import com.google.maps.android.ui.IconGenerator
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_show_date.*
-import kotlinx.android.synthetic.main.fragment_fragment4.*
 
 
 class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
@@ -69,10 +61,14 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
     }
 
     fun setObserve() {
-        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer {
+//        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer {
+//            setList()
+//            mapFragment.getMapAsync(this)
+//        })
+        (activity!! as ShowDateActivity).planResults.addChangeListener { t, changeSet ->
             setList()
             mapFragment.getMapAsync(this)
-        })
+        }
     }
 
     fun setList() {
@@ -87,7 +83,7 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
                             T_Plan.name,
                             T_Plan.locationX,
                             T_Plan.locationY,
-                            T_Plan.time,
+                            T_Plan.hour.toString() + ":" + T_Plan.minute.toString(),
                             T_Plan.memo,
                             T_Plan.pos,
                             -1,
@@ -133,22 +129,39 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
         var markerOptions = MarkerOptions()
         var boundsBuilder = LatLngBounds.builder()
 
-        val bitmapDraw = ContextCompat.getDrawable(
-                activity!!.applicationContext,
-                R.drawable.marker
-        ) as BitmapDrawable
-        val b = bitmapDraw.bitmap
-        val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
+        val text = TextView(context)
+        text.text = ""
+        val generator = IconGenerator(context)
+        generator.setBackground(context!!.getDrawable(R.drawable.marker))
+        generator.setContentView(text)
+//        val icon = generator.makeIcon()
+        val icon = Bitmap.createScaledBitmap(generator.makeIcon(), 71, 100, false)
+//
+//        val bitmapDraw = ContextCompat.getDrawable(
+//                activity!!.applicationContext,
+//                R.drawable.marker
+//        ) as BitmapDrawable
+//        val b = bitmapDraw.bitmap
+//        val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
 
+        var markerList: ArrayList<Marker> = ArrayList()
         for (i in 0..spotList.size - 1) {
             markerOptions
                     .position(latlngList[i])
                     .title(spotList[i].name)
                     .snippet(spotList[i].time)
-                    .icon(BitmapDescriptorFactory.fromBitmap(marker))
-            gMap.addMarker(markerOptions)
-
+                    .icon(BitmapDescriptorFactory.fromBitmap(icon))
+            markerList.add(gMap.addMarker(markerOptions))
             boundsBuilder.include(latlngList[i])
+        }
+        gMap.setOnMarkerClickListener {
+            val center = CameraUpdateFactory.newLatLng(it.position)
+            gMap.animateCamera(center)
+
+            for(i in markerList){
+                i.showInfoWindow()
+            }
+            true
         }
         if (spotList.isNotEmpty()) {
             var bounds = boundsBuilder.build()

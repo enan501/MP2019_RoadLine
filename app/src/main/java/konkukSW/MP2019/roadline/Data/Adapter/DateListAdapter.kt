@@ -80,6 +80,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
         val tuple = realm.where(T_Plan::class.java)
                 .equalTo("id", items[pos].id)
                 .findFirst()
+
         tuple!!.deleteFromRealm()
         realm.commitTransaction()
         items.removeAt(pos)
@@ -120,8 +121,16 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
     override fun onBindViewHolder(p0: androidx.recyclerview.widget.RecyclerView.ViewHolder, p1: Int) { //viewHolder의 내용 초기화
         Log.d("mytest", "onbindeviewholder " + p1.toString())
         if(p0 is ItemViewHolder) {
-            p0.spotName.text = items.get(p1).name
-            p0.spotTime.text = items.get(p1).time
+            p0.spotName.text = items[p1].name
+            p0.spotTime.text = items[p1].time
+            if(Fragment1.editMode){
+                p0.deleteBtn.visibility = View.VISIBLE
+                p0.dragBtn.visibility = View.INVISIBLE
+            }
+            else{
+                p0.deleteBtn.visibility = View.INVISIBLE
+                p0.dragBtn.visibility = View.VISIBLE
+            }
         }
     }
 
@@ -145,10 +154,7 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
             deleteBtn = itemView.findViewById(R.id.rs_deleteBtn)
             spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
-            if(Fragment1.editMode){
-                dragBtn.visibility = View.VISIBLE
-                deleteBtn.visibility = View.VISIBLE
-            }
+
             dragBtn.setOnTouchListener { _, event ->
                 if(event.action == MotionEvent.ACTION_DOWN){
                     itemDragListener?.onStartDrag(this)
@@ -172,8 +178,8 @@ class DateListAdapter(val items:ArrayList<Plan>, val context: Context): androidx
                         .show()
             }
             itemView.setOnClickListener {
-                Log.d("mytest", adapterPosition.toString())
-                itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
+                if(adapterPosition in 0 until items.size)
+                    itemClickListener?.OnItemClick(this, it, items[adapterPosition], adapterPosition)
             }
             itemView.setOnLongClickListener {_ ->
                 itemLongClickListener?.onItemLongClick()

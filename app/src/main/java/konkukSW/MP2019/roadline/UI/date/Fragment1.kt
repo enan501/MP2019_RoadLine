@@ -71,10 +71,13 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         initSwipe()
     }
     fun setObserve(){
-        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer{
-            setList()
+        (activity!! as ShowDateActivity).planResults.addChangeListener { _, _->
             adapter.notifyDataSetChanged()
-        })
+        }
+//        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer{
+//            setList()
+//            adapter.notifyDataSetChanged()
+//        })
     }
     fun initData(){
         editMode = false
@@ -91,7 +94,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         planList.clear()
         for(T_Plan in (activity!! as ShowDateActivity).planResults){
             planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
-                    T_Plan.locationX, T_Plan.locationY, T_Plan.time, T_Plan.memo, T_Plan.pos, -1, false))
+                    T_Plan.locationX, T_Plan.locationY, T_Plan.hour.toString() + ":" + T_Plan.minute.toString(), T_Plan.memo, T_Plan.pos, -1, false))
         }
         if(planList.size == 1)
             planList.get(0).viewType = TYPE_ONE
@@ -144,17 +147,16 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                     i.putExtra("ListID", listID)
                     i.putExtra("path", 1)
                     i.putExtra("pos", position)
+                    i.putExtra("planId", data.id)
                     startActivityForResult(i, 123)
                 }
                 else{
                     for(i in 0..adapter.itemCount){
-//                        val anim = ScaleAnimation(1.0f, 0.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                         val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                         anim.duration = 300
                         val view = rView.findViewHolderForAdapterPosition(i)
                         if(view is DateListAdapter.ItemViewHolder){
                             view.deleteBtn.visibility = View.INVISIBLE
-//                            view.deleteBtn.startAnimation(anim)
                             view.dragBtn.startAnimation(anim)
                             view.dragBtn.visibility = View.VISIBLE
                         }

@@ -49,7 +49,6 @@
             android:layout_height="wrap_content"
             android:layout_margin="3dp"
             app:cardCornerRadius="5dp">
-
             <fragment
                 android:id="@+id/AS_SearchBox"
                 android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
