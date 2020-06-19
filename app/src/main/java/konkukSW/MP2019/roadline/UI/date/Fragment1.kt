@@ -23,9 +23,11 @@ import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
+import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.fragment_fragment2.*
 import kotlinx.android.synthetic.main.row_spot.*
 
 class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
@@ -34,11 +36,12 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     private val TYPE_END = -3
     //private val TYPE_MID = -1
 
-    var planList:ArrayList<Plan> = arrayListOf()
-    lateinit var adapter:DateListAdapter
+//    var planList:ArrayList<Plan> = arrayListOf()
+//    lateinit var adapter:DateListAdapter
+    lateinit var planAdapter: PlanListAdapter
     lateinit var iconAdapter: DateIconListAdapter
-    lateinit var rView: androidx.recyclerview.widget.RecyclerView
-    lateinit var rIconView: androidx.recyclerview.widget.RecyclerView
+    lateinit var rView: RecyclerView
+    lateinit var rIconView: RecyclerView
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
@@ -72,12 +75,9 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
     fun setObserve(){
         (activity!! as ShowDateActivity).planResults.addChangeListener { _, _->
-            adapter.notifyDataSetChanged()
+            iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, context!!)
+            rIconView.adapter = iconAdapter
         }
-//        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer{
-//            setList()
-//            adapter.notifyDataSetChanged()
-//        })
     }
     fun initData(){
         editMode = false
@@ -88,21 +88,21 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 dayNum = intent.getIntExtra("DayNum", 0)
             }
         }
-        setList()
+//        setList()
     }
-    fun setList(){
-        planList.clear()
-        for(T_Plan in (activity!! as ShowDateActivity).planResults){
-            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
-                    T_Plan.locationX, T_Plan.locationY, T_Plan.hour.toString() + ":" + T_Plan.minute.toString(), T_Plan.memo, T_Plan.pos, -1, false))
-        }
-        if(planList.size == 1)
-            planList.get(0).viewType = TYPE_ONE
-        else if(planList.size > 1){
-            planList.get(0).viewType = TYPE_START
-            planList.get(planList.size - 1).viewType = TYPE_END
-        }
-    }
+//    fun setList(){
+//        planList.clear()
+//        for(T_Plan in (activity!! as ShowDateActivity).planResults){
+//            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
+//                    T_Plan.locationX, T_Plan.locationY, T_Plan.hour.toString() + ":" + T_Plan.minute.toString(), T_Plan.memo, T_Plan.pos, -1, false))
+//        }
+//        if(planList.size == 1)
+//            planList.get(0).viewType = TYPE_ONE
+//        else if(planList.size > 1){
+//            planList.get(0).viewType = TYPE_START
+//            planList.get(planList.size - 1).viewType = TYPE_END
+//        }
+//    }
     fun initLayout(){
         rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
         val layoutManager = LinearLayoutManager(
@@ -111,8 +111,9 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 false
         )
         rView.layoutManager = layoutManager
-        adapter = DateListAdapter(planList, context!!)
-        rView.adapter = adapter
+//        adapter = DateListAdapter(planList, context!!)
+        planAdapter = PlanListAdapter((activity!! as ShowDateActivity).planResults, context!!)
+        rView.adapter = planAdapter
 
 
         rIconView = v.findViewById(R.id.f1_rViewIcon) as androidx.recyclerview.widget.RecyclerView
@@ -122,40 +123,36 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 false
         )
         rIconView.layoutManager = layoutManager2
-        iconAdapter = DateIconListAdapter(planList.size, context!!)
+        iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, context!!)
         rIconView.adapter = iconAdapter
     }
 
     fun addListener(){
-        adapter.itemClickListener = object : DateListAdapter.OnItemClickListener{
-            //addBtn 클릭했을 때
-            override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
+        planAdapter.itemClickListener = object : PlanListAdapter.OnItemClickListener{
+            override fun OnItemClick(holder: PlanListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
-                i.putExtra("pos", planList.size)
+                Log.d("mytag", (planAdapter.itemCount - 1).toString())
+                i.putExtra("pos", planAdapter.itemCount - 1)
                 i.putExtra("DayNum", dayNum)
                 i.putExtra("ListID", listID)
                 startActivityForResult(i,123)
             }
 
-            //리사이클러뷰 아이템 클릭했을 때
-            override fun OnItemClick(holder: DateListAdapter.ItemViewHolder, view: View, data: Plan, position: Int) {
-                Log.d("mytest", "click")
+            override fun OnItemClick(holder: PlanListAdapter.ItemViewHolder, view: View, data: T_Plan, position: Int) {
                 if(!editMode){
                     val i = Intent(activity, AddSpotActivity::class.java)
-                    i.putExtra("spot", data)
                     i.putExtra("DayNum", dayNum)
                     i.putExtra("ListID", listID)
-                    i.putExtra("path", 1)
                     i.putExtra("pos", position)
                     i.putExtra("planId", data.id)
                     startActivityForResult(i, 123)
                 }
                 else{
-                    for(i in 0..adapter.itemCount){
+                    for(i in 0 until planAdapter.itemCount - 1){
                         val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                         anim.duration = 300
                         val view = rView.findViewHolderForAdapterPosition(i)
-                        if(view is DateListAdapter.ItemViewHolder){
+                        if(view is PlanListAdapter.ItemViewHolder){
                             view.deleteBtn.visibility = View.INVISIBLE
                             view.dragBtn.startAnimation(anim)
                             view.dragBtn.visibility = View.VISIBLE
@@ -166,20 +163,20 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             }
         }
 
-        adapter.itemDragListener = object : DateListAdapter.OnItemDragListener {
-            override fun onStartDrag(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
+        planAdapter.itemDragListener = object :PlanListAdapter.OnItemDragListener{
+            override fun onStartDrag(holder: RecyclerView.ViewHolder) {
                 itemTouchHelper.startDrag(holder)
             }
         }
-        adapter.itemLongClickListener = object : DateListAdapter.OnItemLongClickListener {
+
+        planAdapter.itemLongClickListener = object : PlanListAdapter.OnItemLongClickListener{
             override fun onItemLongClick() {
-                Log.d("mytest", "longclick" + editMode.toString())
                 if(!editMode){
                     val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                     anim.duration = 300
-                    for(i in 0..adapter.itemCount){
+                    for(i in 0 until planAdapter.itemCount - 1){
                         val view = rView.findViewHolderForAdapterPosition(i)
-                        if(view is DateListAdapter.ItemViewHolder){
+                        if(view is PlanListAdapter.ItemViewHolder){
                             view.deleteBtn.visibility = View.VISIBLE
                             view.dragBtn.visibility = View.INVISIBLE
                             view.deleteBtn.startAnimation(anim)
@@ -190,17 +187,85 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             }
         }
 
-        adapter.itemChangeListener = object :DateListAdapter.OnItemChangeListener{
+        planAdapter.itemChangeListener = object :PlanListAdapter.OnItemChangeListener{
             override fun onItemChange() {
-                Log.d("mytest", "planlist size(delete) : " + planList.size.toString())
-                iconAdapter = DateIconListAdapter(planList.size, context!!)
-                rIconView.adapter = iconAdapter
+
             }
         }
+//        adapter.itemClickListener = object : DateListAdapter.OnItemClickListener{
+//            //addBtn 클릭했을 때
+//            override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
+//                val i = Intent(activity, AddSpotActivity::class.java)
+//                i.putExtra("pos", planList.size)
+//                i.putExtra("DayNum", dayNum)
+//                i.putExtra("ListID", listID)
+//                startActivityForResult(i,123)
+//            }
+//
+//            //리사이클러뷰 아이템 클릭했을 때
+//            override fun OnItemClick(holder: DateListAdapter.ItemViewHolder, view: View, data: Plan, position: Int) {
+//                Log.d("mytest", "click")
+//                if(!editMode){
+//                    val i = Intent(activity, AddSpotActivity::class.java)
+//                    i.putExtra("spot", data)
+//                    i.putExtra("DayNum", dayNum)
+//                    i.putExtra("ListID", listID)
+//                    i.putExtra("path", 1)
+//                    i.putExtra("pos", position)
+//                    i.putExtra("planId", data.id)
+//                    startActivityForResult(i, 123)
+//                }
+//                else{
+//                    for(i in 0..adapter.itemCount){
+//                        val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
+//                        anim.duration = 300
+//                        val view = rView.findViewHolderForAdapterPosition(i)
+//                        if(view is DateListAdapter.ItemViewHolder){
+//                            view.deleteBtn.visibility = View.INVISIBLE
+//                            view.dragBtn.startAnimation(anim)
+//                            view.dragBtn.visibility = View.VISIBLE
+//                        }
+//                    }
+//                    editMode = false
+//                }
+//            }
+//        }
+//
+//        adapter.itemDragListener = object : DateListAdapter.OnItemDragListener {
+//            override fun onStartDrag(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
+//                itemTouchHelper.startDrag(holder)
+//            }
+//        }
+//        adapter.itemLongClickListener = object : DateListAdapter.OnItemLongClickListener {
+//            override fun onItemLongClick() {
+//                Log.d("mytest", "longclick" + editMode.toString())
+//                if(!editMode){
+//                    val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
+//                    anim.duration = 300
+//                    for(i in 0..adapter.itemCount){
+//                        val view = rView.findViewHolderForAdapterPosition(i)
+//                        if(view is DateListAdapter.ItemViewHolder){
+//                            view.deleteBtn.visibility = View.VISIBLE
+//                            view.dragBtn.visibility = View.INVISIBLE
+//                            view.deleteBtn.startAnimation(anim)
+//                        }
+//                    }
+//                    editMode = true
+//                }
+//            }
+//        }
+//
+//        adapter.itemChangeListener = object :DateListAdapter.OnItemChangeListener{
+//            override fun onItemChange() {
+//                Log.d("mytest", "planlist size(delete) : " + planList.size.toString())
+//                iconAdapter = DateIconListAdapter(planList.size, context!!)
+//                rIconView.adapter = iconAdapter
+//            }
+//        }
     }
 
     fun initSwipe(){
-        callback = DateItemTouchHelperCallback(adapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
+        callback = DateItemTouchHelperCallback(planAdapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
     }
@@ -209,15 +274,15 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 123) {
             if(resultCode == Activity.RESULT_OK) {
-                refresh()
+//                refresh()
             }
         }
     }
 
-    fun refresh() {
-        val ft = fragmentManager!!.beginTransaction()
-        ft.detach(this).attach(this).commit()
-    }
+//    fun refresh() {
+////        val ft = fragmentManager!!.beginTransaction()
+////        ft.detach(this).attach(this).commit()
+//    }
 
     fun combineImage(first:Bitmap, second:Bitmap):Bitmap?{
         val result = Bitmap.createBitmap(first.width + second.width, first.height, Bitmap.Config.ARGB_8888)
@@ -230,12 +295,13 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
     fun getScreenshot() : Bitmap?{
         val first = getScreenshotFromRecyclerView(rIconView, iconAdapter)
-        val second = getScreenshotFromRecyclerView(rView, adapter)
+        val second = getScreenshotFromRecyclerView(rView, planAdapter)
         val result = combineImage(first!!, second!!)
         return result
     }
 
-    fun getScreenshotFromRecyclerView(view: androidx.recyclerview.widget.RecyclerView, ad: androidx.recyclerview.widget.RecyclerView.Adapter<androidx.recyclerview.widget.RecyclerView.ViewHolder>): Bitmap? {
+    fun getScreenshotFromRecyclerView(view: RecyclerView, ad: RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
+
         var bigBitmap: Bitmap? = null
         val size = ad.itemCount - 1
         if(size == 0)
@@ -274,7 +340,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             iHeight += bitmap.getHeight()
             bitmap.recycle()
         }
+
         return bigBitmap
     }
-
 }

@@ -116,7 +116,7 @@ class ShowDateActivity : AppCompatActivity() {
         if(dayNum == maxDayNum){
             sd_rightImg.visibility = View.INVISIBLE
         }
-        else if(dayNum == 1){
+        if(dayNum == 1){
             sd_leftImg.visibility = View.INVISIBLE
         }
     }

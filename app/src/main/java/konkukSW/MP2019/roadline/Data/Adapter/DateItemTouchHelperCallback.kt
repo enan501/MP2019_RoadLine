@@ -11,7 +11,7 @@ import android.view.LayoutInflater
 import android.widget.TextView
 import konkukSW.MP2019.roadline.R
 
-class DateItemTouchHelperCallback(adapter: DateListAdapter, context:Context, dragDirs:Int, swipeDirs:Int) :ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs){
+class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dragDirs:Int, swipeDirs:Int) :ItemTouchHelper.SimpleCallback(dragDirs, swipeDirs){
 
     override fun isLongPressDragEnabled(): Boolean {
         return false
