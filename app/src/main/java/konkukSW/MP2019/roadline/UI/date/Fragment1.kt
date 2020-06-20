@@ -19,6 +19,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.fragment_fragment1.*
 
 class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     private val TYPE_ONE  = -2
@@ -55,6 +56,10 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         return v
     }
 
+    override fun onDestroy() {
+        (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
+        super.onDestroy()
+    }
 
     fun init(){
         setObserve()
@@ -155,6 +160,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         planAdapter.itemDragListener = object :PlanListAdapter.OnItemDragListener{
             override fun onStartDrag(holder: RecyclerView.ViewHolder) {
                 Log.d("mytag", "startdrag")
+                planAdapter.onDetachedFromRecyclerView(f1_rView)
                 itemTouchHelper.startDrag(holder)
             }
         }

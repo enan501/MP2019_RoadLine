@@ -24,7 +24,11 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
     }
 
     var itemClickListener : OnItemClickListener? = null
-
+    var realm: Realm
+    init{
+        Realm.init(context)
+        realm = Realm.getDefaultInstance()
+    }
     inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
@@ -53,8 +57,7 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
 
     fun removeItem(position: Int){
         val item = getItem(position)!!
-        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
+
 
         val builder = AlertDialog.Builder(context)
         builder.setMessage("삭제하시겠습니까?")

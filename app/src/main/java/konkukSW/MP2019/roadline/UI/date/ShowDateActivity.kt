@@ -70,7 +70,6 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
 
-
     fun initData() {
         setSupportActionBar(sd_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
