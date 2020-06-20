@@ -14,7 +14,6 @@ import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.Fragment1
 
@@ -49,6 +48,9 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     init {
         Realm.init(context)
         realm = Realm.getDefaultInstance()
+        for(i in 0..itemCount-2){
+            Log.d("mytag", "pos : " + getItem(i)!!.pos.toString())
+        }
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -96,40 +98,23 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     }
 
     fun moveItem(pos1:Int, pos2:Int){  //객체 두개 바꾸기 함수
-        if(pos2 < itemCount - 1){
-//            val item1 = items.get(pos1)
-//            items.removeAt(pos1)
-//            items.add(pos2, item1)
-//            notifyItemMoved(pos1, pos2)
-//            changePos()
+        if(pos2 in 0 until itemCount - 1 && pos1 in 0 until itemCount - 1){
+            Log.d("mytag", "moveItem!!")
             realm.beginTransaction()
-//            getItem(pos1)!!.pos = pos2
-//            getItem(pos2)!!.pos = pos1
+            val item1 = getItem(pos1)
+            val item2 = getItem(pos2)
             if(pos2 > pos1){
                 for(i in pos1 + 1 .. pos2){
                     getItem(i)!!.pos--
                 }
             }
             else{
-                for (i in pos2 .. pos1 - 1){
+                for (i in pos2 until pos1){
                     getItem(i)!!.pos++
                 }
             }
             getItem(pos1)!!.pos = pos2
             realm.commitTransaction()
-
-
-
-//            for(i in 0..items.size-1) {
-//                if (items.size == 1 && i == 0)
-//                    items.get(i).viewType = TYPE_ONE
-//                else if (items.size > 1 && i == items.size - 1)
-//                    items.get(i).viewType = TYPE_END
-//                else if (items.size > 1 && i == 0)
-//                    items.get(i).viewType = TYPE_START
-//                else if (items.size > 1)
-//                    items.get(i).viewType = TYPE_MID
-//            }
         }
     }
 

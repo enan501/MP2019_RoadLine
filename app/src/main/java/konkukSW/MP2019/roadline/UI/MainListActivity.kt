@@ -235,7 +235,6 @@ class MainListActivity : AppCompatActivity() {
                 val ynBuilder = AlertDialog.Builder(this)
                 ynBuilder.setMessage(curTextArray[i].text.toString() + " 화폐를 삭제하시겠습니까?")
                         .setPositiveButton("삭제") { dialogInterface, _ ->
-                            Log.d("mytag", "cur longclick")
                             val index = curArray.size - 1
                             curArray.removeAt(i)
                             curTextArray[index].visibility = View.INVISIBLE

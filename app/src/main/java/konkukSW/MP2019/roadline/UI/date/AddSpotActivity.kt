@@ -34,14 +34,10 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.R.id.places_autocomplete_search_input
-import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_add_spot.*
-import kotlinx.android.synthetic.main.activity_show_date.*
 import java.util.*
-import kotlin.math.min
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap

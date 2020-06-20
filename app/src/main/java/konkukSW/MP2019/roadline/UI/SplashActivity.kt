@@ -111,7 +111,6 @@ class SplashActivity : AppCompatActivity() {
                     var code = T_currency.code
                     T_currency.symbol = code
                     realm.commitTransaction()
-                    Log.d("mytag", "")
                 }
             }
         }

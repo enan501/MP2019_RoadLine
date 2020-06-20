@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.*
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -15,20 +14,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
-import android.widget.Adapter
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.DividerItemDecoration
-import io.realm.Realm
-import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
-import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.fragment_fragment2.*
-import kotlinx.android.synthetic.main.row_spot.*
 
 class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     private val TYPE_ONE  = -2
@@ -131,7 +121,6 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         planAdapter.itemClickListener = object : PlanListAdapter.OnItemClickListener{
             override fun OnItemClick(holder: PlanListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
-                Log.d("mytag", (planAdapter.itemCount - 1).toString())
                 i.putExtra("pos", planAdapter.itemCount - 1)
                 i.putExtra("DayNum", dayNum)
                 i.putExtra("ListID", listID)
@@ -165,6 +154,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
         planAdapter.itemDragListener = object :PlanListAdapter.OnItemDragListener{
             override fun onStartDrag(holder: RecyclerView.ViewHolder) {
+                Log.d("mytag", "startdrag")
                 itemTouchHelper.startDrag(holder)
             }
         }

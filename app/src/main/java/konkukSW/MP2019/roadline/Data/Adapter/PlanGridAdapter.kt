@@ -1,7 +1,6 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
-import android.location.LocationManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,11 +11,8 @@ import androidx.appcompat.app.AlertDialog
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
-import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import konkukSW.MP2019.roadline.UI.date.ShowDateActivity
 
 class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: Context) : RealmRecyclerViewAdapter<T_Plan, PlanGridAdapter.ViewHolder>(realmResult, false) {
 
@@ -79,7 +75,6 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("mytag", position.toString() + " : onbindviewholder")
         if(holder is ViewHolder){
             val rPos = convertPos(position)
 
@@ -133,7 +128,6 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
                         holder.roadImg.setImageResource(R.drawable.roadl_right_up)
                     }
                     else->{
-                        Log.d("mytag", "djfksdj")
                     }
                 }
                 if(position == 0){
@@ -146,11 +140,9 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
     override fun getItemCount(): Int {
         count = super.getItemCount()
         if(count % 10 in 6..9){
-            Log.d("mytag", ((count / 10 + 1) * 10).toString())
             return (count / 10 + 1) * 10
         }
         else{
-            Log.d("mytag", count.toString())
             return count
         }
     }

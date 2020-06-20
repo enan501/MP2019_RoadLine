@@ -10,13 +10,11 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.location.LocationManager
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.ScaleAnimation
 import android.widget.CheckBox
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -24,13 +22,8 @@ import androidx.collection.LruCache
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import io.realm.OrderedCollectionChangeSet
-import konkukSW.MP2019.roadline.Data.Adapter.DateListAdapter
-import konkukSW.MP2019.roadline.Data.Adapter.PhotoPickGridAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.PlanGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
-import kotlinx.android.synthetic.main.fragment_fragment2.*
 
 
 class Fragment2 : androidx.fragment.app.Fragment() {
@@ -143,13 +136,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
 
     fun initLayout(){
-        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as RecyclerView
+        timelineView = v.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as RecyclerView
         val layoutManager = GridLayoutManager(activity!!, 5)
         timelineView.layoutManager = layoutManager
         planAdapter = PlanGridAdapter((activity!! as ShowDateActivity).planResults, context!!)
         timelineView.adapter = planAdapter
 
-        gpsCheck = v!!.findViewById(konkukSW.MP2019.roadline.R.id.gps_check)
+        gpsCheck = v.findViewById(konkukSW.MP2019.roadline.R.id.gps_check)
         if((activity!! as ShowDateActivity).planResults.size == 0){
             gpsCheck.visibility = View.GONE
         }
@@ -165,8 +158,8 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             val providers = lm!!.getProviders(true)
             var location: android.location.Location? = null
             for (provider in providers) {
-                val l = lm!!.getLastKnownLocation(provider) ?: continue
-                if (location == null || l.accuracy < location!!.accuracy) {
+                val l = lm.getLastKnownLocation(provider) ?: continue
+                if (location == null || l.accuracy < location.accuracy) {
                     // Found best last known location: %s", l);
                     location = l
                 }
@@ -193,7 +186,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             }
         }
 
-        gpsCheck.setOnCheckedChangeListener { buttonView, isChecked ->
+        gpsCheck.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked)
                 human()
             else{
@@ -267,65 +260,61 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
     fun getScreenshotFromRecyclerView(): Bitmap? {
         var bigBitmap: Bitmap? = null
+        val size = planAdapter.itemCount
+        if(size == 0)
+            return null
+        var height = 0
+        val paint = Paint()
+        var iHeight = 0
+        var width = 0
+        var iWidth = 0
+        var rheight = 0
+        var rwidth = 0
+        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
-        if (planAdapter != null) {
-            val size = planAdapter.itemCount
-            if(size == 0)
-                return null
-            var height = 0
-            val paint = Paint()
-            var iHeight = 0
-            var width = 0
-            var iWidth = 0
-            var rheight = 0
-            var rwidth = 0
-            val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
-
-            // Use 1/8th of the available memory for this memory cache.
-            val cacheSize = maxMemory / 8
-            val bitmaCache = LruCache<String, Bitmap>(cacheSize)
-            var count:Int = 0
-            for (i in 0 until size) {
-                val holder = planAdapter.createViewHolder(timelineView, planAdapter.getItemViewType(i))
-                planAdapter.onBindViewHolder(holder, i)
-                holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(timelineView.width, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(timelineView.height, View.MeasureSpec.UNSPECIFIED)
-                )
-                holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
-                holder.itemView.isDrawingCacheEnabled = true
-                holder.itemView.buildDrawingCache()
-                val drawingCache = holder.itemView.drawingCache
-                if (drawingCache != null) {
-                    bitmaCache.put(i.toString(), drawingCache)
-                }
-                else{
-                    Log.d("mytag", "null : " + i.toString())
-                }
-                if(count % 5 == 0){
-                    height += holder.itemView.measuredHeight
-                    width = holder.itemView.measuredWidth
-                }else{
-                    width += holder.itemView.measuredWidth
-                }
-                count++
-                rheight = holder.itemView.measuredHeight
-                rwidth = holder.itemView.measuredWidth
+        // Use 1/8th of the available memory for this memory cache.
+        val cacheSize = maxMemory / 8
+        val bitmaCache = LruCache<String, Bitmap>(cacheSize)
+        var count:Int = 0
+        for (i in 0 until size) {
+            val holder = planAdapter.createViewHolder(timelineView, planAdapter.getItemViewType(i))
+            planAdapter.onBindViewHolder(holder, i)
+            holder.itemView.measure(
+                    View.MeasureSpec.makeMeasureSpec(timelineView.width, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(timelineView.height, View.MeasureSpec.UNSPECIFIED)
+            )
+            holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
+            holder.itemView.isDrawingCacheEnabled = true
+            holder.itemView.buildDrawingCache()
+            val drawingCache = holder.itemView.drawingCache
+            if (drawingCache != null) {
+                bitmaCache.put(i.toString(), drawingCache)
             }
-
-            bigBitmap = Bitmap.createBitmap(rwidth*5, height, Bitmap.Config.ARGB_8888)
-            val bigCanvas = Canvas(bigBitmap!!)
-            bigCanvas.drawColor(Color.WHITE)
-
-            for (i in 0 until size) {
-                val bitmap = bitmaCache.get(i.toString())
-                iHeight = (i/5)*rheight
-                iWidth = (i%5)*rwidth
-                Log.d("mytag", bitmap.toString())
-                bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
-                bitmap!!.recycle()
+            else{
+                Log.d("mytag", "null : " + i.toString())
             }
+            if(count % 5 == 0){
+                height += holder.itemView.measuredHeight
+                width = holder.itemView.measuredWidth
+            }else{
+                width += holder.itemView.measuredWidth
+            }
+            count++
+            rheight = holder.itemView.measuredHeight
+            rwidth = holder.itemView.measuredWidth
+        }
 
+        bigBitmap = Bitmap.createBitmap(rwidth*5, height, Bitmap.Config.ARGB_8888)
+        val bigCanvas = Canvas(bigBitmap!!)
+        bigCanvas.drawColor(Color.WHITE)
+
+        for (i in 0 until size) {
+            val bitmap = bitmaCache.get(i.toString())
+            iHeight = (i/5)*rheight
+            iWidth = (i%5)*rwidth
+            Log.d("mytag", bitmap.toString())
+            bigCanvas.drawBitmap(bitmap!!, iWidth.toFloat(), iHeight.toFloat(), paint)
+            bitmap!!.recycle()
         }
         return bigBitmap
     }
