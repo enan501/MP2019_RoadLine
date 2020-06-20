@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,12 +23,14 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
+import com.bumptech.glide.load.data.ExifOrientationStream
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyPhotoListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
+import konkukSW.MP2019.roadline.Extension.getExifOrientation
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_show_photo.*
 import java.time.LocalDateTime
@@ -130,6 +133,7 @@ class ShowPhotoActivity : AppCompatActivity() {
                 Table.listID = ListID
                 Table.dayNum = day_click
                 Table.img = getPathFromUri(data!!.data)
+//                Table.degree = data!!.data.getExifOrientation(this)
                 if(android.os.Build.VERSION.SDK_INT >= 26) {
 //                    Table.dateTime = LocalDate.now().toEpochDay()
                     Table.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
