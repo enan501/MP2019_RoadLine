@@ -11,49 +11,28 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.location.LocationManager
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AlertDialog
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.Log
-import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.Toast
-import androidx.lifecycle.Observer
-import io.realm.Realm
-import io.realm.RealmResults
-import konkukSW.MP2019.roadline.Data.Adapter.PlanAdapter
+import androidx.appcompat.app.AlertDialog
+import androidx.collection.LruCache
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import konkukSW.MP2019.roadline.Data.Adapter.PlanGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
-import kotlinx.android.synthetic.main.fragment_fragment2.*
+
 
 class Fragment2 : androidx.fragment.app.Fragment() {
 
     var ListID = "";
     var DayNum = 0;
     var LOCATION_REQUEST = 1234
-    lateinit var adapter: PlanAdapter
-    var data : ArrayList<Plan> = ArrayList()
+    lateinit var planAdapter:PlanGridAdapter
     lateinit var gpsCheck : CheckBox
-    var ViewTypeArray:Array<Int> = arrayOf(
-        2,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8,
-        0,0,0,5,6,0,0,0,7,8)
-    var position = 0
-    var lastPosition = 0 // 제일 마지막에 추가된 일정
-    var foldCount = 0 // 5가되면 foldFlag가 바뀐다.
-    var foldFlag = false // false : 오른쪽으로 추가 모드, true : 왼쪽으로 추가모드
-    var humanIndex = -1
 
     lateinit var v:View
     lateinit var timelineView : RecyclerView
@@ -71,22 +50,83 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         return v
     }
 
+//    fun refresh(){
+////        val ft = fragmentManager!!.beginTransaction()
+////        ft.detach(this).attach(this).commit()
+//    }
 
-    fun refresh(){
-        data.clear()
-        position = 0
-        foldFlag = false
-        foldCount = 0
-
-        val ft = fragmentManager!!.beginTransaction()
-        ft.detach(this).attach(this).commit()
-    }
     fun setObserve(){
-        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer{
-            setList()
-            adapter.notifyDataSetChanged()
-        })
+        (activity!! as ShowDateActivity).planResults.addChangeListener{t, changeSet->
+            gpsCheck.isChecked = false
+            planAdapter.notifyDataSetChanged()
+            if(t.size == 0){
+                gpsCheck.visibility = View.GONE
+            }
+            else{
+                gpsCheck.visibility = View.VISIBLE
+            }
+//            val modifications: Array<OrderedCollectionChangeSet.Range> = changeSet.changeRanges
+//            for (range in modifications) {
+//                Log.d("mytag", "itemCHange: " + range.startIndex.toString() +" " + range.length.toString())
+//                val rPos = convertPos(range.startIndex)
+//                if(range.length == 1){ //수정
+//                    planAdapter.notifyItemRangeChanged(rPos, range.length)
+//                }
+//                else{ //이동
+//                    var nPos = -1
+//                    if(range.startIndex % 10 in 0..4){
+//                        nPos = (range.startIndex / 10) * 10
+//                    }
+//                    else{
+//                        nPos = 5 + (range.startIndex / 10) * 10
+//                    }
+//                    Log.d("mytag", "itemChangeMove : " + nPos.toString() + " " + (rPos + range.length -1).toString())
+//                    planAdapter.notifyItemRangeChanged(nPos, rPos + range.length - nPos)
+//                }
+////                planAdapter.notifyItemRangeRemoved(range.startIndex, range.length)
+////                planAdapter.notifyItemChanged(rPos)
+//            }
+//
+//            val insertions = changeSet.insertionRanges
+//            for (range in insertions) {
+//                Log.d("mytag", "itemInsert: " + range.startIndex.toString() +" " + range.length.toString())
+//                val rPos = convertPos(range.startIndex)
+//                if(range.startIndex % 10 in 0..4){
+//                    if(rPos % 10 == 0){
+//                        if(rPos - 5 >= 0)
+//                            planAdapter.notifyItemChanged(rPos - 5)
+//                    }
+//                    else{
+//                        planAdapter.notifyItemChanged(rPos - 1)
+//                    }
+//                    planAdapter.notifyItemInserted(rPos)
+//                }
+//                else if(range.startIndex % 10 == 5){
+//                    planAdapter.notifyItemChanged(range.startIndex - 1)
+//                    planAdapter.notifyItemRangeInserted(rPos, 5)
+//                }
+//                else {
+//                    planAdapter.notifyItemChanged(rPos + 1)
+//                    planAdapter.notifyItemChanged(rPos)
+//                }
+//            }
+        }
     }
+
+//    fun convertPos(position:Int) : Int{
+//        when(position % 10){
+//            5 -> return position + 4
+//            6 -> return position + 2
+//            8 -> return position - 2
+//            9 -> return position - 4
+//            else -> return position
+//        }
+//    }
+    override fun onDestroy() {
+        (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
+        super.onDestroy()
+    }
+
     fun initData(){
         if(activity != null){
             val intent = activity!!.intent
@@ -96,53 +136,18 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             }
         }
 
-        setList()
     }
-    fun setList(){
-        data.clear()
-        position = 0
-        foldFlag = false
-        foldCount = 0
-        for(T_Plan in (activity!! as ShowDateActivity).planResults){
-            addItem(ListID, DayNum, T_Plan.id, T_Plan.name, T_Plan.locationX, T_Plan.locationY,
-                    T_Plan.time, T_Plan.memo)
-        }
 
 
-        if(data.size > 1) {
-            // 마지막 일정 모양 바꿔주기
-            if (foldFlag == true) {
-                if (foldCount == 0)
-                    data.get(lastPosition).viewType = 1
-                else if (foldCount == 1)
-                    data.get(lastPosition).viewType = 3
-                else
-                    data.get(lastPosition).viewType = 2
-
-            } else {
-                if (foldCount == 0)
-                    data.get(lastPosition).viewType = 2
-                else if (foldCount == 1)
-                    data.get(lastPosition).viewType = 4
-                else
-                    data.get(lastPosition).viewType = 1
-            }
-        }
-        else if(data.size == 1)
-        {
-            data.get(lastPosition).viewType = 10
-        }
-
-    }
     fun initLayout(){
-        timelineView = v!!.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager = androidx.recyclerview.widget.GridLayoutManager(activity!!, 5)
+        timelineView = v.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as RecyclerView
+        val layoutManager = GridLayoutManager(activity!!, 5)
         timelineView.layoutManager = layoutManager
-        adapter = PlanAdapter(data)
-        timelineView.adapter = adapter
+        planAdapter = PlanGridAdapter((activity!! as ShowDateActivity).planResults, context!!)
+        timelineView.adapter = planAdapter
 
-        gpsCheck = v!!.findViewById(konkukSW.MP2019.roadline.R.id.gps_check)
-        if(data.size == 0){
+        gpsCheck = v.findViewById(konkukSW.MP2019.roadline.R.id.gps_check)
+        if((activity!! as ShowDateActivity).planResults.size == 0){
             gpsCheck.visibility = View.GONE
         }
         else{
@@ -153,38 +158,17 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
     fun human(){
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
-
             val lm = context?.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
             val providers = lm!!.getProviders(true)
             var location: android.location.Location? = null
             for (provider in providers) {
-                val l = lm!!.getLastKnownLocation(provider) ?: continue
-                if (location == null || l.accuracy < location!!.accuracy) {
+                val l = lm.getLastKnownLocation(provider) ?: continue
+                if (location == null || l.accuracy < location.accuracy) {
                     // Found best last known location: %s", l);
                     location = l
                 }
             }
-            val clat = location!!.latitude
-            val clng = location!!.longitude
-            var latDif = data[0].locationY - clat
-            var lngDif = data[0].locationX - clng
-            var dif = latDif*latDif + lngDif*lngDif
-            var min = dif
-            var minIndex = 0
-            data[0].humanFlag = false
-            for(i in 1..data.size-1){
-                latDif = data[i].locationY - clat
-                lngDif = data[i].locationX - clng
-                data[i].humanFlag = false
-                dif = latDif*latDif+lngDif*lngDif
-                if(min>dif){
-                    min = dif
-                    minIndex = i
-                }
-            }
-            data[minIndex].humanFlag = true
-            adapter.notifyItemChanged(minIndex)
-            humanIndex = minIndex
+            planAdapter.setHuman(location)
         }
         else{
             initPermission()
@@ -192,87 +176,37 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
 
     fun addListener() {
-        adapter.itemClickListener = object : PlanAdapter.OnItemClickListener{
-            override fun OnItemClick(holder: PlanAdapter.ItemViewHolder, view: View, data: Plan, position: Int) {
-                showAddSpot(data, position)
+        planAdapter.itemClickListener = object : PlanGridAdapter.OnItemClickListener{
+            override fun OnItemClick(holder: PlanGridAdapter.ViewHolder, view: View, data: T_Plan, position: Int) {
+                Log.d("mytag", "Click")
+                val i = Intent(activity, AddSpotActivity::class.java)
+                i.putExtra("planId", data.id)
+                i.putExtra("DayNum", DayNum)
+                i.putExtra("ListID", ListID)
+                i.putExtra("path", 1)
+                i.putExtra("pos", position)
+                startActivityForResult(i, 123)
+                //showAddSpot()
             }
         }
-        gpsCheck.setOnCheckedChangeListener { buttonView, isChecked ->
+
+        gpsCheck.setOnCheckedChangeListener { _, isChecked ->
             if(isChecked)
                 human()
             else{
-                data[humanIndex].humanFlag = false
-                adapter.notifyItemChanged(humanIndex)
-                humanIndex = -1
+                val beforeHumanIndex = planAdapter.humanIndex
+                planAdapter.humanIndex = -1
+                planAdapter.notifyItemChanged(beforeHumanIndex)
             }
 
         }
     }
 
-    fun showAddSpot(data:Plan, position:Int)
-    {
-        val i = Intent(activity, AddSpotActivity::class.java)
-        i.putExtra("spot", data)
-        i.putExtra("DayNum", DayNum)
-        i.putExtra("ListID", ListID)
-        i.putExtra("path", 1)
-        i.putExtra("pos", position)
-        startActivityForResult(i, 123)
-    }
-
-    fun addItem(listID:String, DayNum:Int, id:String, name:String, locaX:Double, locaY:Double, time:String, memo:String)
-    {
-        if(foldFlag == false) { // 오른쪽으로 추가
-            data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
-            lastPosition = position;
-        }
-        else // 왼쪽으로 추가
-        {
-            if(foldCount == 0) {
-                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9, false))
-                data.add(position + 1, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0,9, false))
-                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9, false))
-                data.add(position + 3, Plan(listID, DayNum, id, name, locaX, locaY, time, memo,0,9, false))
-                data.add(position + 4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
-                lastPosition = position + 4;
-            }
-            else if(foldCount == 1) {
-                data.removeAt(position+2)
-                data.add(position + 2, Plan(listID, DayNum, id, name, locaX, locaY, time,memo, 0, ViewTypeArray[position], false))
-                lastPosition = position + 2;
-            }
-            else if(foldCount == 2) {
-                data.removeAt(position)
-                data.add(position, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
-                lastPosition = position;
-            }
-            else if(foldCount == 3) {
-                data.removeAt(position-2)
-                data.add(position-2, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
-                lastPosition = position - 2;
-            }
-            else if(foldCount == 4) {
-                data.removeAt(position-4)
-                data.add(position-4, Plan(listID, DayNum, id, name, locaX, locaY, time, memo, 0, ViewTypeArray[position], false))
-                lastPosition = position - 4
-            }
-        }
-        position++
-        foldCount++
-        if (foldCount == 5)
-        {
-            foldCount = 0;
-            if(foldFlag)
-                foldFlag = false
-            else
-                foldFlag = true
-        }
-    }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) { // 애드스팟 하고나서 돌아왔을때 어댑터뷰 바로 갱신
         super.onActivityResult(requestCode, resultCode, data)
         if(requestCode == 123) {
             if(resultCode == Activity.RESULT_OK) {
-                refresh()
+//                refresh()
             }
         }
     }
@@ -289,13 +223,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         }
         return true
     } // checkAppPermission
-    fun askPermission(requestPermission: Array<String>,
-                      REQ_PERMISSION: Int) {
+    fun askPermission(requestPermission: Array<String>, REQ_PERMISSION: Int) {
         requestPermissions(
                 requestPermission,
                 REQ_PERMISSION
         )
     } // askPermission
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions:
     Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -330,61 +264,61 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
     fun getScreenshotFromRecyclerView(): Bitmap? {
         var bigBitmap: Bitmap? = null
+        val size = planAdapter.itemCount
+        if(size == 0)
+            return null
+        var height = 0
+        val paint = Paint()
+        var iHeight = 0
+        var width = 0
+        var iWidth = 0
+        var rheight = 0
+        var rwidth = 0
+        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
-        if (adapter != null) {
-            val size = adapter.itemCount
-            if(size == 0)
-                return null
-            var height = 0
-            val paint = Paint()
-            var iHeight = 0
-            var width = 0
-            var iWidth = 0
-            var rheight = 0
-            var rwidth = 0
-            val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
-
-            // Use 1/8th of the available memory for this memory cache.
-            val cacheSize = maxMemory / 8
-            val bitmaCache = LruCache<String, Bitmap>(cacheSize)
-            var count:Int = 0
-            for (i in 0 until size) {
-                val holder = adapter.createViewHolder(timeline_recycleView, adapter.getItemViewType(i))
-                adapter.onBindViewHolder(holder, i)
-                holder.itemView.measure(
-                        View.MeasureSpec.makeMeasureSpec(timeline_recycleView.width, View.MeasureSpec.UNSPECIFIED),
-                        View.MeasureSpec.makeMeasureSpec(timeline_recycleView.height, View.MeasureSpec.UNSPECIFIED)
-                )
-                holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
-                holder.itemView.isDrawingCacheEnabled = true
-                holder.itemView.buildDrawingCache()
-                val drawingCache = holder.itemView.drawingCache
-                if (drawingCache != null) {
-                    bitmaCache.put(i.toString(), drawingCache)
-                }
-                if(count % 5 == 0){
-                    height += holder.itemView.measuredHeight
-                    width = holder.itemView.measuredWidth
-                }else{
-                    width += holder.itemView.measuredWidth
-                }
-                count++
-                rheight = holder.itemView.measuredHeight
-                rwidth = holder.itemView.measuredWidth
+        // Use 1/8th of the available memory for this memory cache.
+        val cacheSize = maxMemory / 8
+        val bitmaCache = LruCache<String, Bitmap>(cacheSize)
+        var count:Int = 0
+        for (i in 0 until size) {
+            val holder = planAdapter.createViewHolder(timelineView, planAdapter.getItemViewType(i))
+            planAdapter.onBindViewHolder(holder, i)
+            holder.itemView.measure(
+                    View.MeasureSpec.makeMeasureSpec(timelineView.width, View.MeasureSpec.UNSPECIFIED),
+                    View.MeasureSpec.makeMeasureSpec(timelineView.height, View.MeasureSpec.UNSPECIFIED)
+            )
+            holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
+            holder.itemView.isDrawingCacheEnabled = true
+            holder.itemView.buildDrawingCache()
+            val drawingCache = holder.itemView.drawingCache
+            if (drawingCache != null) {
+                bitmaCache.put(i.toString(), drawingCache)
             }
-
-            bigBitmap = Bitmap.createBitmap(rwidth*5, height, Bitmap.Config.ARGB_8888)
-            val bigCanvas = Canvas(bigBitmap!!)
-            bigCanvas.drawColor(Color.WHITE)
-
-            for (i in 0 until size) {
-                val bitmap = bitmaCache.get(i.toString())
-                iHeight = (i/5)*rheight
-                iWidth = (i%5)*rwidth
-                bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
-                bitmap.recycle()
+            else{
+                Log.d("mytag", "null : " + i.toString())
             }
+            if(count % 5 == 0){
+                height += holder.itemView.measuredHeight
+                width = holder.itemView.measuredWidth
+            }else{
+                width += holder.itemView.measuredWidth
+            }
+            count++
+            rheight = holder.itemView.measuredHeight
+            rwidth = holder.itemView.measuredWidth
+        }
 
+        bigBitmap = Bitmap.createBitmap(rwidth*5, height, Bitmap.Config.ARGB_8888)
+        val bigCanvas = Canvas(bigBitmap!!)
+        bigCanvas.drawColor(Color.WHITE)
+
+        for (i in 0 until size) {
+            val bitmap = bitmaCache.get(i.toString())
+            iHeight = (i/5)*rheight
+            iWidth = (i%5)*rwidth
+            Log.d("mytag", bitmap.toString())
+            bigCanvas.drawBitmap(bitmap!!, iWidth.toFloat(), iHeight.toFloat(), paint)
+            bitmap!!.recycle()
         }
         return bigBitmap
     }

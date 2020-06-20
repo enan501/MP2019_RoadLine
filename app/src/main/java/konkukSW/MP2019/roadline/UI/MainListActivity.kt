@@ -79,7 +79,7 @@ class MainListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(konkukSW.MP2019.roadline.R.layout.activity_main_list)
+        setContentView(R.layout.activity_main_list)
         Realm.init(this)
         init()
     }
@@ -235,7 +235,6 @@ class MainListActivity : AppCompatActivity() {
                 val ynBuilder = AlertDialog.Builder(this)
                 ynBuilder.setMessage(curTextArray[i].text.toString() + " 화폐를 삭제하시겠습니까?")
                         .setPositiveButton("삭제") { dialogInterface, _ ->
-                            Log.d("mytag", "cur longclick")
                             val index = curArray.size - 1
                             curArray.removeAt(i)
                             curTextArray[index].visibility = View.INVISIBLE

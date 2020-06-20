@@ -86,6 +86,9 @@ dependencies {
     //이미지 로딩 라이브러리
     implementation 'com.github.bumptech.glide:glide:3.7.0'
 
+    //google map marker custom
+    compile 'com.google.maps.android:android-maps-utils:0.5+'
+
 }
 
 configurations.all {

@@ -1,4 +1,4 @@
-package konkukSW.MP2019.roadline.UI.photo
+package konkukSW.MP2019.roadline.Data.Adapter
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

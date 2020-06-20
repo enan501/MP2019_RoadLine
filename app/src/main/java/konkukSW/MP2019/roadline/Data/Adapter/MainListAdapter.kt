@@ -82,10 +82,8 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
             val dateSt = org.threeten.bp.LocalDate.ofEpochDay(item.dateStart)
             val dateEn = org.threeten.bp.LocalDate.ofEpochDay(item.dateEnd)
             p0.date.text = dateSt.format(dateForamt) + " ~ " + dateEn.format(dateForamt)
-            Log.d("mytag", "myt" + item.dateStart.toString())
         }
         if(getItem(p1)!!.img.isEmpty()){
-            //TODO("대표이미지 설정")
             p0.image.setImageResource(R.drawable.ml_default_image)
         }
         else{
