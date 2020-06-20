@@ -9,15 +9,11 @@ import androidx.viewpager.widget.ViewPager
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
+import konkukSW.MP2019.roadline.Data.Adapter.ImageFragmentAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_detail_photo.*
-import java.time.LocalDateTime
-import java.time.ZoneOffset
-import java.time.format.DateTimeFormatter
-import java.util.*
-import kotlin.collections.ArrayList
 
 class DetailPhotoActivity : AppCompatActivity() {
     lateinit var realm:Realm

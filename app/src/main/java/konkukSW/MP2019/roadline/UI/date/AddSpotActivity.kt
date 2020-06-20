@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
@@ -33,37 +34,42 @@ import com.google.android.libraries.places.widget.AutocompleteSupportFragment
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
 import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
-import konkukSW.MP2019.roadline.Data.Dataclass.Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_add_money.*
+import konkukSW.MP2019.roadline.R.id.places_autocomplete_search_input
 import kotlinx.android.synthetic.main.activity_add_spot.*
-import kotlinx.android.synthetic.main.activity_show_date.*
 import java.util.*
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
-    lateinit var addMapView:SupportMapFragment
-    var spotId:String = ""
-    var spotName:String=""
+
+    var spotName:String = ""
     var locationX:Double = 0.0
     var locationY:Double = 0.0
-    var btnType:Boolean = false
-    var time:String = ""
-    var memo:String = ""
-    var hour:Int = 0
-    var min:Int = 0
+    var memo:String ? = null
+    var hour:Int? = null
+    var minute:Int? = null
+
     var pos = -1
+    var planId: String? = null
     var listID = ""
     var DayNum = 0
     val LOCATION_REQUEST = 1234
-    lateinit var bitmapDraw:BitmapDrawable
-    lateinit var b:Bitmap
+
     lateinit var markerIcon:Bitmap
-    lateinit var thisPlan:T_Plan
+    var thisPlan:T_Plan? = null
+    lateinit var builder: AlertDialog.Builder
+    var autocompleteFragment: AutocompleteSupportFragment? = null
+    lateinit var searchBox: EditText
+
+
+
+    lateinit var dialogMemo : EditText
+    lateinit var dialogTime : TimePicker
+    lateinit var addDialog: View
 
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
-        initData()
+        initMap()
         initListener()
     }
 
@@ -72,8 +78,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_spot)
-        initToolbar()
-        init()
+        initData()
+        initLayout()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
@@ -83,33 +89,74 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         return super.onOptionsItemSelected(item)
     }
 
-    fun initToolbar(){
-        setSupportActionBar(as_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-    }
-
-    fun init(){
+    fun initData(){
         Realm.init(this)
         realm = Realm.getDefaultInstance()
+
         val i = intent
         pos = i.getIntExtra("pos", -1)
         listID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum",0)
-        if(i.getIntExtra("path", 0) == 1 && pos > 0) // 경로 추천 버튼 추가
-            path_bt.visibility = View.VISIBLE
+        planId = i.getStringExtra("planId") //null이면 추가, null아니면 수정
 
-        bitmapDraw = ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable
-        b = bitmapDraw.bitmap
-        markerIcon = Bitmap.createScaledBitmap(b, 71, 100, false)
+        if(planId != null){ //수정
+            thisPlan  = realm.where(T_Plan::class.java).equalTo("id", planId).findFirst()!!
+
+            spotName = thisPlan!!.name
+            hour = thisPlan!!.hour
+            minute=  thisPlan!!.minute
+            memo = thisPlan!!.memo
+            locationX = thisPlan!!.locationX
+            locationY = thisPlan!!.locationY
+        }
+
+        val bitmap = (ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable).bitmap
+        markerIcon = Bitmap.createScaledBitmap(bitmap, 71, 100, false)
         if (!Places.isInitialized()) {
             Places.initialize(this, getString(R.string.api_key))
         }
-        val autocompleteFragment =
-            supportFragmentManager.findFragmentById(R.id.AS_SearchBox) as AutocompleteSupportFragment?
+    }
 
+    fun initLayout(){
+        setSupportActionBar(as_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        builder = AlertDialog.Builder(this) //상세정보 추가 다이얼로그
+        addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
+        dialogMemo = addDialog.findViewById(R.id.apd_editText1)
+        dialogTime = addDialog.findViewById(R.id.apd_timePicker)
+        builder.setView(addDialog)
+
+        autocompleteFragment = supportFragmentManager.findFragmentById(R.id.AS_SearchBox) as AutocompleteSupportFragment?
         autocompleteFragment!!.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG))
+        searchBox = autocompleteFragment!!.view?.findViewById(places_autocomplete_search_input) as EditText
+        val addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
+        addMapView.getMapAsync(this)
 
-        autocompleteFragment.setOnPlaceSelectedListener(object : PlaceSelectionListener {
+        if(pos > 0 && planId != null) // 경로 추천 버튼 추가
+            path_bt.visibility = View.VISIBLE
+    }
+
+
+    fun initMap(){
+        if(planId != null){ //수정
+            searchBox.setText(thisPlan!!.name)
+            addMap.addMarker(
+                    MarkerOptions()
+                            .position(LatLng(locationY,locationX))
+                            .title(spotName)
+                            .snippet(hour.toString()+"시 "+minute.toString()+"분")
+                            .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
+            )
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
+        }
+        else{ //추가
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.552420, 126.984719),12f))
+        }
+    }
+
+    fun initListener(){
+        autocompleteFragment!!.setOnPlaceSelectedListener(object : PlaceSelectionListener {
             override fun onError(status: Status) {
                 Log.d("addMap", "Error : " + status.toString())
             }
@@ -120,77 +167,40 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
                 var marker = MarkerOptions()
                 marker.position(place.latLng!!)
-                    .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
+                        .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
                 addMap.addMarker(marker)
                 spotName = place.name.toString()
                 locationY = (place.latLng as LatLng).latitude
                 locationX = (place.latLng as LatLng).longitude
             }
         })
-        addMapView = supportFragmentManager.findFragmentById(R.id.AS_MapView) as SupportMapFragment
-        addMapView.getMapAsync(this)
-    }
 
-    fun initData(){
-        var spot = intent.getSerializableExtra("spot")
-        if(spot!=null){ //수정
-            spot = spot as Plan
-            spotId = spot.id
-
-            thisPlan  = realm.where(T_Plan::class.java).equalTo("id", spotId).findFirst()!!
-            spotName = thisPlan.name
-            time = thisPlan.time
-            Log.v("timetag", time)
-            if(time != ""){
-                hour = Integer.parseInt(time.split(":").get(0))
-                min = Integer.parseInt(time.split(":").get(1))
-            }else{
-                time = ""
-            }
-            memo = thisPlan.memo
-            locationX = thisPlan.locationX
-            locationY = thisPlan.locationY
-            btnType = true
-            val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
-            as_searchBox.setText(spotName)
-            addMap.addMarker(
-                    MarkerOptions()
-                            .position(LatLng(locationY,locationX))
-                            .title(spotName)
-                            .snippet(hour.toString()+"시 "+min.toString()+"분")
-                            .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
-            )
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))
-        }else{
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(37.552420, 126.984719),12f))
-        }
-    }
-
-    fun initListener(){
         as_button_check.setOnClickListener { //체크 등록 버튼
-            val as_searchBox = AS_SearchBox.view?.findViewById(R.id.places_autocomplete_search_input) as EditText
-            if(as_searchBox.text.toString() != ""){
-                realm.beginTransaction()
-                if(btnType == false){ //추가
-                    val plan: T_Plan = realm.createObject(T_Plan::class.java)
+            if(searchBox.text.toString() != ""){
+                if(planId == null){ //추가
+                    realm.beginTransaction()
+                    val plan: T_Plan = realm.createObject(T_Plan::class.java, UUID.randomUUID().toString())
                     plan.listID = listID
                     plan.dayNum = DayNum
-                    plan.id = UUID.randomUUID().toString()
                     plan.name = spotName
-                    plan.time = time
+                    plan.hour = hour
+                    plan.minute = minute
                     plan.memo = memo
                     plan.locationX = locationX
                     plan.locationY = locationY
                     plan.pos = pos
+                    realm.commitTransaction()
                 }
                 else{ //수정
-                    thisPlan.name = spotName
-                    thisPlan.time = time
-                    thisPlan.memo = memo
-                    thisPlan.locationX = locationX
-                    thisPlan.locationY = locationY
+                    realm.beginTransaction()
+                    thisPlan!!.name = spotName
+                    thisPlan!!.hour = hour
+                    thisPlan!!.minute = minute
+                    thisPlan!!.memo = memo
+                    thisPlan!!.locationX = locationX
+                    thisPlan!!.locationY = locationY
+                    realm.commitTransaction()
                 }
-                realm.commitTransaction()
                 val s = Intent()
                 s.putExtra("dayNum", intent.getIntExtra("DayNum", -1))
                 s.putExtra("listId", intent.getStringExtra("ListID"))
@@ -199,69 +209,58 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 finish()
             }
             else{ //아무값 입력하지 않으면
-                onBackPressed()
+                Toast.makeText(applicationContext, "위치를 추가해주세요", Toast.LENGTH_LONG).show()
+//                onBackPressed()
             }
         }
         path_bt.setOnClickListener {
-            val plans = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).findAll()!!
-            var prev = plans.where().equalTo("pos",pos-1).findFirst()
-            var cur = plans.where().equalTo("pos",pos).findFirst()
+            var prev = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).equalTo("pos", pos - 1).findFirst()!!
+            var cur = thisPlan
 
-            var uri = "http://maps.google.com/maps?saddr="+prev!!.locationY+","+prev!!.locationX+"&daddr="+cur!!.locationY+","+cur!!.locationX+"&dirflg=r"
+            var uri = "http://maps.google.com/maps?saddr="+prev.locationY+","+prev.locationX+"&daddr="+cur!!.locationY+","+cur!!.locationX+"&dirflg=r"
             var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             mapIntent.setPackage("com.google.android.apps.maps")
             startActivity(mapIntent)
         }
         as_button_memo.setOnClickListener { //상세정보 추가 버튼
-            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-            val addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
-            val dialogMemo = addDialog.findViewById<EditText>(R.id.apd_editText1)
-            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
-
-            dialogMemo.setText(memo)
-            dialogTime.hour = hour
-            dialogTime.minute = min
-
-            builder.setView(addDialog)
-                .setPositiveButton("추가") { dialogInterface, i ->
-                    memo = dialogMemo.text.toString()
-                    hour = dialogTime.hour
-                    min = dialogTime.minute
-                    var min_zero = ""
-                    if(min < 10)
-                        min_zero = "0"
-                    time = hour.toString() + ":" + min_zero + min.toString()
-                }
-                .setNegativeButton("취소") { dialogInterface, i ->
-                }
-                .show()
+            if(planId != null){ //수정
+                dialogMemo.setText(thisPlan!!.memo)
+                if(thisPlan!!.hour != null)
+                    dialogTime.hour = thisPlan!!.hour!!
+                else
+                    dialogTime.hour = 0
+                if(thisPlan!!.minute != null)
+                    dialogTime.minute = thisPlan!!.minute!!
+                else
+                    dialogTime.minute = 0
+            }
+            else{
+                dialogMemo.text.clear()
+                //시간 초기화
+                dialogTime.hour = 0
+                dialogTime.minute = 0
+            }
+            if(addDialog.parent != null){
+                (addDialog.parent as ViewGroup).removeView(addDialog)
+            }
+            builder.show()
         }
+        builder.setPositiveButton("추가") { dialogInterface, i ->
+            memo = dialogMemo.text.toString()
+            hour = dialogTime.hour
+            minute = dialogTime.minute
+        }
+        .setNegativeButton("취소") { dialogInterface, i -> }
+
         replace_bt.setOnClickListener {
+            if(addDialog.parent != null){
+                (addDialog.parent as ViewGroup).removeView(addDialog)
+            }
             getCurLoc()
         }
-
-//        as_button_time.setOnClickListener { //상세정보 추가 버튼
-//            val builder = AlertDialog.Builder(this) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-//            val addDialog = layoutInflater.inflate(R.layout.add_time_dialog, null)
-//            val dialogTime = addDialog.findViewById<TimePicker>(R.id.apd_timePicker)
-//            dialogTime.hour = hour
-//            dialogTime.minute = min
-//            builder.setView(addDialog)
-//                .setPositiveButton("추가") { dialogInterface, i ->
-//                    hour = dialogTime.hour
-//                    min = dialogTime.minute
-//                    time = hour.toString() + "/"+min.toString()
-//                }
-//                .setNegativeButton("취소") { dialogInterface, i ->
-//                }
-//                .show()
-//        }
-
-
     }
     fun getCurLoc(){
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
-
             val lm = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
             val providers = lm!!.getProviders(true)
             var location: android.location.Location? = null
@@ -278,10 +277,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             initPermission()
         }
     }
-
-
-
-
     fun checkAppPermission(requestPermission: Array<String>): Boolean {
         val requestResult = BooleanArray(requestPermission.size)
         for (i in requestResult.indices) {
@@ -324,15 +319,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val builder = AlertDialog.Builder(this)
             builder.setMessage("GPS 권한을 허용할까요?")
                     .setTitle("권한 요청")
-                    .setIcon(konkukSW.MP2019.roadline.R.drawable.notification_action_background)
+                    .setIcon(R.drawable.notification_action_background)
                     .setPositiveButton("OK"){
                         _,_ ->
                         askPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST)
                     }
             val dialog = builder.create()
             dialog.show()
-
-
         }
     }
 

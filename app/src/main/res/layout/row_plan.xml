@@ -21,12 +21,12 @@
 
         <ImageView
             android:id="@+id/man_img"
+            android:visibility="invisible"
             android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/run" />
         <TextView
-            android:visibility="visible"
             android:id="@+id/plan_Item_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

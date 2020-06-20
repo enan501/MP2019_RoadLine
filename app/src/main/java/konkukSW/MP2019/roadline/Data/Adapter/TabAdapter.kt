@@ -9,9 +9,7 @@ import konkukSW.MP2019.roadline.UI.date.Fragment2
 import konkukSW.MP2019.roadline.UI.date.Fragment4
 
 class TabAdapter(fm: FragmentManager, val num:Int): androidx.fragment.app.FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
-//    override fun getItemPosition(p0: Any): Int {
-//        return PagerAdapter.POSITION_NONE
-//    }
+
     override fun getCount(): Int {
         return num
     }
