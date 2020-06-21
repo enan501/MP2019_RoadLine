@@ -20,7 +20,6 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
     var context = context
 
     override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
-        Log.d("mytag", "onMove : " + p1.adapterPosition.toString() + ", " + p2.adapterPosition.toString())
         if(originPosition == POSITION_UNKNOWN) originPosition = p1.adapterPosition
         oldPosition = p1.adapterPosition
         if ( oldPosition > POSITION_UNKNOWN && newPosition != p2.adapterPosition){
@@ -31,7 +30,7 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
     }
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
-        Log.d("mytag","clear")
+        if(newPosition == dateListAdapter.itemCount-1) newPosition--
         dateListAdapter.onAttachedToRecyclerView(recyclerView)
         dateListAdapter.moveItem(originPosition,newPosition)
         dateListAdapter.notifyDataSetChanged()
@@ -50,8 +49,8 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
             x: Int,
             y: Int
     ) {
-        //dateListAdapter.moveItem(oldPosition,newPosition)
-        dateListAdapter.notifyItemMoved(oldPosition,newPosition)
+        if (fromPos in 0 until dateListAdapter.itemCount - 1 && toPos in 0 until dateListAdapter.itemCount - 1)
+            dateListAdapter.notifyItemMoved(fromPos,toPos)
         super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
     }
 
