@@ -101,7 +101,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
 
     fun moveItem(pos1:Int, pos2:Int){  //객체 두개 바꾸기 함수
         if (pos2 in 0 until itemCount - 1 && pos1 in 0 until itemCount - 1) {
-            Log.d("mytag", "moveItem!!")
+            Log.d("mytag", "moveItem $pos1 / $pos2")
             realm.beginTransaction()
             var item1 = getItem(pos1)!!
             if(pos2 > pos1) {
@@ -116,7 +116,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
             }
             item1.pos = pos2
             realm.commitTransaction()
-            notifyItemMoved(pos1,pos2)
+            //notifyItemMoved(pos1,pos2)
         }
 
     }

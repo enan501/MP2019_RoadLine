@@ -54,7 +54,6 @@ class PhotoGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val contex
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         if(p0 is ViewHolder){
             val item = getItem(p1)!!
-
             Glide.with(context).load(item.img).into(p0.priceImage)
             p0.priceText.visibility = View.GONE
             p0.imgCover.visibility = View.GONE

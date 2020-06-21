@@ -545,7 +545,7 @@ class MainListActivity : AppCompatActivity() {
                                 }
                                 cbuilder.dismiss()
                             } else {
-                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일 수 없습니다", Toast.LENGTH_SHORT).show()
                             }
                         } else {
                             Toast.makeText(applicationContext, "시작일과 종료일 모두 입력해주세요", Toast.LENGTH_SHORT).show()

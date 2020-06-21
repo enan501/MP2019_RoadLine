@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="200dp" xmlns:app="http://schemas.android.com/apk/res-auto"
-                                    app:cardElevation="10dp"
-                                    android:layout_margin="10dp">
-    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
-        <ImageView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="2"
-            android:id="@+id/MLItem_image" android:scaleType="centerCrop"/>
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="200dp"
+    android:layout_margin="10dp"
+    app:cardElevation="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/MLItem_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +41,7 @@
                 android:paddingLeft="10dp"
                 android:text="대만여행"
                 android:textColor="@color/black"
-                android:textSize="24dp" />
+                android:textSize="20dp" />
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:id="@+id/MLItem_date" android:textSize="12dp"
                 android:paddingLeft="12dp"
@@ -42,20 +52,26 @@
         </LinearLayout>
             <ImageButton
                 android:id="@+id/ML_edit"
-                android:layout_margin="8dp"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:background="@color/white"
+                android:foreground="@drawable/rippple_effect_gray_circle"
+                android:padding="10dp"
+                android:layout_margin="4dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:scaleType="fitCenter"
                 android:layout_gravity="center_vertical"
-                android:background="@drawable/edit" />
+                android:src="@drawable/edit" />
             <ImageButton
                 android:id="@+id/ML_delete"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="8dp"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:padding="10dp"
+                android:foreground="@drawable/rippple_effect_gray_circle"
+                android:layout_marginRight="8dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_gravity="center_vertical"
-                android:backgroundTint="@color/black"
-                android:background="@drawable/garbage" />
+                android:background="@color/white"
+                android:src="@drawable/garbage"
+                android:scaleType="fitCenter"/>
 />
         </LinearLayout>
     </LinearLayout>

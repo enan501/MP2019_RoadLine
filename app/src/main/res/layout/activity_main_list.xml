@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     android:orientation="vertical"
     tools:context=".UI.MainListActivity">
@@ -51,16 +52,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:backgroundTint="#FFFFFF"
+            android:layout_marginRight="24dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="@color/white"
+            app:borderWidth="0dp"
             android:clickable="true"
             android:src="@drawable/add" />
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginHorizontal="5dp"
             android:id="@+id/ML_rView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:paddingTop="10dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"/>
         <TextView
             android:id="@+id/startText"
             android:visibility="invisible"

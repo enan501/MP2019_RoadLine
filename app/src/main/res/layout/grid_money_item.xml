@@ -31,7 +31,7 @@
             android:text="1000원"
             android:textColor="@color/white"
             android:fontFamily="@font/nanum_square_round_r"
-            android:textSize="22sp"/>
+            android:textSize="18sp"/>
 
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -13,6 +13,7 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
     }
 
     private val POSITION_UNKNOWN = -1
+    private var originPosition = POSITION_UNKNOWN
     private var oldPosition = POSITION_UNKNOWN
     private var newPosition = POSITION_UNKNOWN
     var dateListAdapter = adapter
@@ -20,6 +21,7 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
 
     override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
         Log.d("mytag", "onMove : " + p1.adapterPosition.toString() + ", " + p2.adapterPosition.toString())
+        if(originPosition == POSITION_UNKNOWN) originPosition = p1.adapterPosition
         oldPosition = p1.adapterPosition
         if ( oldPosition > POSITION_UNKNOWN && newPosition != p2.adapterPosition){
             newPosition = p2.adapterPosition
@@ -31,9 +33,11 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         Log.d("mytag","clear")
         dateListAdapter.onAttachedToRecyclerView(recyclerView)
+        dateListAdapter.moveItem(originPosition,newPosition)
         dateListAdapter.notifyDataSetChanged()
         oldPosition = POSITION_UNKNOWN;
         newPosition = POSITION_UNKNOWN;
+        originPosition = POSITION_UNKNOWN;
         super.clearView(recyclerView, viewHolder)
     }
 
@@ -46,7 +50,8 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
             x: Int,
             y: Int
     ) {
-        dateListAdapter.moveItem(oldPosition,newPosition)
+        //dateListAdapter.moveItem(oldPosition,newPosition)
+        dateListAdapter.notifyItemMoved(oldPosition,newPosition)
         super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
     }
 

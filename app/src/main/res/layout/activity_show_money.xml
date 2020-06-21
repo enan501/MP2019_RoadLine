@@ -18,7 +18,7 @@
             android:fontFamily="@font/nanum_square_round_r"
             android:gravity="left|center_vertical"
             android:text="가계부"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
     </androidx.appcompat.widget.Toolbar>
 
     <View
