@@ -33,7 +33,6 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
         if(newPosition == dateListAdapter.itemCount-1) newPosition--
         dateListAdapter.onAttachedToRecyclerView(recyclerView)
         dateListAdapter.moveItem(originPosition,newPosition)
-        dateListAdapter.notifyDataSetChanged()
         oldPosition = POSITION_UNKNOWN;
         newPosition = POSITION_UNKNOWN;
         originPosition = POSITION_UNKNOWN;

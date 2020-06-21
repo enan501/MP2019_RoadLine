@@ -117,7 +117,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                 item2.pos = pos2
             }
             realm.commitTransaction()
-            //notifyItemMoved(pos1,pos2)
+            notifyDataSetChanged()
         }
 
     }
