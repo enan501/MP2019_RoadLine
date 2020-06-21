@@ -21,5 +21,10 @@ class NetworkStatus {
             }
             return TYPE_NOT_CONNECTED
         }
+
+        fun isNetworkConnected(context: Context):Boolean{
+            var netState = getConnectivityStatus(context)
+            return (netState == TYPE_WIFI || netState == TYPE_MOBILE)
+        }
     }
 }

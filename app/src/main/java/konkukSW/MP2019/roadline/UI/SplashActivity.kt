@@ -1,77 +1,65 @@
 package konkukSW.MP2019.roadline.UI
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.jakewharton.threetenabp.AndroidThreeTen
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.NetworkStatus
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import konkukSW.MP2019.roadline.R
+import kotlinx.coroutines.*
 import org.jsoup.Jsoup
+import kotlin.coroutines.CoroutineContext
 
 
-class SplashActivity : AppCompatActivity() {
-
+class SplashActivity : AppCompatActivity(){
     lateinit var realm:Realm
-    var netStatus = -1
-    private val TYPE_WIFI = 1
-    private val TYPE_MOBILE = 2
-    private val TYPE_NOT_CONNECTED = 3
     lateinit var curResults:RealmResults<T_Currency>
-
+    lateinit var dialog:AlertDialog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(konkukSW.MP2019.roadline.R.layout.activity_splash)
-
         Realm.init(this)
         AndroidThreeTen.init(this)
         val config = RealmConfiguration.Builder().deleteRealmIfMigrationNeeded().build() // DB 테이블 수정시 자동으로 모든 인스턴스들 삭제모드
         Realm.setDefaultConfiguration(config) // 데이터베이스 옵션 설정해주는것 한번만 하면 됨.
-        GlobalScope.launch(Dispatchers.Default) {
-            checkNetwork()
+        dialog = AlertDialog.Builder(this).create()
+        dialog.apply{
+            setMessage(getString(R.string.no_network_no_currency))
+            setButton(AlertDialog.BUTTON_POSITIVE,"닫기") { _, _-> finish()}
+            setOnDismissListener { finish() }
         }
-        Thread.sleep(2500)
-        startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
-        finish()
+        GlobalScope.launch{
+            checkCurrency()
+        }
+        Thread.sleep(1500)
     }
-    fun checkNetwork(){
-        netStatus = NetworkStatus.getConnectivityStatus(this)
+    suspend fun checkCurrency(){
         realm = Realm.getDefaultInstance()
         curResults = realm.where(T_Currency::class.java).findAll()
-
-        if(netStatus == TYPE_WIFI || netStatus == TYPE_MOBILE){
+        if(NetworkStatus.isNetworkConnected(this)){
             getCurrency()
+            startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
+            finish()
         }
         else{
             if(curResults.size == 0){
-                Toast.makeText(this, "네트워크에 연결해주세요", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
-    fun getCurrency() {
-        println("size : " + realm.where(T_Currency::class.java).findAll().size.toString())
-        if (curResults.size == 142) {
-            //이미 db 구성되어 있으면 환율정보만 업데이트
-            Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
-                select("tbody >tr").forEach {element ->
-                    var curCode = element.select("td:nth-child(3)>a").text()
-                    var curRate = element.select("td:nth-child(4)").text()
-
-                    realm.beginTransaction()
-                    curResults.where().equalTo("code",curCode).findFirst()!!.rate = curRate.toDouble()
-                    realm.commitTransaction()
+                withContext(Dispatchers.Main){
+                    dialog.show()
                 }
             }
         }
-        else{
+    }
+    fun getCurrency():Boolean { // True : delay 주기
+        if (curResults.size < 142) {
             //환율정보 db 초기 세팅
             //이름,코드,환율 parsing
             Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
@@ -113,7 +101,13 @@ class SplashActivity : AppCompatActivity() {
                     realm.commitTransaction()
                 }
             }
+            return false
+        } else {
+            return true
         }
     }
+
+
+
 }
 

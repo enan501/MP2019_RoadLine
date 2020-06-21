@@ -48,7 +48,6 @@
         <activity android:name=".UI.photo.DetailPhotoActivity"/>
         <activity
             android:name=".UI.SplashActivity"
-            android:screenOrientation="portrait"
             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

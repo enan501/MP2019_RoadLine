@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">RoadLine</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="spin_prompt">통화를 선택하세요</string>
     <string-array name="spin_arr">
@@ -21,4 +20,7 @@
         <item>₸</item> <!-- 카자흐스탄-->
         <item>৳</item> <!-- 방글라데시-->
     </string-array>
+
+    <string name="no_network_no_currency">최초 1회 접속 시 환율 정보 수집을 위해 데이터 접속이 필요합니다.\n네트워크에 연결 후 실행해 주세요!</string>
+    <string name="no_network">네트워크 접속이 원활하지 않습니다.\n네트워크 연결 상태를 확인해 주세요!</string>
 </resources>
