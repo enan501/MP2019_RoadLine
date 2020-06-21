@@ -48,91 +48,22 @@
         android:layout_marginTop="16dp"
         android:text="화폐"
         android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@+id/curText0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/AL_title" />
 
-
-    <TextView
-        android:id="@+id/curText0"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="3dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
-        android:text="KRW"
-        android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/curText1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-    <TextView
-        android:id="@+id/curText1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="3dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/curText0"
-        app:layout_constraintEnd_toStartOf="@+id/curText2"
-        app:layout_constraintStart_toEndOf="@+id/curText0" />
-
-    <TextView
-        android:id="@+id/curText2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="3dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/curText0"
-        app:layout_constraintEnd_toStartOf="@+id/curText3"
-        app:layout_constraintStart_toEndOf="@+id/curText1" />
+        android:id="@+id/rvCurrency"
+        app:layout_constraintTop_toBottomOf="@id/textView4"
+        android:paddingStart="24dp"
+        android:paddingEnd="6dp"
+        android:clipToPadding="false"
+        tools:listitem="@layout/item_addlist_currency"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:orientation="horizontal"/>
 
 
-    <TextView
-        android:id="@+id/curText3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="2dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/curText0"
-        app:layout_constraintEnd_toStartOf="@+id/curText4"
-        app:layout_constraintStart_toEndOf="@+id/curText2" />
-
-    <TextView
-        android:id="@+id/curText4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="3dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/button_background"
-        android:gravity="center"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="6dp"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/curText0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/curText3" />
 
 
     <TextView
@@ -145,7 +76,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/curText0" />
+        app:layout_constraintTop_toBottomOf="@+id/rvCurrency" />
 
 
     <TextView

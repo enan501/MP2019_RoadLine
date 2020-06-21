@@ -31,6 +31,8 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.activity_show_money.*
+import kotlinx.android.synthetic.main.add_list_dialog.*
+import kotlinx.android.synthetic.main.add_list_dialog.view.*
 import kotlinx.android.synthetic.main.image_pick_dialog.*
 import java.sql.Date
 import java.time.LocalDate
@@ -47,9 +49,9 @@ class MainListActivity : AppCompatActivity() {
 
     lateinit var MLAdapter:MainListAdapter
     lateinit var currencyAdapter: ArrayAdapter<String>
+    lateinit var selectedCurrencyAdapter: CurrencyAdapter
     lateinit var realm:Realm
     private val REQUEST_CODE = 123
-    private val CURRENCY_MAX_SIZE = 5
     private val TYPE_ADD = true
     private  val TYPE_EDIT = false
     lateinit var listResults: RealmResults<T_List>
@@ -66,7 +68,6 @@ class MainListActivity : AppCompatActivity() {
     lateinit var addListTitle: EditText
     lateinit var editStart: TextView
     lateinit var editEnd: TextView
-    val curTextArray = arrayListOf<TextView>()
     lateinit var imageView: ImageView
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
@@ -107,6 +108,7 @@ class MainListActivity : AppCompatActivity() {
             nowMonth = org.threeten.bp.LocalDate.now().monthValue - 1
             nowDay = org.threeten.bp.LocalDate.now().dayOfMonth
         }
+        korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
     }
 
     fun initLayout(){
@@ -151,6 +153,34 @@ class MainListActivity : AppCompatActivity() {
             currencyAdapter.add(T_currency.code + " - " + T_currency.name)
         }
         currencyAdapter.add("추가하기")
+
+        /* --------- selected currency Adapter --------- */
+        curArray.add(korCur)
+        selectedCurrencyAdapter = CurrencyAdapter(curArray, this)
+        selectedCurrencyAdapter.itemClickListener = object:CurrencyAdapter.OnItemClickListener{
+            override fun OnLongClick(position: Int): Boolean {
+                if(position == 0){
+                    Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
+                    return false
+                } else {
+                    val ynBuilder = AlertDialog.Builder(this@MainListActivity)
+                    ynBuilder.setMessage(curArray[position].name + " 화폐를 삭제하시겠습니까?")
+                            .setPositiveButton("삭제") { _, _ ->
+                                curArray.removeAt(position)
+                                selectedCurrencyAdapter.notifyItemRemoved(position)
+                            }
+                            .setNegativeButton("취소") { _,_ ->
+                            }
+                    val ynDialog = ynBuilder.create()
+                    ynDialog.show()
+
+                    return false
+                }
+            }
+
+        }
+
+        //cellspacing?
     }
 
     fun initDialog(){
@@ -163,17 +193,11 @@ class MainListActivity : AppCompatActivity() {
 
         builder = AlertDialog.Builder(this) //여행 추가 dialog
         addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
-
+        addListDialog.rvCurrency.adapter = selectedCurrencyAdapter
         addListTitle = addListDialog.findViewById(R.id.AL_title)
         editStart = addListDialog.findViewById(R.id.editStart)
         editEnd = addListDialog.findViewById(R.id.editEnd)
         imageView = addListDialog.findViewById(R.id.imageView)
-
-        curTextArray.add(addListDialog.findViewById(R.id.curText0))
-        curTextArray.add(addListDialog.findViewById(R.id.curText1))
-        curTextArray.add(addListDialog.findViewById(R.id.curText2))
-        curTextArray.add(addListDialog.findViewById(R.id.curText3))
-        curTextArray.add(addListDialog.findViewById(R.id.curText4))
 
         currencySpinner = addListDialog.findViewById(R.id.currencySpinner)
         currencySpinner.adapter = currencyAdapter
@@ -184,7 +208,7 @@ class MainListActivity : AppCompatActivity() {
             currencySpinner.setTitle("")
         }
         currencySpinner.setPositiveButton("취소")
-        korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
+
 
         currencySpinner.setSelection(currencyAdapter.count)
 
@@ -202,19 +226,12 @@ class MainListActivity : AppCompatActivity() {
                             exist = true
                         }
                     }
-                    if(curArray.size < CURRENCY_MAX_SIZE){
-                        if(exist){
-                            Toast.makeText(applicationContext, "이미 선택한 화폐입니다", Toast.LENGTH_SHORT).show()
-                        }
-                        else{
-                            curArray.add(curTuple!!)
-                            val index = curArray.size - 1
-                            curTextArray[index].visibility = View.VISIBLE
-                            curTextArray[index].text = curTuple!!.code
-                        }
+                    if(exist){
+                        Toast.makeText(applicationContext, "이미 선택한 화폐입니다", Toast.LENGTH_SHORT).show()
                     }
                     else{
-                        Toast.makeText(applicationContext, "화폐는 5개까지 설정할 수 있습니다 ", Toast.LENGTH_SHORT).show()
+                        curArray.add(curTuple!!)
+                        selectedCurrencyAdapter.notifyItemInserted(curArray.size-1)
                     }
                 }
             }
@@ -223,34 +240,6 @@ class MainListActivity : AppCompatActivity() {
             }
         }
 
-
-
-        curTextArray[0].setOnLongClickListener{
-            Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
-            false
-        }
-
-        for(i in 1 until CURRENCY_MAX_SIZE){
-            curTextArray[i].setOnLongClickListener {
-                val ynBuilder = AlertDialog.Builder(this)
-                ynBuilder.setMessage(curTextArray[i].text.toString() + " 화폐를 삭제하시겠습니까?")
-                        .setPositiveButton("삭제") { dialogInterface, _ ->
-                            val index = curArray.size - 1
-                            curArray.removeAt(i)
-                            curTextArray[index].visibility = View.INVISIBLE
-                            curTextArray[index].text = ""
-                            for(j in 1 until curArray.size){
-                                curTextArray[j].text = curArray[j].code
-                            }
-                        }
-                        .setNegativeButton("취소") { dialogInterface, i ->
-                        }
-                val ynDialog = ynBuilder.create()
-                ynDialog.show()
-
-                false
-            }
-        }
 
         val startListener = DatePickerDialog.OnDateSetListener{ view, year, month, dayOfMonth ->
             dateStartYear=  year
@@ -346,17 +335,13 @@ class MainListActivity : AppCompatActivity() {
             builder.setView(addListDialog)
                     .setPositiveButton("추가") { _, _ -> }
                     .setNegativeButton("취소") { _, _ -> }
-            
+
             dateStartEpoch = null
             dateEndEpoch = null
 
+
             curArray.clear()
             curArray.add(korCur)
-            curTextArray[0].text = korCur.code
-            curTextArray[0].visibility = View.VISIBLE
-            for(i in 1 until CURRENCY_MAX_SIZE){
-                curTextArray[i].visibility = View.INVISIBLE
-            }
 
             val cbuilder = builder.create() //여행추가 다이얼로그
             cbuilder.setCanceledOnTouchOutside(false)
@@ -471,15 +456,9 @@ class MainListActivity : AppCompatActivity() {
 
                 val item = listResults[position]!!
                 addListTitle.setText(item.title)
+
                 curArray.clear()
-                for(i in 0 until CURRENCY_MAX_SIZE){
-                    curTextArray[i].visibility = View.INVISIBLE
-                }
-                for(i in 0 until item.currencys.size){
-                    curArray.add(item.currencys[i]!!)
-                    curTextArray[i].text = item.currencys[i]!!.code
-                    curTextArray[i].visibility = View.VISIBLE
-                }
+                curArray.addAll(data.currencys)
 
                 dateStartEpoch = item.dateStart
                 dateEndEpoch = item.dateEnd
