@@ -55,6 +55,8 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 ////        ft.detach(this).attach(this).commit()
 //    }
 
+
+
     fun setObserve(){
         (activity!! as ShowDateActivity).planResults.addChangeListener{t, changeSet->
             gpsCheck.isChecked = false

@@ -49,12 +49,13 @@ class ShowDateActivity : AppCompatActivity() {
     lateinit var thisList: T_List
     lateinit var dayResults: RealmResults<T_Day>
     lateinit var planResults:RealmResults<T_Plan>
-//    val planResultsData = MutableLiveData<RealmResults<T_Plan>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_date)
         init()
     }
+
+
 
     fun init() {
         initData()
@@ -69,7 +70,10 @@ class ShowDateActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-
+    override fun onDestroy() {
+        super.onDestroy()
+        planResults.removeAllChangeListeners()
+    }
 
     fun initData() {
         setSupportActionBar(sd_toolbar)

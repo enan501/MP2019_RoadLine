@@ -22,8 +22,8 @@ class DateItemTouchHelperCallback(adapter: PlanListAdapter, context:Context, dra
     var context = context
 
     override fun onMove(p0: RecyclerView, p1: RecyclerView.ViewHolder, p2: RecyclerView.ViewHolder): Boolean {
-        Log.d("mytag", "onMove : " + p1.adapterPosition.toString() + ", " + p2.adapterPosition.toString())
-        dateListAdapter.moveItem(p1.adapterPosition, p2.adapterPosition)
+        Log.d("mytag", "onMove : " + p1.layoutPosition.toString() + ", " + p2.layoutPosition.toString())
+        dateListAdapter.moveItem(p1.layoutPosition, p2.layoutPosition)
         return true
     }
 

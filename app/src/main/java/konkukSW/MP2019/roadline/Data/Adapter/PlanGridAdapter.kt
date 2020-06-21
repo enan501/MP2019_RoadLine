@@ -53,15 +53,23 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
 
     fun removeItem(position: Int){
         val item = getItem(position)!!
-        Realm.init(context)
+//        Realm.init(context)
         val realm = Realm.getDefaultInstance()
 
         val builder = AlertDialog.Builder(context)
         builder.setMessage("삭제하시겠습니까?")
                 .setPositiveButton("삭제") { dialogInterface, _ ->
-                    realm.beginTransaction()
-                    realm.where(T_Plan::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
-                    realm.commitTransaction()
+//                    realm.beginTransaction()
+//                    Log.d("mytag", position.toString() + " " + item.toString())
+//                    item.deleteFromRealm()
+////                    realm.where(T_Plan::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
+//                    realm.commitTransaction()
+                    realm.use {
+                        Log.d("mytag", realm.toString())
+                        realm.executeTransaction {
+                            item.deleteFromRealm()
+                        }
+                    }
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }
@@ -74,14 +82,15 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
         return ViewHolder(v)
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if(holder is ViewHolder){
             val rPos = convertPos(position)
 
             if(rPos > count - 1){ //empty
-                holder.humanImg.visibility = View.GONE
-                holder.roadImg.visibility = View.GONE
-                holder.name.visibility = View.GONE
+                holder.humanImg.visibility = View.INVISIBLE
+                holder.roadImg.visibility = View.INVISIBLE
+                holder.name.visibility = View.INVISIBLE
             }
             else{
                 if(position == humanIndex)
@@ -178,5 +187,7 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
         notifyItemChanged(humanIndex)
         return convertPos(minIndex)
     }
+
+
 
 }

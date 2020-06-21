@@ -21,6 +21,9 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
 
     private val TYPE_ITEM = 0
     private val TYPE_FOOTER = 1
+    var realmResult = realmResult
+    var position1 = -1
+    var position2 = -1
 
     interface OnItemClickListener{
         fun OnItemClick(holder: ItemViewHolder, view:View, data: T_Plan, position: Int)
@@ -48,9 +51,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     init {
         Realm.init(context)
         realm = Realm.getDefaultInstance()
-        for(i in 0..itemCount-2){
-            Log.d("mytag", "pos : " + getItem(i)!!.pos.toString())
-        }
+
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -64,12 +65,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
             spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
 
-            dragBtn.setOnTouchListener { _, event ->
-                if(event.action == MotionEvent.ACTION_DOWN){
-                    itemDragListener?.onStartDrag(this)
-                }
-                false
-            }
+
             deleteBtn.setOnClickListener {
                 val builder = AlertDialog.Builder(context) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
                 val deleteListDialog = //context 이용해서 레이아웃 인플레이터 생성
@@ -98,24 +94,35 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     }
 
     fun moveItem(pos1:Int, pos2:Int){  //객체 두개 바꾸기 함수
-        if(pos2 in 0 until itemCount - 1 && pos1 in 0 until itemCount - 1){
+        if(pos1 != position1 || pos2 != position2){
+            if(pos2 in 0 until itemCount - 1 && pos1 in 0 until itemCount - 1){
             Log.d("mytag", "moveItem!!")
-            realm.beginTransaction()
-            val item1 = getItem(pos1)
-            val item2 = getItem(pos2)
+            val itemId = realmResult.where().equalTo("pos", pos1).findFirst()!!.id
             if(pos2 > pos1){
-                for(i in pos1 + 1 .. pos2){
-                    getItem(i)!!.pos--
+                var realmResultSnapshot = realmResult.where().lessThan("pos", pos2 + 1).greaterThan("pos", pos1).findAll()!!.createSnapshot()
+                for(i in 0 until realmResultSnapshot.size){
+                    realm.beginTransaction()
+                    realmResultSnapshot[i]!!.pos--
+                    realm.commitTransaction()
                 }
             }
             else{
-                for (i in pos2 until pos1){
-                    getItem(i)!!.pos++
+                var realmResultSnapshot = realmResult.where().lessThan("pos", pos1).greaterThan("pos", pos2 - 1).findAll()!!.createSnapshot()
+                for(i in 0 until realmResultSnapshot.size){
+                    realm.beginTransaction()
+                    realmResultSnapshot[i]!!.pos++
+                    realm.commitTransaction()
                 }
             }
-            getItem(pos1)!!.pos = pos2
+
+            realm.beginTransaction()
+            realmResult.where().equalTo("id", itemId).findFirst()!!.pos = pos2
             realm.commitTransaction()
+            }
         }
+        position1 = pos1
+        position2 = pos2
+
     }
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
@@ -189,13 +196,23 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
             p0.spotName.text = getItem(p1)!!.name
             if(getItem(p1)!!.hour != null)
                 p0.spotTime.text = getItem(p1)!!.hour.toString() + ":" + getItem(p1)!!.minute.toString()
-            if(Fragment1.editMode){
+            if(Fragment1.mode == 0){ //수정 모드
                 p0.deleteBtn.visibility = View.VISIBLE
                 p0.dragBtn.visibility = View.INVISIBLE
             }
-            else{
+            else if(Fragment1.mode == 1){ //평상시
                 p0.deleteBtn.visibility = View.INVISIBLE
                 p0.dragBtn.visibility = View.VISIBLE
+            }
+            else{ //캡처
+                p0.deleteBtn.visibility = View.INVISIBLE
+                p0.dragBtn.visibility = View.INVISIBLE
+            }
+            p0.dragBtn.setOnTouchListener { _, event ->
+                if(event.action == MotionEvent.ACTION_DOWN){
+                    itemDragListener?.onStartDrag(p0)
+                }
+                false
             }
         }
     }

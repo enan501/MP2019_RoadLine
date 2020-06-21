@@ -19,15 +19,10 @@ import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.add_list_dialog.*
 
 class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
-    private val TYPE_ONE  = -2
-    private val TYPE_START = -4
-    private val TYPE_END = -3
-    //private val TYPE_MID = -1
 
-//    var planList:ArrayList<Plan> = arrayListOf()
-//    lateinit var adapter:DateListAdapter
     lateinit var planAdapter: PlanListAdapter
     lateinit var iconAdapter: DateIconListAdapter
     lateinit var rView: RecyclerView
@@ -38,7 +33,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
 
     companion object{
-        var editMode = false
+        var mode = 1 //0->수정모드, 1->평상시, 2->캡처할때
     }
 
     var listID = ""
@@ -70,7 +65,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         }
     }
     fun initData(){
-        editMode = false
+        mode = 1
         if(activity != null){
             val intent = activity!!.intent
             if(intent != null){
@@ -78,21 +73,8 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 dayNum = intent.getIntExtra("DayNum", 0)
             }
         }
-//        setList()
     }
-//    fun setList(){
-//        planList.clear()
-//        for(T_Plan in (activity!! as ShowDateActivity).planResults){
-//            planList.add(Plan(T_Plan.listID, T_Plan.dayNum, T_Plan.id, T_Plan.name,
-//                    T_Plan.locationX, T_Plan.locationY, T_Plan.hour.toString() + ":" + T_Plan.minute.toString(), T_Plan.memo, T_Plan.pos, -1, false))
-//        }
-//        if(planList.size == 1)
-//            planList.get(0).viewType = TYPE_ONE
-//        else if(planList.size > 1){
-//            planList.get(0).viewType = TYPE_START
-//            planList.get(planList.size - 1).viewType = TYPE_END
-//        }
-//    }
+
     fun initLayout(){
         rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
         val layoutManager = LinearLayoutManager(
@@ -128,7 +110,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             }
 
             override fun OnItemClick(holder: PlanListAdapter.ItemViewHolder, view: View, data: T_Plan, position: Int) {
-                if(!editMode){
+                if(mode == 1){
                     val i = Intent(activity, AddSpotActivity::class.java)
                     i.putExtra("DayNum", dayNum)
                     i.putExtra("ListID", listID)
@@ -136,7 +118,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                     i.putExtra("planId", data.id)
                     startActivityForResult(i, 123)
                 }
-                else{
+                else if(mode == 0){ //수정 모드
                     for(i in 0 until planAdapter.itemCount - 1){
                         val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                         anim.duration = 300
@@ -147,7 +129,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                             view.dragBtn.visibility = View.VISIBLE
                         }
                     }
-                    editMode = false
+                    mode = 1
                 }
             }
         }
@@ -161,7 +143,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
         planAdapter.itemLongClickListener = object : PlanListAdapter.OnItemLongClickListener{
             override fun onItemLongClick() {
-                if(!editMode){
+                if(mode == 1){
                     val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                     anim.duration = 300
                     for(i in 0 until planAdapter.itemCount - 1){
@@ -172,7 +154,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                             view.deleteBtn.startAnimation(anim)
                         }
                     }
-                    editMode = true
+                    mode = 0
                 }
             }
         }
@@ -291,8 +273,8 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     fun getScreenshotFromRecyclerView(view: RecyclerView, ad: RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
-
-        var bigBitmap: Bitmap? = null
+        mode = 2
+        var bigBitmap: Bitmap?
         val size = ad.itemCount - 1
         if(size == 0)
             return null
@@ -311,6 +293,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             )
             holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
+            Log.d("mytag", holder.itemView.measuredHeight.toString())
             holder.itemView.isDrawingCacheEnabled = true
             holder.itemView.buildDrawingCache()
             val drawingCache = holder.itemView.drawingCache
@@ -330,7 +313,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             iHeight += bitmap.getHeight()
             bitmap.recycle()
         }
-
+        mode = 1
         return bigBitmap
     }
 }
