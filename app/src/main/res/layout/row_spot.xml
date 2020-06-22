@@ -1,65 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   xmlns:tools="http://schemas.android.com/tools"
-                                                   android:id="@+id/linearLayout3"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="50dp"
-                                                   android:background="#fafafa">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/linearLayout3"
+              android:layout_width="match_parent"
+              android:layout_height="50dp"
+              android:background="#fafafa">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+        <TextView
+            android:id="@+id/rs_spotTime"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            android:layout_marginHorizontal="8dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:gravity="center"
+            android:paddingHorizontal="5dp"
+            android:text="13:00" android:textColor="@color/colorPrimary"
+            android:textSize="13sp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rs_spotName" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+        <TextView
+            android:id="@+id/rs_spotName"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="7dp"
+            android:layout_marginBottom="7dp"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:maxLines="1"
+            android:paddingHorizontal="5dp"
+            android:text="null" android:textSize="17sp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@id/rs_dragBtn"
+            app:layout_constraintStart_toEndOf="@id/rs_spotTime" app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/rs_dragBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/drag_icon"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.619" app:layout_constraintStart_toEndOf="@id/rs_spotName"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/rs_deleteBtn"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/rs_spotName"
+            app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/delete"/>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="wrap_content"
+            android:layout_height="0.5dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/lightGray" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    <TextView
-        android:id="@+id/rs_spotTime"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        app:layout_constraintHorizontal_chainStyle="spread"
-        android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp"
-        android:gravity="center"
-        android:paddingHorizontal="5dp"
-        android:text="13:00" android:textColor="@color/colorPrimary"
-        android:textSize="13sp" app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rs_spotName" app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-    <TextView
-        android:id="@+id/rs_spotName"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginBottom="7dp"
-        android:ellipsize="end"
-        android:gravity="left|center_vertical"
-        android:maxLines="1"
-        android:paddingHorizontal="5dp"
-        android:text="null" android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@id/rs_dragBtn"
-        app:layout_constraintStart_toEndOf="@id/rs_spotTime" app:layout_constraintTop_toTopOf="parent"/>
+</LinearLayout>
 
-    <ImageView
-        android:id="@+id/rs_dragBtn"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:background="@drawable/drag_icon"
-        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.619" app:layout_constraintStart_toEndOf="@id/rs_spotName"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/rs_deleteBtn"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toEndOf="@id/rs_spotName"
-        app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/delete"/>
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="wrap_content"
-        android:layout_height="0.5dp"
-        android:layout_marginEnd="10dp"
-        android:background="@color/lightGray" app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"/>
-
-</androidx.constraintlayout.widget.ConstraintLayout>

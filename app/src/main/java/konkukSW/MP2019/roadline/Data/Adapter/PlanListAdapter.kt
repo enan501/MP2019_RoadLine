@@ -53,6 +53,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
         for(i in 0..itemCount-2){
             Log.d("mytag", "pos : " + getItem(i)?.pos.toString())
         }
+
     }
 
     inner class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -124,36 +125,18 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
         realm.beginTransaction()
-//        val tuple = realm.where(T_Plan::class.java)
-//                .equalTo("id", items[pos].id)
-//                .findFirst()
 
-//        tuple!!.deleteFromRealm()
         Log.d("mytag", "pos " + pos.toString())
         getItem(pos)?.deleteFromRealm()
         for(i in pos + 1 .. itemCount - 2) {
             getItem(i)!!.pos--
         }
         realm.commitTransaction()
-//        items.removeAt(pos)
-//
-//        notifyItemRangeRemoved(pos, items.size + 1)
-//        changePos()
+
         itemChangeListener!!.onItemChange() //iconAdapter 다시 달기
     }
 
-//    fun changePos(){
-//        realm.beginTransaction()
-//        for(i in 0..items.size-1) {
-//            val id = items[i].id
-//            val result = realm.where(T_Plan::class.java)
-//                    .equalTo("id", id)
-//                    .findFirst()
-//            items[i].pos = i
-//            result!!.pos = i
-//        }
-//        realm.commitTransaction()
-//    }
+
 
     inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var addBtn: ImageView
@@ -189,17 +172,22 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         if(p0 is ItemViewHolder) {
-            p0.spotName.text = getItem(p1)?.name
-            if(getItem(p1)?.hour != null)
-                p0.spotTime.text = getItem(p1)?.hour.toString() + ":" + getItem(p1)?.minute.toString()
-            if(Fragment1.editMode){
+            p0.spotName.text = getItem(p1)!!.name
+            if(getItem(p1)!!.hour != null)
+                p0.spotTime.text = getItem(p1)!!.hour.toString() + ":" + getItem(p1)!!.minute.toString()
+            if(Fragment1.mode == 0){ //수정 모드
                 p0.deleteBtn.visibility = View.VISIBLE
                 p0.dragBtn.visibility = View.INVISIBLE
             }
-            else{
+            else if(Fragment1.mode == 1){ //평상시
                 p0.deleteBtn.visibility = View.INVISIBLE
                 p0.dragBtn.visibility = View.VISIBLE
             }
+            else{ //캡처
+                p0.deleteBtn.visibility = View.INVISIBLE
+                p0.dragBtn.visibility = View.INVISIBLE
+            }
+
         }
     }
 

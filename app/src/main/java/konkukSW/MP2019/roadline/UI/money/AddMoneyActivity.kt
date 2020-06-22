@@ -21,6 +21,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import com.bumptech.glide.Glide
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.kotlin.where
@@ -41,6 +42,8 @@ import kotlin.math.roundToInt
 
 class AddMoneyActivity : AppCompatActivity() {
     val SELECT_IMAGE = 100
+    var editMode = false
+    var moneyId = ""
     var listID = ""
     var dayNum = 0
     var img_url: String = "" // 이미지 URI
@@ -49,11 +52,10 @@ class AddMoneyActivity : AppCompatActivity() {
     lateinit var selectedCurrency: T_Currency
     lateinit var spinnerAdapter: ArrayAdapter<String>
     lateinit var curList:RealmList<T_Currency>
+    var selectedMoney: T_Money? = null //수정모드일때만 초기화
     var exchange = 0.0
-    var pos = -1
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
-    var textViewList:ArrayList<TextView> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,8 +75,6 @@ class AddMoneyActivity : AppCompatActivity() {
     fun initPermission() {
         if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
             askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
-        } else {
-            Toast.makeText(applicationContext, "권한이 승인되었습니다.", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -122,28 +122,61 @@ class AddMoneyActivity : AppCompatActivity() {
     fun initData(){
         realm = Realm.getDefaultInstance()
         val i = intent
-        pos = i.getIntExtra("pos", -1)
+        editMode = i.getBooleanExtra("editMode", false)
         dayNum = i.getIntExtra("DayNum", 0)
         listID = i.getStringExtra("ListID")
-        selectedCurrency = realm.where(T_Currency::class.java).equalTo("code", i.getStringExtra("cur")).findFirst()!!
+        if(editMode){ //수정
+            moneyId = i.getStringExtra("moneyId")
+            selectedMoney = realm.where(T_Money::class.java).equalTo("id", moneyId).findFirst()!!
+            selectedCurrency = selectedMoney!!.currency!!
+        }
+        else{
+            selectedCurrency = realm.where(T_Currency::class.java).equalTo("code", i.getStringExtra("cur")).findFirst()!!
+        }
+        
         curList = realm.where(T_List::class.java).equalTo("id", listID).findFirst()!!.currencys
-        textViewList.add(textView1)
-        textViewList.add(textView2)
-        textViewList.add(textView3)
-        textViewList.add(textView4)
-        textViewList.add(textView5)
-        textViewList.add(textView6)
     }
 
 
     fun initLayout(){
-        setSupportActionBar(am_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         for(i in 0 until curList.size){
             if(curList[i]!!.code == selectedCurrency.code){
                 cSpinner.setSelection(i)
             }
         }
+
+        if(editMode){
+            am_toolbar.title = "가계부 수정"
+            img_url = selectedMoney!!.img
+            if(img_url == ""){
+                addMoneyImage.setImageResource(R.drawable.photo_default)
+            }
+            else{
+                Glide.with(applicationContext).load(selectedMoney!!.img).into(addMoneyImage)
+            }
+            val price = selectedMoney!!.price
+            if(Math.floor(price) == price){
+                priceTxt.setText(Math.floor(price).toInt().toString())
+            }
+            else{
+                priceTxt.setText(price.toString())
+            }
+            memoText.setText(selectedMoney!!.memo)
+            when(selectedMoney!!.cate){
+                "식사" -> categoryGroup.check(R.id.mealBtn)
+                "쇼핑" -> categoryGroup.check(R.id.shoppingBtn)
+                "교통" -> categoryGroup.check(R.id.transportBtn )
+                "관광" -> categoryGroup.check(R.id.tourBtn)
+                "숙박" -> categoryGroup.check(R.id.lodgmentBtn)
+                "기타" -> categoryGroup.check(R.id.etcBtn)
+            }
+            cate = selectedMoney!!.cate
+        }
+        else{
+            am_toolbar.title = "가계부 추가"
+        }
+        setSupportActionBar(am_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     fun initAdapter(){
@@ -192,10 +225,11 @@ class AddMoneyActivity : AppCompatActivity() {
             }
         }
 
-        for(i in 0 until textViewList.size){
-            textViewList[i].setOnClickListener {
-                categoryGroup.check(categoryGroup.getChildAt(i).id)
-            }
+        addMoneyImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+            intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            startActivityForResult(intent, SELECT_IMAGE)
         }
 
         priceTxt.addTextChangedListener(object : TextWatcher {
@@ -216,16 +250,6 @@ class AddMoneyActivity : AppCompatActivity() {
             }
         })
     }
-
-    fun addImg(view: View) {
-        //어떤 앱에서 이미지를 가져오는지 몰라서 묵시적 intent 수행
-        //가져올 때 액션 picK이라는 인텐트 필터 적용
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        startActivityForResult(intent, SELECT_IMAGE)
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -264,27 +288,44 @@ class AddMoneyActivity : AppCompatActivity() {
             dialog.show()
         }
         else{
-            realm.beginTransaction()
-            val moneyTable = realm.createObject(T_Money::class.java, UUID.randomUUID().toString())//데이터베이스에 저장할 객체 생성
-            moneyTable.listID = listID
-            moneyTable.dayNum = dayNum
-            moneyTable.currency = selectedCurrency
-            if (img_url == "") { // 사진 선택 안했으면
-                moneyTable.img = ""
-            } else {
-                moneyTable.img = img_url
-            }
-            moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
-            moneyTable.cate = cate
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
-                moneyTable.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
+            if(editMode) { //수정
+                realm.beginTransaction()
+                selectedMoney!!.currency = selectedCurrency
+                selectedMoney!!.img = img_url
+                selectedMoney!!.price = priceTxt.text.toString().toDouble() //원화 넣기
+                selectedMoney!!.cate = cate
+                if(android.os.Build.VERSION.SDK_INT >= 26) {
+                    selectedMoney!!.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
+                }
+                else{
+                    selectedMoney!!.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
+                }
+                selectedMoney!!.memo = memoText.text.toString()
+                realm.commitTransaction()
+
             }
             else{
-                moneyTable.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
+                realm.beginTransaction()
+                val moneyTable = realm.createObject(T_Money::class.java, UUID.randomUUID().toString())//데이터베이스에 저장할 객체 생성
+                moneyTable.listID = listID
+                moneyTable.dayNum = dayNum
+                moneyTable.currency = selectedCurrency
+                moneyTable.img = img_url
+                moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
+                moneyTable.cate = cate
+                if(android.os.Build.VERSION.SDK_INT >= 26) {
+                    moneyTable.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
+                }
+                else{
+                    moneyTable.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
+                }
+                moneyTable.memo = memoText.text.toString()
+                realm.commitTransaction()
             }
-            realm.commitTransaction()
 
-            if(img_url != ""){
+
+            val item = realm.where(T_Photo::class.java).equalTo("listID", listID).equalTo("dayNum", dayNum).equalTo("img", img_url).findFirst()
+            if(img_url != "" && item == null){
                 realm.beginTransaction()
                 val photoTable = realm.createObject(T_Photo::class.java, UUID.randomUUID().toString())
                 photoTable.listID = listID

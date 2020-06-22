@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,10 +14,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.*
 import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import io.realm.Realm
 import io.realm.RealmResults
+import konkukSW.MP2019.roadline.Data.Adapter.MoneyGridAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyPhotoListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Currency
 import konkukSW.MP2019.roadline.Data.DB.T_Day
@@ -39,12 +43,15 @@ class ShowMoneyActivity : AppCompatActivity() {
     var ListID = ""
     var DayNum = 0
     var isAll = false
+    var deleteMode = false
     lateinit var dayList:RealmResults<T_Day>
     lateinit var moneyResults: RealmResults<T_Money>
     lateinit var selectedCurrency:T_Currency
     var totalMoney = 0.0
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
+    var deleteMoneyList: ArrayList<T_Money> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,19 +89,97 @@ class ShowMoneyActivity : AppCompatActivity() {
 
     }
 
+    fun changeViewToDeleteMode(flg: Boolean){
+        for(i in 0 until rViewAdapterPhoto.itemCount){
+            val viewHolder = money_recycleView.findViewHolderForAdapterPosition(i)
+            if(viewHolder != null){
+                for(j in 0 until (viewHolder as MoneyPhotoListAdapter.ViewHolder).rView.childCount){
+                    val itemViewHolder = viewHolder.rView.findViewHolderForAdapterPosition(j)
+                    if(itemViewHolder != null){
+                        if(flg){
+                            (itemViewHolder as MoneyGridAdapter.ViewHolder).isChecked = false
+                            itemViewHolder.checkButton.visibility = View.INVISIBLE
+                        }
+                        else{
+                            (itemViewHolder as MoneyGridAdapter.ViewHolder).isChecked = false
+                            itemViewHolder.checkButton.visibility = View.VISIBLE
+                            itemViewHolder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
     fun initListener() {
+        deleteButton.setOnClickListener {
+            if(deleteMode){
+                if(deleteMoneyList.isNotEmpty()){
+                    val builder = AlertDialog.Builder(this@ShowMoneyActivity)
+                    builder.setMessage("삭제하시겠습니까?")
+                            .setPositiveButton("삭제") { dialogInterface, _ ->
+                                Log.d("mytag", deleteMoneyList.toString())
+                                realm.beginTransaction()
+                                for(i in deleteMoneyList){
+                                    i.deleteFromRealm()
+                                }
+                                realm.commitTransaction()
+                                changeViewToDeleteMode(deleteMode)
+                                deleteMoneyList.clear()
+                                deleteText.text = "수정하기"
+                                deleteMode = false
+                            }
+                            .setNegativeButton("취소") { dialogInterface, i ->
+                                changeViewToDeleteMode(deleteMode)
+                                deleteMoneyList.clear()
+                                deleteText.text = "수정하기"
+                                deleteMode = false
+                            }
+                    val dialog = builder.create()
+                    dialog.show()
+                }
+                else{
+                    deleteText.text = "수정하기"
+                    changeViewToDeleteMode(deleteMode)
+                    deleteMode = false
+                }
+            }
+            else{
+                deleteText.text = "삭제하기"
+                changeViewToDeleteMode(deleteMode)
+                deleteMode = true
+            }
+        }
         rViewAdapterPhoto.moneyItemClickListener = object :MoneyPhotoListAdapter.OnMoneyItemClickListener{
-            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
+            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) { //추가
                 val intent = Intent(this@ShowMoneyActivity, AddMoneyActivity::class.java)
-                intent.putExtra("pos", position)
                 intent.putExtra("ListID", data.listID)
                 intent.putExtra("DayNum", data.num)
                 intent.putExtra("cur", selectedCurrency.code)
+                intent.putExtra("editMode", false)
                 startActivity(intent)
             }
 
-            override fun onMoneyItemClick(data: T_Money) {
-                showImage(data)
+            override fun onMoneyItemClick(holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int, isChecked: Boolean) { //수정
+                if(deleteMode){
+                    if(isChecked){
+                        holder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+                        deleteMoneyList.remove(data)
+                    }
+                    else{
+                        holder.checkButton.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorPrimary), PorterDuff.Mode.SRC_IN)
+                        deleteMoneyList.add(data)
+                    }
+                }
+                else{
+                    val intent = Intent(this@ShowMoneyActivity, AddMoneyActivity::class.java)
+                    intent.putExtra("ListID", data.listID)
+                    intent.putExtra("DayNum", data.dayNum)
+                    intent.putExtra("moneyId", data.id)
+                    intent.putExtra("editMode", true)
+                    startActivity(intent)
+                }
             }
         }
         rViewAdapterPhoto.totalViewChangeListener = object :MoneyPhotoListAdapter.OnTotalViewChangeListener{
@@ -104,10 +189,21 @@ class ShowMoneyActivity : AppCompatActivity() {
         }
 
         detail_money.setOnClickListener {
-            val intent = Intent(this, ShowDetailMoneyActivity::class.java)
-            intent.putExtra("ListID", ListID)
-            intent.putExtra("DayNum", DayNum)
-            startActivityForResult(intent, 123)
+            if(moneyResults.isEmpty()){
+                val builder = AlertDialog.Builder(this@ShowMoneyActivity)
+                builder.setMessage("가계부에 내용을 추가해주세요")
+                        .setPositiveButton("확인") { dialogInterface, _ ->
+
+                        }
+                val dialog = builder.create()
+                dialog.show()
+            }
+            else{
+                val intent = Intent(this, ShowDetailMoneyActivity::class.java)
+                intent.putExtra("ListID", ListID)
+                intent.putExtra("DayNum", DayNum)
+                startActivityForResult(intent, 123)
+            }
         }
         moneyResults.addChangeListener { _ ->
             totalMoney = 0.0
@@ -186,55 +282,15 @@ class ShowMoneyActivity : AppCompatActivity() {
         for(j in results){
             total += j.price * j.currency!!.rate
         }
-        if(total.roundToInt().toString().length >= 6 || selectedCurrency.code == "KRW"){
-            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyPhotoListAdapter.ViewHolder).totalText.text = shortFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
-        }
-        else{
-            (money_recycleView.findViewHolderForAdapterPosition(pos) as MoneyPhotoListAdapter.ViewHolder).totalText.text = longFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
-        }
-    }
-
-    fun showImage(item: T_Money){
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater //레이아웃을 위에 겹쳐서 올리는 부분
-        val layout = inflater.inflate(R.layout.detail_money_img, null) as ConstraintLayout //레이아웃 객체생성
-        layout.setBackgroundColor(Color.parseColor("#99000000")) //레이아웃 배경 투명도 주기
-        val lp = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
-        addContentView(layout, lp) //레이아웃 위에 겹치기
-        layout.setOnClickListener {
-            (layout.parent as ViewManager).removeView(layout)
-        }
-        var imageView = layout.findViewById<ImageView>(R.id.priceImage) // 매번 새로운 레이어 이므로 ID를 find 해준다.
-        var textView1 = layout.findViewById<TextView>(R.id.textView1)
-        var textView2 = layout.findViewById<TextView>(R.id.textView2)
-        val num = item.price
-        if(num.roundToInt().toString().length >= 6){
-            textView1.text = shortFormat.format(num) + " " + item.currency!!.symbol
-        }
-        else{
-            textView1.text =longFormat.format(num) + " " + item.currency!!.symbol
-        }
-        if(android.os.Build.VERSION.SDK_INT >= 26) {
-            val dateFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            val dateTime = LocalDateTime.ofEpochSecond(item!!.dateTime, 0, ZoneOffset.of("+09:00"))
-            textView2.text = dateTime.format(dateFormat)
-        }
-        else{
-            val dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            val dateTime = org.threeten.bp.LocalDateTime.ofEpochSecond(item!!.dateTime, 0, org.threeten.bp.ZoneOffset.of("+09:00"))
-            textView2.text = dateTime.format(dateFormat)
-        }
-        if (item.img == "") {
-            when (item.cate) {
-                "식사" -> imageView.setImageResource(R.drawable.meal_big)
-                "쇼핑" -> imageView.setImageResource(R.drawable.shopping_big)
-                "교통" -> imageView.setImageResource(R.drawable.transport_big)
-                "관광" -> imageView.setImageResource(R.drawable.tour_big)
-                "숙박" -> imageView.setImageResource(R.drawable.lodgment_big)
-                "기타" -> imageView.setImageResource(R.drawable.etc_big)
+        val viewHoler = money_recycleView.findViewHolderForAdapterPosition(pos)
+        if(viewHoler != null){
+            if(total.roundToInt().toString().length >= 6 || selectedCurrency.code == "KRW"){
+                (viewHoler as MoneyPhotoListAdapter.ViewHolder).totalText.text = shortFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
             }
-        } else
-            Glide.with(applicationContext).load(item.img).into(imageView)
-
+            else{
+                (viewHoler as MoneyPhotoListAdapter.ViewHolder).totalText.text = longFormat.format(total / selectedCurrency.rate) + selectedCurrency.symbol
+            }
+        }
     }
 
     fun inputTotalTextView(num:Double){

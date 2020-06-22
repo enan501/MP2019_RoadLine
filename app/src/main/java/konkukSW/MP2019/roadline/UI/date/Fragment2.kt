@@ -55,8 +55,10 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 ////        ft.detach(this).attach(this).commit()
 //    }
 
+
+
     fun setObserve(){
-        (activity!! as ShowDateActivity).planResults.addChangeListener{t, changeSet->
+        (activity!! as ShowDateActivity).planResults.addChangeListener{t, _->
             gpsCheck.isChecked = false
             planAdapter.notifyDataSetChanged()
             if(t.size == 0){
@@ -263,7 +265,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
 
     fun getScreenshotFromRecyclerView(): Bitmap? {
-        var bigBitmap: Bitmap? = null
+        var bigBitmap: Bitmap?
         val size = planAdapter.itemCount
         if(size == 0)
             return null

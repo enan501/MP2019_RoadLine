@@ -49,7 +49,6 @@ class ShowDateActivity : AppCompatActivity() {
     lateinit var thisList: T_List
     lateinit var dayResults: RealmResults<T_Day>
     lateinit var planResults:RealmResults<T_Plan>
-//    val planResultsData = MutableLiveData<RealmResults<T_Plan>>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_date)
@@ -70,16 +69,8 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
 
+
     fun initData() {
-        setSupportActionBar(sd_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        tabLayer = findViewById(R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
-        tabLayer!!.tabGravity = TabLayout.GRAVITY_FILL
-
         listID = intent.getStringExtra("ListID")
         dayNum = intent.getIntExtra("DayNum", 0)
         Realm.init(this)
@@ -88,7 +79,7 @@ class ShowDateActivity : AppCompatActivity() {
         dayResults = realm.where<T_Day>(T_Day::class.java).equalTo("listID", listID).findAll()!!
         maxDayNum = dayResults.size
         title = thisList.title
-        title_view.text = title
+        sd_toolbar.title = title
         sd_textView1.text = "DAY " + dayNum.toString()
         if(android.os.Build.VERSION.SDK_INT >= 26) {
             val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
@@ -105,13 +96,17 @@ class ShowDateActivity : AppCompatActivity() {
                 .equalTo("dayNum", dayNum)
                 .findAll()
                 .sort("pos")
-//        planResultsData.postValue(planResults)
-//        planResults.addChangeListener { t->
-//            planResultsData.postValue(t)
-//        }
     }
 
     fun initLayout(){
+        setSupportActionBar(sd_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        tabLayer = findViewById(R.id.sd_layout_tab)
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
+        tabLayer!!.tabGravity = TabLayout.GRAVITY_FILL
+
         if(dayNum == maxDayNum){
             sd_rightImg.visibility = View.INVISIBLE
         }
@@ -196,29 +191,27 @@ class ShowDateActivity : AppCompatActivity() {
         }
 
         sd_imgBtn3.setOnClickListener {
-            var bitmap2: Bitmap? = null
+            var bitmap: Bitmap? = null
             if (tabPos == 0) { //Fragment1
-                sd_imgBtn3.visibility = View.VISIBLE
-                bitmap2 = (getSupportFragmentManager()
+                bitmap = (supportFragmentManager
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
                         as Fragment1).getScreenshot()
 
             }
             else if(tabPos == 1){ //Fragment2
-                sd_imgBtn3.visibility = View.VISIBLE
-                bitmap2 = (getSupportFragmentManager()
+                bitmap = (supportFragmentManager
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
                         as Fragment2).getScreenshotFromRecyclerView()
             }
 
-            if(bitmap2 != null){
+            if(bitmap != null){
                 val storage = this.cacheDir
                 val fileName = "temp.jpg"
                 val tempFile = File(storage, fileName)
                 try {
                     tempFile.createNewFile()
                     val out = FileOutputStream(tempFile)
-                    bitmap2?.compress(Bitmap.CompressFormat.JPEG,100, out)
+                    bitmap?.compress(Bitmap.CompressFormat.JPEG,100, out)
                     out.close()
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()

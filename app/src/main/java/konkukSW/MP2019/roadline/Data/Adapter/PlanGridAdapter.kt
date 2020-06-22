@@ -46,7 +46,6 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
             }
 
             itemView.setOnLongClickListener {
-//                itemLongClickListener?.onItemLongClick()
                 val rPos = convertPos(adapterPosition)
                 removeItem(rPos)
                 true
@@ -82,9 +81,9 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
             val rPos = convertPos(position)
 
             if(rPos > count - 1){ //empty
-                holder.humanImg.visibility = View.GONE
-                holder.roadImg.visibility = View.GONE
-                holder.name.visibility = View.GONE
+                holder.humanImg.visibility = View.INVISIBLE
+                holder.roadImg.visibility = View.INVISIBLE
+                holder.name.visibility = View.INVISIBLE
             }
             else{
                 if(position == humanIndex)
@@ -181,5 +180,7 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
         notifyItemChanged(humanIndex)
         return convertPos(minIndex)
     }
+
+
 
 }

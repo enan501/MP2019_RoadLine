@@ -18,6 +18,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
+import androidx.appcompat.widget.DialogTitle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
@@ -34,6 +35,7 @@ import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.add_list_dialog.*
 import kotlinx.android.synthetic.main.add_list_dialog.view.*
 import kotlinx.android.synthetic.main.image_pick_dialog.*
+import org.w3c.dom.Text
 import java.sql.Date
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -69,6 +71,7 @@ class MainListActivity : AppCompatActivity() {
     lateinit var editStart: TextView
     lateinit var editEnd: TextView
     lateinit var imageView: ImageView
+    lateinit var textViewTitle: TextView
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
     lateinit var currencySpinner: SearchableSpinner
@@ -198,6 +201,7 @@ class MainListActivity : AppCompatActivity() {
         editStart = addListDialog.findViewById(R.id.editStart)
         editEnd = addListDialog.findViewById(R.id.editEnd)
         imageView = addListDialog.findViewById(R.id.imageView)
+        textViewTitle = addListDialog.findViewById(R.id.textViewTitle)
 
         currencySpinner = addListDialog.findViewById(R.id.currencySpinner)
         currencySpinner.adapter = currencyAdapter
@@ -245,7 +249,7 @@ class MainListActivity : AppCompatActivity() {
             dateStartYear=  year
             dateStartMonth = month + 1
             dateStartDay = dayOfMonth
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
+            if(Build.VERSION.SDK_INT >= 26) {
                 val dateStart = LocalDate.of(year, month + 1, dayOfMonth)
                 editStart.text = (dateStart as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
                 dateStartEpoch = dateStart.toEpochDay()
@@ -261,7 +265,7 @@ class MainListActivity : AppCompatActivity() {
             dateEndYear = year
             dateEndMonth = month + 1
             dateEndDay = dayOfMonth
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
+            if(Build.VERSION.SDK_INT >= 26) {
                 val dateEnd = LocalDate.of(year, month + 1, dayOfMonth)
                 editEnd.text = (dateEnd as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
                 dateEndEpoch = dateEnd.toEpochDay()
@@ -326,7 +330,8 @@ class MainListActivity : AppCompatActivity() {
             addListTitle.text.clear()
             editStart.text = "시작일 입력하기"
             editEnd.text = "종료일 입력하기"
-            imageView.setImageResource(R.drawable.ml_default_image)
+            textViewTitle.visibility = View.GONE
+            imageView.visibility = View.GONE
 
             if(addListDialog.parent != null){
                 (addListDialog.parent as ViewGroup).removeView(addListDialog)
@@ -443,8 +448,6 @@ class MainListActivity : AppCompatActivity() {
                         .show()
             }
 
-
-
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 photoResults = realm.where(T_Photo::class.java).equalTo("listID", data.id).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
                 if(addListDialog.parent != null){
@@ -456,9 +459,12 @@ class MainListActivity : AppCompatActivity() {
 
                 val item = listResults[position]!!
                 addListTitle.setText(item.title)
-
                 curArray.clear()
                 curArray.addAll(data.currencys)
+
+                textViewTitle.visibility = View.VISIBLE
+                imageView.visibility = View.VISIBLE
+
 
                 dateStartEpoch = item.dateStart
                 dateEndEpoch = item.dateEnd
@@ -524,7 +530,7 @@ class MainListActivity : AppCompatActivity() {
                                 }
                                 cbuilder.dismiss()
                             } else {
-                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일 수 없습니다", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
                             }
                         } else {
                             Toast.makeText(applicationContext, "시작일과 종료일 모두 입력해주세요", Toast.LENGTH_SHORT).show()
