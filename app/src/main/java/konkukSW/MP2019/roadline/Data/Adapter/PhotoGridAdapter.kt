@@ -40,10 +40,7 @@ class PhotoGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val contex
                 if((context as ShowPhotoActivity).deleteMode)
                     isChecked = !isChecked
             }
-//            itemView.setOnLongClickListener {
-//                removeItem(adapterPosition)
-//                true
-//            }
+
         }
     }
 

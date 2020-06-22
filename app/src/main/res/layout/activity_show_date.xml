@@ -12,23 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-
-
-
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/sd_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
-
-            <TextView
-                android:id="@+id/title_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/nanum_square_round_r"
-                android:gravity="left|center_vertical"
-                android:text="유럽여행"
-                android:textSize="24sp" />
-
         </androidx.appcompat.widget.Toolbar>
 
         <View

@@ -117,12 +117,10 @@ class ShowPhotoActivity : AppCompatActivity() {
                     if(isChecked){
                         holder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
                         deletePhotoList.remove(data)
-                        Log.d("mytag", "remove : " + deletePhotoList.toString())
                     }
                     else{
-                        holder.checkButton.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
+                        holder.checkButton.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorPrimary), PorterDuff.Mode.SRC_IN)
                         deletePhotoList.add(data)
-                        Log.d("mytag", "add : " +deletePhotoList.toString())
                     }
                 }
             }
@@ -155,6 +153,7 @@ class ShowPhotoActivity : AppCompatActivity() {
                     dialog.show()
                 }
                 else{
+                    changeViewToDeleteMode(deleteMode)
                     deleteText.text = "수정하기"
                     deleteMode = false
                 }

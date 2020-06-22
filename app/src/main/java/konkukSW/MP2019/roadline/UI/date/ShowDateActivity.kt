@@ -71,15 +71,6 @@ class ShowDateActivity : AppCompatActivity() {
 
 
     fun initData() {
-        setSupportActionBar(sd_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        tabLayer = findViewById(R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_list_select))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_timeline))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(konkukSW.MP2019.roadline.R.drawable.tab_map))
-        tabLayer!!.tabGravity = TabLayout.GRAVITY_FILL
-
         listID = intent.getStringExtra("ListID")
         dayNum = intent.getIntExtra("DayNum", 0)
         Realm.init(this)
@@ -88,7 +79,7 @@ class ShowDateActivity : AppCompatActivity() {
         dayResults = realm.where<T_Day>(T_Day::class.java).equalTo("listID", listID).findAll()!!
         maxDayNum = dayResults.size
         title = thisList.title
-        title_view.text = title
+        sd_toolbar.title = title
         sd_textView1.text = "DAY " + dayNum.toString()
         if(android.os.Build.VERSION.SDK_INT >= 26) {
             val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
@@ -108,6 +99,14 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun initLayout(){
+        setSupportActionBar(sd_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        tabLayer = findViewById(R.id.sd_layout_tab)
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
+        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
+        tabLayer!!.tabGravity = TabLayout.GRAVITY_FILL
+
         if(dayNum == maxDayNum){
             sd_rightImg.visibility = View.INVISIBLE
         }

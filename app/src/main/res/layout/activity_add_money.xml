@@ -36,6 +36,15 @@
         android:layout_marginStart="8dp" android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/am_toolbar" app:srcCompat="@drawable/photo_default"/>
+    <!--<TextView-->
+        <!--android:id="@+id/addMoneyImage"-->
+        <!--android:text="이곳을 눌러 사진을 추가하세요"-->
+        <!--android:textColor="@color/lightGray"-->
+        <!--android:gravity="center"-->
+        <!--android:layout_width="250dp" android:layout_height="250dp"-->
+        <!--android:layout_marginStart="8dp" android:layout_marginTop="8dp"-->
+        <!--app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@+id/am_toolbar" app:srcCompat="@drawable/photo_default"/>-->
     <TextView
         android:id="@+id/textViewTitle1"
         android:layout_width="match_parent"

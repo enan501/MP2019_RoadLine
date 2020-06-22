@@ -141,6 +141,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                 }
                 else{
                     deleteText.text = "수정하기"
+                    changeViewToDeleteMode(deleteMode)
                     deleteMode = false
                 }
             }
@@ -165,12 +166,10 @@ class ShowMoneyActivity : AppCompatActivity() {
                     if(isChecked){
                         holder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
                         deleteMoneyList.remove(data)
-                        Log.d("mytag", "remove : " + deleteMoneyList.toString())
                     }
                     else{
-                        holder.checkButton.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
+                        holder.checkButton.setColorFilter(ContextCompat.getColor(applicationContext, R.color.colorPrimary), PorterDuff.Mode.SRC_IN)
                         deleteMoneyList.add(data)
-                        Log.d("mytag", "add : " +deleteMoneyList.toString())
                     }
                 }
                 else{

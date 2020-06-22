@@ -223,8 +223,6 @@ class MainListActivity : AppCompatActivity() {
             }
         }
 
-
-
         curTextArray[0].setOnLongClickListener{
             Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
             false
@@ -256,7 +254,7 @@ class MainListActivity : AppCompatActivity() {
             dateStartYear=  year
             dateStartMonth = month + 1
             dateStartDay = dayOfMonth
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
+            if(Build.VERSION.SDK_INT >= 26) {
                 val dateStart = LocalDate.of(year, month + 1, dayOfMonth)
                 editStart.text = (dateStart as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
                 dateStartEpoch = dateStart.toEpochDay()
@@ -272,7 +270,7 @@ class MainListActivity : AppCompatActivity() {
             dateEndYear = year
             dateEndMonth = month + 1
             dateEndDay = dayOfMonth
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
+            if(Build.VERSION.SDK_INT >= 26) {
                 val dateEnd = LocalDate.of(year, month + 1, dayOfMonth)
                 editEnd.text = (dateEnd as LocalDate).format(DateTimeFormatter.ofPattern("yyyy.MM.dd"))
                 dateEndEpoch = dateEnd.toEpochDay()
@@ -437,7 +435,6 @@ class MainListActivity : AppCompatActivity() {
                 builder.setView(deleteListDialog)
                         .setPositiveButton("삭제") { dialogInterface, _ ->
                             realm.beginTransaction()
-
                             realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
                             realm.where(T_Money::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
                             realm.where(T_Photo::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
@@ -457,8 +454,6 @@ class MainListActivity : AppCompatActivity() {
                         }
                         .show()
             }
-
-
 
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 photoResults = realm.where(T_Photo::class.java).equalTo("listID", data.id).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
