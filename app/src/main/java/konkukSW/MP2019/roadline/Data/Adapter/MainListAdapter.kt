@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
@@ -87,7 +88,7 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
             p0.image.setImageResource(R.drawable.ml_default_image)
         }
         else{
-            p0.image.setImageURI(Uri.parse(item.img))
+            Glide.with(context).load(item.img).into(p0.image)
         }
     }
 }

@@ -256,7 +256,7 @@ class AddMoneyActivity : AppCompatActivity() {
         if (requestCode == SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 img_url = getPathFromUri(data!!.data)
-                addMoneyImage.setImageURI(data!!.data)
+                Glide.with(applicationContext).load(data!!.data).into(addMoneyImage)
             }
         }
     }

@@ -56,8 +56,6 @@ class MainListActivity : AppCompatActivity() {
     lateinit var selectedCurrencyAdapter: CurrencyAdapter
     lateinit var realm:Realm
     private val REQUEST_CODE = 123
-    private val TYPE_ADD = true
-    private  val TYPE_EDIT = false
     lateinit var listResults: RealmResults<T_List>
     lateinit var curResults: RealmResults<T_Currency>
     var clickedPhoto : T_Photo? = null
