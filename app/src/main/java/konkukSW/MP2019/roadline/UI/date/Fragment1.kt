@@ -196,9 +196,12 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     fun getScreenshot() : Bitmap?{
-        val first = getScreenshotFromRecyclerView(rIconView, iconAdapter)
-        val second = getScreenshotFromRecyclerView(rView, planAdapter)
-        val result = combineImage(first!!, second!!)
+        var result: Bitmap? = null
+        if(planAdapter.itemCount > 1){
+            val first = getScreenshotFromRecyclerView(rIconView, iconAdapter)
+            val second = getScreenshotFromRecyclerView(rView, planAdapter)
+            result = combineImage(first!!, second!!)
+        }
         return result
     }
 

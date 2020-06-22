@@ -105,10 +105,6 @@ class ShowDateActivity : AppCompatActivity() {
                 .equalTo("dayNum", dayNum)
                 .findAll()
                 .sort("pos")
-//        planResultsData.postValue(planResults)
-//        planResults.addChangeListener { t->
-//            planResultsData.postValue(t)
-//        }
     }
 
     fun initLayout(){
@@ -196,29 +192,27 @@ class ShowDateActivity : AppCompatActivity() {
         }
 
         sd_imgBtn3.setOnClickListener {
-            var bitmap2: Bitmap? = null
+            var bitmap: Bitmap? = null
             if (tabPos == 0) { //Fragment1
-                sd_imgBtn3.visibility = View.VISIBLE
-                bitmap2 = (getSupportFragmentManager()
+                bitmap = (supportFragmentManager
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
                         as Fragment1).getScreenshot()
 
             }
             else if(tabPos == 1){ //Fragment2
-                sd_imgBtn3.visibility = View.VISIBLE
-                bitmap2 = (getSupportFragmentManager()
+                bitmap = (supportFragmentManager
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
                         as Fragment2).getScreenshotFromRecyclerView()
             }
 
-            if(bitmap2 != null){
+            if(bitmap != null){
                 val storage = this.cacheDir
                 val fileName = "temp.jpg"
                 val tempFile = File(storage, fileName)
                 try {
                     tempFile.createNewFile()
                     val out = FileOutputStream(tempFile)
-                    bitmap2?.compress(Bitmap.CompressFormat.JPEG,100, out)
+                    bitmap?.compress(Bitmap.CompressFormat.JPEG,100, out)
                     out.close()
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()
