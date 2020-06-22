@@ -141,11 +141,24 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     fun initMap(){
         if(planId != null){ //수정
             searchBox.setText(thisPlan!!.name)
+            var str:String?
+            if(hour != null){
+                val minute = minute.toString()
+                str = hour.toString()
+                if(minute.length == 1)
+                    str += "시 0" + minute + "분"
+                else
+                    str += "시 " + minute + "분"
+
+            }
+            else{
+                str = null
+            }
             addMap.addMarker(
                     MarkerOptions()
                             .position(LatLng(locationY,locationX))
                             .title(spotName)
-                            .snippet(hour.toString()+"시 "+minute.toString()+"분")
+                            .snippet(str)
                             .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
             )
             addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(locationY,locationX),12f))

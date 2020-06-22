@@ -1,65 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".UI.photo.DetailPhotoActivity">
-    <FrameLayout
-        android:id="@+id/frameLayout"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".UI.photo.DetailPhotoActivity">
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/adp_toolbar"
-            android:background="#B3FFFFFF"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize">
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    android:paddingVertical="5dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <!--<TextView-->
-                        <!--android:fontFamily="@font/nanum_square_round_r"-->
-                        <!--android:id="@+id/dateView"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="0dp"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:gravity="center|bottom"-->
-                        <!--android:text="6월 3일 토요일" />-->
-                    <!--<TextView-->
-                        <!--android:fontFamily="@font/nanum_square_round_r"-->
-                        <!--android:id="@+id/dateTimeView"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="0dp"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:gravity="center|top"-->
-                        <!--android:text="23시 50분" />-->
-                    <TextView
-                        android:id="@+id/dayView"
-                        android:fontFamily="@font/nanum_square_round_r"
-                        android:text="DAY 1"
-                        android:textSize="23dp"
-                        android:gravity="center"
-                        android:textColor="@color/lightGray"
-                        android:layout_width="match_parent" android:layout_height="match_parent"/>
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.appcompat.widget.Toolbar>
-    </FrameLayout>
-
-
-</LinearLayout>
+        android:layout_height="match_parent"/>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/adp_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#B3FFFFFF"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/viewPager">
+        <TextView
+            android:id="@+id/dayView"
+            android:fontFamily="@font/nanum_square_round_r"
+            android:text="DAY 1"
+            android:textSize="23dp"
+            android:gravity="center"
+            android:textColor="@color/lightGray"
+            android:layout_width="match_parent" android:layout_height="match_parent"/>
+    </androidx.appcompat.widget.Toolbar>
+</androidx.constraintlayout.widget.ConstraintLayout>

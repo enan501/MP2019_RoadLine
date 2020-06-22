@@ -12,17 +12,17 @@
         android:layout_height="50dp">
         <TextView
             android:id="@+id/rs_spotTime"
-            android:layout_width="wrap_content"
+            android:layout_width="50dp"
             android:layout_height="match_parent"
-            app:layout_constraintHorizontal_chainStyle="spread"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="7dp"
             android:layout_marginBottom="7dp"
             android:gravity="center"
             android:paddingHorizontal="5dp"
-            android:text="13:00" android:textColor="@color/colorPrimary"
-            android:textSize="13sp" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/rs_spotName" app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/colorPrimary"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/rs_spotName"
+            app:layout_constraintHorizontal_chainStyle="spread" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
         <TextView
             android:id="@+id/rs_spotName"

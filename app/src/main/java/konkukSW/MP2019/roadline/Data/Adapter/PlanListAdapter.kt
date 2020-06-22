@@ -17,7 +17,9 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.Fragment1
 import kotlinx.android.synthetic.main.fragment_fragment1.view.*
+import org.threeten.bp.LocalDateTime
 import java.lang.Exception
+import java.time.format.DateTimeFormatter
 
 class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context: Context) : RealmRecyclerViewAdapter<T_Plan, RecyclerView.ViewHolder>(realmResult, true) {
 
@@ -46,6 +48,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     var itemLongClickListener:OnItemLongClickListener? = null
     var itemChangeListener:OnItemChangeListener? = null
     var realm: Realm
+    val timeFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("HH:mm")
 
     init {
         Realm.init(context)
@@ -173,8 +176,15 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         if(p0 is ItemViewHolder) {
             p0.spotName.text = getItem(p1)!!.name
-            if(getItem(p1)!!.hour != null)
-                p0.spotTime.text = getItem(p1)!!.hour.toString() + ":" + getItem(p1)!!.minute.toString()
+            if(getItem(p1)!!.hour != null){
+                val minute = getItem(p1)!!.minute.toString()
+                var str = getItem(p1)!!.hour.toString()
+                if(minute.length == 1)
+                    str += ":0" + minute
+                else
+                    str += ":" + minute
+                p0.spotTime.text = str
+            }
             if(Fragment1.mode == 0){ //수정 모드
                 p0.deleteBtn.visibility = View.VISIBLE
                 p0.dragBtn.visibility = View.INVISIBLE

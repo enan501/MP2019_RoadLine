@@ -19,7 +19,6 @@ import konkukSW.MP2019.roadline.R
 class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
     var ListID = "init"
     var DayNum = 0;
-//    var spotList: ArrayList<Plan> = arrayListOf()
     var latlngList: ArrayList<LatLng> = arrayListOf()
 
     val mapFragment by lazy {
@@ -44,24 +43,8 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
         return view
     }
 
-//    override fun onHiddenChanged(hidden: Boolean) {
-//        refresh()
-//        super.onHiddenChanged(hidden)
-//    }
-//
-//    fun refresh() {
-////        val ft = fragmentManager!!.beginTransaction()
-////        ft.detach(this).attach(this).commit()
-////        spotList.clear()
-////        setList()
-////        mapFragment.getMapAsync(this)
-//    }
 
     fun setObserve() {
-//        (activity!! as ShowDateActivity).planResultsData.observe(viewLifecycleOwner, Observer {
-//            setList()
-//            mapFragment.getMapAsync(this)
-//        })
         (activity!! as ShowDateActivity).planResults.addChangeListener { _, _ ->
             setList()
             mapFragment.getMapAsync(this)
@@ -69,24 +52,8 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
     }
 
     fun setList() {
-//        spotList.clear()
         latlngList.clear()
         for (T_Plan in (activity!! as ShowDateActivity).planResults) {
-//            spotList.add(
-//                    Plan(
-//                            T_Plan.listID,
-//                            T_Plan.dayNum,
-//                            T_Plan.id,
-//                            T_Plan.name,
-//                            T_Plan.locationX,
-//                            T_Plan.locationY,
-//                            T_Plan.hour.toString() + ":" + T_Plan.minute.toString(),
-//                            T_Plan.memo,
-//                            T_Plan.pos,
-//                            -1,
-//                            false
-//                    )
-//            )
             latlngList.add(LatLng(T_Plan.locationY, T_Plan.locationX))
         }
     }
@@ -133,8 +100,20 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
             markerOptions
                     .position(latlngList[i])
                     .title(result[i]!!.name)
-                    .snippet(result[i]!!.hour.toString() + ":" + result[i]!!.minute.toString())
                     .icon(BitmapDescriptorFactory.fromBitmap(marker))
+            if(result[i]!!.hour != null){
+                val minute = result[i]!!.minute.toString()
+                var str = result[i]!!.hour.toString()
+                if(minute.length == 1)
+                    str += "시 0" + minute + "분"
+                else
+                    str += "시 " + minute + "분"
+                markerOptions.snippet(str)
+
+            }
+            else{
+                markerOptions.snippet(null)
+            }
             gMap.addMarker(markerOptions)
 
             boundsBuilder.include(latlngList[i])
