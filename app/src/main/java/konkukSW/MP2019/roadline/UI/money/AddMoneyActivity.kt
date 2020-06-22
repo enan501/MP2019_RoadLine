@@ -54,10 +54,8 @@ class AddMoneyActivity : AppCompatActivity() {
     lateinit var curList:RealmList<T_Currency>
     var selectedMoney: T_Money? = null //수정모드일때만 초기화
     var exchange = 0.0
-//    var pos = -1
     val shortFormat = DecimalFormat("###,###")
     val longFormat = DecimalFormat("###,###.##")
-    var textViewList:ArrayList<TextView> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,18 +135,10 @@ class AddMoneyActivity : AppCompatActivity() {
         }
         
         curList = realm.where(T_List::class.java).equalTo("id", listID).findFirst()!!.currencys
-        textViewList.add(textView1)
-        textViewList.add(textView2)
-        textViewList.add(textView3)
-        textViewList.add(textView4)
-        textViewList.add(textView5)
-        textViewList.add(textView6)
     }
 
 
     fun initLayout(){
-        setSupportActionBar(am_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         for(i in 0 until curList.size){
             if(curList[i]!!.code == selectedCurrency.code){
                 cSpinner.setSelection(i)
@@ -156,7 +146,7 @@ class AddMoneyActivity : AppCompatActivity() {
         }
 
         if(editMode){
-            title_view.text = "가계부 수정"
+            am_toolbar.title = "가계부 수정"
             img_url = selectedMoney!!.img
             if(img_url == ""){
                 addMoneyImage.setImageResource(R.drawable.photo_default)
@@ -181,8 +171,12 @@ class AddMoneyActivity : AppCompatActivity() {
                 "기타" -> categoryGroup.check(R.id.etcBtn)
             }
             cate = selectedMoney!!.cate
-
         }
+        else{
+            am_toolbar.title = "가계부 추가"
+        }
+        setSupportActionBar(am_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
     fun initAdapter(){
@@ -231,10 +225,11 @@ class AddMoneyActivity : AppCompatActivity() {
             }
         }
 
-        for(i in 0 until textViewList.size){
-            textViewList[i].setOnClickListener {
-                categoryGroup.check(categoryGroup.getChildAt(i).id)
-            }
+        addMoneyImage.setOnClickListener {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+            intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+            startActivityForResult(intent, SELECT_IMAGE)
         }
 
         priceTxt.addTextChangedListener(object : TextWatcher {
@@ -255,16 +250,6 @@ class AddMoneyActivity : AppCompatActivity() {
             }
         })
     }
-
-    fun addImg(view: View) {
-        //어떤 앱에서 이미지를 가져오는지 몰라서 묵시적 intent 수행
-        //가져올 때 액션 picK이라는 인텐트 필터 적용
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        startActivityForResult(intent, SELECT_IMAGE)
-    }
-
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

@@ -1,274 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".UI.money.AddMoneyActivity">
+
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/am_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/title_view"
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/nanum_square_round_r"
-                android:gravity="start|center_vertical"
-                android:text="가계부 추가"
-                android:textSize="24sp" />
-            <ImageView
-                android:id="@+id/addMoneySubmit"
-                android:layout_marginVertical="8dp"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:onClick="submitBtn"
-                android:src="@drawable/checkbt" />
-        </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/addMoneySubmit"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginVertical="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0"
+            android:onClick="submitBtn"
+            android:src="@drawable/checkbt"/>
     </androidx.appcompat.widget.Toolbar>
-
     <View
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="#cccccc" />
-
-    <LinearLayout
-        android:orientation="vertical"
+        android:layout_height="1dp" android:background="#cccccc"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/am_toolbar"/>
+    <ImageView
+        android:id="@+id/addMoneyImage"
+        android:layout_width="250dp" android:layout_height="250dp"
+        android:layout_marginStart="8dp" android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/am_toolbar" app:srcCompat="@drawable/photo_default"/>
+    <TextView
+        android:id="@+id/textViewTitle1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <LinearLayout
-            android:gravity="center"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="가격"
+        android:textColor="@color/colorPrimary"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addMoneyImage"/>
+    <EditText
+        android:id="@+id/priceTxt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:ems="10"
+        android:hint="가격을 입력하세요"
+        android:inputType="numberDecimal"
+        android:textAlignment="textEnd"
+        android:paddingEnd="10dp"
+        app:layout_constraintEnd_toStartOf="@+id/cSpinner"
+        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintStart_toStartOf="@+id/textViewTitle1"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle1"/>
+    <Spinner
+        android:id="@+id/cSpinner"
+        android:background="@null"
+        android:layout_width="wrap_content" android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="@+id/priceTxt"
+        app:layout_constraintEnd_toEndOf="@+id/textViewTitle1" app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/priceTxt" app:layout_constraintTop_toBottomOf="@+id/textViewTitle1"/>
+    <TextView
+        android:id="@+id/addMoneyExchange"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:layout_marginEnd="10dp" android:textAlignment="textEnd"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="@+id/priceTxt" app:layout_constraintTop_toBottomOf="@+id/priceTxt"/>
+    <TextView
+        android:id="@+id/textViewTitle2"
+        android:textColor="@color/colorPrimary"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp" android:text="카테고리"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/priceTxt"/>
+    <RadioGroup
+        android:id="@+id/categoryGroup"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:orientation="horizontal" app:layout_constraintEnd_toEndOf="@id/textViewTitle2"
+        app:layout_constraintStart_toStartOf="@id/textViewTitle2"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle2">
+        <RadioButton
+            android:id="@+id/mealBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp">
-            <ImageView
-                android:id="@+id/addMoneyImage"
-                android:layout_width="250dp"
-                android:layout_height="250dp"
-                android:onClick="addImg"
-                android:scaleType="centerCrop"
-                android:src="@drawable/photo_default" />
-        </LinearLayout>
+            android:button="@null"
+            android:drawableTop="@drawable/radio_meal"
+            android:drawablePadding="8dp" android:gravity="center" android:text="식사"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="20dp"
-            android:layout_weight="1.5"
-            android:orientation="vertical" android:paddingHorizontal="20dp">
+        <RadioButton
+            android:id="@+id/shoppingBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/radio_shopping"
+            android:drawablePadding="8dp" android:gravity="center" android:text="쇼핑"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="가격"
-                    android:textColor="#60aebf"
-                    android:textSize="23sp"
-                    android:textStyle="bold"/>
+        <RadioButton
+            android:id="@+id/transportBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/radio_transport"
+            android:drawablePadding="8dp" android:gravity="center" android:text="교통"/>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:orientation="horizontal">
+        <RadioButton
+            android:id="@+id/tourBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/radio_tour"
+            android:drawablePadding="8dp" android:gravity="center" android:text="관광"/>
 
-                    <EditText
-                        android:id="@+id/priceTxt"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="1"
-                        android:hint="가격을 입력하세요"
-                        android:inputType="numberDecimal"
-                        android:paddingEnd="15dp"
-                        android:textAlignment="textEnd"/>
+        <RadioButton
+            android:id="@+id/lodgmentBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/radio_lodgment"
+            android:drawablePadding="8dp" android:gravity="center" android:text="숙박"/>
 
-                    <Spinner
-                        android:id="@+id/cSpinner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0"
-                        android:background="@null"/>
-                </LinearLayout>
+        <RadioButton
+            android:id="@+id/etcBtn"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/radio_etc"
+            android:drawablePadding="8dp" android:gravity="center" android:text="기타"/>
+    </RadioGroup>
+    <TextView
+        android:id="@+id/textViewTitle3"
+        android:textColor="@color/colorPrimary"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp" android:text="메모"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/categoryGroup"/>
+    <EditText
+        android:id="@+id/memoText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/white"
+        android:gravity="center"
+        android:hint="메모를 입력하세요"
+        android:inputType="textMultiLine"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="15dp" android:ems="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/textViewTitle3" app:layout_constraintStart_toStartOf="@id/textViewTitle3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTitle3"/>
 
-                <TextView
-                    android:id="@+id/addMoneyExchange"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="50dp"
-                    android:textAlignment="textEnd"
-                    android:textStyle="italic"/>
-            </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
+</androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="카테고리"
-                    android:textColor="#60aebf"
-                    android:textSize="23sp"
-                    android:textStyle="bold"/>
 
-                <RadioGroup
-                    android:id="@+id/categoryGroup"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
 
-                    <RadioButton
-                        android:id="@+id/mealBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:button="@drawable/radio_meal"
-                        android:gravity="center"/>
 
-                    <RadioButton
-                        android:id="@+id/shoppingBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:button="@drawable/radio_shopping"
-                        android:gravity="center"/>
-
-                    <RadioButton
-                        android:id="@+id/transportBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:button="@drawable/radio_transport"
-                        android:gravity="center"/>
-
-                    <RadioButton
-                        android:id="@+id/tourBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:button="@drawable/radio_tour"
-                        android:gravity="center"/>
-
-                    <RadioButton
-                        android:id="@+id/lodgmentBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:button="@drawable/radio_lodgment"
-                        android:gravity="center"/>
-
-                    <RadioButton
-                        android:id="@+id/etcBtn"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="9dp"
-                        android:layout_weight="1"
-                        android:button="@drawable/radio_etc"
-                        android:gravity="center"/>
-                </RadioGroup>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="5dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="식사"
-                        android:textAlignment="center"/>
-
-                    <TextView
-                        android:id="@+id/textView2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="쇼핑"
-                        android:textAlignment="center"/>
-
-                    <TextView
-                        android:id="@+id/textView3"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="교통"
-                        android:textAlignment="center"/>
-
-                    <TextView
-                        android:id="@+id/textView4"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="관광"
-                        android:textAlignment="center"/>
-
-                    <TextView
-                        android:id="@+id/textView5"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="숙박"
-                        android:textAlignment="center"/>
-
-                    <TextView
-                        android:id="@+id/textView6"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="기타"
-                        android:textAlignment="center"/>
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="메모"
-                    android:textColor="@color/colorPrimary"
-                    android:textSize="23sp"
-                    android:textStyle="bold"/>
-                <EditText
-                    android:id="@+id/memoText"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@color/white"
-                    android:gravity="center"
-                    android:hint="메모를 입력하세요"
-                    android:inputType="textMultiLine"
-                    android:paddingEnd="15dp"/>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-</LinearLayout>
