@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
+import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.*
 import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
+import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.add_list_dialog.*
@@ -71,6 +73,7 @@ class MainListActivity : AppCompatActivity() {
     lateinit var editStart: TextView
     lateinit var editEnd: TextView
     lateinit var imageView: ImageView
+    lateinit var imageViewBack: TextView
     lateinit var textViewTitle: TextView
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
@@ -201,6 +204,7 @@ class MainListActivity : AppCompatActivity() {
         editStart = addListDialog.findViewById(R.id.editStart)
         editEnd = addListDialog.findViewById(R.id.editEnd)
         imageView = addListDialog.findViewById(R.id.imageView)
+        imageViewBack = addListDialog.findViewById(R.id.imageViewBack)
         textViewTitle = addListDialog.findViewById(R.id.textViewTitle)
 
         currencySpinner = addListDialog.findViewById(R.id.currencySpinner)
@@ -332,6 +336,7 @@ class MainListActivity : AppCompatActivity() {
             editEnd.text = "종료일 입력하기"
             textViewTitle.visibility = View.GONE
             imageView.visibility = View.GONE
+            imageViewBack.visibility = View.GONE
 
             if(addListDialog.parent != null){
                 (addListDialog.parent as ViewGroup).removeView(addListDialog)
@@ -398,9 +403,7 @@ class MainListActivity : AppCompatActivity() {
                     }
                 }
             }
-            imageView.setOnClickListener {
-                showImagePickDialog(TYPE_ADD, null)
-            }
+
             imm.hideSoftInputFromWindow(addListTitle.windowToken, 0)
 
         }
@@ -463,18 +466,45 @@ class MainListActivity : AppCompatActivity() {
                 curArray.addAll(data.currencys)
 
                 textViewTitle.visibility = View.VISIBLE
-                imageView.visibility = View.VISIBLE
 
 
                 dateStartEpoch = item.dateStart
                 dateEndEpoch = item.dateEnd
 
+                imageViewBack.setOnClickListener {
+                    if(photoResults.isNotEmpty()){
+                        showImagePickDialog()
+                    }
+                    else{
+                        //추억함으로 이동
+                        var intent = Intent(this@MainListActivity, ShowPhotoActivity::class.java)
+                        intent.putExtra("ListID", data.id)
+                        intent.putExtra("DayNum",0)
+                        startActivity(intent)
+                        overridePendingTransition(
+                                R.anim.anim_slide_in_top,
+                                R.anim.anim_slide_out_bottom
+                        )
+                    }
+                }
+
                 if(item.img == ""){
-                    imageView.setImageResource(R.drawable.ml_default_image)
+                    imageView.visibility = View.INVISIBLE
+                    imageViewBack.visibility = View.VISIBLE
+                    if(photoResults.isEmpty()){
+                        imageViewBack.text = "이곳을 눌러 추억함에 사진을 추가하세요"
+                    }
+                    else{
+                        imageViewBack.text = "이곳을 눌러 사진을 선택하세요"
+                    }
                 }
                 else{
+                    imageView.visibility = View.VISIBLE
+                    imageViewBack.visibility = View.INVISIBLE
                     Glide.with(applicationContext).load(item.img).into(imageView)
                 }
+
+
 
                 if(Build.VERSION.SDK_INT >= 26) {
                     val dateFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
@@ -538,14 +568,14 @@ class MainListActivity : AppCompatActivity() {
                     }
                 }
                 imageView.setOnClickListener {
-                    showImagePickDialog(TYPE_EDIT, item)
+                    showImagePickDialog()
                 }
                 imm.hideSoftInputFromWindow(addListTitle.windowToken, 0)
             }
         }
     }
 
-    fun showImagePickDialog(type:Boolean, list:T_List?){
+    fun showImagePickDialog(){
         clickedPhoto = null
         val imagePickBuilder = AlertDialog.Builder(this@MainListActivity)
         val imagePickView = layoutInflater.inflate(R.layout.image_pick_dialog, null)
@@ -554,41 +584,35 @@ class MainListActivity : AppCompatActivity() {
         var photoAdapter: PhotoPickGridAdapter?
         var isAvail = false
         pickImageView.setHasFixedSize(true)
-        if(type == TYPE_ADD){
+
+        if(photoResults.size == 0){
             backTextView.visibility = View.VISIBLE
             pickImageView.visibility = View.INVISIBLE
         }
-        else{ //TYPE_EDIT
-            if(photoResults.size == 0){
-                backTextView.visibility = View.VISIBLE
-                pickImageView.visibility = View.INVISIBLE
-            }
-            else{
-                isAvail = true
-                backTextView.visibility = View.INVISIBLE
-                pickImageView.visibility = View.VISIBLE
-                photoAdapter = PhotoPickGridAdapter(photoResults, this@MainListActivity)
-                pickImageView.adapter = photoAdapter
-                pickImageView.layoutManager = GridLayoutManager(this@MainListActivity, 3)
+        else{
+            isAvail = true
+            backTextView.visibility = View.INVISIBLE
+            pickImageView.visibility = View.VISIBLE
+            photoAdapter = PhotoPickGridAdapter(photoResults, this@MainListActivity)
+            pickImageView.adapter = photoAdapter
+            pickImageView.layoutManager = GridLayoutManager(this@MainListActivity, 3)
 
-                photoAdapter.itemClickListener = object : PhotoPickGridAdapter.OnItemClickListener{
-                    override fun onItemClick(
-                            holder: PhotoPickGridAdapter.ViewHolder,
-                            view: View,
-                            data: T_Photo,
-                            position: Int,
-                            clickedPos: Int
-                    ) {
-                        clickedPhoto = data
-                        if(clickedPos != -1){
-                            (pickImageView.findViewHolderForAdapterPosition(clickedPos) as PhotoPickGridAdapter.ViewHolder).backImage.visibility = View.INVISIBLE
-                            (pickImageView.findViewHolderForAdapterPosition(clickedPos) as PhotoPickGridAdapter.ViewHolder).clickedState = false
+            photoAdapter.itemClickListener = object : PhotoPickGridAdapter.OnItemClickListener{
+                override fun onItemClick(
+                        data: T_Photo,
+                        clickedPos: Int
+                ) {
+                    clickedPhoto = data
+                    if(clickedPos != -1){
+                        val pickedImageView = pickImageView.findViewHolderForAdapterPosition(clickedPos)
+                        if(pickedImageView != null){
+                            (pickedImageView as PhotoPickGridAdapter.ViewHolder).backImage.visibility = View.INVISIBLE
                         }
                     }
+                }
 
-                    override fun onNothingClicked() {
-                        clickedPhoto = null
-                    }
+                override fun onNothingClicked() {
+                    clickedPhoto = null
                 }
             }
         }
@@ -612,6 +636,8 @@ class MainListActivity : AppCompatActivity() {
                 }
                 else{
                     createdBuilder.dismiss()
+                    imageView.visibility = View.VISIBLE
+                    imageViewBack.visibility = View.INVISIBLE
                     Glide.with(applicationContext).load(clickedPhoto!!.img).into(imageView)
                 }
             }

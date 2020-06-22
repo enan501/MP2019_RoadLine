@@ -16,7 +16,7 @@ import konkukSW.MP2019.roadline.R
 
 class PhotoPickGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val context: Context) : RealmRecyclerViewAdapter<T_Photo, PhotoPickGridAdapter.ViewHolder>(realmResult, true) {
     interface OnItemClickListener {
-        fun onItemClick(holder: ViewHolder, view: View, data: T_Photo, position: Int, clickedPos: Int)
+        fun onItemClick(data: T_Photo, clickedPos: Int)
         fun onNothingClicked()
     }
 
@@ -27,16 +27,16 @@ class PhotoPickGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val co
     inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var photoImage: ImageView
         var backImage: ImageView
-        var clickedState = false
+//        var clickedState = false
         init {
             photoImage = itemView.findViewById(R.id.photoImage)
             backImage = itemView.findViewById(R.id.backImage)
             itemView.setOnClickListener {
-                clickedState  = !clickedState
-                Log.d("mytag", adapterPosition.toString() + " : " + clickedState.toString() + " : " + clickedPos.toString())
-                if(clickedState){ //클릭
+//                clickedState = !clickedState
+//                Log.d("mytag", adapterPosition.toString() + " : " + clickedState.toString() + " : " + clickedPos.toString())
+                if(adapterPosition != clickedPos){ //클릭
                     backImage.visibility = View.VISIBLE
-                    itemClickListener.onItemClick(this, it, getItem(adapterPosition)!!, adapterPosition, clickedPos)
+                    itemClickListener.onItemClick(getItem(adapterPosition)!!, clickedPos)
                     clickedPos = adapterPosition
                 }
                 else{ //클릭 취소
@@ -57,7 +57,12 @@ class PhotoPickGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val co
         if(p0 is ViewHolder){
             val item = getItem(p1)!!
             Glide.with(context).load(item.img).into(p0.photoImage)
-//            p0.photoImage.setImageBitmap(BitmapFactory.decodeFile(item.img))
+            if(p1 == clickedPos){
+                p0.backImage.visibility = View.VISIBLE
+            }
+            else{
+                p0.backImage.visibility = View.INVISIBLE
+            }
         }
     }
 }
