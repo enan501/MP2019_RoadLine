@@ -55,8 +55,6 @@ class ShowDateActivity : AppCompatActivity() {
         init()
     }
 
-
-
     fun init() {
         initData()
         initLayout()
@@ -70,10 +68,7 @@ class ShowDateActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        planResults.removeAllChangeListeners()
-    }
+
 
     fun initData() {
         setSupportActionBar(sd_toolbar)

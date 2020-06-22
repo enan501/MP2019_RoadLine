@@ -2,21 +2,17 @@ package konkukSW.MP2019.roadline.UI.photo
 
 import android.Manifest
 import android.app.Activity
-import android.app.AlertDialog
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewManager
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,11 +21,14 @@ import androidx.recyclerview.widget.SimpleItemAnimator
 import io.realm.Realm
 import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.MoneyPhotoListAdapter
+import konkukSW.MP2019.roadline.Data.Adapter.PhotoGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
-import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
+import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.activity_show_photo.*
+import kotlinx.android.synthetic.main.activity_show_photo.deleteButton
+import kotlinx.android.synthetic.main.activity_show_photo.deleteText
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
@@ -42,9 +41,11 @@ class ShowPhotoActivity : AppCompatActivity() {
     var DayNum = 0
     var isAll = false
     lateinit var dayList: RealmResults<T_Day>
-
     private val SELECT_IMAGE = 100
     private var day_click = 0
+    var deleteMode = false
+    var deletePhotoList: ArrayList<T_Photo> = ArrayList()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,14 +78,123 @@ class ShowPhotoActivity : AppCompatActivity() {
         rViewAdapterPhoto = MoneyPhotoListAdapter(dayList, this@ShowPhotoActivity, isAll, false)
     }
 
+    fun initLayout() {
+        setSupportActionBar(sp_toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        supportActionBar!!.title = "추억함"
+
+        photo_recycleView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
+        photo_recycleView.adapter = rViewAdapterPhoto
+        val animator = photo_recycleView.itemAnimator
+        if(animator is SimpleItemAnimator){
+            animator.supportsChangeAnimations = false
+        }
+    }
+
+    fun initListener() {
+        rViewAdapterPhoto.photoItemClickListener = object :MoneyPhotoListAdapter.OnPhotoItemClickListener{
+            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
+                if(isAll){
+                    day_click = position + 1
+                }
+                else{
+                    day_click = DayNum
+                }
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+                intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                startActivityForResult(intent, SELECT_IMAGE)
+            }
+
+            override fun onPhotoItemClick(
+                    holder: PhotoGridAdapter.ViewHolder,
+                    view: View,
+                    data: T_Photo,
+                    position: Int,
+                    isChecked: Boolean
+            ) {
+                if(deleteMode){
+                    if(isChecked){
+                        holder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+                        deletePhotoList.remove(data)
+                        Log.d("mytag", "remove : " + deletePhotoList.toString())
+                    }
+                    else{
+                        holder.checkButton.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN)
+                        deletePhotoList.add(data)
+                        Log.d("mytag", "add : " +deletePhotoList.toString())
+                    }
+                }
+            }
+        }
+
+        deleteButton.setOnClickListener {
+            if(deleteMode){
+                if(deletePhotoList.isNotEmpty()){
+                    val builder = androidx.appcompat.app.AlertDialog.Builder(this@ShowPhotoActivity)
+                    builder.setMessage("삭제하시겠습니까?")
+                            .setPositiveButton("삭제") { dialogInterface, _ ->
+                                Log.d("mytag", deletePhotoList.toString())
+                                realm.beginTransaction()
+                                for(i in deletePhotoList){
+                                    i.deleteFromRealm()
+                                }
+                                realm.commitTransaction()
+                                changeViewToDeleteMode(deleteMode)
+                                deletePhotoList.clear()
+                                deleteText.text = "수정하기"
+                                deleteMode = false
+                            }
+                            .setNegativeButton("취소") { dialogInterface, i ->
+                                changeViewToDeleteMode(deleteMode)
+                                deletePhotoList.clear()
+                                deleteText.text = "수정하기"
+                                deleteMode = false
+                            }
+                    val dialog = builder.create()
+                    dialog.show()
+                }
+                else{
+                    deleteText.text = "수정하기"
+                    deleteMode = false
+                }
+            }
+            else{
+                deleteText.text = "삭제하기"
+                changeViewToDeleteMode(deleteMode)
+                deleteMode = true
+            }
+        }
+    }
+
+    fun changeViewToDeleteMode(flg: Boolean){
+        for(i in 0 until rViewAdapterPhoto.itemCount){
+            val viewHolder = photo_recycleView.findViewHolderForAdapterPosition(i)
+            if(viewHolder != null){
+                for(j in 0 until (viewHolder as MoneyPhotoListAdapter.ViewHolder).rView.childCount){
+                    val itemViewHolder = viewHolder.rView.findViewHolderForAdapterPosition(j)
+                    if(itemViewHolder != null){
+                        if(flg){
+                            (itemViewHolder as PhotoGridAdapter.ViewHolder).isChecked = false
+                            itemViewHolder.checkButton.visibility = View.INVISIBLE
+                            itemViewHolder.imgCover.visibility = View.INVISIBLE
+                        }
+                        else{
+                            (itemViewHolder as PhotoGridAdapter.ViewHolder).isChecked = false
+                            itemViewHolder.checkButton.visibility = View.VISIBLE
+                            itemViewHolder.imgCover.visibility = View.VISIBLE
+                            itemViewHolder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+                        }
+
+                    }
+                }
+            }
+        }
+    }
+
     fun initPermission() {
         if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
             askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
-        } else {
-            Toast.makeText(
-                applicationContext,
-                "권한이 승인되었습니다.", Toast.LENGTH_SHORT
-            ).show()
         }
     }
 
@@ -131,7 +241,6 @@ class ShowPhotoActivity : AppCompatActivity() {
                 Table.dayNum = day_click
                 Table.img = getPathFromUri(data!!.data)
                 if(android.os.Build.VERSION.SDK_INT >= 26) {
-//                    Table.dateTime = LocalDate.now().toEpochDay()
                     Table.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
                 }
                 else{
@@ -150,46 +259,11 @@ class ShowPhotoActivity : AppCompatActivity() {
         return path
     }
 
-    fun initListener() {
-        rViewAdapterPhoto.photoItemClickListener = object :MoneyPhotoListAdapter.OnPhotoItemClickListener{
-            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) {
-                if(isAll){
-                    day_click = position + 1
-                }
-                else{
-                    day_click = DayNum
-                }
-                addImg()
-            }
-        }
-    }
-
-    fun addImg() {
-        //어떤 앱에서 이미지를 가져오는지 몰라서 묵시적 intent 수행
-        //가져올 때 액션 picK이라는 인텐트 필터 적용
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-        intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        startActivityForResult(intent, SELECT_IMAGE)
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(item!!.itemId == android.R.id.home){
             finish()
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    fun initLayout() {
-        setSupportActionBar(sp_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-        photo_recycleView.layoutManager = LinearLayoutManager(this, RecyclerView.VERTICAL, false)
-        photo_recycleView.adapter = rViewAdapterPhoto
-        val animator = photo_recycleView.itemAnimator
-        if(animator is SimpleItemAnimator){
-            animator.supportsChangeAnimations = false
-        }
     }
 }
 

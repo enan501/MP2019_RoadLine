@@ -138,7 +138,7 @@ class MainListActivity : AppCompatActivity() {
                 (convertView as TextView).text = "추가하기"
                 convertView.setTextColor(ContextCompat.getColor(this@MainListActivity, R.color.colorPrimary))
                 convertView.gravity = View.TEXT_ALIGNMENT_CENTER
-                convertView.textSize = 15f
+                convertView.textSize = 12f
                 return convertView
             }
 
@@ -361,7 +361,8 @@ class MainListActivity : AppCompatActivity() {
             val cbuilder = builder.create() //여행추가 다이얼로그
             cbuilder.setCanceledOnTouchOutside(false)
             cbuilder.show()
-
+            cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
+            cbuilder.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
             cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if(addListTitle.text.trim().toString() == ""){
                     Toast.makeText(applicationContext, "여행 제목을 입력해주세요", Toast.LENGTH_SHORT).show()

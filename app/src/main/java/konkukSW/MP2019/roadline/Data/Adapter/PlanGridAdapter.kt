@@ -24,7 +24,11 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
     }
 
     var itemClickListener : OnItemClickListener? = null
-
+    var realm: Realm
+    init{
+        Realm.init(context)
+        realm = Realm.getDefaultInstance()
+    }
     inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var name: TextView
         var humanImg : ImageView
@@ -42,7 +46,6 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
             }
 
             itemView.setOnLongClickListener {
-//                itemLongClickListener?.onItemLongClick()
                 val rPos = convertPos(adapterPosition)
                 removeItem(rPos)
                 true
@@ -53,23 +56,14 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
 
     fun removeItem(position: Int){
         val item = getItem(position)!!
-//        Realm.init(context)
-        val realm = Realm.getDefaultInstance()
+
 
         val builder = AlertDialog.Builder(context)
         builder.setMessage("삭제하시겠습니까?")
                 .setPositiveButton("삭제") { dialogInterface, _ ->
-//                    realm.beginTransaction()
-//                    Log.d("mytag", position.toString() + " " + item.toString())
-//                    item.deleteFromRealm()
-////                    realm.where(T_Plan::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
-//                    realm.commitTransaction()
-                    realm.use {
-                        Log.d("mytag", realm.toString())
-                        realm.executeTransaction {
-                            item.deleteFromRealm()
-                        }
-                    }
+                    realm.beginTransaction()
+                    realm.where(T_Plan::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
+                    realm.commitTransaction()
                 }
                 .setNegativeButton("취소") { dialogInterface, i ->
                 }
@@ -81,7 +75,6 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
         val v = LayoutInflater.from(parent.context).inflate(R.layout.row_plan, parent, false)
         return ViewHolder(v)
     }
-
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         if(holder is ViewHolder){

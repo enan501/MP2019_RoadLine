@@ -19,7 +19,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.add_list_dialog.*
+import kotlinx.android.synthetic.main.fragment_fragment1.*
 
 class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
@@ -43,13 +43,15 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_fragment1, container, false)
-        Log.d("mytest", "oncreateview")
         init()
         return v
     }
 
+    override fun onDestroy() {
+        (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
+        super.onDestroy()
+    }
 
     fun init(){
         setObserve()
@@ -137,6 +139,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         planAdapter.itemDragListener = object :PlanListAdapter.OnItemDragListener{
             override fun onStartDrag(holder: RecyclerView.ViewHolder) {
                 Log.d("mytag", "startdrag")
+                planAdapter.onDetachedFromRecyclerView(f1_rView)
                 itemTouchHelper.startDrag(holder)
             }
         }
@@ -164,76 +167,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
             }
         }
-//        adapter.itemClickListener = object : DateListAdapter.OnItemClickListener{
-//            //addBtn 클릭했을 때
-//            override fun OnItemClick(holder: DateListAdapter.FooterViewHolder) {
-//                val i = Intent(activity, AddSpotActivity::class.java)
-//                i.putExtra("pos", planList.size)
-//                i.putExtra("DayNum", dayNum)
-//                i.putExtra("ListID", listID)
-//                startActivityForResult(i,123)
-//            }
-//
-//            //리사이클러뷰 아이템 클릭했을 때
-//            override fun OnItemClick(holder: DateListAdapter.ItemViewHolder, view: View, data: Plan, position: Int) {
-//                Log.d("mytest", "click")
-//                if(!editMode){
-//                    val i = Intent(activity, AddSpotActivity::class.java)
-//                    i.putExtra("spot", data)
-//                    i.putExtra("DayNum", dayNum)
-//                    i.putExtra("ListID", listID)
-//                    i.putExtra("path", 1)
-//                    i.putExtra("pos", position)
-//                    i.putExtra("planId", data.id)
-//                    startActivityForResult(i, 123)
-//                }
-//                else{
-//                    for(i in 0..adapter.itemCount){
-//                        val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
-//                        anim.duration = 300
-//                        val view = rView.findViewHolderForAdapterPosition(i)
-//                        if(view is DateListAdapter.ItemViewHolder){
-//                            view.deleteBtn.visibility = View.INVISIBLE
-//                            view.dragBtn.startAnimation(anim)
-//                            view.dragBtn.visibility = View.VISIBLE
-//                        }
-//                    }
-//                    editMode = false
-//                }
-//            }
-//        }
-//
-//        adapter.itemDragListener = object : DateListAdapter.OnItemDragListener {
-//            override fun onStartDrag(holder: androidx.recyclerview.widget.RecyclerView.ViewHolder) {
-//                itemTouchHelper.startDrag(holder)
-//            }
-//        }
-//        adapter.itemLongClickListener = object : DateListAdapter.OnItemLongClickListener {
-//            override fun onItemLongClick() {
-//                Log.d("mytest", "longclick" + editMode.toString())
-//                if(!editMode){
-//                    val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
-//                    anim.duration = 300
-//                    for(i in 0..adapter.itemCount){
-//                        val view = rView.findViewHolderForAdapterPosition(i)
-//                        if(view is DateListAdapter.ItemViewHolder){
-//                            view.deleteBtn.visibility = View.VISIBLE
-//                            view.dragBtn.visibility = View.INVISIBLE
-//                            view.deleteBtn.startAnimation(anim)
-//                        }
-//                    }
-//                    editMode = true
-//                }
-//            }
-//        }
-//
-//        adapter.itemChangeListener = object :DateListAdapter.OnItemChangeListener{
-//            override fun onItemChange() {
-//                Log.d("mytest", "planlist size(delete) : " + planList.size.toString())
-//                iconAdapter = DateIconListAdapter(planList.size, context!!)
-//                rIconView.adapter = iconAdapter
-//            }
-//        }
+
     }
 
     fun initSwipe(){
@@ -251,10 +185,6 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         }
     }
 
-//    fun refresh() {
-////        val ft = fragmentManager!!.beginTransaction()
-////        ft.detach(this).attach(this).commit()
-//    }
 
     fun combineImage(first:Bitmap, second:Bitmap):Bitmap?{
         val result = Bitmap.createBitmap(first.width + second.width, first.height, Bitmap.Config.ARGB_8888)
@@ -293,7 +223,6 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             )
             holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
-            Log.d("mytag", holder.itemView.measuredHeight.toString())
             holder.itemView.isDrawingCacheEnabled = true
             holder.itemView.buildDrawingCache()
             val drawingCache = holder.itemView.drawingCache

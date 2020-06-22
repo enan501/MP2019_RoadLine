@@ -16,14 +16,13 @@ import io.realm.RealmRecyclerViewAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.Fragment1
+import kotlinx.android.synthetic.main.fragment_fragment1.view.*
+import java.lang.Exception
 
 class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context: Context) : RealmRecyclerViewAdapter<T_Plan, RecyclerView.ViewHolder>(realmResult, true) {
 
     private val TYPE_ITEM = 0
     private val TYPE_FOOTER = 1
-    var realmResult = realmResult
-    var position1 = -1
-    var position2 = -1
 
     interface OnItemClickListener{
         fun OnItemClick(holder: ItemViewHolder, view:View, data: T_Plan, position: Int)
@@ -51,6 +50,9 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     init {
         Realm.init(context)
         realm = Realm.getDefaultInstance()
+        for(i in 0..itemCount-2){
+            Log.d("mytag", "pos : " + getItem(i)?.pos.toString())
+        }
 
     }
 
@@ -65,7 +67,12 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
             spotTime = itemView.findViewById(R.id.rs_spotTime)
             dragBtn = itemView.findViewById(R.id.rs_dragBtn)
 
-
+            dragBtn.setOnTouchListener { _, event ->
+                if(event.action == MotionEvent.ACTION_DOWN){
+                    itemDragListener?.onStartDrag(this)
+                }
+                false
+            }
             deleteBtn.setOnClickListener {
                 val builder = AlertDialog.Builder(context) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
                 val deleteListDialog = //context 이용해서 레이아웃 인플레이터 생성
@@ -94,70 +101,41 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     }
 
     fun moveItem(pos1:Int, pos2:Int){  //객체 두개 바꾸기 함수
-        if(pos1 != position1 || pos2 != position2){
-            if(pos2 in 0 until itemCount - 1 && pos1 in 0 until itemCount - 1){
+        if (pos2 in 0 until itemCount - 1 && pos1 in 0 until itemCount - 1) {
             Log.d("mytag", "moveItem!!")
-            val itemId = realmResult.where().equalTo("pos", pos1).findFirst()!!.id
-            if(pos2 > pos1){
-                var realmResultSnapshot = realmResult.where().lessThan("pos", pos2 + 1).greaterThan("pos", pos1).findAll()!!.createSnapshot()
-                for(i in 0 until realmResultSnapshot.size){
-                    realm.beginTransaction()
-                    realmResultSnapshot[i]!!.pos--
-                    realm.commitTransaction()
+            realm.beginTransaction()
+            var item1 = getItem(pos1)!!
+            if(pos2 > pos1) {
+                for (i in pos1 + 1..pos2) {
+                    getItem(i)!!.pos--
                 }
             }
             else{
-                var realmResultSnapshot = realmResult.where().lessThan("pos", pos1).greaterThan("pos", pos2 - 1).findAll()!!.createSnapshot()
-                for(i in 0 until realmResultSnapshot.size){
-                    realm.beginTransaction()
-                    realmResultSnapshot[i]!!.pos++
-                    realm.commitTransaction()
+                for (i in pos2 until pos1){
+                    getItem(i)!!.pos++
                 }
             }
-
-            realm.beginTransaction()
-            realmResult.where().equalTo("id", itemId).findFirst()!!.pos = pos2
+            item1.pos = pos2
             realm.commitTransaction()
-            }
+            notifyItemMoved(pos1,pos2)
         }
-        position1 = pos1
-        position2 = pos2
 
     }
 
     fun removeItem(pos:Int){ // 객체 지우기 함수
         realm.beginTransaction()
-//        val tuple = realm.where(T_Plan::class.java)
-//                .equalTo("id", items[pos].id)
-//                .findFirst()
 
-//        tuple!!.deleteFromRealm()
         Log.d("mytag", "pos " + pos.toString())
-        getItem(pos)!!.deleteFromRealm()
+        getItem(pos)?.deleteFromRealm()
         for(i in pos + 1 .. itemCount - 2) {
             getItem(i)!!.pos--
         }
         realm.commitTransaction()
 
-//        items.removeAt(pos)
-//
-//        notifyItemRangeRemoved(pos, items.size + 1)
-//        changePos()
         itemChangeListener!!.onItemChange() //iconAdapter 다시 달기
     }
 
-//    fun changePos(){
-//        realm.beginTransaction()
-//        for(i in 0..items.size-1) {
-//            val id = items[i].id
-//            val result = realm.where(T_Plan::class.java)
-//                    .equalTo("id", id)
-//                    .findFirst()
-//            items[i].pos = i
-//            result!!.pos = i
-//        }
-//        realm.commitTransaction()
-//    }
+
 
     inner class FooterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { //데이터 저장 구조
         var addBtn: ImageView
@@ -208,12 +186,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                 p0.deleteBtn.visibility = View.INVISIBLE
                 p0.dragBtn.visibility = View.INVISIBLE
             }
-            p0.dragBtn.setOnTouchListener { _, event ->
-                if(event.action == MotionEvent.ACTION_DOWN){
-                    itemDragListener?.onStartDrag(p0)
-                }
-                false
-            }
+
         }
     }
 

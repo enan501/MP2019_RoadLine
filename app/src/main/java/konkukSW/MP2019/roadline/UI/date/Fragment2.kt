@@ -124,6 +124,10 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 //            else -> return position
 //        }
 //    }
+    override fun onDestroy() {
+        (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
+        super.onDestroy()
+    }
 
     fun initData(){
         if(activity != null){

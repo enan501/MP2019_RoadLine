@@ -59,9 +59,9 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginBottom="20dp"
             android:layout_weight="1.5"
-            android:orientation="vertical"
-            android:paddingHorizontal="20dp">
+            android:orientation="vertical" android:paddingHorizontal="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,7 +74,7 @@
                     android:text="가격"
                     android:textColor="#60aebf"
                     android:textSize="23sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -91,14 +91,14 @@
                         android:hint="가격을 입력하세요"
                         android:inputType="numberDecimal"
                         android:paddingEnd="15dp"
-                        android:textAlignment="textEnd" />
+                        android:textAlignment="textEnd"/>
 
                     <Spinner
                         android:id="@+id/cSpinner"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="0"
-                        android:background="@null" />
+                        android:background="@null"/>
                 </LinearLayout>
 
                 <TextView
@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:paddingEnd="50dp"
                     android:textAlignment="textEnd"
-                    android:textStyle="italic" />
+                    android:textStyle="italic"/>
             </LinearLayout>
 
             <LinearLayout
@@ -122,70 +122,70 @@
                     android:text="카테고리"
                     android:textColor="#60aebf"
                     android:textSize="23sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"/>
 
                 <RadioGroup
                     android:id="@+id/categoryGroup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_marginHorizontal="10dp"
                     android:layout_marginTop="15dp"
-                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/mealBtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:gravity="center"
                         android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
-                        android:button="@drawable/radio_meal" />
+                        android:button="@drawable/radio_meal"
+                        android:gravity="center"/>
 
                     <RadioButton
                         android:id="@+id/shoppingBtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@drawable/radio_shopping" />
+                        android:button="@drawable/radio_shopping"
+                        android:gravity="center"/>
 
                     <RadioButton
                         android:id="@+id/transportBtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@drawable/radio_transport" />
+                        android:button="@drawable/radio_transport"
+                        android:gravity="center"/>
 
                     <RadioButton
                         android:id="@+id/tourBtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@drawable/radio_tour" />
+                        android:button="@drawable/radio_tour"
+                        android:gravity="center"/>
 
                     <RadioButton
                         android:id="@+id/lodgmentBtn"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
-                        android:gravity="center"
                         android:layout_weight="1"
-                        android:button="@drawable/radio_lodgment" />
+                        android:button="@drawable/radio_lodgment"
+                        android:gravity="center"/>
 
                     <RadioButton
                         android:id="@+id/etcBtn"
                         android:layout_width="0dp"
-                        android:gravity="center"
                         android:layout_height="wrap_content"
                         android:layout_marginHorizontal="9dp"
                         android:layout_weight="1"
-                        android:button="@drawable/radio_etc" />
+                        android:button="@drawable/radio_etc"
+                        android:gravity="center"/>
                 </RadioGroup>
 
                 <LinearLayout
@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="식사"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"/>
 
                     <TextView
                         android:id="@+id/textView2"
@@ -209,7 +209,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="쇼핑"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"/>
 
                     <TextView
                         android:id="@+id/textView3"
@@ -217,7 +217,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="교통"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"/>
 
                     <TextView
                         android:id="@+id/textView4"
@@ -225,7 +225,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="관광"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"/>
 
                     <TextView
                         android:id="@+id/textView5"
@@ -233,7 +233,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="숙박"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"/>
 
                     <TextView
                         android:id="@+id/textView6"
@@ -241,8 +241,33 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="기타"
-                        android:textAlignment="center" />
+                        android:textAlignment="center"/>
                 </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="메모"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="23sp"
+                    android:textStyle="bold"/>
+                <EditText
+                    android:id="@+id/memoText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:gravity="center"
+                    android:hint="메모를 입력하세요"
+                    android:inputType="textMultiLine"
+                    android:paddingEnd="15dp"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

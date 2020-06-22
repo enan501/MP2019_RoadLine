@@ -11,10 +11,11 @@ open class T_Money : RealmObject() {
     var dayNum: Int = 0 // T_Day의 id의 외래키
 
     @PrimaryKey
-    var id : String = "" //기본키
+    var id : String = "" //기본키mo
     var currency: T_Currency? = null
     var img: String = ""
     var price: Double = 0.0 //원화
     var cate: String = ""
     var dateTime: Long = 0
+    var memo: String = ""
 }

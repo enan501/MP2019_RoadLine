@@ -2,6 +2,7 @@ package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
@@ -20,6 +21,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.photo.DetailPhotoActivity
+import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -30,11 +32,12 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
 
     interface OnMoneyItemClickListener {
         fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
-        fun onMoneyItemClick(data: T_Money)
+        fun onMoneyItemClick(holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int, isChecked: Boolean)
     }
 
     interface OnPhotoItemClickListener {
         fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
+        fun onPhotoItemClick(holder: PhotoGridAdapter.ViewHolder, view: View, data: T_Photo, position: Int, isChecked: Boolean)
     }
 
     interface OnTotalViewChangeListener{
@@ -81,7 +84,7 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        if(p0 is ViewHolder){
+        if(p0 is ViewHolder) {
             val item = getItem(p1)!!
             p0.dayNumText.text = "DAY" + item.num.toString()
             if(android.os.Build.VERSION.SDK_INT >= 26) {
@@ -103,8 +106,8 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
                 val moneyAdapter = MoneyGridAdapter(result, context)
                 moneyAdapter.itemClickListener = object :MoneyGridAdapter.OnItemClickListener{
                     override fun onItemClick(
-                            holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int) {
-                        moneyItemClickListener!!.onMoneyItemClick(data)
+                            holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int, isChecked: Boolean) {
+                        moneyItemClickListener!!.onMoneyItemClick(holder, view, data, position, isChecked)
                     }
                 }
                 p0.rView.adapter = moneyAdapter
@@ -121,23 +124,27 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
             }
             else{
                 val result = realm.where(T_Photo::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("dateTime")
-//                photoArray.add(result)
                 val photoAdapter = PhotoGridAdapter(result, context)
                 photoAdapter.itemClickListener = object :PhotoGridAdapter.OnItemClickListener{
                     override fun onItemClick(
                             holder: PhotoGridAdapter.ViewHolder,
                             view: View,
                             data: T_Photo,
-                            position: Int
+                            position: Int,
+                            isChecked: Boolean
                     ) {
-                        //intent
-                        val intent = Intent(view.context, DetailPhotoActivity::class.java)
-                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                        intent.putExtra("isAll", isAll)
-                        intent.putExtra("photoId", data.id)
-                        intent.putExtra("listId", item.listID)
-                        intent.putExtra("dayNum", item.num)
-                        view.context.startActivity(intent)
+                        if((context as ShowPhotoActivity).deleteMode){
+                            photoItemClickListener!!.onPhotoItemClick(holder, view, data, position, isChecked)
+                        }
+                        else{
+                            val intent = Intent(view.context, DetailPhotoActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            intent.putExtra("isAll", isAll)
+                            intent.putExtra("photoId", data.id)
+                            intent.putExtra("listId", item.listID)
+                            intent.putExtra("dayNum", item.num)
+                            view.context.startActivity(intent)
+                        }
                     }
                 }
                 p0.rView.adapter = photoAdapter
