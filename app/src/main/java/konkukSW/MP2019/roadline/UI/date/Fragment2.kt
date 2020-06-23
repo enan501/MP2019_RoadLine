@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import konkukSW.MP2019.roadline.Data.Adapter.PlanGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import kotlinx.android.synthetic.main.row_plan.*
 
 
 class Fragment2 : androidx.fragment.app.Fragment() {
@@ -324,5 +325,64 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         }
         return bigBitmap
     }
+
+
+//    fun getScreenshotFromRecyclerView(): Bitmap? {
+//        var bigBitmap: Bitmap?
+//        val size = planAdapter.itemCount
+//        if(size == 0)
+//            return null
+//        var totalHeight = 0
+//        val paint = Paint()
+//        var width = 0
+////        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+////
+////        // Use 1/8th of the available memory for this memory cache.
+////        val cacheSize = maxMemory / 8
+////        val bitmaCache = LruCache<String, Bitmap>(cacheSize)
+//        var bitmapList = ArrayList<Bitmap>()
+//
+//        var itemWidth = 0
+//        var itemHeight = 0
+//        for(i in 0 until size){
+//            val childView = timelineView.getChildAt(i)
+//            if(childView != null){
+//                itemHeight = childView.height
+//                itemWidth = childView.width
+//                break
+//            }
+//        }
+//
+//        for (i in 0 until size) {
+//            val holder = planAdapter.createViewHolder(timelineView, planAdapter.getItemViewType(i))
+//            planAdapter.onBindViewHolder(holder, i)
+//            holder.itemView.layout(0, 0, itemWidth, itemHeight)
+//
+//            val buffer = Bitmap.createBitmap(itemWidth, itemHeight, Bitmap.Config.ARGB_8888)
+//            val canvas = Canvas(buffer)
+//            holder.itemView.draw(canvas)
+//            bitmapList.add(buffer)
+//
+//            if(i % 5 == 0){
+//                totalHeight += itemHeight
+//                width = itemWidth
+//            } else {
+//                width += itemWidth
+//            }
+//        }
+//
+//        bigBitmap = Bitmap.createBitmap(timelineView.width, totalHeight, Bitmap.Config.ARGB_8888)
+//        val bigCanvas = Canvas(bigBitmap)
+//        bigCanvas.drawColor(Color.WHITE)
+//
+//        for (i in 0 until size) {
+//            val bitmap = bitmapList[i]
+//            val iHeight = (i / 5) * itemHeight
+//            val iWidth = (i % 5) * itemWidth
+//            bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
+//            bitmap.recycle()
+//        }
+//        return bigBitmap
+//    }
 
 }

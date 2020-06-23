@@ -37,6 +37,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.R.id.places_autocomplete_search_input
 import kotlinx.android.synthetic.main.activity_add_spot.*
+
 import java.util.*
 
 class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -118,6 +119,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     }
 
     fun initLayout(){
+        as_toolbar.title = "위치 추가"
         setSupportActionBar(as_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
@@ -235,7 +237,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             mapIntent.setPackage("com.google.android.apps.maps")
             startActivity(mapIntent)
         }
-        as_button_memo.setOnClickListener { //상세정보 추가 버튼
+
+        memo_button.setOnClickListener {
             if(planId != null){ //수정
                 dialogMemo.setText(thisPlan!!.memo)
                 if(thisPlan!!.hour != null)
@@ -258,6 +261,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             }
             builder.show()
         }
+
         builder.setPositiveButton("추가") { dialogInterface, i ->
             memo = dialogMemo.text.toString()
             hour = dialogTime.hour

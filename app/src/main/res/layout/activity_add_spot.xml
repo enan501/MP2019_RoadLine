@@ -1,90 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:orientation="vertical"
+                                                   tools:context="konkukSW.MP2019.roadline.UI.date.AddSpotActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/as_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <TextView
-                android:id="@+id/as_button_memo"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="match_parent"
-                android:fontFamily="@font/nanum_square_round_r"
-                android:gravity="center"
-                android:text="상세정보 추가"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:id="@+id/as_button_check"
-                android:layout_width="35dp"
-                android:layout_height="match_parent"
-                android:layout_marginVertical="8dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="0" android:src="@drawable/checkbt"/>
-        </LinearLayout>
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/as_button_check"
+            android:layout_width="35dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_marginVertical="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_weight="0" android:src="@drawable/checkbt"/>
     </androidx.appcompat.widget.Toolbar>
-
     <View
+        android:id="@+id/view"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
-        android:background="#cccccc" />
+        android:background="#cccccc" app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/as_toolbar"/>
 
-    <FrameLayout
+    <androidx.cardview.widget.CardView
+        app:layout_constraintTop_toBottomOf="@id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        app:cardCornerRadius="5dp">
+        <fragment
+            android:id="@+id/AS_SearchBox"
+            android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </androidx.cardview.widget.CardView>
+
+    <fragment
+        android:id="@+id/AS_MapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="6">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/as_toolbar"/>
 
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-            app:cardCornerRadius="5dp">
-            <fragment
-                android:id="@+id/AS_SearchBox"
-                android:name="com.google.android.libraries.places.widget.AutocompleteSupportFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-        </androidx.cardview.widget.CardView>
-
-        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/AS_MapView"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <LinearLayout
-            android:layout_width="70dp"
-            android:layout_gravity="bottom|left"
-            android:orientation="vertical"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/replace_bt"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/navigation" />
-
-            <Button
-                android:id="@+id/path_bt"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="10dp"
-                android:background="@drawable/route"
-                android:visibility="gone" />
-
-        </LinearLayout>
-    </FrameLayout>
+    <Button
+        android:id="@+id/path_bt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/route"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintStart_toStartOf="@+id/replace_bt"
+        app:layout_constraintBottom_toTopOf="@+id/replace_bt"
+        android:visibility="visible" />
+    <Button
+        android:id="@+id/replace_bt"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginStart="15dp" android:background="@drawable/navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+    <ImageView
+        android:id="@+id/memo_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" app:srcCompat="@drawable/memo_button"/>
+    <!--<ImageView-->
+        <!--android:id="@+id/time_button"-->
+        <!--android:layout_width="50dp" android:layout_height="50dp"-->
+        <!--android:layout_marginBottom="15dp" app:layout_constraintBottom_toTopOf="@+id/memo_button"-->
+        <!--app:layout_constraintEnd_toEndOf="@+id/memo_button" app:srcCompat="@drawable/time_button"/>-->
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,11 +31,11 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
 
+    private val MODE_EDIT = 0
+    private val MODE_DEFAULT = 1
+    private val MODE_CAPTURE = 2
 
-    companion object{
-        var mode = 1 //0->수정모드, 1->평상시, 2->캡처할때
-    }
-
+    var mode = MODE_DEFAULT
     var listID = ""
     var dayNum = 0
 
@@ -67,7 +67,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         }
     }
     fun initData(){
-        mode = 1
+        mode = MODE_DEFAULT
         if(activity != null){
             val intent = activity!!.intent
             if(intent != null){
@@ -85,8 +85,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 false
         )
         rView.layoutManager = layoutManager
-//        adapter = DateListAdapter(planList, context!!)
-        planAdapter = PlanListAdapter((activity!! as ShowDateActivity).planResults, context!!)
+        planAdapter = PlanListAdapter((activity!! as ShowDateActivity).planResults, context!!, this)
         rView.adapter = planAdapter
 
 
@@ -112,7 +111,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
             }
 
             override fun OnItemClick(holder: PlanListAdapter.ItemViewHolder, view: View, data: T_Plan, position: Int) {
-                if(mode == 1){
+                if(mode == MODE_DEFAULT){
                     val i = Intent(activity, AddSpotActivity::class.java)
                     i.putExtra("DayNum", dayNum)
                     i.putExtra("ListID", listID)
@@ -120,7 +119,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                     i.putExtra("planId", data.id)
                     startActivityForResult(i, 123)
                 }
-                else if(mode == 0){ //수정 모드
+                else if(mode == MODE_EDIT){ //수정 모드
                     for(i in 0 until planAdapter.itemCount - 1){
                         val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                         anim.duration = 300
@@ -131,7 +130,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                             view.dragBtn.visibility = View.VISIBLE
                         }
                     }
-                    mode = 1
+                    mode = MODE_DEFAULT
                 }
             }
         }
@@ -146,7 +145,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
         planAdapter.itemLongClickListener = object : PlanListAdapter.OnItemLongClickListener{
             override fun onItemLongClick() {
-                if(mode == 1){
+                if(mode == MODE_DEFAULT){
                     val anim = ScaleAnimation(0.0f, 1.0f, 1.0f, 1.0f, 100.0f, 0.0f)
                     anim.duration = 300
                     for(i in 0 until planAdapter.itemCount - 1){
@@ -157,7 +156,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                             view.deleteBtn.startAnimation(anim)
                         }
                     }
-                    mode = 0
+                    mode = MODE_EDIT
                 }
             }
         }
@@ -174,15 +173,6 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         callback = DateItemTouchHelperCallback(planAdapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if(requestCode == 123) {
-            if(resultCode == Activity.RESULT_OK) {
-//                refresh()
-            }
-        }
     }
 
 
@@ -206,18 +196,16 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     fun getScreenshotFromRecyclerView(view: RecyclerView, ad: RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
-        mode = 2
+        mode = MODE_CAPTURE
         var bigBitmap: Bitmap?
         val size = ad.itemCount - 1
         if(size == 0)
             return null
         var height = 0
         var iHeight = 0
-        val paint = Paint()
-        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
 
-        val cacheSize = maxMemory / 8
-        val bitmapCache = LruCache<String, Bitmap>(cacheSize)
+        var bitmapList = ArrayList<Bitmap>()
+
         for (i in 0 until size) {
             val holder = ad.createViewHolder(view, ad.getItemViewType(i))
             ad.onBindViewHolder(holder, i)
@@ -226,26 +214,25 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                     View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
             )
             holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
-            holder.itemView.isDrawingCacheEnabled = true
-            holder.itemView.buildDrawingCache()
-            val drawingCache = holder.itemView.drawingCache
-            if (drawingCache != null) {
-                bitmapCache.put(i.toString(), drawingCache)
-            }
+            val buffer = Bitmap.createBitmap(holder.itemView.measuredWidth, holder.itemView.measuredHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(buffer)
+            holder.itemView.draw(canvas)
+            bitmapList.add(buffer)
             height += holder.itemView.measuredHeight
         }
 
-        bigBitmap = Bitmap.createBitmap(view.measuredWidth, height, Bitmap.Config.ARGB_8888)
-        val bigCanvas = Canvas(bigBitmap!!)
-        bigCanvas.drawColor(Color.WHITE)
+        bigBitmap = Bitmap.createBitmap(view.width, height, Bitmap.Config.ARGB_8888)
+        var bigCanvas = Canvas(bigBitmap!!)
+        val paint = Paint()
+
 
         for (i in 0 until size) {
-            val bitmap = bitmapCache.get(i.toString())
+            val bitmap = bitmapList[i]
             bigCanvas.drawBitmap(bitmap, 0f, iHeight.toFloat(), paint)
-            iHeight += bitmap.getHeight()
+            iHeight += bitmap.height
             bitmap.recycle()
         }
-        mode = 1
+        mode = MODE_DEFAULT
         return bigBitmap
     }
 }

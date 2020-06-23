@@ -56,8 +56,6 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
 
     fun removeItem(position: Int){
         val item = getItem(position)!!
-
-
         val builder = AlertDialog.Builder(context)
         builder.setMessage("삭제하시겠습니까?")
                 .setPositiveButton("삭제") { dialogInterface, _ ->

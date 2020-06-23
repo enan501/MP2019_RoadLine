@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
@@ -21,7 +22,7 @@ import org.threeten.bp.LocalDateTime
 import java.lang.Exception
 import java.time.format.DateTimeFormatter
 
-class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context: Context) : RealmRecyclerViewAdapter<T_Plan, RecyclerView.ViewHolder>(realmResult, true) {
+class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context: Context, val fragment:Fragment1) : RealmRecyclerViewAdapter<T_Plan, RecyclerView.ViewHolder>(realmResult, true) {
 
     private val TYPE_ITEM = 0
     private val TYPE_FOOTER = 1
@@ -48,7 +49,6 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
     var itemLongClickListener:OnItemLongClickListener? = null
     var itemChangeListener:OnItemChangeListener? = null
     var realm: Realm
-    val timeFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("HH:mm")
 
     init {
         Realm.init(context)
@@ -185,11 +185,11 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                     str += ":" + minute
                 p0.spotTime.text = str
             }
-            if(Fragment1.mode == 0){ //수정 모드
+            if(fragment.mode == 0){ //수정 모드
                 p0.deleteBtn.visibility = View.VISIBLE
                 p0.dragBtn.visibility = View.INVISIBLE
             }
-            else if(Fragment1.mode == 1){ //평상시
+            else if(fragment.mode == 1){ //평상시
                 p0.deleteBtn.visibility = View.INVISIBLE
                 p0.dragBtn.visibility = View.VISIBLE
             }
