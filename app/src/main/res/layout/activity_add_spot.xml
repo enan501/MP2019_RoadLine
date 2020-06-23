@@ -55,11 +55,11 @@
         android:id="@+id/path_bt"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="@drawable/route"
         android:layout_marginBottom="15dp"
-        app:layout_constraintStart_toStartOf="@+id/replace_bt"
+        android:background="@drawable/route"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/replace_bt"
-        android:visibility="visible" />
+        app:layout_constraintStart_toStartOf="@+id/replace_bt"/>
     <Button
         android:id="@+id/replace_bt"
         android:layout_width="50dp"
