@@ -219,7 +219,7 @@ class ShowDateActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
                 Log.v("tag", tempFile.toURI().toString())
-                var uri = FileProvider.getUriForFile(this,"konkukSW.MP2019.roadline.fileprovider",tempFile)
+                var uri = FileProvider.getUriForFile(this,packageName + ".fileprovider",tempFile)
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
                 shareIntent.type = "image/*"

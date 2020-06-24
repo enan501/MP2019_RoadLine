@@ -28,18 +28,6 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key"/>
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_path" />
-        <!--<provider-->
-            <!--android:name="androidx.core.content.FileProvider"-->
-            <!--android:authorities="konkukSW.MP2019.roadline.fileprovider"-->
-            <!--android:exported="false"-->
-            <!--android:grantUriPermissions="true">-->
-            <!--<meta-data-->
-                <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
-                <!--android:resource="@xml/file_path" />-->
-        <!--</provider>-->
         <provider android:authorities="${applicationId}.fileprovider"
                   android:name="androidx.core.content.FileProvider"
                   android:exported="false" android:grantUriPermissions="true">

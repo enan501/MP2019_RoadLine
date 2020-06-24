@@ -271,118 +271,48 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         if(size == 0)
             return null
         var height = 0
-        val paint = Paint()
-        var iHeight = 0
-        var width = 0
-        var iWidth = 0
-        var rheight = 0
-        var rwidth = 0
-        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
+        var bitmapList = ArrayList<Bitmap>()
 
-        // Use 1/8th of the available memory for this memory cache.
-        val cacheSize = maxMemory / 8
-        val bitmaCache = LruCache<String, Bitmap>(cacheSize)
-        var count:Int = 0
+
+        var childWidth = 0
+        var childHeight = 0
+        for(i in 0 until size){
+            val childView = timelineView.getChildAt(i)
+            if(childView != null){
+                childWidth = childView.width
+                childHeight = childView.height
+            }
+            break
+        }
+
         for (i in 0 until size) {
             val holder = planAdapter.createViewHolder(timelineView, planAdapter.getItemViewType(i))
             planAdapter.onBindViewHolder(holder, i)
             holder.itemView.measure(
-                    View.MeasureSpec.makeMeasureSpec(timelineView.width, View.MeasureSpec.UNSPECIFIED),
-                    View.MeasureSpec.makeMeasureSpec(timelineView.height, View.MeasureSpec.UNSPECIFIED)
+                    View.MeasureSpec.makeMeasureSpec(childWidth, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
             )
             holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
-            holder.itemView.isDrawingCacheEnabled = true
-            holder.itemView.buildDrawingCache()
-            val drawingCache = holder.itemView.drawingCache
-            if (drawingCache != null) {
-                bitmaCache.put(i.toString(), drawingCache)
-            }
-            else{
-                Log.d("mytag", "null : " + i.toString())
-            }
-            if(count % 5 == 0){
+            val buffer = Bitmap.createBitmap(holder.itemView.measuredWidth, holder.itemView.measuredHeight, Bitmap.Config.ARGB_8888)
+            val canvas = Canvas(buffer)
+            holder.itemView.draw(canvas)
+            bitmapList.add(buffer)
+            if(i % 5 == 0){
                 height += holder.itemView.measuredHeight
-                width = holder.itemView.measuredWidth
-            }else{
-                width += holder.itemView.measuredWidth
             }
-            count++
-            rheight = holder.itemView.measuredHeight
-            rwidth = holder.itemView.measuredWidth
         }
 
-        bigBitmap = Bitmap.createBitmap(rwidth*5, height, Bitmap.Config.ARGB_8888)
+        bigBitmap = Bitmap.createBitmap(timelineView.width, height, Bitmap.Config.ARGB_8888)
         val bigCanvas = Canvas(bigBitmap!!)
-        bigCanvas.drawColor(Color.WHITE)
 
+        val paint = Paint()
         for (i in 0 until size) {
-            val bitmap = bitmaCache.get(i.toString())
-            iHeight = (i/5)*rheight
-            iWidth = (i%5)*rwidth
-            Log.d("mytag", bitmap.toString())
+            val bitmap = bitmapList[i]
+            val iHeight = (i / 5) * childHeight
+            val iWidth = (i % 5) * childWidth
             bigCanvas.drawBitmap(bitmap!!, iWidth.toFloat(), iHeight.toFloat(), paint)
             bitmap!!.recycle()
         }
         return bigBitmap
     }
-
-
-//    fun getScreenshotFromRecyclerView(): Bitmap? {
-//        var bigBitmap: Bitmap?
-//        val size = planAdapter.itemCount
-//        if(size == 0)
-//            return null
-//        var totalHeight = 0
-//        val paint = Paint()
-//        var width = 0
-////        val maxMemory = (Runtime.getRuntime().maxMemory() / 1024).toInt()
-////
-////        // Use 1/8th of the available memory for this memory cache.
-////        val cacheSize = maxMemory / 8
-////        val bitmaCache = LruCache<String, Bitmap>(cacheSize)
-//        var bitmapList = ArrayList<Bitmap>()
-//
-//        var itemWidth = 0
-//        var itemHeight = 0
-//        for(i in 0 until size){
-//            val childView = timelineView.getChildAt(i)
-//            if(childView != null){
-//                itemHeight = childView.height
-//                itemWidth = childView.width
-//                break
-//            }
-//        }
-//
-//        for (i in 0 until size) {
-//            val holder = planAdapter.createViewHolder(timelineView, planAdapter.getItemViewType(i))
-//            planAdapter.onBindViewHolder(holder, i)
-//            holder.itemView.layout(0, 0, itemWidth, itemHeight)
-//
-//            val buffer = Bitmap.createBitmap(itemWidth, itemHeight, Bitmap.Config.ARGB_8888)
-//            val canvas = Canvas(buffer)
-//            holder.itemView.draw(canvas)
-//            bitmapList.add(buffer)
-//
-//            if(i % 5 == 0){
-//                totalHeight += itemHeight
-//                width = itemWidth
-//            } else {
-//                width += itemWidth
-//            }
-//        }
-//
-//        bigBitmap = Bitmap.createBitmap(timelineView.width, totalHeight, Bitmap.Config.ARGB_8888)
-//        val bigCanvas = Canvas(bigBitmap)
-//        bigCanvas.drawColor(Color.WHITE)
-//
-//        for (i in 0 until size) {
-//            val bitmap = bitmapList[i]
-//            val iHeight = (i / 5) * itemHeight
-//            val iWidth = (i % 5) * itemWidth
-//            bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
-//            bitmap.recycle()
-//        }
-//        return bigBitmap
-//    }
-
 }

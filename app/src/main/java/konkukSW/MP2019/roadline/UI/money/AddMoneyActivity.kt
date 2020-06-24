@@ -251,10 +251,7 @@ class AddMoneyActivity : AppCompatActivity() {
             dialog.setItems(array, DialogInterface.OnClickListener { dialog, which ->
                 when(which){
                     0->{ //카메라
-//                        if (!checkAppPermission(arrayOf(Manifest.permission.CAMERA))) {
-//                            askPermission(arrayOf(Manifest.permission.CAMERA), CAPTURE_IMAGE)
-//                        }
-                        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
                         if(intent.resolveActivity(packageManager) != null){
                             var photoFile: File? = null
                             try {
@@ -269,13 +266,9 @@ class AddMoneyActivity : AppCompatActivity() {
                         }
                     }
                     1->{ //앨범
-//                        if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
-//                            askPermission(arrayOf(Manifest.permission.CAMERA), SELECT_IMAGE)
-//                        }
-
                         val intent = Intent(Intent.ACTION_PICK)
-                        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-                        intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        intent.type = MediaStore.Images.Media.CONTENT_TYPE
+                        intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         startActivityForResult(intent, SELECT_IMAGE)
                     }
                 }
