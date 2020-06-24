@@ -17,6 +17,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.TimePicker
 import android.widget.Toast
@@ -37,6 +38,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.R.id.places_autocomplete_search_input
 import kotlinx.android.synthetic.main.activity_add_spot.*
+import kotlinx.android.synthetic.main.add_memo_dialog.*
 
 import java.util.*
 
@@ -44,6 +46,7 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     lateinit var addMap: GoogleMap
 
     var spotName:String = ""
+    var spotNameAlter:String? = null
     var locationX:Double = 0.0
     var locationY:Double = 0.0
     var memo:String ? = null
@@ -65,7 +68,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
     lateinit var dialogMemo : EditText
+    lateinit var dialogTitle : EditText
     lateinit var dialogTime : TimePicker
+    lateinit var dialogCheckTime: CheckBox
+    lateinit var dialogCheckMemo: CheckBox
     lateinit var addDialog: View
 
     override fun onMapReady(p0: GoogleMap) {
@@ -102,8 +108,8 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if(planId != null){ //수정
             thisPlan  = realm.where(T_Plan::class.java).equalTo("id", planId).findFirst()!!
-
             spotName = thisPlan!!.name
+            spotNameAlter = thisPlan!!.nameAlter
             hour = thisPlan!!.hour
             minute=  thisPlan!!.minute
             memo = thisPlan!!.memo
@@ -125,8 +131,11 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
         builder = AlertDialog.Builder(this) //상세정보 추가 다이얼로그
         addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
-        dialogMemo = addDialog.findViewById(R.id.apd_editText1)
-        dialogTime = addDialog.findViewById(R.id.apd_timePicker)
+        dialogMemo = addDialog.findViewById(R.id.memoEditText)
+        dialogTime = addDialog.findViewById(R.id.timePicker)
+        dialogTitle = addDialog.findViewById(R.id.titleEditText)
+        dialogCheckMemo = addDialog.findViewById(R.id.checkBoxMemo)
+        dialogCheckTime = addDialog.findViewById(R.id.checkBoxTime)
         builder.setView(addDialog)
 
         autocompleteFragment = supportFragmentManager.findFragmentById(R.id.AS_SearchBox) as AutocompleteSupportFragment?
@@ -143,7 +152,14 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
     fun initMap(){
         if(planId != null){ //수정
             searchBox.setText(thisPlan!!.name)
-            var str:String?
+            var title = ""
+            if(spotNameAlter == null){
+                title = spotName
+            }
+            else{
+                title = spotNameAlter!!
+            }
+            var str: String? = null
             if(hour != null){
                 val minute = minute.toString()
                 str = hour.toString()
@@ -153,13 +169,11 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     str += "시 " + minute + "분"
 
             }
-            else{
-                str = null
-            }
+
             addMap.addMarker(
                     MarkerOptions()
                             .position(LatLng(locationY,locationX))
-                            .title(spotName)
+                            .title(title)
                             .snippet(str)
                             .icon(BitmapDescriptorFactory.fromBitmap(markerIcon))
             )
@@ -192,12 +206,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
         as_button_check.setOnClickListener { //체크 등록 버튼
             if(searchBox.text.toString() != ""){
-                if(planId == null){ //추가
+                if(planId == null) { //추가
                     realm.beginTransaction()
                     val plan: T_Plan = realm.createObject(T_Plan::class.java, UUID.randomUUID().toString())
                     plan.listID = listID
                     plan.dayNum = DayNum
                     plan.name = spotName
+                    plan.nameAlter = spotNameAlter
                     plan.hour = hour
                     plan.minute = minute
                     plan.memo = memo
@@ -206,9 +221,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     plan.pos = pos
                     realm.commitTransaction()
                 }
-                else{ //수정
+                else { //수정
                     realm.beginTransaction()
                     thisPlan!!.name = spotName
+                    thisPlan!!.nameAlter = spotNameAlter
                     thisPlan!!.hour = hour
                     thisPlan!!.minute = minute
                     thisPlan!!.memo = memo
@@ -238,24 +254,60 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(mapIntent)
         }
 
+        dialogCheckMemo.setOnCheckedChangeListener { buttonView, isChecked ->
+            when(isChecked){
+                true->dialogMemo.isEnabled = true
+                false->dialogMemo.isEnabled = false
+            }
+        }
+
+        dialogCheckTime.setOnCheckedChangeListener { buttonView, isChecked ->
+            when(isChecked){
+                true->dialogTime.isEnabled = true
+                false->dialogTime.isEnabled = false
+            }
+        }
+
         memo_button.setOnClickListener {
-            if(planId != null){ //수정
-                dialogMemo.setText(thisPlan!!.memo)
-                if(thisPlan!!.hour != null)
-                    dialogTime.hour = thisPlan!!.hour!!
-                else
-                    dialogTime.hour = 0
-                if(thisPlan!!.minute != null)
-                    dialogTime.minute = thisPlan!!.minute!!
-                else
-                    dialogTime.minute = 0
+            if(spotNameAlter == null){
+                if(spotName == ""){
+                    dialogTitle.text.clear()
+                    dialogTitle.hint = "위치를 추가하세요"
+                    dialogTitle.isEnabled = false
+                }
+                else{
+                    dialogTitle.hint = spotName
+                    dialogTitle.isEnabled = true
+                    dialogTitle.setText(spotName)
+                }
             }
             else{
-                dialogMemo.text.clear()
-                //시간 초기화
+                dialogTitle.hint = spotName
+                dialogTitle.isEnabled = true
+                dialogTitle.setText(spotNameAlter)
+            }
+            if(hour != null){
+                dialogTime.hour = hour!!
+                dialogTime.minute = minute!!
+                dialogCheckTime.isChecked = true
+                dialogTime.isEnabled = true
+            }else{
                 dialogTime.hour = 0
                 dialogTime.minute = 0
+                dialogCheckTime.isChecked = false
+                dialogTime.isEnabled = false
             }
+            if(memo != null){
+                dialogMemo.setText(memo)
+                dialogCheckMemo.isChecked = true
+                dialogMemo.isEnabled = true
+
+            }else{
+                dialogMemo.text.clear()
+                dialogCheckMemo.isChecked = false
+                dialogMemo.isEnabled  = false
+            }
+            dialogTitle.setSelection(dialogTitle.text.length)
             if(addDialog.parent != null){
                 (addDialog.parent as ViewGroup).removeView(addDialog)
             }
@@ -263,9 +315,26 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         }
 
         builder.setPositiveButton("추가") { dialogInterface, i ->
-            memo = dialogMemo.text.toString()
-            hour = dialogTime.hour
-            minute = dialogTime.minute
+            if(dialogTitle.text.toString() != ""){
+                spotNameAlter = dialogTitle.text.toString()
+            } else{
+                spotNameAlter = null
+            }
+            if(dialogCheckMemo.isChecked){
+                if(dialogMemo.text.isNotEmpty())
+                    memo = dialogMemo.text.toString()
+                else
+                    memo = null
+            } else{
+                memo = null
+            }
+            if(dialogCheckTime.isChecked){
+                hour = dialogTime.hour
+                minute = dialogTime.minute
+            } else{
+                hour = null
+                minute = null
+            }
         }
         .setNegativeButton("취소") { dialogInterface, i -> }
 

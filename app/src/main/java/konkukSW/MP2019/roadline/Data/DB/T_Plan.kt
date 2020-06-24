@@ -11,6 +11,7 @@ open class T_Plan : RealmObject() {
     @PrimaryKey
     var id : String = ""
     var name: String =  ""
+    var nameAlter: String? = null
     var locationX :Double = 0.0
     var locationY :Double = 0.0
 

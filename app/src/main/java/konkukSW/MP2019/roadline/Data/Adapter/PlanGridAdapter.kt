@@ -91,7 +91,11 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
                 holder.roadImg.visibility = View.VISIBLE
                 holder.name.visibility = View.VISIBLE
                 val item = getItem(rPos)!!
-                holder.name.text = item.name
+                if(item.nameAlter == null){
+                    holder.name.text = item.name
+                }else{
+                    holder.name.text = item.nameAlter
+                }
             }
 
             if(rPos == count - 1){ //마지막

@@ -95,25 +95,29 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
         val b = bitmapDraw.bitmap
         val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
 
-        for(i in 0 until result.size)
-        {
-            markerOptions
-                    .position(latlngList[i])
-                    .title(result[i]!!.name)
-                    .icon(BitmapDescriptorFactory.fromBitmap(marker))
-            if(result[i]!!.hour != null){
-                val minute = result[i]!!.minute.toString()
-                var str = result[i]!!.hour.toString()
-                if(minute.length == 1)
-                    str += "시 0" + minute + "분"
-                else
-                    str += "시 " + minute + "분"
-                markerOptions.snippet(str)
-
+        for(i in 0 until result.size) {
+            var title = ""
+            if(result[i]!!.nameAlter == null){
+                title = result[i]!!.name
             }
             else{
-                markerOptions.snippet(null)
+                title = result[i]!!.nameAlter!!
             }
+            var time: String? = null
+            if(result[i]!!.hour != null){
+                val minute = result[i]!!.minute.toString()
+                time = result[i]!!.hour.toString()
+                if(minute.length == 1)
+                    time += "시 0" + minute + "분"
+                else
+                    time += "시 " + minute + "분"
+            }
+            markerOptions
+                    .position(latlngList[i])
+                    .title(title)
+                    .snippet(time)
+                    .icon(BitmapDescriptorFactory.fromBitmap(marker))
+
             gMap.addMarker(markerOptions)
 
             boundsBuilder.include(latlngList[i])

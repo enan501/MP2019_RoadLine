@@ -175,7 +175,11 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
 
     override fun onBindViewHolder(p0: RecyclerView.ViewHolder, p1: Int) {
         if(p0 is ItemViewHolder) {
-            p0.spotName.text = getItem(p1)!!.name
+            if(getItem(p1)!!.nameAlter == null){
+                p0.spotName.text = getItem(p1)!!.name
+            }else{
+                p0.spotName.text = getItem(p1)!!.nameAlter
+            }
             if(getItem(p1)!!.hour != null){
                 val minute = getItem(p1)!!.minute.toString()
                 var str = getItem(p1)!!.hour.toString()
