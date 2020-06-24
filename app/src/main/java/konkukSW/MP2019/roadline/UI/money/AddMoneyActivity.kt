@@ -56,8 +56,8 @@ class AddMoneyActivity : AppCompatActivity() {
     var moneyId = ""
     var listID = ""
     var dayNum = 0
-    var img_url: String = "" // 이미지 URI
-    var img_path: String = ""//카메라 이미지 경로
+    var imgUri: String = "" // 이미지 URI
+    var imgPath: String = ""//카메라 이미지 경로
     var cate: String = "" // 카테고리
     lateinit var realm:Realm
     lateinit var selectedCurrency: T_Currency
@@ -167,8 +167,8 @@ class AddMoneyActivity : AppCompatActivity() {
 
         if(editMode){
             am_toolbar.title = "가계부 수정"
-            img_url = selectedMoney!!.img
-            if(img_url == ""){
+            imgUri = selectedMoney!!.img
+            if(imgUri == ""){
                 addMoneyImage.setImageResource(R.drawable.photo_default)
             }
             else{
@@ -259,7 +259,7 @@ class AddMoneyActivity : AppCompatActivity() {
                             }catch (e: IOException){}
                             if(photoFile != null){
                                 val photoUri = FileProvider.getUriForFile(this, packageName + ".fileprovider", photoFile)
-                                img_path = photoFile.absolutePath
+                                imgPath = photoFile.absolutePath
                                 intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
                                 startActivityForResult(intent, CAPTURE_IMAGE)
                             }
@@ -267,6 +267,7 @@ class AddMoneyActivity : AppCompatActivity() {
                     }
                     1->{ //앨범
                         val intent = Intent(Intent.ACTION_PICK)
+
                         intent.type = MediaStore.Images.Media.CONTENT_TYPE
                         intent.data = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                         startActivityForResult(intent, SELECT_IMAGE)
@@ -307,12 +308,12 @@ class AddMoneyActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SELECT_IMAGE) {
-                img_url = getPathFromUri(data!!.data)
+                imgUri = getPathFromUri(data!!.data)
                 Glide.with(applicationContext).load(data!!.data).into(addMoneyImage)
             }
             else if(requestCode == CAPTURE_IMAGE){
-                img_url = img_path
-                Glide.with(applicationContext).load(img_url).into(addMoneyImage)
+                imgUri = imgPath
+                Glide.with(applicationContext).load(imgUri).into(addMoneyImage)
             }
         }
     }
@@ -347,7 +348,7 @@ class AddMoneyActivity : AppCompatActivity() {
             if(editMode) { //수정
                 realm.beginTransaction()
                 selectedMoney!!.currency = selectedCurrency
-                selectedMoney!!.img = img_url
+                selectedMoney!!.img = imgUri
                 selectedMoney!!.price = priceTxt.text.toString().toDouble() //원화 넣기
                 selectedMoney!!.cate = cate
                 if(android.os.Build.VERSION.SDK_INT >= 26) {
@@ -366,7 +367,7 @@ class AddMoneyActivity : AppCompatActivity() {
                 moneyTable.listID = listID
                 moneyTable.dayNum = dayNum
                 moneyTable.currency = selectedCurrency
-                moneyTable.img = img_url
+                moneyTable.img = imgUri
                 moneyTable.price = priceTxt.text.toString().toDouble() //원화 넣기
                 moneyTable.cate = cate
                 if(android.os.Build.VERSION.SDK_INT >= 26) {
@@ -380,13 +381,13 @@ class AddMoneyActivity : AppCompatActivity() {
             }
 
 
-            val item = realm.where(T_Photo::class.java).equalTo("listID", listID).equalTo("dayNum", dayNum).equalTo("img", img_url).findFirst()
-            if(img_url != "" && item == null){
+            val item = realm.where(T_Photo::class.java).equalTo("listID", listID).equalTo("dayNum", dayNum).equalTo("img", imgUri).findFirst()
+            if(imgUri != "" && item == null){
                 realm.beginTransaction()
                 val photoTable = realm.createObject(T_Photo::class.java, UUID.randomUUID().toString())
                 photoTable.listID = listID
                 photoTable.dayNum = dayNum
-                photoTable.img = img_url
+                photoTable.img = imgUri
                 if(android.os.Build.VERSION.SDK_INT >= 26) {
                     photoTable.dateTime = LocalDate.now().toEpochDay()
                 }

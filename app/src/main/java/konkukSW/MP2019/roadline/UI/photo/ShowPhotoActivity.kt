@@ -49,7 +49,7 @@ class ShowPhotoActivity : AppCompatActivity() {
     var DayNum = 0
     var isAll = false
     lateinit var dayList: RealmResults<T_Day>
-    var img_path = ""//카메라 이미지 경로
+    var imgPath = ""//카메라 이미지 경로
     private val SELECT_IMAGE = 100
     private val CAPTURE_IMAGE = 200
     private var day_click = 0
@@ -123,7 +123,7 @@ class ShowPhotoActivity : AppCompatActivity() {
                                 }catch (e: IOException){}
                                 if(photoFile != null){
                                     val photoUri = FileProvider.getUriForFile(this@ShowPhotoActivity, packageName + ".fileprovider", photoFile)
-                                    img_path = photoFile.absolutePath
+                                    imgPath = photoFile.absolutePath
                                     intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
                                     startActivityForResult(intent, CAPTURE_IMAGE)
                                 }
@@ -131,6 +131,7 @@ class ShowPhotoActivity : AppCompatActivity() {
                         }
                         1->{ //앨범
                             val intent = Intent(Intent.ACTION_PICK)
+                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
                             intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
                             intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
                             startActivityForResult(intent, SELECT_IMAGE)
@@ -163,7 +164,7 @@ class ShowPhotoActivity : AppCompatActivity() {
         deleteButton.setOnClickListener {
             if(deleteMode){
                 if(deletePhotoList.isNotEmpty()){
-                    val builder = androidx.appcompat.app.AlertDialog.Builder(this@ShowPhotoActivity)
+                    val builder =AlertDialog.Builder(this@ShowPhotoActivity)
                     builder.setMessage("삭제하시겠습니까?")
                             .setPositiveButton("삭제") { dialogInterface, _ ->
                                 Log.d("mytag", deletePhotoList.toString())
@@ -285,28 +286,48 @@ class ShowPhotoActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            var path = ""
             when(requestCode){
                 SELECT_IMAGE->{
-                    path = getPathFromUri(data!!.data)
+                    if(data != null){
+                        if(data.clipData == null){
+                            val path = getPathFromUri(data!!.data)
+                            addPhotoToDB(path)
+                        }
+                        else{
+                            val clipData = data.clipData
+                            if(clipData.itemCount > 9){
+                                Toast.makeText(this, "사진은 9장까지 선택 가능합니다", Toast.LENGTH_LONG).show()
+                            }
+                            else {
+                                for(i in 0 until clipData.itemCount){
+                                    val path = getPathFromUri(clipData.getItemAt(i).uri)
+                                    addPhotoToDB(path)
+                                }
+                            }
+                        }
+                    }
                 }
                 CAPTURE_IMAGE->{
-                    path = img_path
+                    addPhotoToDB(imgPath)
                 }
             }
-            realm.beginTransaction()
-            val Table: T_Photo = realm.createObject(T_Photo::class.java, UUID.randomUUID().toString())//데이터베이스에 저장할 객체 생성
-            Table.listID = ListID
-            Table.dayNum = day_click
-            Table.img = path
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
-                Table.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
-            }
-            else{
-                Table.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
-            }
-            realm.commitTransaction()
+
         }
+    }
+
+    fun addPhotoToDB(path: String){
+        realm.beginTransaction()
+        val Table: T_Photo = realm.createObject(T_Photo::class.java, UUID.randomUUID().toString())//데이터베이스에 저장할 객체 생성
+        Table.listID = ListID
+        Table.dayNum = day_click
+        Table.img = path
+        if(android.os.Build.VERSION.SDK_INT >= 26) {
+            Table.dateTime = LocalDateTime.now().atZone(ZoneId.of("Asia/Seoul")).toEpochSecond()
+        }
+        else{
+            Table.dateTime = org.threeten.bp.LocalDateTime.now().atZone(org.threeten.bp.ZoneId.of("Asia/Seoul")).toEpochSecond()
+        }
+        realm.commitTransaction()
     }
 
     fun getPathFromUri(uri: Uri): String {
