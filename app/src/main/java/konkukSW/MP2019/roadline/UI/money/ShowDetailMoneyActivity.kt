@@ -80,14 +80,14 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         totalMoneyValue = 0.0
         for (i in results) {
             when (i!!.cate) {
-                "식사" -> priceList[0] += i!!.price * i!!.currency!!.rate
-                "쇼핑" -> priceList[1] += i!!.price * i!!.currency!!.rate
-                "교통" -> priceList[2] += i!!.price * i!!.currency!!.rate
-                "관광" -> priceList[3] += i!!.price * i!!.currency!!.rate
-                "숙박" -> priceList[4] += i!!.price * i!!.currency!!.rate
-                "기타" -> priceList[5] += i!!.price * i!!.currency!!.rate
+                "식사" -> priceList[0] += i.price * i.currency!!.rate
+                "쇼핑" -> priceList[1] += i.price * i.currency!!.rate
+                "교통" -> priceList[2] += i.price * i.currency!!.rate
+                "관광" -> priceList[3] += i.price * i.currency!!.rate
+                "숙박" -> priceList[4] += i.price * i.currency!!.rate
+                "기타" -> priceList[5] += i.price * i.currency!!.rate
             }
-            totalMoneyValue += i!!.price * i!!.currency!!.rate
+            totalMoneyValue += i.price * i.currency!!.rate
         }
 
         for (i in 0 until categoryList.size) {

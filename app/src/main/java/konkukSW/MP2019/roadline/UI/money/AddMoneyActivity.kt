@@ -2,10 +2,15 @@ package konkukSW.MP2019.roadline.UI.money
 
 import android.Manifest
 import android.app.Activity
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.icu.text.SimpleDateFormat
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AlertDialog
@@ -21,16 +26,20 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.FileProvider
 import com.bumptech.glide.Glide
 import io.realm.Realm
 import io.realm.RealmList
 import io.realm.kotlin.where
 import konkukSW.MP2019.roadline.Data.DB.*
+import konkukSW.MP2019.roadline.Extension.getPathFromUri
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.coroutines.selects.select
 import org.threeten.bp.LocalDate
+import java.io.File
+import java.io.IOException
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -42,11 +51,13 @@ import kotlin.math.roundToInt
 
 class AddMoneyActivity : AppCompatActivity() {
     val SELECT_IMAGE = 100
+    val CAPTURE_IMAGE = 200
     var editMode = false
     var moneyId = ""
     var listID = ""
     var dayNum = 0
     var img_url: String = "" // 이미지 URI
+    var img_path: String = ""//카메라 이미지 경로
     var cate: String = "" // 카테고리
     lateinit var realm:Realm
     lateinit var selectedCurrency: T_Currency
@@ -73,8 +84,8 @@ class AddMoneyActivity : AppCompatActivity() {
     }
 
     fun initPermission() {
-        if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
-            askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE), SELECT_IMAGE)
+        if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA))) {
+            askPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA), SELECT_IMAGE)
         }
     }
 
@@ -102,11 +113,21 @@ class AddMoneyActivity : AppCompatActivity() {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         when (requestCode) {
-            SELECT_IMAGE -> if (checkAppPermission(permissions)) { //퍼미션 동의했을 때 할 일
-                Toast.makeText(this, "권한이 승인됨", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "권한이 거절됨", Toast.LENGTH_SHORT).show()
-                finish()
+            SELECT_IMAGE -> {
+                if (checkAppPermission(permissions)) { //퍼미션 동의했을 때 할 일
+                    Toast.makeText(this, "권한이 승인됨", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "권한이 거절됨", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
+            }
+            CAPTURE_IMAGE -> {
+                if (checkAppPermission(permissions)) { //퍼미션 동의했을 때 할 일
+                    Toast.makeText(this, "권한이 승인됨", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, "권한이 거절됨", Toast.LENGTH_SHORT).show()
+                    finish()
+                }
             }
         }
     }
@@ -114,7 +135,6 @@ class AddMoneyActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if(item!!.itemId == android.R.id.home){
             finish()
-
         }
         return super.onOptionsItemSelected(item)
     }
@@ -226,10 +246,41 @@ class AddMoneyActivity : AppCompatActivity() {
         }
 
         addMoneyImage.setOnClickListener {
-            val intent = Intent(Intent.ACTION_PICK)
-            intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-            intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-            startActivityForResult(intent, SELECT_IMAGE)
+            val array = arrayOf("사진 찍어서 추가", "앨범에서 추가")
+            val dialog = AlertDialog.Builder(this@AddMoneyActivity)
+            dialog.setItems(array, DialogInterface.OnClickListener { dialog, which ->
+                when(which){
+                    0->{ //카메라
+//                        if (!checkAppPermission(arrayOf(Manifest.permission.CAMERA))) {
+//                            askPermission(arrayOf(Manifest.permission.CAMERA), CAPTURE_IMAGE)
+//                        }
+                        val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                        if(intent.resolveActivity(packageManager) != null){
+                            var photoFile: File? = null
+                            try {
+                                photoFile = createImageFile()
+                            }catch (e: IOException){}
+                            if(photoFile != null){
+                                val photoUri = FileProvider.getUriForFile(this, packageName + ".fileprovider", photoFile)
+                                img_path = photoFile.absolutePath
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                                startActivityForResult(intent, CAPTURE_IMAGE)
+                            }
+                        }
+                    }
+                    1->{ //앨범
+//                        if (!checkAppPermission(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))) {
+//                            askPermission(arrayOf(Manifest.permission.CAMERA), SELECT_IMAGE)
+//                        }
+
+                        val intent = Intent(Intent.ACTION_PICK)
+                        intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+                        intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                        startActivityForResult(intent, SELECT_IMAGE)
+                    }
+                }
+            })
+            dialog.show()
         }
 
         priceTxt.addTextChangedListener(object : TextWatcher {
@@ -251,12 +302,24 @@ class AddMoneyActivity : AppCompatActivity() {
         })
     }
 
+    fun createImageFile(): File {
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "TEST_" + timeStamp + "_"
+        val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val image = File.createTempFile(imageFileName, ".jpg", storageDir)
+        return image
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == SELECT_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SELECT_IMAGE) {
                 img_url = getPathFromUri(data!!.data)
                 Glide.with(applicationContext).load(data!!.data).into(addMoneyImage)
+            }
+            else if(requestCode == CAPTURE_IMAGE){
+                img_url = img_path
+                Glide.with(applicationContext).load(img_url).into(addMoneyImage)
             }
         }
     }
