@@ -55,6 +55,9 @@ class SplashActivity : AppCompatActivity(){
                 withContext(Dispatchers.Main){
                     dialog.show()
                 }
+            } else {
+                startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
+                finish()
             }
         }
     }

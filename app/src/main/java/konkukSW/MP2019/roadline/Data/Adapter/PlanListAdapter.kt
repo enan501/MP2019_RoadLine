@@ -181,6 +181,7 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                 p0.spotName.text = getItem(p1)!!.nameAlter
             }
             if(getItem(p1)!!.hour != null){
+                p0.spotTime.visibility = View.VISIBLE
                 val minute = getItem(p1)!!.minute.toString()
                 var str = getItem(p1)!!.hour.toString()
                 if(minute.length == 1)
@@ -188,7 +189,10 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                 else
                     str += ":" + minute
                 p0.spotTime.text = str
+            } else {
+                p0.spotTime.visibility = View.GONE
             }
+
             if(fragment.mode == 0){ //수정 모드
                 p0.deleteBtn.visibility = View.VISIBLE
                 p0.dragBtn.visibility = View.INVISIBLE
