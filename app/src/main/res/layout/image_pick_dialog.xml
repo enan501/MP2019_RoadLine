@@ -19,16 +19,28 @@
     <!--android:scrollbars="none" />-->
     <!--</RelativeLayout>-->
 
+    <TextView
+        android:id="@+id/dayText"
+        android:textSize="37sp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="Day 1" app:layout_constraintBottom_toTopOf="@+id/rView"/>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@id/dayText"/>
     <TextView
         android:id="@+id/backTextView"
         android:layout_width="wrap_content"
@@ -37,5 +49,5 @@
         android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
         android:text="추억함에 사진을 추가해주세요" android:textColor="@color/lightGray" android:textSize="20dp"
         app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="@+id/rView"/>
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/dayText"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

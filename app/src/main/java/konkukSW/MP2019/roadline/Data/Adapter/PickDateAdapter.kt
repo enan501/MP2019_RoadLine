@@ -10,16 +10,19 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
+import com.bumptech.glide.Glide
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 import org.threeten.bp.format.DateTimeFormatter
+import org.w3c.dom.Text
 import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
 class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): RecyclerView.Adapter<PickDateAdapter.ViewHolder>() {
-
+    var editMode = false
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_pick_date,p0,false)
@@ -31,10 +34,19 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
     }
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
-        p0.imgPhoto.visibility = View.INVISIBLE
-        p0.imgCover.visibility = View.INVISIBLE
-        p0.day.background = ResourcesCompat.getDrawable(context.resources, R.drawable.grad2, null)
-//        p0.day.setBackgroundColor(R.drawable.grad2)
+
+        if(items[p1].img == null){
+            p0.imgPhoto.visibility = View.INVISIBLE
+            p0.imgCover.visibility = View.INVISIBLE
+            p0.day.background = ResourcesCompat.getDrawable(context.resources, R.drawable.grad2, null)
+        }
+        else{
+            p0.imgPhoto.visibility = View.VISIBLE
+            p0.imgCover.visibility = View.VISIBLE
+            p0.day.setBackgroundColor(ContextCompat.getColor(context, R.color.transparent))
+            Glide.with(context).load(items[p1].img).into(p0.imgPhoto)
+        }
+
         if(android.os.Build.VERSION.SDK_INT >= 26) {
             val dateFormat = java.time.format.DateTimeFormatter.ofPattern("yyyy.MM.dd")
             val date = LocalDate.ofEpochDay(items[p1].date)
@@ -78,9 +90,16 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             imgCover = itemView.findViewById(R.id.img_cover)
             imgPhoto = itemView.findViewById(R.id.img_photo)
             itemView.setOnClickListener{
-                val position = adapterPosition
-                if(position != 0 && position != items.size-1)
-                    itemClickListener?.OnItemClick(this, items[position], position)
+                if(!editMode){
+                    val position = adapterPosition
+                    if(position != 0 && position != items.size-1)
+                        itemClickListener?.OnItemClick(this, items[position], position)
+                }
+                else{
+                    editMode = false
+                    notifyDataSetChanged()
+                }
+
             }
             itemView.setOnLongClickListener {
                 val position = adapterPosition
@@ -88,6 +107,8 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
                     itemClickListener?.OnItemLongClick(this, items[position], position)
                 true
             }
+
         }
     }
+
 }

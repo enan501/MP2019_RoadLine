@@ -122,7 +122,7 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
                 }
             }
             else{
-                p0.dayNumText.textSize = 35f
+                p0.dayNumText.textSize = 30f
                 p0.dayNumText.text = "여행 전"
                 p0.dateText.visibility = View.GONE
             }

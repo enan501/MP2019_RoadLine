@@ -5,7 +5,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent" android:layout_height="wrap_content">
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,17 +12,17 @@
         android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_marginLeft="15dp"
-            android:layout_weight="1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/dayNumText"
-                android:textSize="43sp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DAY1" />
+                android:text="DAY1"
+                android:textSize="37sp"/>
 
             <TextView
                 android:id="@+id/dateText"
@@ -31,32 +30,31 @@
                 android:layout_height="wrap_content"
                 android:text="2019.05.03"
                 android:textColor="@color/colorPrimary"
-                android:textSize="17sp" />
+                android:textSize="13sp"/>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/addButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_marginVertical="50dp"
             android:layout_marginHorizontal="25dp"
+            android:layout_marginVertical="50dp"
             android:layout_weight="0"
-            android:backgroundTint="#A0A0A0"
-            app:srcCompat="@drawable/add_bt2" />
+            app:srcCompat="@drawable/add_bt2"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp" />
+        android:layout_margin="8dp" />
 
     <TextView
-        android:layout_margin="15dp"
         android:id="@+id/totalText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:text="1000원"
         android:textAlignment="viewEnd"
-        android:textSize="16sp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:textSize="10sp"/>
 </LinearLayout>

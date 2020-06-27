@@ -30,6 +30,8 @@ import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
+import kotlinx.android.synthetic.main.image_pick_dialog.*
+import kotlinx.android.synthetic.main.item_pick_date.*
 import kotlin.collections.ArrayList
 
 
@@ -43,7 +45,8 @@ class PickDateActivity : AppCompatActivity() {
     lateinit var realm: Realm
     lateinit var thisList:T_List
     lateinit var dayResults: RealmResults<T_Day>
-    lateinit var photoResults: RealmResults<T_Photo>
+    var editMode = false
+    var pickedDay = -1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +74,7 @@ class PickDateActivity : AppCompatActivity() {
         ListID = intent.getStringExtra("ListID")
         listPos = intent.getIntExtra("listPos", -1)
 
-        dateList = arrayListOf(PickDate(ListID,0,-1),PickDate(ListID,0,-1))
+        dateList = arrayListOf(PickDate(ListID,0,-1, null),PickDate(ListID,0,-1, null))
 
         realm = Realm.getDefaultInstance()
         thisList = realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!
@@ -79,12 +82,11 @@ class PickDateActivity : AppCompatActivity() {
                 .equalTo("listID", ListID)
                 .findAll().sort("num")
         for(T_Day in dayResults){
-            dateList.add(PickDate(ListID, T_Day.num, T_Day.date))
+            dateList.add(PickDate(ListID, T_Day.num, T_Day.date, T_Day.img))
         }
-        dateList.add(PickDate(ListID,-1,-1)) //추가 버튼
-        dateList.add(PickDate(ListID,0,-1)) //안보이는 마지막
+        dateList.add(PickDate(ListID,-1,-1, null)) //추가 버튼
+        dateList.add(PickDate(ListID,0,-1, null)) //안보이는 마지막
 
-        photoResults = realm.where(T_Photo::class.java).equalTo("listID", ListID).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
     }
 
     fun initLayout(){
@@ -119,34 +121,49 @@ class PickDateActivity : AppCompatActivity() {
     fun addListener() {
         PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
-                if(data.day > 0){
-                    var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
-                    PDIntentToSD.putExtra("ListID", ListID)
-                    PDIntentToSD.putExtra("DayNum", data.day)
-                    startActivity(PDIntentToSD)
+                if(!editMode){
+                    if(data.day > 0){
+                        var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
+                        PDIntentToSD.putExtra("ListID", ListID)
+                        PDIntentToSD.putExtra("DayNum", data.day)
+                        startActivity(PDIntentToSD)
+                    }
+                    else if(data.day == -1){ //추가
+                        //db에다 여행 날짜 추가
+                        realm.beginTransaction()
+                        val newDay: T_Day = realm.createObject(T_Day::class.java)
+                        newDay.listID = data.listid
+                        newDay.num = dateList[position-1].day + 1
+                        newDay.date = dateList[position - 1].date + 1
+                        realm.commitTransaction()
+
+                        realm.beginTransaction()
+                        thisList.dateEnd = newDay.date
+                        realm.commitTransaction()
+
+                        dateList.add(position,PickDate(ListID, newDay.num, newDay.date, null))
+                        PDAdapter.notifyDataSetChanged()
+                    }
                 }
-                else if(data.day == -1){ //추가
-                    //db에다 여행 날짜 추가
-                    realm.beginTransaction()
-                    val newDay: T_Day = realm.createObject(T_Day::class.java)
-                    newDay.listID = data.listid
-                    newDay.num = dateList[position-1].day + 1
-                    newDay.date = dateList[position - 1].date + 1
-                    realm.commitTransaction()
-
-                    realm.beginTransaction()
-                    thisList.dateEnd = newDay.date
-                    realm.commitTransaction()
-
-                    dateList.add(position,PickDate(ListID, newDay.num, newDay.date))
-                    PDAdapter.notifyDataSetChanged()
+                else{
+                    editMode = false
+                    addImageButton.visibility = View.INVISIBLE
                 }
             }
 
             override fun OnItemLongClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
-//                showImagePickDialog(holder)
+                editMode = true
+                addImageButton.visibility = View.VISIBLE
+                pickedDay = data.day
             }
+
         }
+
+        addImageButton.setOnClickListener {
+            showImagePickDialog(pickedDay)
+
+        }
+
         PD_photoBtn.setOnClickListener {
             var intent = Intent(this, ShowPhotoActivity::class.java)
             intent.putExtra("ListID", ListID)
@@ -169,16 +186,20 @@ class PickDateActivity : AppCompatActivity() {
         }
     }
 
-    fun showImagePickDialog(holder: PickDateAdapter.ViewHolder){
+    fun showImagePickDialog(dayNum: Int){
+        var photoResults = realm.where(T_Photo::class.java).equalTo("listID", ListID).equalTo("dayNum", dayNum).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
         var clickedPhoto:T_Photo? = null
         val imagePickBuilder = AlertDialog.Builder(this@PickDateActivity)
         val imagePickView = layoutInflater.inflate(R.layout.image_pick_dialog, null)
+        val dayTextView = imagePickView.findViewById<TextView>(R.id.dayText)
         val pickImageView = imagePickView.findViewById<RecyclerView>(R.id.rView)
         val backTextView = imagePickView.findViewById<TextView>(R.id.backTextView)
         var photoAdapter: PhotoPickGridAdapter?
         var isAvail = false
         pickImageView.setHasFixedSize(true)
 
+        dayTextView.visibility = View.VISIBLE
+        dayTextView.text = "Day " + dayNum.toString()
         if(photoResults.size == 0){
             backTextView.visibility = View.VISIBLE
             pickImageView.visibility = View.INVISIBLE
@@ -236,11 +257,12 @@ class PickDateActivity : AppCompatActivity() {
                 }
                 else{
                     createdBuilder.dismiss()
-                    holder.imgCover.visibility = View.VISIBLE
-                    holder.imgPhoto.visibility = View.VISIBLE
-                    holder.day.setBackgroundColor(ContextCompat.getColor(this@PickDateActivity, R.color.transparent))
-                    Glide.with(applicationContext).load(clickedPhoto!!.img).into(holder.imgPhoto)
-                    //realm에 대표사진 넣는 코드 추가해야됨
+                    val dayItem = dayResults.where().equalTo("num", dayNum).findFirst()
+                    realm.beginTransaction()
+                    dayItem!!.img = clickedPhoto!!.img
+                    realm.commitTransaction()
+                    dateList[dayNum].img = clickedPhoto!!.img
+                    PDAdapter.notifyItemChanged(dayNum)
                 }
             }
         }

@@ -30,13 +30,26 @@
             android:textColor="@color/white"
             android:textSize="36sp" />
     </LinearLayout>
+    <TextView
+        android:id="@+id/addImageButton"
+        android:visibility="invisible"
+        android:background="@drawable/button_background"
+        android:paddingVertical="7dp"
+        android:paddingHorizontal="10dp"
+        android:textSize="15sp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="end"
+        android:textColor="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:text="배경사진 설정"/>
 
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/PD_rView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="20dp"
         android:layout_weight="2.5"
         android:paddingTop="30dp"/>
