@@ -1,9 +1,11 @@
 package konkukSW.MP2019.roadline.UI
 
 import android.app.DatePickerDialog
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.opengl.Visibility
 import android.os.Build
 import android.os.Bundle
@@ -20,6 +22,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.appcompat.widget.DialogTitle
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
@@ -32,11 +35,15 @@ import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
+import konkukSW.MP2019.roadline.UI.widget.ProgressDialog
+import konkukSW.MP2019.roadline.refreshCurrency
 import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.add_list_dialog.*
 import kotlinx.android.synthetic.main.add_list_dialog.view.*
 import kotlinx.android.synthetic.main.image_pick_dialog.*
+import kotlinx.android.synthetic.main.setting_header.view.*
 import org.w3c.dom.Text
 import java.sql.Date
 import java.time.LocalDate
@@ -80,6 +87,8 @@ class MainListActivity : AppCompatActivity() {
     var dateStartEpoch: Long? = null
     var dateEndEpoch: Long? = null
     lateinit var imm :InputMethodManager
+
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -132,6 +141,7 @@ class MainListActivity : AppCompatActivity() {
             ML_rView.visibility = View.VISIBLE
             startText.visibility = View.GONE
         }
+
     }
 
     fun initAdapter(){
@@ -335,11 +345,48 @@ class MainListActivity : AppCompatActivity() {
             }
             dialog.show()
         }
-
+        settingView.itemHorizontalPadding = resources.getDimensionPixelSize(R.dimen.setting_padding)
     }
 
 
     fun initListener() {
+        btnSetting.setOnClickListener {
+            drawerLayout.openDrawer(settingView)
+        }
+//        settingView.getHeaderView(0).btnClose.setOnClickListener {
+//            drawerLayout.closeDrawer(settingView)
+//        }
+        settingView.setNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.btnRefreshCurrency->{
+                    refreshCurrency(this)
+                    drawerLayout.closeDrawer(settingView)
+                }
+                R.id.btnRate -> {
+                    try {
+                        val intent =
+                                Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName"))
+                        startActivity(intent)
+                    } catch (e: ActivityNotFoundException) {
+                        val intent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+                        )
+                        startActivity(intent)
+                    }
+                    drawerLayout.closeDrawer(settingView)
+                }
+                R.id.btnVersionInfo -> {
+                    var dialog = BaseDialog.Builder(this).create()
+                    dialog.setTitle("버젼 정보")
+                            .setMessage("Ver 1.0.0")
+                            .setOkButton("닫기", View.OnClickListener { dialog.dismissDialog() })
+                            .show()
+                }
+            }
+            true
+        }
+
         ML_addListBtn.setOnClickListener {
             addListTitle.text.clear()
             editStart.text = "시작일 입력하기"

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/btnRefreshCurrency"
+        android:title="환율 갱신" />
+    <item
+        android:id="@+id/btnRate"
+        android:title="별점 남기기"/>
+    <item
+        android:id="@+id/btnVersionInfo"
+        android:title="버젼 정보"/>
+</menu>
