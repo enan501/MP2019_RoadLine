@@ -22,7 +22,6 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): RecyclerView.Adapter<PickDateAdapter.ViewHolder>() {
-    var editMode = false
 
     override fun onCreateViewHolder(p0: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(p0.context).inflate(R.layout.item_pick_date,p0,false)
@@ -90,14 +89,9 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             imgCover = itemView.findViewById(R.id.img_cover)
             imgPhoto = itemView.findViewById(R.id.img_photo)
             itemView.setOnClickListener{
-                if(!editMode){
                     val position = adapterPosition
-                    itemClickListener?.OnItemClick(this, items[position], position)
-                }
-                else{
-                    editMode = false
-                    notifyDataSetChanged()
-                }
+                    if(position != 0 && position != items.size-1)
+                        itemClickListener?.OnItemClick(this, items[position], position)
 
             }
             itemView.setOnLongClickListener {

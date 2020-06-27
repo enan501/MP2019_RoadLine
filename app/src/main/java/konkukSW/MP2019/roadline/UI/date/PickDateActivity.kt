@@ -116,6 +116,9 @@ class PickDateActivity : AppCompatActivity() {
         smoothScroller.computeScrollVectorForPosition(0)
         layoutManager.startSmoothScroll(smoothScroller)
         PDAdapter.notifyDataSetChanged()
+
+        PD_title.layoutParams.let{
+        }
     }
 
 
@@ -146,10 +149,10 @@ class PickDateActivity : AppCompatActivity() {
                         PDAdapter.notifyDataSetChanged()
                     }
                 }
-                else{
-                    editMode = false
-                    addImageButton.visibility = View.INVISIBLE
-                }
+//                else{
+//                    editMode = false
+//                    addImageButton.visibility = View.INVISIBLE
+//                }
             }
 
             override fun OnItemLongClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
@@ -159,6 +162,12 @@ class PickDateActivity : AppCompatActivity() {
             }
 
         }
+
+        PD_rView.setOnClickListener{
+            editMode = false
+            addImageButton.visibility = View.INVISIBLE
+        }
+
 
         addImageButton.setOnClickListener {
             showImagePickDialog(pickedDay)
