@@ -117,8 +117,6 @@ class PickDateActivity : AppCompatActivity() {
         layoutManager.startSmoothScroll(smoothScroller)
         PDAdapter.notifyDataSetChanged()
 
-        PD_title.layoutParams.let{
-        }
     }
 
 
@@ -126,33 +124,15 @@ class PickDateActivity : AppCompatActivity() {
         PDAdapter.itemClickListener = object : PickDateAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
                 if(!editMode){
-                    if(data.day > 0){
                         var PDIntentToSD = Intent(applicationContext, ShowDateActivity::class.java)
                         PDIntentToSD.putExtra("ListID", ListID)
                         PDIntentToSD.putExtra("DayNum", data.day)
                         startActivity(PDIntentToSD)
-                    }
-                    else if(data.day == -1){ //추가
-                        //db에다 여행 날짜 추가
-                        realm.beginTransaction()
-                        val newDay: T_Day = realm.createObject(T_Day::class.java)
-                        newDay.listID = data.listid
-                        newDay.num = dateList[position-1].day + 1
-                        newDay.date = dateList[position - 1].date + 1
-                        realm.commitTransaction()
-
-                        realm.beginTransaction()
-                        thisList.dateEnd = newDay.date
-                        realm.commitTransaction()
-
-                        dateList.add(position,PickDate(ListID, newDay.num, newDay.date, null))
-                        PDAdapter.notifyDataSetChanged()
-                    }
                 }
-//                else{
-//                    editMode = false
-//                    addImageButton.visibility = View.INVISIBLE
-//                }
+                else{
+                    editMode = false
+                    addImageButton.visibility = View.INVISIBLE
+                }
             }
 
             override fun OnItemLongClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
@@ -163,15 +143,15 @@ class PickDateActivity : AppCompatActivity() {
 
         }
 
-        PD_rView.setOnClickListener{
-            editMode = false
-            addImageButton.visibility = View.INVISIBLE
-        }
+//        PD_rView.setOnClickListener{
+//            Log.d("mytag", "clickkk")
+//            editMode = false
+//            addImageButton.visibility = View.INVISIBLE
+//        }
 
 
         addImageButton.setOnClickListener {
             showImagePickDialog(pickedDay)
-
         }
 
         PD_photoBtn.setOnClickListener {
@@ -272,8 +252,8 @@ class PickDateActivity : AppCompatActivity() {
                     realm.beginTransaction()
                     dayItem!!.img = clickedPhoto!!.img
                     realm.commitTransaction()
-                    dateList[dayNum].img = clickedPhoto!!.img
-                    PDAdapter.notifyItemChanged(dayNum)
+                    dateList[dayNum - 1].img = clickedPhoto!!.img
+                    PDAdapter.notifyItemChanged(dayNum - 1)
                 }
             }
         }
