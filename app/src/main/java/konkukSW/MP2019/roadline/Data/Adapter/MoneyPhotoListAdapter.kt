@@ -20,6 +20,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.DetailPhotoActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import java.text.DecimalFormat
@@ -31,7 +32,7 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
 
 
     interface OnMoneyItemClickListener {
-        fun onButtonClick(holder: ViewHolder, view: View, data: T_Day, position: Int)
+        fun onButtonClick(holder: ViewHolder, view: View, data: T_Day?, position: Int)
         fun onMoneyItemClick(holder: MoneyGridAdapter.ViewHolder, view: View, data: T_Money, position: Int, isChecked: Boolean)
     }
 
@@ -70,8 +71,20 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
             rView = itemView.findViewById(R.id.rView)
             totalText = itemView.findViewById(R.id.totalText)
             addButton.setOnClickListener {
-                if(isMoneyType)
-                    moneyItemClickListener!!.onButtonClick(this, it, getItem(adapterPosition)!!, adapterPosition)
+                if(isMoneyType){
+                    if(isAll){
+                        if(adapterPosition == 0){ //여행 전
+                            moneyItemClickListener!!.onButtonClick(this, it, null, adapterPosition)
+                        }
+                        else{
+                            moneyItemClickListener!!.onButtonClick(this, it, getItem(adapterPosition - 1)!!, adapterPosition)
+                        }
+                    }
+                    else{
+                        moneyItemClickListener!!.onButtonClick(this, it, getItem(adapterPosition)!!, adapterPosition)
+                    }
+
+                }
                 else
                     photoItemClickListener!!.onButtonClick(this, it, getItem(adapterPosition)!!, adapterPosition)
             }
@@ -85,22 +98,45 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         if(p0 is ViewHolder) {
-            val item = getItem(p1)!!
-            p0.dayNumText.text = "DAY" + item.num.toString()
-            if(android.os.Build.VERSION.SDK_INT >= 26) {
-                val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
-                val date = LocalDate.ofEpochDay(item.date)
-                p0.dateText.text = date.format(dateFormat)
+            var item: T_Day? = null
+            if(isMoneyType && isAll){
+                if(p1 != 0){
+                    item = getItem(p1 - 1)!!
+                }
             }
             else{
-                val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
-                val date = org.threeten.bp.LocalDate.ofEpochDay(item.date)
-                p0.dateText.text = date.format(dateFormat)
+                item = getItem(p1)!!
+            }
+
+            if(item != null){
+                p0.dayNumText.text = "DAY" + item.num.toString()
+                if(android.os.Build.VERSION.SDK_INT >= 26) {
+                    val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+                    val date = LocalDate.ofEpochDay(item.date)
+                    p0.dateText.text = date.format(dateFormat)
+                }
+                else{
+                    val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
+                    val date = org.threeten.bp.LocalDate.ofEpochDay(item.date)
+                    p0.dateText.text = date.format(dateFormat)
+                }
+            }
+            else{
+                p0.dayNumText.textSize = 35f
+                p0.dayNumText.text = "여행 전"
+                p0.dateText.visibility = View.GONE
             }
 
             if(isMoneyType){
-                val result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("dateTime")
-                result.addChangeListener{ _ ->
+                var result:RealmResults<T_Money>
+                if(item != null){
+                    result = realm.where(T_Money::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("dateTime")
+                }
+                else{
+                    val num = -1
+                    result = realm.where(T_Money::class.java).equalTo("listID", (context as ShowMoneyActivity).ListID).equalTo("dayNum", num).findAll()!!.sort("dateTime")
+                }
+                result.addChangeListener{_, _->
                     totalViewChangeListener!!.onTotalViewChange(p1)
                 }
                 val moneyAdapter = MoneyGridAdapter(result, context)
@@ -123,7 +159,7 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
                 }
             }
             else{
-                val result = realm.where(T_Photo::class.java).equalTo("listID", item.listID).equalTo("dayNum", item.num).findAll()!!.sort("dateTime")
+                val result = realm.where(T_Photo::class.java).equalTo("listID", item!!.listID).equalTo("dayNum", item!!.num).findAll()!!.sort("dateTime")
                 val photoAdapter = PhotoGridAdapter(result, context)
                 photoAdapter.itemClickListener = object :PhotoGridAdapter.OnItemClickListener{
                     override fun onItemClick(
@@ -141,8 +177,8 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
                             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                             intent.putExtra("isAll", isAll)
                             intent.putExtra("photoId", data.id)
-                            intent.putExtra("listId", item.listID)
-                            intent.putExtra("dayNum", item.num)
+                            intent.putExtra("listId", item!!.listID)
+                            intent.putExtra("dayNum", item!!.num)
                             view.context.startActivity(intent)
                         }
                     }
@@ -155,6 +191,16 @@ class MoneyPhotoListAdapter(realmResult:OrderedRealmCollection<T_Day>, val conte
                 animator.supportsChangeAnimations = false
             p0.rView.layoutManager = GridLayoutManager(context, 3)
             }
+        }
+    }
+
+    override fun getItemCount(): Int {
+        if(isAll && isMoneyType){
+            return super.getItemCount() + 1
+
+        }
+        else{
+            return super.getItemCount()
         }
     }
 }

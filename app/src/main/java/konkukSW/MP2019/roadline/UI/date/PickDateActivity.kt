@@ -8,27 +8,28 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearSmoothScroller
-import androidx.recyclerview.widget.LinearSnapHelper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.recyclerview.widget.*
+import com.bumptech.glide.Glide
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
+import konkukSW.MP2019.roadline.Data.Adapter.PhotoPickGridAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.PickDateAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
+import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_pick_date.*
-import java.time.LocalDate
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -42,6 +43,7 @@ class PickDateActivity : AppCompatActivity() {
     lateinit var realm: Realm
     lateinit var thisList:T_List
     lateinit var dayResults: RealmResults<T_Day>
+    lateinit var photoResults: RealmResults<T_Photo>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,8 +81,10 @@ class PickDateActivity : AppCompatActivity() {
         for(T_Day in dayResults){
             dateList.add(PickDate(ListID, T_Day.num, T_Day.date))
         }
-        dateList.add(PickDate(ListID,-1,-1))
-        dateList.add(PickDate(ListID,0,-1))
+        dateList.add(PickDate(ListID,-1,-1)) //추가 버튼
+        dateList.add(PickDate(ListID,0,-1)) //안보이는 마지막
+
+        photoResults = realm.where(T_Photo::class.java).equalTo("listID", ListID).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
     }
 
     fun initLayout(){
@@ -94,7 +98,7 @@ class PickDateActivity : AppCompatActivity() {
         PD_title.text = thisList.title
 
         val layoutManager = CenterZoomLayoutManager(this,
-                androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL,false)
+                LinearLayoutManager.HORIZONTAL,false)
         val smoothScroller = object : androidx.recyclerview.widget.LinearSmoothScroller(this) {
             override fun getHorizontalSnapPreference(): Int {
                 return SNAP_TO_END
@@ -102,7 +106,7 @@ class PickDateActivity : AppCompatActivity() {
         }
         PD_rView.layoutManager = layoutManager
         snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
-        PDAdapter = PickDateAdapter(dateList)
+        PDAdapter = PickDateAdapter(applicationContext, dateList)
         PD_rView.adapter = PDAdapter
         smoothScroller.targetPosition = 2
         smoothScroller.computeScrollVectorForPosition(2)
@@ -131,12 +135,16 @@ class PickDateActivity : AppCompatActivity() {
                     realm.commitTransaction()
 
                     realm.beginTransaction()
-                    thisList!!.dateEnd = newDay.date
+                    thisList.dateEnd = newDay.date
                     realm.commitTransaction()
 
                     dateList.add(position,PickDate(ListID, newDay.num, newDay.date))
                     PDAdapter.notifyDataSetChanged()
                 }
+            }
+
+            override fun OnItemLongClick(holder: PickDateAdapter.ViewHolder, data: PickDate, position: Int) {
+//                showImagePickDialog(holder)
             }
         }
         PD_photoBtn.setOnClickListener {
@@ -158,6 +166,83 @@ class PickDateActivity : AppCompatActivity() {
                 R.anim.anim_slide_in_top,
                 R.anim.anim_slide_out_bottom
             )
+        }
+    }
+
+    fun showImagePickDialog(holder: PickDateAdapter.ViewHolder){
+        var clickedPhoto:T_Photo? = null
+        val imagePickBuilder = AlertDialog.Builder(this@PickDateActivity)
+        val imagePickView = layoutInflater.inflate(R.layout.image_pick_dialog, null)
+        val pickImageView = imagePickView.findViewById<RecyclerView>(R.id.rView)
+        val backTextView = imagePickView.findViewById<TextView>(R.id.backTextView)
+        var photoAdapter: PhotoPickGridAdapter?
+        var isAvail = false
+        pickImageView.setHasFixedSize(true)
+
+        if(photoResults.size == 0){
+            backTextView.visibility = View.VISIBLE
+            pickImageView.visibility = View.INVISIBLE
+        }
+        else{
+            isAvail = true
+            backTextView.visibility = View.INVISIBLE
+            pickImageView.visibility = View.VISIBLE
+            photoAdapter = PhotoPickGridAdapter(photoResults, this@PickDateActivity)
+            pickImageView.adapter = photoAdapter
+            pickImageView.layoutManager = GridLayoutManager(this@PickDateActivity, 3)
+
+            photoAdapter.itemClickListener = object : PhotoPickGridAdapter.OnItemClickListener{
+                override fun onItemClick(
+                        data: T_Photo,
+                        clickedPos: Int
+                ) {
+                    clickedPhoto = data
+                    if(clickedPos != -1){
+                        val pickedImageView = pickImageView.findViewHolderForAdapterPosition(clickedPos)
+                        if(pickedImageView != null){
+                            (pickedImageView as PhotoPickGridAdapter.ViewHolder).backImage.visibility = View.INVISIBLE
+                        }
+                    }
+                }
+
+                override fun onNothingClicked() {
+                    clickedPhoto = null
+                }
+            }
+        }
+
+        imagePickBuilder.setView(imagePickView)
+        if(isAvail) {
+            imagePickBuilder.setPositiveButton("추가"){_, _->}
+                    .setNegativeButton("취소"){_, _->}
+        }
+        else{
+            imagePickBuilder.setPositiveButton("확인"){_, _->}
+        }
+        val createdBuilder = imagePickBuilder.create() //여행추가 다이얼로그
+        createdBuilder.setCanceledOnTouchOutside(false)
+        createdBuilder.show()
+
+        if(isAvail){
+            createdBuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                if(clickedPhoto == null){
+                    val builder = AlertDialog.Builder(this@PickDateActivity)
+                    builder.setMessage("사진을 선택해주세요")
+                            .setPositiveButton("확인") { _, _ ->
+
+                            }
+                    val dialog = builder.create()
+                    dialog.show()
+                }
+                else{
+                    createdBuilder.dismiss()
+                    holder.imgCover.visibility = View.VISIBLE
+                    holder.imgPhoto.visibility = View.VISIBLE
+                    holder.day.setBackgroundColor(ContextCompat.getColor(this@PickDateActivity, R.color.transparent))
+                    Glide.with(applicationContext).load(clickedPhoto!!.img).into(holder.imgPhoto)
+                    //realm에 대표사진 넣는 코드 추가해야됨
+                }
+            }
         }
     }
 

@@ -229,6 +229,9 @@ class AddMoneyActivity : AppCompatActivity() {
                 }
             }
         }
+        if(spinnerAdapter.count == 1){
+            cSpinner.isEnabled = false
+        }
     }
 
     fun initListener(){
@@ -309,7 +312,7 @@ class AddMoneyActivity : AppCompatActivity() {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == SELECT_IMAGE) {
                 imgUri = getPathFromUri(data!!.data)
-                Glide.with(applicationContext).load(data!!.data).into(addMoneyImage)
+                Glide.with(applicationContext).load(data.data).into(addMoneyImage)
             }
             else if(requestCode == CAPTURE_IMAGE){
                 imgUri = imgPath

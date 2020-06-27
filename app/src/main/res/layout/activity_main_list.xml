@@ -24,7 +24,6 @@
             android:layout_gravity="bottom"
             android:layout_marginHorizontal="15dp"
             android:layout_marginBottom="5dp"
-            android:fontFamily="@font/nanum_square_round_r"
             android:text="여행 리스트"
             android:textColor="@color/white"
             android:textSize="28sp" />
@@ -33,7 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:fontFamily="@font/nanum_square_round_r"
             android:layout_marginHorizontal="15dp"
             android:layout_marginBottom="10dp"
             android:text="- 오늘은 어디로 떠나시나요?"

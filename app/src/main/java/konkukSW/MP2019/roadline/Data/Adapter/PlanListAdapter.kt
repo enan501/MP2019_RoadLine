@@ -14,9 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import io.realm.OrderedRealmCollection
 import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
+import konkukSW.MP2019.roadline.Data.DB.T_Day
+import konkukSW.MP2019.roadline.Data.DB.T_Money
+import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.Fragment1
+import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.fragment_fragment1.view.*
 import org.threeten.bp.LocalDateTime
 import java.lang.Exception
@@ -77,26 +81,20 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                 false
             }
             deleteBtn.setOnClickListener {
-                val builder = AlertDialog.Builder(context) //alert 다이얼로그 builder 이용해서 다이얼로그 생성
-                val deleteListDialog = //context 이용해서 레이아웃 인플레이터 생성
-                        (context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).inflate(R.layout.delete_list_dialog, null)
-                val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
-                var deleteMessage = "이 항목을 삭제하시겠습니까?"
-                deleteListText.text = deleteMessage
-
-                builder.setView(deleteListDialog)
-                        .setPositiveButton("삭제") { _, _->
+                val builder = androidx.appcompat.app.AlertDialog.Builder(context)
+                builder.setMessage("이 항목을 삭제할까요?")
+                        .setPositiveButton("삭제") { _, _ ->
                             removeItem(adapterPosition)
                         }
-                        .setNegativeButton("취소") { _, _ ->
-                        }
-                        .show()
+                        .setNegativeButton("취소"){ _, _ ->}
+                val dialog = builder.create()
+                dialog.show()
             }
             itemView.setOnClickListener {
                 if(adapterPosition in 0 until itemCount - 1)
                     itemClickListener?.OnItemClick(this, it, getItem(adapterPosition)!!, adapterPosition)
             }
-            itemView.setOnLongClickListener {_ ->
+            itemView.setOnLongClickListener {
                 itemLongClickListener?.onItemLongClick()
                 true
             }

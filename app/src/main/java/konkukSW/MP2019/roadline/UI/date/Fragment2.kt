@@ -310,8 +310,8 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             val bitmap = bitmapList[i]
             val iHeight = (i / 5) * childHeight
             val iWidth = (i % 5) * childWidth
-            bigCanvas.drawBitmap(bitmap!!, iWidth.toFloat(), iHeight.toFloat(), paint)
-            bitmap!!.recycle()
+            bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
+            bitmap.recycle()
         }
         return bigBitmap
     }

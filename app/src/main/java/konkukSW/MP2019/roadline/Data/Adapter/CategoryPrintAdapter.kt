@@ -21,7 +21,7 @@ class CategoryPrintAdapter (context: Context, resource:Int, val list:ArrayList<C
 
         val p = list[position]
         v!!.findViewById<TextView>(R.id.category).text = p.category
-        v!!.findViewById<TextView>(R.id.price).text = p.price
+        v.findViewById<TextView>(R.id.price).text = p.price
 
         return v // 한줄이 채워진 상태가 됨
     }

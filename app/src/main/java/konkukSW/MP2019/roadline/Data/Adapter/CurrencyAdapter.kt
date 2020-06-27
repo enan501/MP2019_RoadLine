@@ -34,7 +34,7 @@ class CurrencyAdapter(var items: ArrayList<T_Currency>, val context: Context): R
         : RecyclerView.ViewHolder(itemView){
         init{
             itemView.setOnLongClickListener{
-                itemClickListener!!.OnLongClick(adapterPosition)!!
+                itemClickListener!!.OnLongClick(adapterPosition)
             }
         }
         fun bind(item: T_Currency){

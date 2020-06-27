@@ -31,10 +31,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.PhotoGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
-import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.activity_show_photo.*
-import kotlinx.android.synthetic.main.activity_show_photo.deleteButton
-import kotlinx.android.synthetic.main.activity_show_photo.deleteText
 import java.io.File
 import java.io.IOException
 import java.time.LocalDateTime
@@ -161,13 +158,12 @@ class ShowPhotoActivity : AppCompatActivity() {
             }
         }
 
-        deleteButton.setOnClickListener {
+        deleteText.setOnClickListener {
             if(deleteMode){
                 if(deletePhotoList.isNotEmpty()){
                     val builder =AlertDialog.Builder(this@ShowPhotoActivity)
                     builder.setMessage("삭제하시겠습니까?")
                             .setPositiveButton("삭제") { dialogInterface, _ ->
-                                Log.d("mytag", deletePhotoList.toString())
                                 realm.beginTransaction()
                                 for(i in deletePhotoList){
                                     i.deleteFromRealm()
@@ -176,12 +172,16 @@ class ShowPhotoActivity : AppCompatActivity() {
                                 changeViewToDeleteMode(deleteMode)
                                 deletePhotoList.clear()
                                 deleteText.text = "수정하기"
+                                deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
+                                deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
                             }
                             .setNegativeButton("취소") { dialogInterface, i ->
                                 changeViewToDeleteMode(deleteMode)
                                 deletePhotoList.clear()
                                 deleteText.text = "수정하기"
+                                deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
+                                deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
                             }
                     val dialog = builder.create()
@@ -190,11 +190,15 @@ class ShowPhotoActivity : AppCompatActivity() {
                 else{
                     changeViewToDeleteMode(deleteMode)
                     deleteText.text = "수정하기"
+                    deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
+                    deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                     deleteMode = false
                 }
             }
             else{
                 deleteText.text = "삭제하기"
+                deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background_clicked)
+                deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 changeViewToDeleteMode(deleteMode)
                 deleteMode = true
             }
@@ -227,7 +231,6 @@ class ShowPhotoActivity : AppCompatActivity() {
                             itemViewHolder.imgCover.visibility = View.VISIBLE
                             itemViewHolder.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
                         }
-
                     }
                 }
             }
@@ -290,13 +293,20 @@ class ShowPhotoActivity : AppCompatActivity() {
                 SELECT_IMAGE->{
                     if(data != null){
                         if(data.clipData == null){
-                            val path = getPathFromUri(data!!.data)
+                            Toast.makeText(applicationContext, "앨범 다중선택을 지원하지 않는 기기입니다.", Toast.LENGTH_LONG).show()
+                            val path = getPathFromUri(data.data)
                             addPhotoToDB(path)
                         }
                         else{
                             val clipData = data.clipData
                             if(clipData.itemCount > 9){
-                                Toast.makeText(this, "사진은 9장까지 선택 가능합니다", Toast.LENGTH_LONG).show()
+                                val builder =AlertDialog.Builder(this@ShowPhotoActivity)
+                                builder.setMessage("사진은 9장까지 선택 가능합니다")
+                                        .setPositiveButton("확인") { _, _ ->
+
+                                        }
+                                val dialog = builder.create()
+                                dialog.show()
                             }
                             else {
                                 for(i in 0 until clipData.itemCount){

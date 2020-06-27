@@ -1,25 +1,25 @@
 package konkukSW.MP2019.roadline.UI.date
 
 
-import android.app.Activity
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.ItemTouchHelper
-import android.util.Log
-import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.fragment_fragment1.*
+
 
 class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
@@ -137,7 +137,6 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
         planAdapter.itemDragListener = object :PlanListAdapter.OnItemDragListener{
             override fun onStartDrag(holder: RecyclerView.ViewHolder) {
-                Log.d("mytag", "startdrag")
                 planAdapter.onDetachedFromRecyclerView(f1_rView)
                 itemTouchHelper.startDrag(holder)
             }
