@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -41,8 +42,11 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
         var title: TextView
         var date: TextView
         var image: ImageView
-        var edit: ImageButton
-        var delete: ImageButton
+//        var edit: ImageButton
+//        var delete: ImageButton
+        var edit: TextView
+        var delete: TextView
+        var editMode = false
         init{
             title = itemView.findViewById(R.id.MLItem_title)
             date = itemView.findViewById(R.id.MLItem_date)
@@ -50,7 +54,28 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
             edit = itemView.findViewById(R.id.ML_edit)
             delete = itemView.findViewById(R.id.ML_delete)
             itemView.setOnClickListener{
-                itemClickListener?.OnItemClick(this, getItem(adapterPosition)!!, adapterPosition)
+                if(editMode){
+                    editMode = false
+                    edit.visibility = View.INVISIBLE
+                    delete.visibility = View.INVISIBLE
+                }
+                else{
+                    itemClickListener?.OnItemClick(this, getItem(adapterPosition)!!, adapterPosition)
+                }
+            }
+            itemView.setOnLongClickListener {
+                if(editMode){
+                    false
+                }
+                else{
+                    editMode = true
+                    val anim = AnimationUtils.loadAnimation(context, R.anim.anim_alpha_in)
+                    edit.animation = anim
+                    delete.animation = anim
+                    edit.visibility = View.VISIBLE
+                    delete.visibility = View.VISIBLE
+                    true
+                }
             }
             edit.setOnClickListener {
                 itemClickListener?.OnEditClick(this,getItem(adapterPosition)!!,adapterPosition)
@@ -72,6 +97,8 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val item = getItem(p1)!!
         p0.title.text = item.title
+        p0.edit.visibility = View.INVISIBLE
+        p0.delete.visibility = View.INVISIBLE
         if(android.os.Build.VERSION.SDK_INT >= 26) {
             val dateFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd")
             val dateSt = LocalDate.ofEpochDay(item.dateStart)

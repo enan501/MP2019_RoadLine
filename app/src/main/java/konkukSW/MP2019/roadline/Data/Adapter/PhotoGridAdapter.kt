@@ -1,6 +1,8 @@
 package konkukSW.MP2019.roadline.Data.Adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.PorterDuff
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -55,13 +57,13 @@ class PhotoGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val contex
             Glide.with(context).load(item.img).into(p0.priceImage)
             p0.priceText.visibility = View.INVISIBLE
             p0.imgCover.visibility = View.INVISIBLE
-
-//            if(deleteMode){
-//                p0.checkButton.visibility = View.VISIBLE
-//            }
-//            else{
-//                p0.imgCover.visibility = View.INVISIBLE
-//            }
+            if((context as ShowPhotoActivity).deleteMode){
+                p0.checkButton.visibility = View.VISIBLE
+                p0.checkButton.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN)
+            }
+            else{
+                p0.checkButton.visibility = View.INVISIBLE
+            }
         }
     }
 

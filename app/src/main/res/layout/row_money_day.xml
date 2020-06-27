@@ -21,7 +21,6 @@
             <TextView
                 android:id="@+id/dayNumText"
                 android:textSize="43sp"
-                android:fontFamily="@font/nanum_square_round_r"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="DAY1" />
@@ -31,7 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="2019.05.03"
-                android:fontFamily="@font/nanum_square_round_r"
                 android:textColor="@color/colorPrimary"
                 android:textSize="17sp" />
         </LinearLayout>
@@ -59,7 +57,6 @@
         android:text="1000원"
         android:textAlignment="viewEnd"
         android:textSize="16sp"
-        android:fontFamily="@font/nanum_square_round_r"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

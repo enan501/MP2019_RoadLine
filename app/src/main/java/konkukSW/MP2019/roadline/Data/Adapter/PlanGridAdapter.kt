@@ -163,7 +163,7 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
 
     fun setHuman(location: android.location.Location?): Int{
         val clat = location!!.latitude
-        val clng = location!!.longitude
+        val clng = location.longitude
         var latDif = getItem(0)!!.locationY - clat
         var lngDif = getItem(0)!!.locationX - clng
         var dif = latDif * latDif + lngDif * lngDif

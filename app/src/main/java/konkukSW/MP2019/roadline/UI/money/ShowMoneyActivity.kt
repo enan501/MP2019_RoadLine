@@ -113,7 +113,7 @@ class ShowMoneyActivity : AppCompatActivity() {
     }
 
     fun initListener() {
-        deleteButton.setOnClickListener {
+        deleteText.setOnClickListener {
             if(deleteMode){
                 if(deleteMoneyList.isNotEmpty()){
                     val builder = AlertDialog.Builder(this@ShowMoneyActivity)
@@ -128,12 +128,16 @@ class ShowMoneyActivity : AppCompatActivity() {
                                 changeViewToDeleteMode(deleteMode)
                                 deleteMoneyList.clear()
                                 deleteText.text = "수정하기"
+                                deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
+                                deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
                             }
                             .setNegativeButton("취소") { dialogInterface, i ->
                                 changeViewToDeleteMode(deleteMode)
                                 deleteMoneyList.clear()
                                 deleteText.text = "수정하기"
+                                deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
+                                deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
                             }
                     val dialog = builder.create()
@@ -141,21 +145,31 @@ class ShowMoneyActivity : AppCompatActivity() {
                 }
                 else{
                     deleteText.text = "수정하기"
+                    deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
+                    deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                     changeViewToDeleteMode(deleteMode)
                     deleteMode = false
                 }
             }
             else{
                 deleteText.text = "삭제하기"
+                deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background_clicked)
+                deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.white))
                 changeViewToDeleteMode(deleteMode)
                 deleteMode = true
             }
         }
         rViewAdapterPhoto.moneyItemClickListener = object :MoneyPhotoListAdapter.OnMoneyItemClickListener{
-            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day, position: Int) { //추가
+            override fun onButtonClick(holder: MoneyPhotoListAdapter.ViewHolder, view: View, data: T_Day?, position: Int) { //추가
                 val intent = Intent(this@ShowMoneyActivity, AddMoneyActivity::class.java)
-                intent.putExtra("ListID", data.listID)
-                intent.putExtra("DayNum", data.num)
+                if(data != null){
+                    intent.putExtra("ListID", data.listID)
+                    intent.putExtra("DayNum", data.num)
+                }
+                else{
+                    intent.putExtra("ListID", ListID)
+                    intent.putExtra("DayNum", -1)
+                }
                 intent.putExtra("cur", selectedCurrency.code)
                 intent.putExtra("editMode", false)
                 startActivity(intent)
@@ -274,10 +288,21 @@ class ShowMoneyActivity : AppCompatActivity() {
                 }
             }
         }
+        if(cAdapter.count == 1){
+            currencySpinner.isEnabled = false
+        }
     }
 
     fun changeTotalView(pos:Int){
-        val results = moneyResults.where().equalTo("dayNum", pos + 1).findAll()!!
+        var results:RealmResults<T_Money>
+        if(pos == 0){
+            val num = -1
+            results = moneyResults.where().equalTo("dayNum", num).findAll()!!
+
+        }
+        else{
+            results = moneyResults.where().equalTo("dayNum", pos).findAll()!!
+        }
         var total = 0.0
         for(j in results){
             total += j.price * j.currency!!.rate

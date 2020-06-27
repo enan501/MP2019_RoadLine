@@ -1,78 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_height="200dp"
-    android:layout_margin="10dp"
-    app:cardElevation="10dp">
+                                   app:cardCornerRadius="10dp"
+                                   android:layout_width="match_parent"
+                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                   android:layout_height="200dp"
+                                   android:layout_margin="10dp"
+                                   app:cardElevation="10dp">
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <ImageView
             android:id="@+id/MLItem_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/ml_default_image"/>
+        <ImageView
+            android:id="@+id/img_cover"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:scaleType="centerCrop" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:orientation="horizontal">
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="match_parent"
-            android:orientation="vertical"
+            android:background="@color/blackAlpha"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"/>
+        <TextView
+            android:id="@+id/MLItem_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="4dp"
             android:gravity="center_vertical"
-            android:layout_gravity="center_vertical">
+            android:text="대만여행"
+            android:textColor="@color/white"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/MLItem_date"
+            app:layout_constraintEnd_toEndOf="@id/img_cover"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/img_cover"
+            app:layout_constraintTop_toTopOf="@+id/img_cover" app:layout_constraintVertical_chainStyle="packed"/>
+        <TextView android:id="@+id/MLItem_date"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="4dp"
+                  android:layout_marginEnd="8dp"
+                  android:layout_marginBottom="8dp" android:text="2019.02.15 ~ 2019.02.18"
+                  android:textColor="@color/white"
+                  android:textSize="12dp"
+                  app:layout_constraintBottom_toBottomOf="@+id/img_cover"
+                  app:layout_constraintEnd_toEndOf="@+id/img_cover"
+                  app:layout_constraintHorizontal_bias="0.5" app:layout_constraintStart_toStartOf="@+id/img_cover"
+                  app:layout_constraintTop_toBottomOf="@+id/MLItem_title"/>
 
-            <TextView
-                android:id="@+id/MLItem_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:fontFamily="@font/nanum_square_round_r"
-                android:gravity="center_vertical"
-                android:paddingLeft="10dp"
-                android:text="대만여행"
-                android:textColor="@color/black"
-                android:textSize="20dp" />
-            <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:id="@+id/MLItem_date" android:textSize="12dp"
-                android:paddingLeft="12dp"
-                android:paddingBottom="8dp"
-
-                android:text="2019.02.15 ~ 2019.02.18"
-                android:fontFamily="@font/nanum_square_round_r"/>
-        </LinearLayout>
-            <ImageButton
-                android:id="@+id/ML_edit"
-                android:background="@color/white"
-                android:foreground="@drawable/rippple_effect_gray_circle"
-                android:padding="10dp"
-                android:layout_margin="4dp"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:scaleType="fitCenter"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/edit" />
-            <ImageButton
-                android:id="@+id/ML_delete"
-                android:padding="10dp"
-                android:foreground="@drawable/rippple_effect_gray_circle"
-                android:layout_marginRight="8dp"
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/white"
-                android:src="@drawable/garbage"
-                android:scaleType="fitCenter"/>
-/>
-        </LinearLayout>
-    </LinearLayout>
+        <!--<ImageButton-->
+            <!--android:id="@+id/ML_edit"-->
+            <!--android:layout_width="44dp"-->
+            <!--android:layout_height="44dp"-->
+            <!--android:background="@color/transparent"-->
+            <!--android:foreground="@drawable/rippple_effect_gray_circle"-->
+            <!--android:padding="7dp"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:src="@drawable/edit"-->
+            <!--android:tint="@color/white"-->
+            <!--app:layout_constraintBottom_toBottomOf="@id/img_cover"-->
+            <!--app:layout_constraintEnd_toStartOf="@id/ML_delete"/>-->
+        <!--<ImageButton-->
+            <!--android:id="@+id/ML_delete"-->
+            <!--android:layout_width="44dp"-->
+            <!--android:layout_height="44dp"-->
+            <!--android:background="@color/transparent"-->
+            <!--android:foreground="@drawable/rippple_effect_gray_circle"-->
+            <!--android:padding="7dp"-->
+            <!--android:scaleType="fitCenter"-->
+            <!--android:src="@drawable/garbage"-->
+            <!--android:tint="@color/white"-->
+            <!--app:layout_constraintBottom_toBottomOf="@+id/img_cover"-->
+            <!--app:layout_constraintEnd_toEndOf="@+id/img_cover"/>-->
+        <TextView
+            android:id="@+id/ML_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/button_background_white"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="10dp"
+            android:text="수정하기"
+            android:textColor="@color/white"
+            android:textSize="15sp" app:layout_constraintEnd_toStartOf="@+id/ML_delete"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/MLItem_date"/>
+        <TextView
+            android:id="@+id/ML_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/button_background_white"
+            android:paddingVertical="7dp"
+            android:paddingHorizontal="10dp"
+            android:text="삭제하기"
+            android:textColor="@color/white"
+            android:textSize="15sp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ML_edit"
+            app:layout_constraintTop_toBottomOf="@+id/MLItem_date"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

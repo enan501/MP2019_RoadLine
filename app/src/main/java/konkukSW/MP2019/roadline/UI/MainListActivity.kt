@@ -164,7 +164,13 @@ class MainListActivity : AppCompatActivity() {
         selectedCurrencyAdapter.itemClickListener = object:CurrencyAdapter.OnItemClickListener{
             override fun OnLongClick(position: Int): Boolean {
                 if(position == 0){
-                    Toast.makeText(applicationContext, "한화는 기본 값으로 삭제할수 없습니다", Toast.LENGTH_SHORT).show()
+                    val builder =AlertDialog.Builder(this@MainListActivity)
+                    builder.setMessage("한화는 기본 값으로 삭제할수 없습니다")
+                            .setPositiveButton("확인") { dialogInterface, _ ->
+
+                            }
+                    val dialog = builder.create()
+                    dialog.show()
                     return false
                 } else {
                     val ynBuilder = AlertDialog.Builder(this@MainListActivity)
@@ -233,7 +239,13 @@ class MainListActivity : AppCompatActivity() {
                         }
                     }
                     if(exist){
-                        Toast.makeText(applicationContext, "이미 선택한 화폐입니다", Toast.LENGTH_SHORT).show()
+                        val builder =AlertDialog.Builder(this@MainListActivity)
+                        builder.setMessage("이미 선택한 화폐입니다")
+                                .setPositiveButton("확인") { dialogInterface, _ ->
+
+                                }
+                        val dialog = builder.create()
+                        dialog.show()
                     }
                     else{
                         curArray.add(curTuple!!)
@@ -358,7 +370,13 @@ class MainListActivity : AppCompatActivity() {
             cbuilder.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
             cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if(addListTitle.text.trim().toString() == ""){
-                    Toast.makeText(applicationContext, "여행 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                    val builder =AlertDialog.Builder(this@MainListActivity)
+                    builder.setMessage("여행 제목을 입력해주세요")
+                            .setPositiveButton("확인") { _, _ ->
+
+                            }
+                    val dialog = builder.create()
+                    dialog.show()
                 }
                 else{
                     if(dateStartEpoch != null && dateEndEpoch != null) {
@@ -393,11 +411,23 @@ class MainListActivity : AppCompatActivity() {
                             cbuilder.dismiss()
                         }
                         else{
-                            Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
+                            val builder =AlertDialog.Builder(this@MainListActivity)
+                            builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
+                                    .setPositiveButton("확인") { _, _ ->
+
+                                    }
+                            val dialog = builder.create()
+                            dialog.show()
                         }
                     }
                     else{
-                        Toast.makeText(applicationContext, "시작일과 종료일 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                        val builder =AlertDialog.Builder(this@MainListActivity)
+                        builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
+                                .setPositiveButton("확인") { _, _ ->
+
+                                }
+                        val dialog = builder.create()
+                        dialog.show()
                     }
                 }
             }
@@ -415,18 +445,10 @@ class MainListActivity : AppCompatActivity() {
             }
 
             override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val deleteListDialog =
-                        layoutInflater.inflate(R.layout.delete_list_dialog, null)
-                val deleteListText = deleteListDialog.findViewById<TextView>(R.id.DL_textView)
                 val item = listResults[position]
-                var deleteMessage = "'"+item!!.title+deleteListText.text
-                deleteListText.text = deleteMessage
-
-                if(deleteListDialog.parent != null){
-                    (deleteListDialog.parent as ViewGroup).removeView(deleteListDialog)
-                }
-                builder.setView(deleteListDialog)
-                        .setPositiveButton("삭제") { dialogInterface, _ ->
+                val builder =AlertDialog.Builder(this@MainListActivity)
+                builder.setMessage("'" + item!!.title + "' 기록을 삭제할까요?")
+                        .setPositiveButton("삭제") { _, _ ->
                             realm.beginTransaction()
 
                             realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
@@ -443,10 +465,9 @@ class MainListActivity : AppCompatActivity() {
                                 startText.visibility = View.GONE
                             }
                         }
-                        .setNegativeButton("취소") { dialogInterface, i ->
-
-                        }
-                        .show()
+                        .setNegativeButton("취소"){ _, _ ->}
+                val dialog = builder.create()
+                dialog.show()
             }
 
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
@@ -527,7 +548,13 @@ class MainListActivity : AppCompatActivity() {
 
                 cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                     if(addListTitle.text.trim().toString() == ""){
-                        Toast.makeText(applicationContext, "여행 제목을 입력해주세요", Toast.LENGTH_SHORT).show()
+                        val builder =AlertDialog.Builder(this@MainListActivity)
+                        builder.setMessage("여행 제목을 입력해주세요")
+                                .setPositiveButton("확인") { _, _ ->
+
+                                }
+                        val dialog = builder.create()
+                        dialog.show()
                     }
                     else {
                         if (dateStartEpoch != null && dateEndEpoch != null) {
@@ -558,10 +585,22 @@ class MainListActivity : AppCompatActivity() {
                                 }
                                 cbuilder.dismiss()
                             } else {
-                                Toast.makeText(applicationContext, "종료일이 시작일보다 이전일수 없습니다", Toast.LENGTH_SHORT).show()
+                                val builder =AlertDialog.Builder(this@MainListActivity)
+                                builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
+                                        .setPositiveButton("확인") { _, _ ->
+
+                                        }
+                                val dialog = builder.create()
+                                dialog.show()
                             }
                         } else {
-                            Toast.makeText(applicationContext, "시작일과 종료일 모두 입력해주세요", Toast.LENGTH_SHORT).show()
+                            val builder =AlertDialog.Builder(this@MainListActivity)
+                            builder.setMessage("시작일과 종료일 모두 입력해주세요")
+                                    .setPositiveButton("확인") { _, _ ->
+
+                                    }
+                            val dialog = builder.create()
+                            dialog.show()
                         }
                     }
                 }
@@ -630,7 +669,13 @@ class MainListActivity : AppCompatActivity() {
         if(isAvail){
             createdBuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if(clickedPhoto == null){
-                    Toast.makeText(applicationContext, "사진을 선택해주세요", Toast.LENGTH_LONG).show()
+                    val builder =AlertDialog.Builder(this@MainListActivity)
+                    builder.setMessage("사진을 선택해주세요")
+                            .setPositiveButton("확인") { _, _ ->
+
+                            }
+                    val dialog = builder.create()
+                    dialog.show()
                 }
                 else{
                     createdBuilder.dismiss()

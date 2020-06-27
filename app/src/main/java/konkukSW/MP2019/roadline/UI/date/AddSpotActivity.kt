@@ -38,6 +38,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.R.id.places_autocomplete_search_input
 import kotlinx.android.synthetic.main.activity_add_spot.*
+import kotlinx.android.synthetic.main.activity_show_photo.*
 import kotlinx.android.synthetic.main.add_memo_dialog.*
 
 import java.util.*
@@ -240,15 +241,20 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 finish()
             }
             else{ //아무값 입력하지 않으면
-                Toast.makeText(applicationContext, "위치를 추가해주세요", Toast.LENGTH_LONG).show()
-//                onBackPressed()
+                val builder =AlertDialog.Builder(this@AddSpotActivity)
+                builder.setMessage("위치를 추가하세요")
+                        .setPositiveButton("확인") { dialogInterface, _ ->
+
+                        }
+                val dialog = builder.create()
+                dialog.show()
             }
         }
         path_bt.setOnClickListener {
             var prev = realm.where(T_Plan::class.java).equalTo("listID",listID).equalTo("dayNum",DayNum).equalTo("pos", pos - 1).findFirst()!!
             var cur = thisPlan
 
-            var uri = "http://maps.google.com/maps?saddr="+prev.locationY+","+prev.locationX+"&daddr="+cur!!.locationY+","+cur!!.locationX+"&dirflg=r"
+            var uri = "http://maps.google.com/maps?saddr="+prev.locationY+","+prev.locationX+"&daddr="+cur!!.locationY+","+ cur.locationX+"&dirflg=r"
             var mapIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
             mapIntent.setPackage("com.google.android.apps.maps")
             startActivity(mapIntent)
@@ -267,6 +273,18 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 false->dialogTime.isEnabled = false
             }
         }
+
+//        dialogTime.setOnClickListener {
+//            if(!dialogCheckTime.isChecked){
+//                dialogCheckTime.isChecked = true
+//            }
+//        }
+//
+//        dialogMemo.setOnClickListener {
+//            if(!dialogCheckMemo.isChecked){
+//                dialogCheckMemo.isChecked = true
+//            }
+//        }
 
         memo_button.setOnClickListener {
             if(spotNameAlter == null){
@@ -351,13 +369,13 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             val providers = lm!!.getProviders(true)
             var location: android.location.Location? = null
             for (provider in providers) {
-                val l = lm!!.getLastKnownLocation(provider) ?: continue
-                if (location == null || l.getAccuracy() < location!!.getAccuracy()) {
+                val l = lm.getLastKnownLocation(provider) ?: continue
+                if (location == null || l.getAccuracy() < location.getAccuracy()) {
                     // Found best last known location: %s", l);
                     location = l
                 }
             }
-            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location!!.latitude,location!!.longitude),12f))
+            addMap.moveCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location!!.latitude, location.longitude),12f))
         }
         else{
             initPermission()

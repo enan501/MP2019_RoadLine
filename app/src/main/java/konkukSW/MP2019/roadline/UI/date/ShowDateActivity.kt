@@ -211,7 +211,7 @@ class ShowDateActivity : AppCompatActivity() {
                 try {
                     tempFile.createNewFile()
                     val out = FileOutputStream(tempFile)
-                    bitmap?.compress(Bitmap.CompressFormat.JPEG,100, out)
+                    bitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
                     out.close()
                 } catch (e: FileNotFoundException) {
                     e.printStackTrace()

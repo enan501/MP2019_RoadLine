@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="konkukSW.MP2019.roadline">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="konkukSW.MP2019.roadline">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -33,24 +33,35 @@
                   android:exported="false" android:grantUriPermissions="true">
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
         </provider>
-        <activity android:name=".UI.money.ShowDetailMoneyActivity" />
-        <activity android:name=".UI.date.AddSpotActivity" />
-        <activity android:name=".UI.money.AddMoneyActivity"/>
-        <activity android:name=".UI.photo.ShowPhotoActivity" />
-        <activity android:name=".UI.money.ShowMoneyActivity" />
-        <activity android:name=".UI.date.ShowDateActivity" />
-        <activity android:name=".UI.date.PickDateActivity" />
-        <activity android:name=".UI.MainListActivity"/>
-        <activity android:name=".UI.photo.DetailPhotoActivity"/>
         <activity
-            android:name=".UI.SplashActivity"
-            android:theme="@style/Splash">
+            android:screenOrientation="portrait"
+            android:name=".UI.money.ShowDetailMoneyActivity" />
+        <activity            android:screenOrientation="portrait"
+                             android:name=".UI.date.AddSpotActivity" />
+        <activity            android:screenOrientation="portrait"
+                             android:name=".UI.money.AddMoneyActivity"/>
+        <activity             android:screenOrientation="portrait"
+                              android:name=".UI.photo.ShowPhotoActivity" />
+        <activity             android:screenOrientation="portrait"
+                              android:name=".UI.money.ShowMoneyActivity" />
+        <activity             android:screenOrientation="portrait"
+                              android:name=".UI.date.ShowDateActivity" />
+        <activity             android:screenOrientation="portrait"
+                              android:name=".UI.date.PickDateActivity" />
+        <activity             android:screenOrientation="portrait"
+                              android:name=".UI.MainListActivity"/>
+        <activity             android:screenOrientation="portrait"
+                              android:name=".UI.photo.DetailPhotoActivity"/>
+        <activity            android:screenOrientation="portrait"
+                             android:name=".UI.SplashActivity"
+                             android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
     </application>
 

@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    tools:context=".UI.money.ShowMoneyActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
+              tools:context=".UI.money.ShowMoneyActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
+        android:gravity="center_vertical"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_weight="0">
-        <LinearLayout
-            android:id="@+id/deleteButton"
+        <TextView
+            android:id="@+id/deleteText"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end" android:orientation="horizontal">
-            <TextView
-                android:id="@+id/deleteText"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" android:gravity="center" android:text="수정하기"/>
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content" android:layout_height="match_parent"
-                app:srcCompat="@android:drawable/ic_menu_delete"/>
-        </LinearLayout>
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" android:layout_marginEnd="8dp"
+            android:background="@drawable/button_background"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingHorizontal="13dp"
+            android:paddingVertical="10dp"
+            android:text="수정하기" android:textColor="@color/colorPrimary"/>
     </androidx.appcompat.widget.Toolbar>
 
     <View
@@ -73,7 +71,6 @@
             android:id="@+id/money_totalTextView"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:fontFamily="@font/nanum_square_round_r"
             android:gravity="center"
             android:textColor="@color/darkGray"
             android:text="Total 0"
@@ -83,8 +80,7 @@
             android:layout_gravity="center"
             android:id="@+id/currencySpinner"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/nanum_square_round_r" />
+            android:layout_height="match_parent"/>
 
         <ImageView
             android:id="@+id/detail_money"

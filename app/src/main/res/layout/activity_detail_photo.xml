@@ -17,7 +17,6 @@
         app:layout_constraintTop_toTopOf="@+id/viewPager">
         <TextView
             android:id="@+id/dayView"
-            android:fontFamily="@font/nanum_square_round_r"
             android:text="DAY 1"
             android:textSize="23dp"
             android:gravity="center"
