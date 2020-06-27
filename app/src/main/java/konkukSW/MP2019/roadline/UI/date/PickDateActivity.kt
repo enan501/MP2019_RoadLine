@@ -74,7 +74,7 @@ class PickDateActivity : AppCompatActivity() {
         ListID = intent.getStringExtra("ListID")
         listPos = intent.getIntExtra("listPos", -1)
 
-        dateList = arrayListOf(PickDate(ListID,0,-1, null),PickDate(ListID,0,-1, null))
+        dateList = arrayListOf()
 
         realm = Realm.getDefaultInstance()
         thisList = realm.where<T_List>(T_List::class.java).equalTo("id",ListID).findFirst()!!
@@ -84,8 +84,6 @@ class PickDateActivity : AppCompatActivity() {
         for(T_Day in dayResults){
             dateList.add(PickDate(ListID, T_Day.num, T_Day.date, T_Day.img))
         }
-        dateList.add(PickDate(ListID,-1,-1, null)) //추가 버튼
-        dateList.add(PickDate(ListID,0,-1, null)) //안보이는 마지막
 
     }
 
@@ -107,13 +105,14 @@ class PickDateActivity : AppCompatActivity() {
             }
         }
         PD_rView.layoutManager = layoutManager
+        var half = resources.displayMetrics.widthPixels/3
+        PD_rView.setPadding(half,0,half,0)
         snapHelper.attachToRecyclerView(PD_rView) //아이템 가운데로 끌어 맞추기
         PDAdapter = PickDateAdapter(applicationContext, dateList)
         PD_rView.adapter = PDAdapter
-        smoothScroller.targetPosition = 2
-        smoothScroller.computeScrollVectorForPosition(2)
+        smoothScroller.targetPosition = 0
+        smoothScroller.computeScrollVectorForPosition(0)
         layoutManager.startSmoothScroll(smoothScroller)
-        dateList.removeAt(0)
         PDAdapter.notifyDataSetChanged()
 
         PD_title.layoutParams.let{
