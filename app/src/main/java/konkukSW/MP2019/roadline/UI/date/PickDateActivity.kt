@@ -6,6 +6,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import androidx.core.content.ContextCompat
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
@@ -14,6 +15,7 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
 import io.realm.Realm
@@ -168,6 +170,7 @@ class PickDateActivity : AppCompatActivity() {
             intent.putExtra("ListID", ListID)
             intent.putExtra("DayNum",0) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
             startActivity(intent)
+
             overridePendingTransition(
                 R.anim.anim_slide_in_top,
                 R.anim.anim_slide_out_bottom

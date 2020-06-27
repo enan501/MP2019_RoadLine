@@ -92,8 +92,7 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             itemView.setOnClickListener{
                 if(!editMode){
                     val position = adapterPosition
-                    if(position != 0 && position != items.size-1)
-                        itemClickListener?.OnItemClick(this, items[position], position)
+                    itemClickListener?.OnItemClick(this, items[position], position)
                 }
                 else{
                     editMode = false
@@ -103,8 +102,7 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             }
             itemView.setOnLongClickListener {
                 val position = adapterPosition
-                if(position > 0 && position < items.size - 2)
-                    itemClickListener?.OnItemLongClick(this, items[position], position)
+                itemClickListener?.OnItemLongClick(this, items[position], position)
                 true
             }
 
