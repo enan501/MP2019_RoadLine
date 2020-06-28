@@ -106,7 +106,10 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
                     5, 6, 7, 8->{
                         holder.roadImg.setImageResource(R.drawable.road_left_end)
                     }
-                    9, 0->{
+                    9 ->{
+                        holder.roadImg.setImageResource(R.drawable.road_right_down_end)
+                    }
+                    0 -> {
                         holder.roadImg.setImageResource(R.drawable.road_left_down_end)
                     }
                 }

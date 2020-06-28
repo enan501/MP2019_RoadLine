@@ -18,6 +18,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.*
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.GlideDrawable
+import com.bumptech.glide.request.animation.GlideAnimation
+import com.bumptech.glide.request.target.SimpleTarget
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
@@ -46,10 +49,14 @@ class PickDateActivity : AppCompatActivity() {
     lateinit var PDAdapter: PickDateAdapter
     lateinit var realm: Realm
     lateinit var thisList:T_List
+    lateinit var backgroundImg:String
     lateinit var dayResults: RealmResults<T_Day>
     var editMode = false
     var pickedDay = -1
-
+    val layoutManager by lazy{
+        CenterZoomLayoutManager(this,
+                LinearLayoutManager.HORIZONTAL,false)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +82,7 @@ class PickDateActivity : AppCompatActivity() {
     fun initData(){
         ListID = intent.getStringExtra("ListID")
         listPos = intent.getIntExtra("listPos", -1)
-
+        backgroundImg = intent.getStringExtra("backgroundImg")
         dateList = arrayListOf()
 
         realm = Realm.getDefaultInstance()
@@ -90,6 +97,7 @@ class PickDateActivity : AppCompatActivity() {
     }
 
     fun initLayout(){
+        Glide.with(this).load(backgroundImg).centerCrop().into(ivBackgroundImg)
         setSupportActionBar(PD_toolbar)
         val backArrow = ContextCompat.getDrawable(applicationContext, R.drawable.abc_ic_ab_back_material)
         backArrow!!.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_ATOP)
@@ -99,8 +107,6 @@ class PickDateActivity : AppCompatActivity() {
 
         PD_title.text = thisList.title
 
-        val layoutManager = CenterZoomLayoutManager(this,
-                LinearLayoutManager.HORIZONTAL,false)
         val smoothScroller = object : androidx.recyclerview.widget.LinearSmoothScroller(this) {
             override fun getHorizontalSnapPreference(): Int {
                 return SNAP_TO_END
@@ -116,9 +122,6 @@ class PickDateActivity : AppCompatActivity() {
         smoothScroller.computeScrollVectorForPosition(0)
         layoutManager.startSmoothScroll(smoothScroller)
         PDAdapter.notifyDataSetChanged()
-
-        PD_title.layoutParams.let{
-        }
     }
 
 
@@ -170,7 +173,9 @@ class PickDateActivity : AppCompatActivity() {
 
 
         addImageButton.setOnClickListener {
-            showImagePickDialog(pickedDay)
+            var position = layoutManager.getPosition(snapHelper.findSnapView(layoutManager)!!)
+            Log.d("enan","position : $position")
+            showImagePickDialog(position+1)
 
         }
 

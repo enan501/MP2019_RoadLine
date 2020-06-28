@@ -25,6 +25,7 @@ import androidx.appcompat.widget.DialogTitle
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
+import com.google.android.material.appbar.AppBarLayout
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner
 import io.realm.Realm
 import io.realm.RealmResults
@@ -35,6 +36,7 @@ import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+import konkukSW.MP2019.roadline.UI.widget.AddListDialog
 import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import konkukSW.MP2019.roadline.UI.widget.ProgressDialog
 import konkukSW.MP2019.roadline.refreshCurrency
@@ -72,7 +74,7 @@ class MainListActivity : AppCompatActivity() {
     var nowDay = 0
 
     //여행추가 dialog
-    lateinit var builder:AlertDialog.Builder
+    lateinit var builder:AddListDialog.Builder
     lateinit var addListDialog: View
     lateinit var addListTitle: EditText
     lateinit var editStart: TextView
@@ -197,7 +199,6 @@ class MainListActivity : AppCompatActivity() {
                     return false
                 }
             }
-
         }
 
         //cellspacing?
@@ -210,19 +211,16 @@ class MainListActivity : AppCompatActivity() {
         var dateEndYear :Int? = null
         var dateEndMonth :Int? = null
         var dateEndDay :Int? = null
-
-        builder = AlertDialog.Builder(this) //여행 추가 dialog
-        addListDialog = layoutInflater.inflate(R.layout.add_list_dialog, null)
-        addListDialog.rvCurrency.adapter = selectedCurrencyAdapter
-        addListTitle = addListDialog.findViewById(R.id.AL_title)
-        editStart = addListDialog.findViewById(R.id.editStart)
-        editEnd = addListDialog.findViewById(R.id.editEnd)
-        imageView = addListDialog.findViewById(R.id.imageView)
-        imageViewBack = addListDialog.findViewById(R.id.imageViewBack)
-        textViewTitle = addListDialog.findViewById(R.id.textViewTitle)
-
-        currencySpinner = addListDialog.findViewById(R.id.currencySpinner)
-        currencySpinner.adapter = currencyAdapter
+        builder = AddListDialog.Builder(this).create() //여행 추가 dialog
+        currencySpinner = builder.dialog.AL_currencySpinner
+        editStart = builder.dialog.editStart
+        editEnd = builder.dialog.editEnd
+        addListTitle = builder.dialog.AL_title
+        textViewTitle = builder.dialog.textViewTitle
+        imageView = builder.dialog.imageView
+        imageViewBack = builder.dialog.imageViewBack
+        builder.setCurrencyAdapter(currencyAdapter)
+                .setSelectedCurrencyAdapter(selectedCurrencyAdapter)
         if(Build.VERSION.SDK_INT >= 26) {
             currencySpinner.setAutofillHints("화폐를 검색하세요")
         }
@@ -350,12 +348,15 @@ class MainListActivity : AppCompatActivity() {
 
 
     fun initListener() {
-        btnSetting.setOnClickListener {
-            drawerLayout.openDrawer(settingView)
-        }
+        btnSetting.setOnClickListener { drawerLayout.openDrawer(settingView)  }
+
 //        settingView.getHeaderView(0).btnClose.setOnClickListener {
 //            drawerLayout.closeDrawer(settingView)
 //        }
+        appBar.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener{ appBarLayout: AppBarLayout?, verticalOffset: Int ->
+            if(verticalOffset <0) ML_subTitle.visibility = View.GONE
+            else ML_subTitle.visibility = View.VISIBLE
+        })
         settingView.setNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.btnRefreshCurrency->{
@@ -395,14 +396,6 @@ class MainListActivity : AppCompatActivity() {
             imageView.visibility = View.GONE
             imageViewBack.visibility = View.GONE
 
-            if(addListDialog.parent != null){
-                (addListDialog.parent as ViewGroup).removeView(addListDialog)
-            }
-
-            builder.setView(addListDialog)
-                    .setPositiveButton("추가") { _, _ -> }
-                    .setNegativeButton("취소") { _, _ -> }
-
             dateStartEpoch = null
             dateEndEpoch = null
 
@@ -410,12 +403,9 @@ class MainListActivity : AppCompatActivity() {
             curArray.clear()
             curArray.add(korCur)
 
-            val cbuilder = builder.create() //여행추가 다이얼로그
-            cbuilder.setCanceledOnTouchOutside(false)
-            cbuilder.show()
-            cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
-            cbuilder.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(ContextCompat.getColor(this,R.color.colorPrimary))
-            cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+
+            builder.setCancelButton("취소")
+                    .setOkButton("확인", View.OnClickListener{
                 if(addListTitle.text.trim().toString() == ""){
                     val builder =AlertDialog.Builder(this@MainListActivity)
                     builder.setMessage("여행 제목을 입력해주세요")
@@ -455,7 +445,7 @@ class MainListActivity : AppCompatActivity() {
                                 ML_rView.visibility = View.VISIBLE
                                 startText.visibility = View.GONE
                             }
-                            cbuilder.dismiss()
+                            builder.dismissDialog()
                         }
                         else{
                             val builder =AlertDialog.Builder(this@MainListActivity)
@@ -478,6 +468,7 @@ class MainListActivity : AppCompatActivity() {
                     }
                 }
             }
+            ).show()
 
             imm.hideSoftInputFromWindow(addListTitle.windowToken, 0)
 
@@ -487,6 +478,7 @@ class MainListActivity : AppCompatActivity() {
             override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 val MLIntent = Intent(applicationContext, PickDateActivity::class.java)
                 MLIntent.putExtra("ListID", data.id)
+                MLIntent.putExtra("backgroundImg", data.img)
                 MLIntent.putExtra("listPos", position)
                 startActivityForResult(MLIntent, REQUEST_CODE)
             }
@@ -519,12 +511,6 @@ class MainListActivity : AppCompatActivity() {
 
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 photoResults = realm.where(T_Photo::class.java).equalTo("listID", data.id).findAll().sort("dayNum", Sort.ASCENDING, "dateTime", Sort.ASCENDING)
-                if(addListDialog.parent != null){
-                    (addListDialog.parent as ViewGroup).removeView(addListDialog)
-                }
-                builder.setView(addListDialog)
-                        .setPositiveButton("수정") { _, _ -> }
-                        .setNegativeButton("취소") { _, _ -> }
 
                 val item = listResults[position]!!
                 addListTitle.setText(item.title)
@@ -589,11 +575,9 @@ class MainListActivity : AppCompatActivity() {
 
 
 
-                val cbuilder = builder.create()
-                cbuilder.setCanceledOnTouchOutside(false)
-                cbuilder.show()
-
-                cbuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                builder.setCanceledOnTouchOutside(false)
+                        .setCancelButton("취소")
+                        .setOkButton("수정", View.OnClickListener {
                     if(addListTitle.text.trim().toString() == ""){
                         val builder =AlertDialog.Builder(this@MainListActivity)
                         builder.setMessage("여행 제목을 입력해주세요")
@@ -630,7 +614,7 @@ class MainListActivity : AppCompatActivity() {
                                     newDay.num = i.toInt()
                                     realm.commitTransaction()
                                 }
-                                cbuilder.dismiss()
+                                builder.dismissDialog()
                             } else {
                                 val builder =AlertDialog.Builder(this@MainListActivity)
                                 builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
@@ -650,7 +634,7 @@ class MainListActivity : AppCompatActivity() {
                             dialog.show()
                         }
                     }
-                }
+                }).show()
                 imageView.setOnClickListener {
                     showImagePickDialog()
                 }

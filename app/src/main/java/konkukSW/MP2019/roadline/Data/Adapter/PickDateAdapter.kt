@@ -90,8 +90,7 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             imgPhoto = itemView.findViewById(R.id.img_photo)
             itemView.setOnClickListener{
                     val position = adapterPosition
-                    if(position != 0 && position != items.size-1)
-                        itemClickListener?.OnItemClick(this, items[position], position)
+                    itemClickListener?.OnItemClick(this, items[position], position)
 
             }
             itemView.setOnLongClickListener {

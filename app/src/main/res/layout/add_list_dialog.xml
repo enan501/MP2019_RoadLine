@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    app:cardCornerRadius="12dp">
+
+
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -34,9 +41,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
         app:srcCompat="@drawable/ml_default_image" />
 
@@ -47,9 +52,7 @@
         android:layout_width="match_parent"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="10dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
         android:layout_height="0dp" android:text="추억함에 사진을 추가하세요"/>
 
@@ -162,9 +165,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editEnd" />
 
+    <LinearLayout
+        android:id="@+id/dialogLinearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingBottom="20dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
+        tools:visibility="visible">
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/background_button_dialog_cancel"
+            android:minHeight="0dp"
+            android:paddingVertical="10dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:text="취소"
+            android:textSize="12sp"
+            android:elevation="0dp"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+            style="?android:attr/borderlessButtonStyle"
+            tools:visibility="visible" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:background="@drawable/background_button_dialog_ok"
+            android:minHeight="0dp"
+            style="?android:attr/borderlessButtonStyle"
+            android:paddingVertical="10dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:textSize="12sp"
+            android:text="확인"
+            android:textColor="@color/colorPrimary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
     <com.toptoche.searchablespinnerlibrary.SearchableSpinner
-        android:id="@+id/currencySpinner"
+        android:id="@+id/AL_currencySpinner"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:background="@null"
@@ -176,3 +225,4 @@
 
     </com.toptoche.searchablespinnerlibrary.SearchableSpinner>
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
