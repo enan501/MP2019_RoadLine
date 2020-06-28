@@ -34,22 +34,22 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="1000원" android:textColor="@color/white"
-                android:textSize="17sp" app:layout_constraintBottom_toBottomOf="parent"
+                android:textSize="13sp" app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
             <TextView
                 android:id="@+id/korPriceText"
-                android:textSize="20sp"
-                android:visibility="invisible"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintVertical_bias="0.3"
                 android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"
-                android:text="TextView" app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/priceText"/>
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                android:textSize="13sp" android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/priceText"
+                app:layout_constraintVertical_bias="0.3"/>
             <ImageView
                 android:id="@+id/checkButton"
                 android:layout_width="30dp"

@@ -56,21 +56,7 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             val date = org.threeten.bp.LocalDate.ofEpochDay(items[p1].date)
             p0.date.text = date.format(dateForamt)
         }
-        if(items.get(p1).day > 0){ //일반 날짜
-            p0.itemView.visibility =View.VISIBLE
-            p0.day.text = "Day " + items.get(p1).day.toString()
-            p0.date.visibility = View.VISIBLE
-        }
-        else if(items.get(p1).day == -1) //맨 마지막 추가버튼
-        {
-            p0.itemView.visibility =View.VISIBLE
-            p0.day.text = "+"
-            p0.day.textSize = 30.0f
-            p0.date.visibility = View.INVISIBLE
-        }
-        else{ //양쪽 끝
-            p0.itemView.visibility =View.INVISIBLE
-        }
+        p0.day.text = "Day " + items.get(p1).day.toString()
     }
     interface OnItemClickListener{
         fun OnItemClick(holder:ViewHolder, data: PickDate, position: Int)
@@ -89,8 +75,8 @@ class PickDateAdapter(val context:Context, var items:ArrayList<PickDate>): Recyc
             imgCover = itemView.findViewById(R.id.img_cover)
             imgPhoto = itemView.findViewById(R.id.img_photo)
             itemView.setOnClickListener{
-                    val position = adapterPosition
-                    itemClickListener?.OnItemClick(this, items[position], position)
+                val position = adapterPosition
+                itemClickListener?.OnItemClick(this, items[position], position)
 
             }
             itemView.setOnLongClickListener {
