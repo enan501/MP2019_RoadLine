@@ -31,6 +31,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.PhotoGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_show_photo.*
 import java.io.File
 import java.io.IOException
@@ -161,9 +162,10 @@ class ShowPhotoActivity : AppCompatActivity() {
         deleteText.setOnClickListener {
             if(deleteMode){
                 if(deletePhotoList.isNotEmpty()){
-                    val builder =AlertDialog.Builder(this@ShowPhotoActivity)
-                    builder.setMessage("삭제하시겠습니까?")
-                            .setPositiveButton("삭제") { dialogInterface, _ ->
+                    val builder = BaseDialog.Builder(this).create()
+                    builder.setTitle("삭제")
+                            .setMessage("삭제하시겠습니까?")
+                            .setOkButton("삭제", View.OnClickListener {
                                 realm.beginTransaction()
                                 for(i in deletePhotoList){
                                     i.deleteFromRealm()
@@ -175,17 +177,18 @@ class ShowPhotoActivity : AppCompatActivity() {
                                 deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
                                 deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
-                            }
-                            .setNegativeButton("취소") { dialogInterface, i ->
+                                builder.dismissDialog()
+                            })
+                            .setCancelButton("취소", View.OnClickListener {
                                 changeViewToDeleteMode(deleteMode)
                                 deletePhotoList.clear()
                                 deleteText.text = "수정하기"
                                 deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
                                 deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
-                            }
-                    val dialog = builder.create()
-                    dialog.show()
+                                builder.dismissDialog()
+                            })
+                            .show()
                 }
                 else{
                     changeViewToDeleteMode(deleteMode)
@@ -300,13 +303,11 @@ class ShowPhotoActivity : AppCompatActivity() {
                         else{
                             val clipData = data.clipData
                             if(clipData.itemCount > 9){
-                                val builder =AlertDialog.Builder(this@ShowPhotoActivity)
-                                builder.setMessage("사진은 9장까지 선택 가능합니다")
-                                        .setPositiveButton("확인") { _, _ ->
-
-                                        }
-                                val dialog = builder.create()
-                                dialog.show()
+                                val builder =BaseDialog.Builder(this).create()
+                                builder.setTitle("알림").
+                                        setMessage("사진은 9장까지 선택 가능합니다")
+                                        .setCancelButton("확인")
+                                        .show()
                             }
                             else {
                                 for(i in 0 until clipData.itemCount){

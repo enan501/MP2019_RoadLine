@@ -26,6 +26,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Money
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_show_money.*
 import org.threeten.bp.format.DateTimeFormatter
 import java.text.DecimalFormat
@@ -116,9 +117,10 @@ class ShowMoneyActivity : AppCompatActivity() {
         deleteText.setOnClickListener {
             if(deleteMode){
                 if(deleteMoneyList.isNotEmpty()){
-                    val builder = AlertDialog.Builder(this@ShowMoneyActivity)
-                    builder.setMessage("삭제하시겠습니까?")
-                            .setPositiveButton("삭제") { dialogInterface, _ ->
+                    val builder = BaseDialog.Builder(this).create()
+                    builder.setTitle("삭제")
+                            .setMessage("삭제하시겠습니까?")
+                            .setOkButton("삭제", View.OnClickListener {
                                 Log.d("mytag", deleteMoneyList.toString())
                                 realm.beginTransaction()
                                 for(i in deleteMoneyList){
@@ -131,17 +133,18 @@ class ShowMoneyActivity : AppCompatActivity() {
                                 deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
                                 deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
-                            }
-                            .setNegativeButton("취소") { dialogInterface, i ->
+                                builder.dismissDialog()
+                            })
+                            .setCancelButton("취소", View.OnClickListener {
                                 changeViewToDeleteMode(deleteMode)
                                 deleteMoneyList.clear()
                                 deleteText.text = "수정하기"
                                 deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
                                 deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
-                            }
-                    val dialog = builder.create()
-                    dialog.show()
+                                builder.dismissDialog()
+                            })
+                            .show()
                 }
                 else{
                     deleteText.text = "수정하기"
@@ -204,13 +207,11 @@ class ShowMoneyActivity : AppCompatActivity() {
 
         detail_money.setOnClickListener {
             if(moneyResults.isEmpty()){
-                val builder = AlertDialog.Builder(this@ShowMoneyActivity)
-                builder.setMessage("가계부에 내용을 추가해주세요")
-                        .setPositiveButton("확인") { dialogInterface, _ ->
-
-                        }
-                val dialog = builder.create()
-                dialog.show()
+                val builder = BaseDialog.Builder(this).create()
+                builder.setTitle("알림")
+                        .setMessage("가계부에 내용을 추가해주세요")
+                        .setCancelButton("확인")
+                        .show()
             }
             else{
                 val intent = Intent(this, ShowDetailMoneyActivity::class.java)
