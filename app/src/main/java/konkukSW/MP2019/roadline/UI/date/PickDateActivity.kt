@@ -116,7 +116,6 @@ class PickDateActivity : AppCompatActivity() {
         smoothScroller.computeScrollVectorForPosition(0)
         layoutManager.startSmoothScroll(smoothScroller)
         PDAdapter.notifyDataSetChanged()
-
     }
 
 
