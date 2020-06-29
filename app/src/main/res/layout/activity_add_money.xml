@@ -110,11 +110,10 @@
         <RadioButton
             android:id="@+id/mealBtn"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:button="@null"
-            android:drawableTop="@drawable/radio_meal"
-            android:drawablePadding="8dp" android:gravity="center" android:text="식사"/>
+            android:drawableTop="@drawable/radio_meal" android:gravity="center" android:text="식사"/>
 
         <RadioButton
             android:id="@+id/shoppingBtn"
@@ -124,7 +123,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/radio_shopping"
-            android:drawablePadding="8dp" android:gravity="center" android:text="쇼핑"/>
+            android:gravity="center" android:text="쇼핑"/>
 
         <RadioButton
             android:id="@+id/transportBtn"
@@ -133,7 +132,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/radio_transport"
-            android:drawablePadding="8dp" android:gravity="center" android:text="교통"/>
+            android:gravity="center" android:text="교통"/>
 
         <RadioButton
             android:id="@+id/tourBtn"
@@ -142,7 +141,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/radio_tour"
-            android:drawablePadding="8dp" android:gravity="center" android:text="관광"/>
+            android:gravity="center" android:text="관광"/>
 
         <RadioButton
             android:id="@+id/lodgmentBtn"
@@ -151,7 +150,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/radio_lodgment"
-            android:drawablePadding="8dp" android:gravity="center" android:text="숙박"/>
+            android:gravity="center" android:text="숙박"/>
 
         <RadioButton
             android:id="@+id/etcBtn"
@@ -160,7 +159,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/radio_etc"
-            android:drawablePadding="8dp" android:gravity="center" android:text="기타"/>
+            android:gravity="center" android:text="기타"/>
     </RadioGroup>
     <TextView
         android:id="@+id/textViewTitle3"
