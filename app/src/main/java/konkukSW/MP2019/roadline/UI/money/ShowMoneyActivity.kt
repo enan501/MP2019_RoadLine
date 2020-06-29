@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.SimpleItemAnimator
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
 import io.realm.Realm
@@ -142,6 +141,7 @@ class ShowMoneyActivity : AppCompatActivity() {
                                 deleteText.background = ContextCompat.getDrawable(applicationContext, R.drawable.button_background)
                                 deleteText.setTextColor(ContextCompat.getColor(applicationContext, R.color.colorPrimary))
                                 deleteMode = false
+
                                 builder.dismissDialog()
                             })
                             .show()
@@ -207,7 +207,7 @@ class ShowMoneyActivity : AppCompatActivity() {
 
         detail_money.setOnClickListener {
             if(moneyResults.isEmpty()){
-                val builder = BaseDialog.Builder(this).create()
+                val builder = BaseDialog.Builder(this@ShowMoneyActivity).create()
                 builder.setTitle("알림")
                         .setMessage("가계부에 내용을 추가해주세요")
                         .setCancelButton("확인")

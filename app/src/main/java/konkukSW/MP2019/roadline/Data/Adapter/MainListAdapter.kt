@@ -42,8 +42,6 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
         var title: TextView
         var date: TextView
         var image: ImageView
-//        var edit: ImageButton
-//        var delete: ImageButton
         var edit: TextView
         var delete: TextView
         var editMode = false
@@ -96,6 +94,7 @@ class MainListAdapter(items: OrderedRealmCollection<T_List>, val context: Contex
 
     override fun onBindViewHolder(p0: ViewHolder, p1: Int) {
         val item = getItem(p1)!!
+        p0.editMode = false
         p0.title.text = item.title
         p0.edit.visibility = View.INVISIBLE
         p0.delete.visibility = View.INVISIBLE

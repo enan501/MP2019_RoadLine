@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import konkukSW.MP2019.roadline.Data.Adapter.PlanGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.row_plan.*
 
 
@@ -252,16 +253,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
         }
         else{
-            val builder = AlertDialog.Builder(context!!)
-            builder.setMessage("GPS 권한을 허용할까요?")
-                    .setTitle("권한 요청")
-                    .setIcon(konkukSW.MP2019.roadline.R.drawable.notification_action_background)
-                    .setPositiveButton("OK"){
-                        _,_ ->
+            val builder = BaseDialog.Builder(context!!).create()
+            builder.setTitle("알림")
+                    .setMessage("GPS 권한을 허용할까요?")
+                    .setCancelButton("확인", View.OnClickListener {
                         askPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST)
-                    }
-            val dialog = builder.create()
-            dialog.show()
+                    })
+                    .show()
         }
     }
 

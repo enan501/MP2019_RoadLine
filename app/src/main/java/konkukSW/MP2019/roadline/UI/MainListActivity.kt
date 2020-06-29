@@ -1,5 +1,6 @@
 package konkukSW.MP2019.roadline.UI
 
+import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.Context
@@ -44,6 +45,7 @@ import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.android.synthetic.main.add_list_dialog.*
 import kotlinx.android.synthetic.main.add_list_dialog.view.*
+import kotlinx.android.synthetic.main.grid_image_item.*
 import kotlinx.android.synthetic.main.image_pick_dialog.*
 import kotlinx.android.synthetic.main.setting_header.view.*
 import org.w3c.dom.Text
@@ -54,7 +56,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.*
-
+import kotlin.collections.ArrayList
 
 
 class MainListActivity : AppCompatActivity() {
@@ -90,14 +92,20 @@ class MainListActivity : AppCompatActivity() {
     var dateEndEpoch: Long? = null
     lateinit var imm :InputMethodManager
 
-
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_list)
         Realm.init(this)
         init()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if(requestCode == REQUEST_CODE) {
+                if(photoResults.isNotEmpty()){
+                    imageViewBack.text = "이곳을 눌러 사진을 선택하세요"
+            }
+        }
     }
 
     fun init() {
@@ -176,25 +184,23 @@ class MainListActivity : AppCompatActivity() {
         selectedCurrencyAdapter.itemClickListener = object:CurrencyAdapter.OnItemClickListener{
             override fun OnLongClick(position: Int): Boolean {
                 if(position == 0){
-                    val builder =AlertDialog.Builder(this@MainListActivity)
-                    builder.setMessage("한화는 기본 값으로 삭제할수 없습니다")
-                            .setPositiveButton("확인") { dialogInterface, _ ->
-
-                            }
-                    val dialog = builder.create()
-                    dialog.show()
+                    val builder = BaseDialog.Builder(this@MainListActivity).create()
+                    builder.setTitle("알림")
+                            .setMessage("한화는 기본 값으로 삭제할수 없습니다")
+                            .setCancelButton("확인")
+                            .show()
                     return false
                 } else {
-                    val ynBuilder = AlertDialog.Builder(this@MainListActivity)
-                    ynBuilder.setMessage(curArray[position].name + " 화폐를 삭제하시겠습니까?")
-                            .setPositiveButton("삭제") { _, _ ->
+                    val builder = BaseDialog.Builder(this@MainListActivity).create()
+                    builder.setTitle("알림")
+                            .setMessage(curArray[position].name + " 화폐를 삭제하시겠습니까?")
+                            .setOkButton("삭제", View.OnClickListener {
                                 curArray.removeAt(position)
                                 selectedCurrencyAdapter.notifyItemRemoved(position)
-                            }
-                            .setNegativeButton("취소") { _,_ ->
-                            }
-                    val ynDialog = ynBuilder.create()
-                    ynDialog.show()
+                                builder.dismissDialog()
+                            })
+                            .setCancelButton("취소")
+                            .show()
 
                     return false
                 }
@@ -247,13 +253,11 @@ class MainListActivity : AppCompatActivity() {
                         }
                     }
                     if(exist){
-                        val builder =AlertDialog.Builder(this@MainListActivity)
-                        builder.setMessage("이미 선택한 화폐입니다")
-                                .setPositiveButton("확인") { dialogInterface, _ ->
-
-                                }
-                        val dialog = builder.create()
-                        dialog.show()
+                        val builder = BaseDialog.Builder(this@MainListActivity).create()
+                        builder.setTitle("알림")
+                                .setMessage("이미 선택한 화폐입니다")
+                                .setCancelButton("확인")
+                                .show()
                     }
                     else{
                         curArray.add(curTuple!!)
@@ -378,7 +382,7 @@ class MainListActivity : AppCompatActivity() {
                     drawerLayout.closeDrawer(settingView)
                 }
                 R.id.btnVersionInfo -> {
-                    var dialog = BaseDialog.Builder(this).create()
+                    var dialog = BaseDialog.Builder(this@MainListActivity).create()
                     dialog.setTitle("버젼 정보")
                             .setMessage("Ver 1.0.0")
                             .setOkButton("닫기", View.OnClickListener { dialog.dismissDialog() })
@@ -407,13 +411,11 @@ class MainListActivity : AppCompatActivity() {
             builder.setCancelButton("취소")
                     .setOkButton("확인", View.OnClickListener{
                 if(addListTitle.text.trim().toString() == ""){
-                    val builder =AlertDialog.Builder(this@MainListActivity)
-                    builder.setMessage("여행 제목을 입력해주세요")
-                            .setPositiveButton("확인") { _, _ ->
-
-                            }
-                    val dialog = builder.create()
-                    dialog.show()
+                    val builder = BaseDialog.Builder(this@MainListActivity).create()
+                    builder.setTitle("알림")
+                            .setMessage("여행 제목을 입력해주세요")
+                            .setCancelButton("확인")
+                            .show()
                 }
                 else{
                     if(dateStartEpoch != null && dateEndEpoch != null) {
@@ -448,23 +450,19 @@ class MainListActivity : AppCompatActivity() {
                             builder.dismissDialog()
                         }
                         else{
-                            val builder =AlertDialog.Builder(this@MainListActivity)
-                            builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
-                                    .setPositiveButton("확인") { _, _ ->
-
-                                    }
-                            val dialog = builder.create()
-                            dialog.show()
+                            val builder = BaseDialog.Builder(this@MainListActivity).create()
+                            builder.setTitle("알림")
+                                    .setMessage("종료일이 시작일보다 이전일수 없습니다")
+                                    .setCancelButton("확인")
+                                    .show()
                         }
                     }
                     else{
-                        val builder =AlertDialog.Builder(this@MainListActivity)
-                        builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
-                                .setPositiveButton("확인") { _, _ ->
-
-                                }
-                        val dialog = builder.create()
-                        dialog.show()
+                        val builder = BaseDialog.Builder(this@MainListActivity).create()
+                        builder.setTitle("알림")
+                                .setMessage("시작일과 종료일을 입력해주세요")
+                                .setCancelButton("확인")
+                                .show()
                     }
                 }
             }
@@ -476,18 +474,19 @@ class MainListActivity : AppCompatActivity() {
 
         MLAdapter.itemClickListener = object : MainListAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val MLIntent = Intent(applicationContext, PickDateActivity::class.java)
+                val MLIntent = Intent(this@MainListActivity, PickDateActivity::class.java)
                 MLIntent.putExtra("ListID", data.id)
                 MLIntent.putExtra("backgroundImg", data.img)
                 MLIntent.putExtra("listPos", position)
-                startActivityForResult(MLIntent, REQUEST_CODE)
+                startActivity(MLIntent)
             }
 
             override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
                 val item = listResults[position]
-                val builder =AlertDialog.Builder(this@MainListActivity)
-                builder.setMessage("'" + item!!.title + "' 기록을 삭제할까요?")
-                        .setPositiveButton("삭제") { _, _ ->
+                val builder = BaseDialog.Builder(this@MainListActivity).create()
+                builder.setTitle("알림")
+                        .setMessage("'" + item!!.title + "' 기록을 삭제할까요?")
+                        .setOkButton("삭제", View.OnClickListener {
                             realm.beginTransaction()
 
                             realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
@@ -503,10 +502,11 @@ class MainListActivity : AppCompatActivity() {
                                 ML_rView.visibility = View.VISIBLE
                                 startText.visibility = View.GONE
                             }
-                        }
-                        .setNegativeButton("취소"){ _, _ ->}
-                val dialog = builder.create()
-                dialog.show()
+                            builder.dismissDialog()
+                        })
+                        .setCancelButton("취소")
+                        .show()
+
             }
 
             override fun OnEditClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
@@ -532,7 +532,7 @@ class MainListActivity : AppCompatActivity() {
                         var intent = Intent(this@MainListActivity, ShowPhotoActivity::class.java)
                         intent.putExtra("ListID", data.id)
                         intent.putExtra("DayNum",0)
-                        startActivity(intent)
+                        startActivityForResult(intent, REQUEST_CODE)
                         overridePendingTransition(
                                 R.anim.anim_slide_in_top,
                                 R.anim.anim_slide_out_bottom
@@ -573,19 +573,19 @@ class MainListActivity : AppCompatActivity() {
                     editEnd.text = dateEnd.format(dateForamt)
                 }
 
-
-
                 builder.setCanceledOnTouchOutside(false)
-                        .setCancelButton("취소")
+                        .setCancelButton("취소", View.OnClickListener {
+                            holder.edit.visibility = View.INVISIBLE
+                            holder.delete.visibility = View.INVISIBLE
+                            builder.dismissDialog()
+                        })
                         .setOkButton("수정", View.OnClickListener {
                     if(addListTitle.text.trim().toString() == ""){
-                        val builder =AlertDialog.Builder(this@MainListActivity)
-                        builder.setMessage("여행 제목을 입력해주세요")
-                                .setPositiveButton("확인") { _, _ ->
-
-                                }
-                        val dialog = builder.create()
-                        dialog.show()
+                        val builder = BaseDialog.Builder(this@MainListActivity).create()
+                        builder.setTitle("알림")
+                                .setMessage("여행 제목을 입력해주세요")
+                                .setCancelButton("확인")
+                                .show()
                     }
                     else {
                         if (dateStartEpoch != null && dateEndEpoch != null) {
@@ -602,36 +602,42 @@ class MainListActivity : AppCompatActivity() {
                                     item.currencys.add(i)
                                 }
                                 realm.commitTransaction()
-                                realm.beginTransaction()
-                                realm.where(T_Day::class.java).equalTo("listID", item.id).findAll().deleteAllFromRealm()
-                                realm.commitTransaction()
                                 val pnum = dateEndEpoch!! - dateStartEpoch!! + 1
+
+                                var dayList = realm.where(T_Day::class.java).equalTo("listID", item.id).sort("num").findAll()!!
+                                var imgList = ArrayList<String?>()
+                                for(i in 0 until dayList.size){
+                                    imgList.add(dayList[i]!!.img)
+                                }
+                                realm.beginTransaction()
+                                dayList.deleteAllFromRealm()
+                                realm.commitTransaction()
                                 for (i in 1..pnum) {
                                     realm.beginTransaction()
                                     val newDay = realm.createObject(T_Day::class.java)
                                     newDay.listID = item.id
                                     newDay.date = dateStartEpoch!! + i -1
                                     newDay.num = i.toInt()
+                                    if((i - 1).toInt() < imgList.size)
+                                        newDay.img = imgList[(i - 1).toInt()]
                                     realm.commitTransaction()
                                 }
+
                                 builder.dismissDialog()
                             } else {
-                                val builder =AlertDialog.Builder(this@MainListActivity)
-                                builder.setMessage("종료일이 시작일보다 이전일수 없습니다")
-                                        .setPositiveButton("확인") { _, _ ->
-
-                                        }
-                                val dialog = builder.create()
-                                dialog.show()
+                                val builder = BaseDialog.Builder(this@MainListActivity).create()
+                                builder.setTitle("알림")
+                                        .setMessage("종료일이 시작일보다 이전일수 없습니다")
+                                        .setCancelButton("확인")
+                                        .show()
                             }
-                        } else {
-                            val builder =AlertDialog.Builder(this@MainListActivity)
-                            builder.setMessage("시작일과 종료일 모두 입력해주세요")
-                                    .setPositiveButton("확인") { _, _ ->
-
-                                    }
-                            val dialog = builder.create()
-                            dialog.show()
+                        }
+                        else{
+                            val builder = BaseDialog.Builder(this@MainListActivity).create()
+                            builder.setTitle("알림")
+                                    .setMessage("시작일과 종료일을 입력해주세요")
+                                    .setCancelButton("확인")
+                                    .show()
                         }
                     }
                 }).show()
@@ -700,13 +706,11 @@ class MainListActivity : AppCompatActivity() {
         if(isAvail){
             createdBuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if(clickedPhoto == null){
-                    val builder =AlertDialog.Builder(this@MainListActivity)
-                    builder.setMessage("사진을 선택해주세요")
-                            .setPositiveButton("확인") { _, _ ->
-
-                            }
-                    val dialog = builder.create()
-                    dialog.show()
+                        val builder = BaseDialog.Builder(this@MainListActivity).create()
+                        builder.setTitle("알림")
+                                .setMessage("사진을 선택해주세요")
+                                .setCancelButton("확인")
+                                .show()
                 }
                 else{
                     createdBuilder.dismiss()
@@ -717,4 +721,6 @@ class MainListActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }

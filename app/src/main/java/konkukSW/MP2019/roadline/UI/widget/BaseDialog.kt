@@ -86,7 +86,5 @@ open class BaseDialog(context: Context) : Dialog(context) {
             dialog.show()
             return dialog
         }
-
-
     }
 }

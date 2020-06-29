@@ -16,6 +16,7 @@ import io.realm.RealmRecyclerViewAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 
 class PhotoGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val context: Context) : RealmRecyclerViewAdapter<T_Photo, PhotoGridAdapter.ViewHolder>(realmResult, true) {
     interface OnItemClickListener {
@@ -73,17 +74,18 @@ class PhotoGridAdapter (realmResult: OrderedRealmCollection<T_Photo>, val contex
         Realm.init(context)
         val realm = Realm.getDefaultInstance()
 
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("삭제하시겠습니까?")
-                .setPositiveButton("삭제") { dialogInterface, _ ->
+        val builder = BaseDialog.Builder(context).create()
+        builder.setTitle("알림")
+                .setMessage("삭제하시겠습니까?")
+                .setOkButton("삭제", View.OnClickListener {
                     realm.beginTransaction()
                     realm.where(T_Photo::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
                     realm.commitTransaction()
-                }
-                .setNegativeButton("취소") { dialogInterface, i ->
-                }
-        val dialog = builder.create()
-        dialog.show()
+                    builder.dismissDialog()
+                })
+                .setCancelButton("취소")
+                .show()
+
     }
 
 }

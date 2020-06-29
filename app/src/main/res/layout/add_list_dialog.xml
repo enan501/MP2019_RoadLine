@@ -43,18 +43,19 @@
         android:scaleType="centerCrop"
         app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-        app:srcCompat="@drawable/ml_default_image" />
+        app:srcCompat="@drawable/transparent_background" tools:layout_editor_absoluteX="24dp"/>
 
     <TextView
         android:id="@+id/imageViewBack"
-        android:gravity="center"
-        android:textColor="@color/lightGray"
         android:layout_width="match_parent"
+        android:layout_height="0dp"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="10dp"
-        app:layout_constraintDimensionRatio="16:9"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
-        android:layout_height="0dp" android:text="추억함에 사진을 추가하세요"/>
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:text="추억함에 사진을 추가하세요"
+        android:textColor="@color/lightGray"
+        app:layout_constraintDimensionRatio="16:9" app:layout_constraintTop_toBottomOf="@+id/textViewTitle"
+        tools:layout_editor_absoluteX="24dp"/>
 
     <TextView
         android:id="@+id/textView4"

@@ -51,6 +51,9 @@ fun refreshCurrency(context: Context) {
         }
 
     }
+    else{
+        showCheckNetworkDialog(context)
+    }
 }
 
 fun showCheckNetworkDialog(context:Context){
