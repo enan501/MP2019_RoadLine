@@ -13,6 +13,7 @@ import io.realm.Realm
 import io.realm.RealmRecyclerViewAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 
 class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: Context) : RealmRecyclerViewAdapter<T_Plan, PlanGridAdapter.ViewHolder>(realmResult, false) {
 
@@ -56,17 +57,17 @@ class PlanGridAdapter(realmResult: OrderedRealmCollection<T_Plan>, val context: 
 
     fun removeItem(position: Int){
         val item = getItem(position)!!
-        val builder = AlertDialog.Builder(context)
-        builder.setMessage("삭제하시겠습니까?")
-                .setPositiveButton("삭제") { dialogInterface, _ ->
+        val builder = BaseDialog.Builder(context).create()
+        builder.setTitle("알림")
+                .setMessage("삭제하시겠습니까?")
+                .setOkButton("삭제", View.OnClickListener {
                     realm.beginTransaction()
                     realm.where(T_Plan::class.java).equalTo("id", item.id).findFirst()!!.deleteFromRealm()
                     realm.commitTransaction()
-                }
-                .setNegativeButton("취소") { dialogInterface, i ->
-                }
-        val dialog = builder.create()
-        dialog.show()
+                    builder.dismissDialog()
+                })
+                .setCancelButton("취소")
+                .show()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

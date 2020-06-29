@@ -31,6 +31,7 @@ import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_pick_date.*
 import kotlinx.android.synthetic.main.image_pick_dialog.*
 import kotlinx.android.synthetic.main.item_pick_date.*
@@ -94,7 +95,13 @@ class PickDateActivity : AppCompatActivity() {
     }
 
     fun initLayout(){
-        Glide.with(this).load(backgroundImg).centerCrop().into(ivBackgroundImg)
+        if(backgroundImg == ""){
+            ivBackgroundScreen.visibility = View.INVISIBLE
+        }
+        else{
+            ivBackgroundScreen.visibility = View.VISIBLE
+            Glide.with(this).load(backgroundImg).centerCrop().into(ivBackgroundImg)
+        }
         setSupportActionBar(PD_toolbar)
         val backArrow = ContextCompat.getDrawable(applicationContext, R.drawable.abc_ic_ab_back_material)
         backArrow!!.setColorFilter(ContextCompat.getColor(applicationContext, R.color.white), PorterDuff.Mode.SRC_ATOP)
@@ -246,13 +253,11 @@ class PickDateActivity : AppCompatActivity() {
         if(isAvail){
             createdBuilder.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 if(clickedPhoto == null){
-                    val builder = AlertDialog.Builder(this@PickDateActivity)
-                    builder.setMessage("사진을 선택해주세요")
-                            .setPositiveButton("확인") { _, _ ->
-
-                            }
-                    val dialog = builder.create()
-                    dialog.show()
+                    val builder = BaseDialog.Builder(this@PickDateActivity).create()
+                    builder.setTitle("알림")
+                            .setMessage("사진을 선택해주세요")
+                            .setCancelButton("확인")
+                            .show()
                 }
                 else{
                     createdBuilder.dismiss()

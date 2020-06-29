@@ -37,6 +37,7 @@ import io.realm.Realm
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.R.id.places_autocomplete_search_input
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_add_spot.*
 import kotlinx.android.synthetic.main.activity_show_photo.*
 import kotlinx.android.synthetic.main.add_memo_dialog.*
@@ -241,13 +242,12 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                 finish()
             }
             else{ //아무값 입력하지 않으면
-                val builder =AlertDialog.Builder(this@AddSpotActivity)
-                builder.setMessage("위치를 추가하세요")
-                        .setPositiveButton("확인") { dialogInterface, _ ->
 
-                        }
-                val dialog = builder.create()
-                dialog.show()
+                val builder = BaseDialog.Builder(this).create()
+                builder.setTitle("알림")
+                        .setMessage("위치를 추가하세요")
+                        .setCancelButton("확인")
+                        .show()
             }
         }
         path_bt.setOnClickListener {
@@ -420,16 +420,15 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
         }
         else{
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage("GPS 권한을 허용할까요?")
-                    .setTitle("권한 요청")
-                    .setIcon(R.drawable.notification_action_background)
-                    .setPositiveButton("OK"){
-                        _,_ ->
+            val builder = BaseDialog.Builder(this).create()
+            builder.setTitle("알림")
+                    .setMessage("GPS 권한을 허용할까요?")
+                    .setOkButton("확인", View.OnClickListener {
                         askPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), LOCATION_REQUEST)
-                    }
-            val dialog = builder.create()
-            dialog.show()
+                        builder.dismissDialog()
+                    })
+                    .setCancelButton("취소")
+                    .show()
         }
     }
 

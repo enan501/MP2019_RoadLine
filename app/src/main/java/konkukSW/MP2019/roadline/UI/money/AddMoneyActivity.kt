@@ -34,6 +34,7 @@ import io.realm.kotlin.where
 import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.Extension.getPathFromUri
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_add_money.*
 import kotlinx.android.synthetic.main.activity_show_money.*
 import kotlinx.coroutines.selects.select
@@ -250,6 +251,8 @@ class AddMoneyActivity : AppCompatActivity() {
 
         addMoneyImage.setOnClickListener {
             val array = arrayOf("사진 찍어서 추가", "앨범에서 추가")
+
+
             val dialog = AlertDialog.Builder(this@AddMoneyActivity)
             dialog.setItems(array, DialogInterface.OnClickListener { dialog, which ->
                 when(which){
@@ -339,13 +342,11 @@ class AddMoneyActivity : AppCompatActivity() {
             else{
                 message = "카테고리를 선택하세요"
             }
-            val builder = AlertDialog.Builder(this)
-            builder.setMessage(message)
-            builder.setNegativeButton("확인"){ _, _ ->
-
-            }
-            val dialog = builder.create()
-            dialog.show()
+            val builder = BaseDialog.Builder(this@AddMoneyActivity).create()
+            builder.setTitle("알림")
+                    .setMessage(message)
+                    .setCancelButton("확인")
+                    .show()
         }
         else{
             if(editMode) { //수정

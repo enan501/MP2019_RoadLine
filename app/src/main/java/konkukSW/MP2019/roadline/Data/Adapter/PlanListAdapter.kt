@@ -20,6 +20,7 @@ import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.Fragment1
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_main_list.*
 import kotlinx.android.synthetic.main.fragment_fragment1.view.*
 import org.threeten.bp.LocalDateTime
@@ -81,14 +82,15 @@ class PlanListAdapter (realmResult: OrderedRealmCollection<T_Plan>, val context:
                 false
             }
             deleteBtn.setOnClickListener {
-                val builder = androidx.appcompat.app.AlertDialog.Builder(context)
-                builder.setMessage("이 항목을 삭제할까요?")
-                        .setPositiveButton("삭제") { _, _ ->
+                val builder = BaseDialog.Builder(context).create()
+                builder.setTitle("알림")
+                        .setMessage("이 항목을 삭제할까요?")
+                        .setOkButton("삭제", View.OnClickListener {
                             removeItem(adapterPosition)
-                        }
-                        .setNegativeButton("취소"){ _, _ ->}
-                val dialog = builder.create()
-                dialog.show()
+                            builder.dismissDialog()
+                        })
+                        .setCancelButton("취소")
+                        .show()
             }
             itemView.setOnClickListener {
                 if(adapterPosition in 0 until itemCount - 1)

@@ -4,6 +4,7 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import io.realm.Realm
@@ -13,6 +14,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.ImageFragmentAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_detail_photo.*
 
 class DetailPhotoActivity : AppCompatActivity() {
@@ -50,9 +52,10 @@ class DetailPhotoActivity : AppCompatActivity() {
                 finish()
             }
             R.id.first->{ //삭제하기
-                val builder = AlertDialog.Builder(this@DetailPhotoActivity)
-                builder.setMessage("삭제하시겠습니까?")
-                        .setPositiveButton("삭제") { _, _ ->
+                val builder = BaseDialog.Builder(this@DetailPhotoActivity).create()
+                builder.setTitle("알림")
+                        .setMessage("삭제하시겠습니까?")
+                        .setOkButton("삭제", View.OnClickListener {
                             val fragment = fAdapter.getItem(viewPager.currentItem) as ImageFragment
                             realm.beginTransaction()
                             photoResults.where().equalTo("id", fragment.getPhotoId()).findFirst()!!.deleteFromRealm()
@@ -68,20 +71,21 @@ class DetailPhotoActivity : AppCompatActivity() {
                             else{
                                 viewPager.currentItem = viewPager.currentItem + 1
                             }
-                        }
-                        .setNegativeButton("취소") { _, _ -> }
-                val dialog = builder.create()
-                dialog.show()
+                            builder.dismissDialog()
+                        })
+                        .setCancelButton("취소")
+                        .show()
             }
             R.id.second->{ //대표사진
                 realm.beginTransaction()
                 var list = realm.where(T_List::class.java).equalTo("id", listId).findFirst()
                 list!!.img = photoResults[selectedPos]!!.img
                 realm.commitTransaction()
-                val builder = AlertDialog.Builder(this@DetailPhotoActivity)
-                    builder.setMessage("대표사진으로 설정되었습니다.")
-                    builder.setPositiveButton("확인") { _, _ ->
-                }.show()
+                val builder = BaseDialog.Builder(this@DetailPhotoActivity).create()
+                builder.setTitle("알림")
+                        .setMessage("대표사진으로 설정되었습니다")
+                        .setCancelButton("확인")
+                        .show()
             }
             else->{ }
         }
