@@ -31,6 +31,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.PhotoGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_Photo
 import konkukSW.MP2019.roadline.R
+import konkukSW.MP2019.roadline.UI.widget.AddPhotoDialog
 import konkukSW.MP2019.roadline.UI.widget.BaseDialog
 import kotlinx.android.synthetic.main.activity_show_photo.*
 import java.io.File
@@ -108,35 +109,34 @@ class ShowPhotoActivity : AppCompatActivity() {
                 else{
                     day_click = DayNum
                 }
-                val array = arrayOf("사진 찍어서 추가", "앨범에서 추가")
-                val dialog = AlertDialog.Builder(this@ShowPhotoActivity)
-                dialog.setItems(array, DialogInterface.OnClickListener { dialog, which ->
-                    when(which){
-                        0->{ //카메라
-                            val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
-                            if(intent.resolveActivity(packageManager) != null){
-                                var photoFile: File? = null
-                                try {
-                                    photoFile = createImageFile()
-                                }catch (e: IOException){}
-                                if(photoFile != null){
-                                    val photoUri = FileProvider.getUriForFile(this@ShowPhotoActivity, packageName + ".fileprovider", photoFile)
-                                    imgPath = photoFile.absolutePath
-                                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
-                                    startActivityForResult(intent, CAPTURE_IMAGE)
-                                }
-                            }
-                        }
-                        1->{ //앨범
-                            val intent = Intent(Intent.ACTION_PICK)
-                            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                            intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
-                            intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-                            startActivityForResult(intent, SELECT_IMAGE)
+
+                val builder = AddPhotoDialog.Builder(this@ShowPhotoActivity).create()
+                builder.setAlbumButton(View.OnClickListener {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                    intent.type = android.provider.MediaStore.Images.Media.CONTENT_TYPE
+                    intent.data = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+                    startActivityForResult(intent, SELECT_IMAGE)
+                    builder.dismissDialog()
+                })
+                builder.setCameraButton(View.OnClickListener {
+                    val intent = Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE)
+                    if(intent.resolveActivity(packageManager) != null){
+                        var photoFile: File? = null
+                        try {
+                            photoFile = createImageFile()
+                        }catch (e: IOException){}
+                        if(photoFile != null){
+                            val photoUri = FileProvider.getUriForFile(this@ShowPhotoActivity, packageName + ".fileprovider", photoFile)
+                            imgPath = photoFile.absolutePath
+                            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri)
+                            startActivityForResult(intent, CAPTURE_IMAGE)
                         }
                     }
+                    builder.dismissDialog()
                 })
-                dialog.show()
+                builder.setCanceledOnTouchOutside(true)
+                builder.show()
             }
 
             override fun onPhotoItemClick(

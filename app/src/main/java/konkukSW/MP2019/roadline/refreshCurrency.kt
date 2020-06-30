@@ -49,7 +49,6 @@ fun refreshCurrency(context: Context) {
             showCheckNetworkDialog(context)
             pd.dismissDialog()
         }
-
     }
     else{
         showCheckNetworkDialog(context)
