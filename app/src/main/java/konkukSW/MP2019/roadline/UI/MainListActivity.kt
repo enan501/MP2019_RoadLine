@@ -32,6 +32,7 @@ import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
 import io.realm.kotlin.where
+import konkukSW.MP2019.roadline.BuildConfig
 import konkukSW.MP2019.roadline.Data.Adapter.*
 import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
@@ -384,7 +385,7 @@ class MainListActivity : AppCompatActivity() {
                 R.id.btnVersionInfo -> {
                     var dialog = BaseDialog.Builder(this@MainListActivity).create()
                     dialog.setTitle("버전 정보")
-                            .setMessage("Ver 1.0.0")
+                            .setMessage("Ver ${BuildConfig.VERSION_NAME}")
                             .setOkButton("닫기", View.OnClickListener { dialog.dismissDialog() })
                             .show()
                 }
