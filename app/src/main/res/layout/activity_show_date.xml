@@ -29,11 +29,11 @@
         android:layout_marginHorizontal="10dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/sd_leftImg"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/back" />
+            <ImageView
+                android:id="@+id/sd_leftImg"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/back"/>
 
         <LinearLayout
             android:id="@+id/sd_day_layout"
@@ -63,11 +63,11 @@
                 android:textSize="15sp" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/sd_rightImg"
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/next" />
+            <ImageView
+                android:id="@+id/sd_rightImg"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/next"/>
     </LinearLayout>
     </LinearLayout>
 

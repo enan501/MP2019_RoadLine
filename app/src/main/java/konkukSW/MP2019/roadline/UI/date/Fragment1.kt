@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.ScaleAnimation
+import android.widget.TextView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     lateinit var v:View
     lateinit var itemTouchHelper:ItemTouchHelper
     lateinit var callback: DateItemTouchHelperCallback
+    lateinit var backView: TextView
 
     private val MODE_EDIT = 0
     private val MODE_DEFAULT = 1
@@ -64,6 +66,12 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         (activity!! as ShowDateActivity).planResults.addChangeListener { _, _->
             iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, context!!)
             rIconView.adapter = iconAdapter
+            if(planAdapter.itemCount == 1){
+                backView.visibility = View.VISIBLE
+            }
+            else{
+                backView.visibility = View.INVISIBLE
+            }
         }
     }
     fun initData(){
@@ -98,6 +106,13 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         rIconView.layoutManager = layoutManager2
         iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, context!!)
         rIconView.adapter = iconAdapter
+        backView = v.findViewById(R.id.backView)
+        if(planAdapter.itemCount == 1){
+            backView.visibility = View.VISIBLE
+        }
+        else{
+            backView.visibility = View.INVISIBLE
+        }
     }
 
     fun addListener(){

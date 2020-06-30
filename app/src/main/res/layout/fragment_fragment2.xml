@@ -1,35 +1,41 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="konkukSW.MP2019.roadline.UI.date.Fragment2">
 
 
-
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="75dp"
-        android:orientation="vertical">
+        tools:context="konkukSW.MP2019.roadline.UI.date.Fragment2"
+    android:orientation="vertical">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/timeline_recycleView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="#fafafa" android:overScrollMode="never"/>
+            android:backgroundTint="#fafafa" android:overScrollMode="never">
+        </androidx.recyclerview.widget.RecyclerView>
+        <TextView
+            android:id="@+id/backView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" android:text="왼쪽 페이지로 이동해 일정을 추가하세요"
+            android:textColor="@color/lightGray"
+            app:layout_constraintBottom_toBottomOf="@+id/timeline_recycleView"
+            app:layout_constraintEnd_toEndOf="@+id/timeline_recycleView" app:layout_constraintStart_toStartOf="@+id/timeline_recycleView"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-    </LinearLayout>
-
-    <CheckBox
-        android:id="@+id/gps_check"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="end|bottom"
-        android:layout_marginBottom="100dp"
-        android:layout_marginRight="20dp"
-        android:background="@drawable/checkbox_custom"
-        android:button="@null" />
+        <CheckBox
+            android:id="@+id/gps_check"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/checkbox_custom" android:button="@null"
+            app:layout_constraintBottom_toBottomOf="@+id/timeline_recycleView" app:layout_constraintEnd_toEndOf="parent"/>
 
 
-</FrameLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+

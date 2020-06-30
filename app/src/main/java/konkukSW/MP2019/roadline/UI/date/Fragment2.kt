@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.collection.LruCache
@@ -24,8 +25,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import konkukSW.MP2019.roadline.Data.Adapter.PlanGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.widget.BaseDialog
+import kotlinx.android.synthetic.main.fragment_fragment1.view.*
+import kotlinx.android.synthetic.main.fragment_fragment2.view.*
 import kotlinx.android.synthetic.main.row_plan.*
+import org.w3c.dom.Text
 
 
 class Fragment2 : androidx.fragment.app.Fragment() {
@@ -35,6 +40,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     var LOCATION_REQUEST = 1234
     lateinit var planAdapter:PlanGridAdapter
     lateinit var gpsCheck : CheckBox
+    lateinit var backView:TextView
 
     lateinit var v:View
     lateinit var timelineView : RecyclerView
@@ -44,20 +50,12 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment2, container, false)
-        Log.d("mytag", "fragment2 : oncreateview")
         setObserve()
         initData()
         initLayout()
         addListener()
         return v
     }
-
-//    fun refresh(){
-////        val ft = fragmentManager!!.beginTransaction()
-////        ft.detach(this).attach(this).commit()
-//    }
-
-
 
     fun setObserve(){
         (activity!! as ShowDateActivity).planResults.addChangeListener{t, _->
@@ -69,63 +67,17 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             else{
                 gpsCheck.visibility = View.VISIBLE
             }
-//            val modifications: Array<OrderedCollectionChangeSet.Range> = changeSet.changeRanges
-//            for (range in modifications) {
-//                Log.d("mytag", "itemCHange: " + range.startIndex.toString() +" " + range.length.toString())
-//                val rPos = convertPos(range.startIndex)
-//                if(range.length == 1){ //수정
-//                    planAdapter.notifyItemRangeChanged(rPos, range.length)
-//                }
-//                else{ //이동
-//                    var nPos = -1
-//                    if(range.startIndex % 10 in 0..4){
-//                        nPos = (range.startIndex / 10) * 10
-//                    }
-//                    else{
-//                        nPos = 5 + (range.startIndex / 10) * 10
-//                    }
-//                    Log.d("mytag", "itemChangeMove : " + nPos.toString() + " " + (rPos + range.length -1).toString())
-//                    planAdapter.notifyItemRangeChanged(nPos, rPos + range.length - nPos)
-//                }
-////                planAdapter.notifyItemRangeRemoved(range.startIndex, range.length)
-////                planAdapter.notifyItemChanged(rPos)
-//            }
-//
-//            val insertions = changeSet.insertionRanges
-//            for (range in insertions) {
-//                Log.d("mytag", "itemInsert: " + range.startIndex.toString() +" " + range.length.toString())
-//                val rPos = convertPos(range.startIndex)
-//                if(range.startIndex % 10 in 0..4){
-//                    if(rPos % 10 == 0){
-//                        if(rPos - 5 >= 0)
-//                            planAdapter.notifyItemChanged(rPos - 5)
-//                    }
-//                    else{
-//                        planAdapter.notifyItemChanged(rPos - 1)
-//                    }
-//                    planAdapter.notifyItemInserted(rPos)
-//                }
-//                else if(range.startIndex % 10 == 5){
-//                    planAdapter.notifyItemChanged(range.startIndex - 1)
-//                    planAdapter.notifyItemRangeInserted(rPos, 5)
-//                }
-//                else {
-//                    planAdapter.notifyItemChanged(rPos + 1)
-//                    planAdapter.notifyItemChanged(rPos)
-//                }
-//            }
+
+            if(planAdapter.itemCount == 0){
+                backView.visibility = View.VISIBLE
+            }
+            else{
+                backView.visibility = View.INVISIBLE
+            }
+
         }
     }
 
-//    fun convertPos(position:Int) : Int{
-//        when(position % 10){
-//            5 -> return position + 4
-//            6 -> return position + 2
-//            8 -> return position - 2
-//            9 -> return position - 4
-//            else -> return position
-//        }
-//    }
     override fun onDestroy() {
         (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
         super.onDestroy()
@@ -156,6 +108,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         }
         else{
             gpsCheck.visibility = View.VISIBLE
+        }
+        backView = v.findViewById(R.id.backView)
+        if(planAdapter.itemCount == 0){
+            backView.visibility = View.VISIBLE
+        }
+        else{
+            backView.visibility = View.INVISIBLE
         }
     }
 
