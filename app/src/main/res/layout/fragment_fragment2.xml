@@ -31,9 +31,10 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="75dp"
             android:background="@drawable/checkbox_custom" android:button="@null"
-            app:layout_constraintBottom_toBottomOf="@+id/timeline_recycleView" app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintBottom_toBottomOf="@+id/timeline_recycleView"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
 
 

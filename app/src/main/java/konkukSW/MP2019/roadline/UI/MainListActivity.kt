@@ -383,7 +383,7 @@ class MainListActivity : AppCompatActivity() {
                 }
                 R.id.btnVersionInfo -> {
                     var dialog = BaseDialog.Builder(this@MainListActivity).create()
-                    dialog.setTitle("버젼 정보")
+                    dialog.setTitle("버전 정보")
                             .setMessage("Ver 1.0.0")
                             .setOkButton("닫기", View.OnClickListener { dialog.dismissDialog() })
                             .show()
