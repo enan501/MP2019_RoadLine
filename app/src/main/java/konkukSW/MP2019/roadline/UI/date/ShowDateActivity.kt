@@ -136,21 +136,17 @@ class ShowDateActivity : AppCompatActivity() {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                        sd_imgBtn3.visibility = View.VISIBLE
                     }
                     1 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                        sd_imgBtn3.visibility = View.VISIBLE
-
                         gps_check.isChecked = false
                     }
                     2 -> {
                         tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
                         tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
                         tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
-                        sd_imgBtn3.visibility = View.INVISIBLE
 
                     }
                 }
@@ -202,6 +198,11 @@ class ShowDateActivity : AppCompatActivity() {
                 bitmap = (supportFragmentManager
                         .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
                         as Fragment2).getScreenshotFromRecyclerView()
+            }
+            else if(tabPos == 2){
+                (supportFragmentManager
+                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(2))
+                        as Fragment4).getScreenShot()
             }
 
             if(bitmap != null){

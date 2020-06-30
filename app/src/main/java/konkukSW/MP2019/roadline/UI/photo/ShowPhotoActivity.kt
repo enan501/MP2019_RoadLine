@@ -135,7 +135,7 @@ class ShowPhotoActivity : AppCompatActivity() {
                     }
                     builder.dismissDialog()
                 })
-                builder.setCanceledOnTouchOutside(true)
+//                builder.setCanceledOnTouchOutside(true)
                 builder.show()
             }
 

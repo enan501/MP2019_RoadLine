@@ -1,25 +1,33 @@
 package konkukSW.MP2019.roadline.UI.date
 
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import konkukSW.MP2019.roadline.R
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
     var ListID = "init"
     var DayNum = 0;
     var latlngList: ArrayList<LatLng> = arrayListOf()
+    var isReady = false
 
     val mapFragment by lazy {
         this.childFragmentManager.findFragmentById(R.id.mapView) as SupportMapFragment
@@ -73,6 +81,7 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
         gMap.clear()
         addPolylines()
         addMarkers()
+        isReady = true
     }
 
     fun addPolylines() {
@@ -125,6 +134,37 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
         if(result.isNotEmpty()){
             var bounds = boundsBuilder.build()
             gMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds,100))
+        }
+    }
+
+    fun getScreenShot(){
+        if(isReady){
+            val callback = GoogleMap.SnapshotReadyCallback{
+                val bitmap = it
+                if(bitmap != null){
+                    val storage = context!!.cacheDir
+                    val fileName = "temp.jpg"
+                    val tempFile = File(storage, fileName)
+                    try {
+                        tempFile.createNewFile()
+                        val out = FileOutputStream(tempFile)
+                        bitmap!!.compress(Bitmap.CompressFormat.JPEG,100, out)
+                        out.close()
+                    } catch (e: FileNotFoundException) {
+                        e.printStackTrace()
+                    } catch (e: IOException) {
+                        e.printStackTrace()
+                    }
+                    Log.v("tag", tempFile.toURI().toString())
+                    var uri = FileProvider.getUriForFile(context!!,context!!.packageName + ".fileprovider",tempFile)
+                    val shareIntent = Intent(Intent.ACTION_SEND)
+                    shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
+                    shareIntent.type = "image/*"
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+                    startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
+                }
+            }
+            gMap.snapshot(callback)
         }
     }
 }
