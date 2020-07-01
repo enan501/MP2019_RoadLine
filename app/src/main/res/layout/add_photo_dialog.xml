@@ -10,22 +10,22 @@
 
 
     <androidx.cardview.widget.CardView
-        app:cardCornerRadius="100dp"
-        android:background="@color/background"
-        app:cardElevation="0dp"
         android:id="@+id/button1"
         android:layout_width="0dp"
-        app:layout_constraintDimensionRatio="1:1"
-        app:layout_constraintEnd_toStartOf="@+id/button2"
         android:layout_height="0dp"
         android:layout_marginEnd="15dp"
-        app:layout_constraintStart_toStartOf="parent"
+        android:background="@color/background"
+        app:cardCornerRadius="100dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/button2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/imageView2"
-            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="50dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="30dp"
             android:tint="@color/colorPrimary" app:srcCompat="@drawable/camera"/>
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
@@ -45,7 +45,7 @@
 
         <ImageView
             android:id="@+id/imageView3"
-            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="50dp"
+            android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_margin="30dp"
             android:tint="@color/colorPrimary" app:srcCompat="@drawable/album"/>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
