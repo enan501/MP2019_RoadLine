@@ -261,6 +261,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
         bigBitmap = Bitmap.createBitmap(timelineView.width, height, Bitmap.Config.ARGB_8888)
         val bigCanvas = Canvas(bigBitmap!!)
+        bigCanvas.drawColor(Color.WHITE)
 
         val paint = Paint()
         for (i in 0 until size) {
@@ -270,6 +271,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
             bigCanvas.drawBitmap(bitmap, iWidth.toFloat(), iHeight.toFloat(), paint)
             bitmap.recycle()
         }
+
         return bigBitmap
     }
 }

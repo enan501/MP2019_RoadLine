@@ -85,11 +85,28 @@
                 android:background="@color/colorLight" app:layout_constraintBottom_toBottomOf="parent"/>
             <ImageView
                 android:id="@+id/imageView4"
-                android:layout_width="50dp" android:layout_height="50dp"
-                android:layout_marginStart="8dp"
-                android:tint="@color/colorPrimary" app:layout_constraintEnd_toEndOf="@+id/view3"
+
+                android:layout_width="60dp" android:layout_height="60dp"
+                app:layout_constraintEnd_toEndOf="@+id/view3"
                 app:layout_constraintStart_toStartOf="@+id/view3" app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/add_btn"/>
+                app:srcCompat="@drawable/add_btn3"/>
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_marginStart="30dp"
+                android:tint="@color/background"
+                android:layout_width="60dp" android:layout_height="60dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view3" app:layout_constraintStart_toStartOf="@+id/view3"
+                app:srcCompat="@drawable/picture"/>
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_marginEnd="30dp"
+                android:tint="@color/background"
+
+                android:layout_width="60dp" android:layout_height="60dp"
+                 android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view3" app:layout_constraintEnd_toEndOf="@+id/view3"
+                app:srcCompat="@drawable/wallet"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
        

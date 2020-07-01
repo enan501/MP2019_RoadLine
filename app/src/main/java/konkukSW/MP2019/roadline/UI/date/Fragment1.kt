@@ -4,6 +4,7 @@ package konkukSW.MP2019.roadline.UI.date
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -220,12 +221,21 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
         var bitmapList = ArrayList<Bitmap>()
 
+        var childHeight = 0
+        for(i in 0 until size){
+            val childView = view.getChildAt(i)
+            if(childView != null){
+                childHeight = childView.height
+            }
+            break
+        }
+
         for (i in 0 until size) {
             val holder = ad.createViewHolder(view, ad.getItemViewType(i))
             ad.onBindViewHolder(holder, i)
             holder.itemView.measure(
                     View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY),
-                    View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                    View.MeasureSpec.makeMeasureSpec(childHeight, View.MeasureSpec.EXACTLY)
             )
             holder.itemView.layout(0, 0, holder.itemView.measuredWidth, holder.itemView.measuredHeight)
             val buffer = Bitmap.createBitmap(holder.itemView.measuredWidth, holder.itemView.measuredHeight, Bitmap.Config.ARGB_8888)
@@ -238,6 +248,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         bigBitmap = Bitmap.createBitmap(view.width, height, Bitmap.Config.ARGB_8888)
         var bigCanvas = Canvas(bigBitmap!!)
         val paint = Paint()
+        bigCanvas.drawColor(Color.WHITE)
 
 
         for (i in 0 until size) {
