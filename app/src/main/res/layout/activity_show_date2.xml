@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".UI.date.ShowDateActivity">
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/sd_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </androidx.appcompat.widget.Toolbar>
+    <View
+        android:id="@+id/view2"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp" android:background="#cccccc"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sd_toolbar"/>
+    <ImageView
+        android:id="@+id/sd_leftImg"
+        android:layout_marginStart="8dp"
+        android:layout_width="30dp"
+        android:layout_height="100dp"
+        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:srcCompat="@drawable/back"/>
+    <TextView
+        android:id="@+id/sd_textView1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="DAY3" android:textColor="@color/colorPrimary"
+        android:textSize="40sp" app:layout_constraintBottom_toTopOf="@+id/sd_textView2"
+        app:layout_constraintEnd_toStartOf="@+id/sd_rightImg" app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/sd_leftImg" app:layout_constraintTop_toTopOf="@+id/sd_leftImg"
+        app:layout_constraintVertical_chainStyle="packed"/>
+
+    <TextView
+        android:id="@+id/sd_textView2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="2018.12.05"
+        android:textColor="@color/common_google_signin_btn_text_light_focused" android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/sd_leftImg" app:layout_constraintEnd_toStartOf="@+id/sd_rightImg"
+        app:layout_constraintHorizontal_bias="0.5" app:layout_constraintStart_toEndOf="@+id/sd_leftImg"
+        app:layout_constraintTop_toBottomOf="@+id/sd_textView1"/>
+    <ImageView
+        android:id="@+id/sd_rightImg"
+        android:layout_width="30dp"
+        android:layout_marginEnd="8dp"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/view2"
+        app:srcCompat="@drawable/next"/>
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/sd_layout_tab"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/grad1"
+        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sd_leftImg"
+        app:tabIndicatorColor="@color/colorPrimary" app:tabMode="fixed" app:tabSelectedTextColor="@color/colorPrimary"
+        app:tabTextColor="@color/black"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/sd_layout_tab">
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/sd_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#fafafa">
+        </androidx.viewpager.widget.ViewPager>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_gravity="bottom"
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+            <View
+                android:id="@+id/view3" android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/colorLight" app:layout_constraintBottom_toBottomOf="parent"/>
+            <ImageView
+                android:id="@+id/imageView4"
+
+                android:layout_width="60dp" android:layout_height="60dp"
+                app:layout_constraintEnd_toEndOf="@+id/view3"
+                app:layout_constraintStart_toStartOf="@+id/view3" app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/add_btn3"/>
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_marginStart="30dp"
+                android:tint="@color/background"
+                android:layout_width="60dp" android:layout_height="60dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view3" app:layout_constraintStart_toStartOf="@+id/view3"
+                app:srcCompat="@drawable/picture"/>
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_marginEnd="30dp"
+                android:tint="@color/background"
+
+                android:layout_width="60dp" android:layout_height="60dp"
+                 android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toBottomOf="@+id/view3" app:layout_constraintEnd_toEndOf="@+id/view3"
+                app:srcCompat="@drawable/wallet"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+       
+
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
