@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Point
 import android.graphics.drawable.ColorDrawable
 import android.view.View
+import androidx.constraintlayout.widget.ConstraintLayout
 import konkukSW.MP2019.roadline.R
 import kotlinx.android.synthetic.main.add_photo_dialog.*
 
@@ -20,7 +21,7 @@ open class AddPhotoDialog(context: Context) : Dialog(context) {
             dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             var size = Point()
             dialog.window!!.windowManager.defaultDisplay.getSize(size)
-            dialog.window!!.setLayout((size.x * 0.872f).toInt(), size.y)
+            dialog.window!!.setLayout((size.x * 0.872f).toInt(), ConstraintLayout.LayoutParams.WRAP_CONTENT)
             return this
         }
 

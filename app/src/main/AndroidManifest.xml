@@ -1,68 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="konkukSW.MP2019.roadline">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-feature android:name="android.hardware.camera"
-                  android:required="true" />
+    xmlns:tools="http://schemas.android.com/tools"
+    package="konkukSW.MP2019.roadline">
 
     <application
-        android:largeHeap="true"
         android:allowBackup="true"
-        android:icon="@drawable/logo_round"
+        android:icon="@mipmap/ic_roadline"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@drawable/logo_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="@string/api_key" />
-        <meta-data
-            android:name="com.kakao.sdk.AppKey"
-            android:value="@string/kakao_app_key"/>
-        <provider android:authorities="${applicationId}.fileprovider"
-                  android:name="androidx.core.content.FileProvider"
-                  android:exported="false" android:grantUriPermissions="true">
-            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"/>
-        </provider>
         <activity
+            android:name=".UI.money.ShowDetailMoneyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.date.AddSpotActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".UI.money.AddMoneyActivity"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".UI.photo.ShowPhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.money.ShowMoneyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.date.ShowDateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.date.PickDateActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.MainListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.photo.DetailPhotoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".UI.SplashActivity"
             android:screenOrientation="portrait"
-            android:name=".UI.money.ShowDetailMoneyActivity" />
-        <activity            android:screenOrientation="portrait"
-                             android:name=".UI.date.AddSpotActivity" />
-        <activity            android:screenOrientation="portrait"
-                             android:name=".UI.money.AddMoneyActivity"/>
-        <activity             android:screenOrientation="portrait"
-                              android:name=".UI.photo.ShowPhotoActivity" />
-        <activity             android:screenOrientation="portrait"
-                              android:name=".UI.money.ShowMoneyActivity" />
-        <activity             android:screenOrientation="portrait"
-                              android:name=".UI.date.ShowDateActivity" />
-        <activity             android:screenOrientation="portrait"
-                              android:name=".UI.date.PickDateActivity" />
-        <activity             android:screenOrientation="portrait"
-                              android:name=".UI.MainListActivity"/>
-        <activity             android:screenOrientation="portrait"
-                              android:name=".UI.photo.DetailPhotoActivity"/>
-        <activity            android:screenOrientation="portrait"
-                             android:name=".UI.SplashActivity"
-                             android:theme="@style/Splash">
+            android:theme="@style/Splash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/api_key" />
+        <meta-data
+            android:name="com.kakao.sdk.AppKey"
+            android:value="@string/kakao_app_key" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
 
     </application>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
 </manifest>

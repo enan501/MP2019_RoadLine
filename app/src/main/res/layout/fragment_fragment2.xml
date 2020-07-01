@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="75dp"
+        android:background="@color/white"
         tools:context="konkukSW.MP2019.roadline.UI.date.Fragment2"
     android:orientation="vertical">
 
@@ -13,7 +14,7 @@
             android:id="@+id/timeline_recycleView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:backgroundTint="#fafafa" android:overScrollMode="never">
+            android:backgroundTint="@color/white" android:overScrollMode="never">
         </androidx.recyclerview.widget.RecyclerView>
         <TextView
             android:id="@+id/backView"
