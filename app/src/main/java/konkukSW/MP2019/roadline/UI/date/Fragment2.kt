@@ -58,7 +58,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
 
     fun setObserve(){
-        (activity!! as ShowDateActivity).planResults.addChangeListener{t, _->
+        (requireActivity() as ShowDateActivity).planResults.addChangeListener{t, _->
             gpsCheck.isChecked = false
             planAdapter.notifyDataSetChanged()
             if(t.size == 0){
@@ -79,13 +79,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
     }
 
     override fun onDestroy() {
-        (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
+        (requireActivity() as ShowDateActivity).planResults.removeAllChangeListeners()
         super.onDestroy()
     }
 
     fun initData(){
         if(activity != null){
-            val intent = activity!!.intent
+            val intent = requireActivity().intent
             if(intent != null){
                 ListID = intent.getStringExtra("ListID")
                 DayNum = intent.getIntExtra("DayNum", 0)
@@ -97,13 +97,13 @@ class Fragment2 : androidx.fragment.app.Fragment() {
 
     fun initLayout(){
         timelineView = v.findViewById(konkukSW.MP2019.roadline.R.id.timeline_recycleView) as RecyclerView
-        val layoutManager = GridLayoutManager(activity!!, 5)
+        val layoutManager = GridLayoutManager(requireActivity(), 5)
         timelineView.layoutManager = layoutManager
-        planAdapter = PlanGridAdapter((activity!! as ShowDateActivity).planResults, context!!)
+        planAdapter = PlanGridAdapter((requireActivity() as ShowDateActivity).planResults, requireContext())
         timelineView.adapter = planAdapter
 
         gpsCheck = v.findViewById(konkukSW.MP2019.roadline.R.id.gps_check)
-        if((activity!! as ShowDateActivity).planResults.size == 0){
+        if((requireActivity() as ShowDateActivity).planResults.size == 0){
             gpsCheck.visibility = View.GONE
         }
         else{
@@ -177,7 +177,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         val requestResult = BooleanArray(requestPermission.size)
         for (i in requestResult.indices) {
             requestResult[i] = ContextCompat.checkSelfPermission(
-                    context!!,
+                    requireContext(),
                     requestPermission[i]
             ) == PackageManager.PERMISSION_GRANTED
             if (!requestResult[i]) {
@@ -212,7 +212,7 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {
         }
         else{
-            val builder = BaseDialog.Builder(context!!).create()
+            val builder = BaseDialog.Builder(requireContext()).create()
             builder.setTitle("알림")
                     .setMessage("GPS 권한을 허용할까요?")
                     .setCancelButton("확인", View.OnClickListener {

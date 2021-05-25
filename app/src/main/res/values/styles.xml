@@ -55,4 +55,18 @@
         <item name="android:scaleType">centerInside</item>
 
     </style>
+
+    <style name="BlueButtonStyle" parent="@style/ButtonStyle">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:paddingLeft">22dp</item>
+        <item name="android:paddingRight">22dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_background</item>
+        <item name="android:textColor">@color/textBlue</item>
+    </style>
+
 </resources>

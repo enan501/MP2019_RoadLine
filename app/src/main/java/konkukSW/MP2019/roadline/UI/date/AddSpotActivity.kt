@@ -69,12 +69,12 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
 
 
-    lateinit var dialogMemo : EditText
-    lateinit var dialogTitle : EditText
-    lateinit var dialogTime : TimePicker
-    lateinit var dialogCheckTime: CheckBox
-    lateinit var dialogCheckMemo: CheckBox
-    lateinit var addDialog: View
+//    lateinit var dialogMemo : EditText
+//    lateinit var dialogTitle : EditText
+//    lateinit var dialogTime : TimePicker
+//    lateinit var dialogCheckTime: CheckBox
+//    lateinit var dialogCheckMemo: CheckBox
+//    lateinit var addDialog: View
 
     override fun onMapReady(p0: GoogleMap) {
         addMap = p0
@@ -107,8 +107,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         listID = i.getStringExtra("ListID")
         DayNum = i.getIntExtra("DayNum",0)
         planId = i.getStringExtra("planId") //null이면 추가, null아니면 수정
+        as_toolbar.title = "위치 추가"
 
         if(planId != null){ //수정
+            as_toolbar.title = "위치 수정"
             thisPlan  = realm.where(T_Plan::class.java).equalTo("id", planId).findFirst()!!
             spotName = thisPlan!!.name
             spotNameAlter = thisPlan!!.nameAlter
@@ -117,6 +119,30 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             memo = thisPlan!!.memo
             locationX = thisPlan!!.locationX
             locationY = thisPlan!!.locationY
+
+            //하단 초기화
+            if(hour != null){
+                timePicker2.hour = hour!!
+                timePicker2.minute = minute!!
+//                dialogCheckTime.isChecked = true
+//                dialogTime.isEnabled = true
+            }else{
+                timePicker2.hour = 0
+                timePicker2.minute = 0
+//                dialogCheckTime.isChecked = false
+//                dialogTime.isEnabled = false
+            }
+            if(memo != null){
+                memoEditText22.setText(memo)
+//                dialogCheckMemo.isChecked = true
+//                dialogMemo.isEnabled = true
+
+            }else{
+                memoEditText22.text.clear()
+//                dialogCheckMemo.isChecked = false
+//                dialogMemo.isEnabled  = false
+            }
+
         }
 
         val bitmap = (ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable).bitmap
@@ -124,21 +150,21 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         if (!Places.isInitialized()) {
             Places.initialize(this, getString(R.string.api_key))
         }
+
     }
 
     fun initLayout(){
-        as_toolbar.title = "위치 추가"
         setSupportActionBar(as_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-        builder = AlertDialog.Builder(this) //상세정보 추가 다이얼로그
-        addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
-        dialogMemo = addDialog.findViewById(R.id.memoEditText)
-        dialogTime = addDialog.findViewById(R.id.timePicker)
-        dialogTitle = addDialog.findViewById(R.id.titleEditText)
-        dialogCheckMemo = addDialog.findViewById(R.id.checkBoxMemo)
-        dialogCheckTime = addDialog.findViewById(R.id.checkBoxTime)
-        builder.setView(addDialog)
+//        builder = AlertDialog.Builder(this) //상세정보 추가 다이얼로그
+//        addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
+//        dialogMemo = addDialog.findViewById(R.id.memoEditText)
+//        dialogTime = addDialog.findViewById(R.id.timePicker)
+//        dialogTitle = addDialog.findViewById(R.id.titleEditText)
+//        dialogCheckMemo = addDialog.findViewById(R.id.checkBoxMemo)
+//        dialogCheckTime = addDialog.findViewById(R.id.checkBoxTime)
+//        builder.setView(addDialog)
 
         autocompleteFragment = supportFragmentManager.findFragmentById(R.id.AS_SearchBox) as AutocompleteSupportFragment?
         autocompleteFragment!!.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG))
@@ -206,7 +232,14 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         })
 
-        as_button_check.setOnClickListener { //체크 등록 버튼
+        btnConfirm.setOnClickListener { //체크 등록 버튼
+            if(memoEditText22.text.isNotEmpty())
+                memo = memoEditText22.text.toString()
+            else
+                memo = null
+            hour = timePicker2.hour
+            minute = timePicker2.minute
+
             if(searchBox.text.toString() != ""){
                 if(planId == null) { //추가
                     realm.beginTransaction()
@@ -260,19 +293,19 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             startActivity(mapIntent)
         }
 
-        dialogCheckMemo.setOnCheckedChangeListener { buttonView, isChecked ->
-            when(isChecked){
-                true->dialogMemo.isEnabled = true
-                false->dialogMemo.isEnabled = false
-            }
-        }
-
-        dialogCheckTime.setOnCheckedChangeListener { buttonView, isChecked ->
-            when(isChecked){
-                true->dialogTime.isEnabled = true
-                false->dialogTime.isEnabled = false
-            }
-        }
+//        dialogCheckMemo.setOnCheckedChangeListener { buttonView, isChecked ->
+//            when(isChecked){
+//                true->dialogMemo.isEnabled = true
+//                false->dialogMemo.isEnabled = false
+//            }
+//        }
+//
+//        dialogCheckTime.setOnCheckedChangeListener { buttonView, isChecked ->
+//            when(isChecked){
+//                true->dialogTime.isEnabled = true
+//                false->dialogTime.isEnabled = false
+//            }
+//        }
 
 //        dialogTime.setOnClickListener {
 //            if(!dialogCheckTime.isChecked){
@@ -286,82 +319,73 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 //            }
 //        }
 
-        memo_button.setOnClickListener {
-            if(spotNameAlter == null){
-                if(spotName == ""){
-                    dialogTitle.text.clear()
-                    dialogTitle.hint = "위치를 추가하세요"
-                    dialogTitle.isEnabled = false
-                }
-                else{
-                    dialogTitle.hint = spotName
-                    dialogTitle.isEnabled = true
-                    dialogTitle.setText(spotName)
-                }
-            }
-            else{
-                dialogTitle.hint = spotName
-                dialogTitle.isEnabled = true
-                dialogTitle.setText(spotNameAlter)
-            }
-            if(hour != null){
-                dialogTime.hour = hour!!
-                dialogTime.minute = minute!!
-                dialogCheckTime.isChecked = true
-                dialogTime.isEnabled = true
-            }else{
-                dialogTime.hour = 0
-                dialogTime.minute = 0
-                dialogCheckTime.isChecked = false
-                dialogTime.isEnabled = false
-            }
-            if(memo != null){
-                dialogMemo.setText(memo)
-                dialogCheckMemo.isChecked = true
-                dialogMemo.isEnabled = true
+//        memo_button.setOnClickListener {
+//            if(spotNameAlter == null){
+//                if(spotName == ""){
+//                    dialogTitle.text.clear()
+//                    dialogTitle.hint = "위치를 추가하세요"
+//                    dialogTitle.isEnabled = false
+//                }
+//                else{
+//                    dialogTitle.hint = spotName
+//                    dialogTitle.isEnabled = true
+//                    dialogTitle.setText(spotName)
+//                }
+//            }
+//            else{
+//                dialogTitle.hint = spotName
+//                dialogTitle.isEnabled = true
+//                dialogTitle.setText(spotNameAlter)
+//            }
+//            if(hour != null){
+//                dialogTime.hour = hour!!
+//                dialogTime.minute = minute!!
+//                dialogCheckTime.isChecked = true
+//                dialogTime.isEnabled = true
+//            }else{
+//                dialogTime.hour = 0
+//                dialogTime.minute = 0
+//                dialogCheckTime.isChecked = false
+//                dialogTime.isEnabled = false
+//            }
+//            if(memo != null){
+//                dialogMemo.setText(memo)
+//                dialogCheckMemo.isChecked = true
+//                dialogMemo.isEnabled = true
+//
+//            }else{
+//                dialogMemo.text.clear()
+//                dialogCheckMemo.isChecked = false
+//                dialogMemo.isEnabled  = false
+//            }
+//            dialogTitle.setSelection(dialogTitle.text.length)
+//            if(addDialog.parent != null){
+//                (addDialog.parent as ViewGroup).removeView(addDialog)
+//            }
+//            builder.show()
+//        }
 
-            }else{
-                dialogMemo.text.clear()
-                dialogCheckMemo.isChecked = false
-                dialogMemo.isEnabled  = false
-            }
-            dialogTitle.setSelection(dialogTitle.text.length)
-            if(addDialog.parent != null){
-                (addDialog.parent as ViewGroup).removeView(addDialog)
-            }
-            builder.show()
-        }
-
-        builder.setPositiveButton("추가") { dialogInterface, i ->
-            if(dialogTitle.text.toString() != ""){
-                spotNameAlter = dialogTitle.text.toString()
-            } else{
-                spotNameAlter = null
-            }
-            if(dialogCheckMemo.isChecked){
-                if(dialogMemo.text.isNotEmpty())
-                    memo = dialogMemo.text.toString()
-                else
-                    memo = null
-            } else{
-                memo = null
-            }
-            if(dialogCheckTime.isChecked){
-                hour = dialogTime.hour
-                minute = dialogTime.minute
-            } else{
-                hour = null
-                minute = null
-            }
-        }
-        .setNegativeButton("취소") { dialogInterface, i -> }
-
-        replace_bt.setOnClickListener {
-            if(addDialog.parent != null){
-                (addDialog.parent as ViewGroup).removeView(addDialog)
-            }
-            getCurLoc()
-        }
+//        builder.setPositiveButton("추가") { dialogInterface, i ->
+//            if(dialogTitle.text.toString() != ""){
+//                spotNameAlter = dialogTitle.text.toString()
+//            } else{
+//                spotNameAlter = null
+//            }
+//            if(memoEditText22.text.isNotEmpty())
+//                memo = memoEditText22.text.toString()
+//            else
+//                memo = null
+//            hour = timePicker2.hour
+//            minute = timePicker2.minute
+//        }
+//        .setNegativeButton("취소") { dialogInterface, i -> }
+//
+//        replace_bt.setOnClickListener {
+//            if(addDialog.parent != null){
+//                (addDialog.parent as ViewGroup).removeView(addDialog)
+//            }
+//            getCurLoc()
+//        }
     }
     fun getCurLoc(){
         if(checkAppPermission(arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION))) {

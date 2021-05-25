@@ -73,10 +73,12 @@ open class AddListDialog(context: Context) : Dialog(context) {
             dialog.dialogLinearLayout.visibility = View.VISIBLE
             return this
         }
+
         fun setCanceledOnTouchOutside(isCancelOnTouchOutside:Boolean):Builder{
             dialog.setCanceledOnTouchOutside(isCancelOnTouchOutside)
             return this
         }
+
         open fun setOkButton(text: String, onClick: View.OnClickListener): Builder {
             dialog.btnOk.text = text
             dialog.btnOk.setOnClickListener(onClick)
@@ -84,6 +86,7 @@ open class AddListDialog(context: Context) : Dialog(context) {
             dialog.dialogLinearLayout.visibility = View.VISIBLE
             return this
         }
+
         fun setDismissListener(listener: DialogInterface.OnDismissListener):Builder {
             dialog.setOnDismissListener(listener)
             return this

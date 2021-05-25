@@ -62,7 +62,7 @@ class SplashActivity : AppCompatActivity(){
         }
     }
     fun getCurrency():Boolean { // True : delay 주기
-        if (curResults.size < 142) {
+        if (curResults.size < 0) {
             //환율정보 db 초기 세팅
             //이름,코드,환율 parsing
             Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
@@ -70,13 +70,14 @@ class SplashActivity : AppCompatActivity(){
                     var curName = element.select("td:nth-child(2)>a").text()
                     var curCode = element.select("td:nth-child(3)>a").text()
                     var curRate = element.select("td:nth-child(4)").text()
-
+                    curName = "Kor"
+                    curCode = "KRRRRRR"
+                    curRate = "1.0"
                     realm.beginTransaction()
                     val newCurrency = realm.createObject(T_Currency::class.java, curCode)
                     newCurrency.name = curName
                     newCurrency.rate = curRate.toDouble()
                     realm.commitTransaction()
-                     //println(index.toString() + " : " + curName + "/" + curCode + "/" + curRate)
                 }
             }
             //코드와 일치하는 기호 parsing

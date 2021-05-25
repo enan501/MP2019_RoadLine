@@ -16,4 +16,9 @@
 <color name="white">#FFFFFF</color>
 <color name="background">#fafafa</color>
 <color name="transparent">#00ffffff</color>
+    <color name="textBlue">#6bb8e9</color>
+    <color name="lightBlue">#f1f8fd</color>
+    <color name="normalBlue">#9FCFEF</color>
+
+
 </resources>

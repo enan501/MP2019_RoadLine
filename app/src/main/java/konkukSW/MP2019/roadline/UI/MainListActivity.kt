@@ -63,7 +63,7 @@ import kotlin.collections.ArrayList
 class MainListActivity : AppCompatActivity() {
 
 
-    lateinit var MLAdapter:MainListAdapter
+    lateinit var MLAdapter: MainListAdapter
     lateinit var currencyAdapter: ArrayAdapter<String>
     lateinit var selectedCurrencyAdapter: CurrencyAdapter
     lateinit var realm:Realm

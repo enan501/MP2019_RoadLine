@@ -13,14 +13,14 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-        <ImageView
-            android:id="@+id/as_button_check"
-            android:layout_width="35dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_marginVertical="8dp"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0" android:src="@drawable/checkbt"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/as_button_check"-->
+<!--            android:layout_width="35dp"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="end"-->
+<!--            android:layout_marginVertical="8dp"-->
+<!--            android:layout_marginRight="10dp"-->
+<!--            android:layout_weight="0" android:src="@drawable/checkbt"/>-->
     </androidx.appcompat.widget.Toolbar>
     <View
         android:id="@+id/view"
@@ -47,7 +47,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/as_toolbar"/>
 
@@ -58,24 +58,90 @@
         android:layout_marginBottom="15dp"
         android:background="@drawable/route"
         android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/replace_bt"
-        app:layout_constraintStart_toStartOf="@+id/replace_bt"/>
-    <Button
-        android:id="@+id/replace_bt"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginStart="15dp" android:background="@drawable/navigation"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-    <ImageView
-        android:id="@+id/memo_button"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginEnd="15dp"
+<!--    <Button-->
+<!--        android:id="@+id/replace_bt"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginBottom="15dp"-->
+<!--        android:layout_marginStart="15dp" android:background="@drawable/navigation"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"/>-->
+<!--    <ImageView-->
+<!--        android:id="@+id/memo_button"-->
+<!--        android:layout_width="50dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:layout_marginBottom="15dp"-->
+<!--        android:layout_marginEnd="15dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent" app:srcCompat="@drawable/memo_button"/>-->
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        app:layout_constraintGuide_percent="0.5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" />
+
+<!--    <EditText-->
+<!--        app:layout_constraintTop_toBottomOf="@id/guideline"-->
+<!--        android:id="@+id/titleEditText"-->
+<!--        android:background="@color/white"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_marginStart="8dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="8dp" android:ems="10" android:inputType="textPersonName"-->
+<!--        android:hint="위치를 추가하세요"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
+
+    <TimePicker
+        android:id="@+id/timePicker2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:timePickerMode="spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/guideline" />
+
+    <EditText
+        android:id="@+id/memoEditText22"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="20"
+        android:gravity="center"
+        android:hint="메모를 입력하세요"
+        android:inputType="textMultiLine"
+        android:padding="10dp"
+        android:textColor="@color/darkGray"
+        app:layout_constraintBottom_toTopOf="@+id/btnConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/timePicker2" />
+
+
+    <TextView
+        android:id="@+id/btnConfirm"
+        style="@style/BlueButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/textBlue"
+        android:text="확인"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" app:srcCompat="@drawable/memo_button"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
     <!--<ImageView-->
         <!--android:id="@+id/time_button"-->
         <!--android:layout_width="50dp" android:layout_height="50dp"-->
