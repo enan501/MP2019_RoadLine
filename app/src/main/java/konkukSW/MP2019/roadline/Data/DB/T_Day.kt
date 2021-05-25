@@ -1,6 +1,7 @@
 package konkukSW.MP2019.roadline.Data.DB
 
 import io.realm.RealmObject
+import io.realm.annotations.Ignore
 import java.util.*
 
 open class T_Day : RealmObject() {
@@ -10,4 +11,5 @@ open class T_Day : RealmObject() {
     var num: Int = 0 //day num
     var date: Long = 0
     var img: String? = null
+
 }

@@ -44,16 +44,18 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
                 container,
                 false
         )
+        init()
+        return view
+    }
+    fun init(){
         setObserve()
         initData()
         setList()
         mapFragment.getMapAsync(this)
-        return view
     }
 
-
     fun setObserve() {
-        (activity!! as ShowDateActivity).planResults.addChangeListener { _, _ ->
+        (requireActivity() as ShowDateActivity).planResults.addChangeListener { _, _ ->
             setList()
             mapFragment.getMapAsync(this)
         }
@@ -61,14 +63,14 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
 
     fun setList() {
         latlngList.clear()
-        for (T_Plan in (activity!! as ShowDateActivity).planResults) {
+        for (T_Plan in (requireActivity() as ShowDateActivity).planResults) {
             latlngList.add(LatLng(T_Plan.locationY, T_Plan.locationX))
         }
     }
 
     fun initData() {
         if (activity != null) {
-            val intent = activity!!.intent
+            val intent = requireActivity().intent
             if (intent != null) {
                 ListID = intent.getStringExtra("ListID")
                 DayNum = intent.getIntExtra("DayNum", 0)
@@ -89,18 +91,18 @@ class Fragment4 : androidx.fragment.app.Fragment(), OnMapReadyCallback {
                 PolylineOptions()
                         .addAll(latlngList)
                         .width(10f)
-                        .color(activity!!.getColor(R.color.blackAlpha))
+                        .color(requireActivity().getColor(R.color.blackAlpha))
                         .startCap(ButtCap())
                         .endCap(ButtCap())
         )
     }
 
     fun addMarkers(){
-        val result = (activity!! as ShowDateActivity).planResults
+        val result = (requireActivity() as ShowDateActivity).planResults
         var markerOptions = MarkerOptions()
         var boundsBuilder = LatLngBounds.builder()
 
-        val bitmapDraw = ContextCompat.getDrawable(activity!!.applicationContext,R.drawable.marker) as BitmapDrawable
+        val bitmapDraw = ContextCompat.getDrawable(requireActivity().applicationContext,R.drawable.marker) as BitmapDrawable
         val b = bitmapDraw.bitmap
         val marker = Bitmap.createScaledBitmap(b, 71, 100, false)
 

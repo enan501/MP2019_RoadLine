@@ -1,6 +1,7 @@
 package konkukSW.MP2019.roadline.Data.DB
 
 import io.realm.RealmObject
+import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
 
 open class T_Plan : RealmObject() {
@@ -20,4 +21,6 @@ open class T_Plan : RealmObject() {
     var memo: String? = null
 
     var pos : Int = 0
+
+
 }
