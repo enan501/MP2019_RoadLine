@@ -24,7 +24,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
     lateinit var adapterList: ArrayList<CategoryTotal>
     private val categoryList: Array<String> = arrayOf("식사", "쇼핑", "교통", "관광", "숙박", "기타")
     lateinit var priceList: Array<Double> //카테고리별 가격 합
-    lateinit var pricePercentList: Array<Int> //카테고리별 가격 퍼센트
+    lateinit var pricePercentList: Array<Float> //카테고리별 가격 퍼센트
     lateinit var realm: Realm
     private val shortFormat = DecimalFormat("###,### 원")
     private val colors = arrayOf(Color.rgb(95,157,212),
@@ -66,7 +66,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         DayNum = i.getIntExtra("DayNum", 0)
 
         priceList = arrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        pricePercentList = arrayOf(0, 0, 0, 0, 0, 0)
+        pricePercentList = arrayOf(0f, 0f, 0f, 0f, 0f, 0f)
 
         Realm.init(this)
         realm = Realm.getDefaultInstance()
@@ -92,7 +92,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
 
         for (i in 0 until categoryList.size) {
             val percent = (priceList[i] / totalMoneyValue) * 100
-            pricePercentList[i] = Math.round(percent.toFloat())
+            pricePercentList[i] = (Math.round((percent * 10).toFloat()) / 10).toFloat()
         }
 
         //listView Data
@@ -121,8 +121,8 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         val chartValues = ArrayList<PieEntry>()
         val chartColors: ArrayList<Int> = ArrayList()
         for (i in 0 until categoryList.size){
-            if(pricePercentList[i] != 0){
-                chartValues.add(PieEntry(pricePercentList[i].toFloat(), categoryList[i]))
+            if(pricePercentList[i] != 0f){
+                chartValues.add(PieEntry(pricePercentList[i], categoryList[i]))
                 chartColors.add(colors[i])
             }
         }
