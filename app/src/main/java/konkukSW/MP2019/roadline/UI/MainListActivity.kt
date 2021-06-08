@@ -89,7 +89,9 @@ class MainListActivity : AppCompatActivity() {
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
     lateinit var currencySpinner: SearchableSpinner
-    lateinit var korCur: T_Currency
+    val korCur: T_Currency by lazy{
+        curResults.where().equalTo("code", "KRW").findFirst()!!
+    }
     var dateStartEpoch: Long? = null
     var dateEndEpoch: Long? = null
     lateinit var imm :InputMethodManager
@@ -133,7 +135,6 @@ class MainListActivity : AppCompatActivity() {
             nowMonth = org.threeten.bp.LocalDate.now().monthValue - 1
             nowDay = org.threeten.bp.LocalDate.now().dayOfMonth
         }
-        korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
     }
 
     fun initLayout(){
@@ -450,6 +451,9 @@ class MainListActivity : AppCompatActivity() {
                                 startText.visibility = View.GONE
                             }
                             builder.dismissDialog()
+                            val MLIntent = Intent(this@MainListActivity, ShowDateActivity::class.java)
+                            MLIntent.putExtra("ListID", newList.id)
+                            startActivity(MLIntent)
                         }
                         else{
                             val builder = BaseDialog.Builder(this@MainListActivity).create()
@@ -623,8 +627,8 @@ class MainListActivity : AppCompatActivity() {
                                         newDay.img = imgList[(i - 1).toInt()]
                                     realm.commitTransaction()
                                 }
-
                                 builder.dismissDialog()
+
                             } else {
                                 val builder = BaseDialog.Builder(this@MainListActivity).create()
                                 builder.setTitle("알림")

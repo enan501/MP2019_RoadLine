@@ -54,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="상단의 아이콘을 눌러 일정을 추가하세요" android:textColor="@color/lightGray"
+        android:text="하단의 아이콘을 눌러 일정을 추가하세요" android:textColor="@color/lightGray"
         app:layout_constraintBottom_toBottomOf="@+id/scrollView" app:layout_constraintEnd_toEndOf="@+id/scrollView"
         app:layout_constraintStart_toStartOf="@+id/scrollView" app:layout_constraintTop_toTopOf="@+id/scrollView"/>
 

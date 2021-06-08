@@ -8,12 +8,14 @@ import com.google.android.material.tabs.TabLayout
 import androidx.core.content.FileProvider
 import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.tabs.TabLayoutMediator
@@ -88,10 +90,78 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item!!.itemId == android.R.id.home){
-            finish()
+        when(item!!.itemId){
+            android.R.id.home -> {
+                finish()
+            }
+            R.id.menuPhoto -> {
+                var Intent = Intent(this, ShowPhotoActivity::class.java)
+                Intent.putExtra("ListID", listID)
+                Intent.putExtra("DayNum", dayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
+                startActivity(Intent)
+                overridePendingTransition(
+                        R.anim.anim_slide_in_top,
+                        R.anim.anim_slide_out_bottom
+                )
+            }
+            R.id.menuMoney -> {
+                //가계부 버튼
+                var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
+                PDIntentToMoney.putExtra("ListID", listID)
+                PDIntentToMoney.putExtra("DayNum", dayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+                startActivity(PDIntentToMoney)
+                overridePendingTransition(
+                        R.anim.anim_slide_in_top,
+                        R.anim.anim_slide_out_bottom
+                )
+            }
+//            R.id.menuShare -> {
+//                var bitmap: Bitmap? = null
+//                if (tabPos == 0) { //Fragment1
+//                    bitmap = (supportFragmentManager
+//                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
+//                            as Fragment1).getScreenshot()
+//
+//                }
+//                else if(tabPos == 1){ //Fragment2
+//                    bitmap = (supportFragmentManager
+//                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
+//                            as Fragment2).getScreenshotFromRecyclerView()
+//                }
+//                else if(tabPos == 2){
+//                    (supportFragmentManager
+//                            .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(2))
+//                            as Fragment4).getScreenShot()
+//                }
+//
+//                if(bitmap != null){
+//                    val storage = this.cacheDir
+//                    val fileName = "temp.jpg"
+//                    val tempFile = File(storage, fileName)
+//                    try {
+//                        tempFile.createNewFile()
+//                        val out = FileOutputStream(tempFile)
+//                        bitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
+//                        out.close()
+//                    } catch (e: FileNotFoundException) {
+//                        e.printStackTrace()
+//                    } catch (e: IOException) {
+//                        e.printStackTrace()
+//                    }
+//                    Log.v("tag", tempFile.toURI().toString())
+//                    var uri = FileProvider.getUriForFile(this,packageName + ".fileprovider",tempFile)
+//                    val shareIntent = Intent(Intent.ACTION_SEND)
+//                    shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
+//                    shareIntent.type = "image/*"
+//                    shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//                    startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
+//                }
+//            }
+            else -> {
+                return super.onOptionsItemSelected(item)
+            }
         }
-        return super.onOptionsItemSelected(item)
+        return true
     }
 
     fun setPlans(selectedDay:Int?) {
@@ -147,11 +217,7 @@ class ShowDateActivity : AppCompatActivity() {
         maxDayNum = dayResults.size
         title = thisList.title
         sd_toolbar.title = title
-
-
-
         setPlans(dayNum)
-
     }
 
     fun initLayout(){
@@ -181,7 +247,7 @@ class ShowDateActivity : AppCompatActivity() {
             }
             tab.view.alpha = 0.4f
         }.attach()
-
+        sd_layout_tab.setSelectedTabIndicatorColor(ContextCompat.getColor(this,R.color.textBlue))
         sd_layout_tab.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
             override fun onTabSelected(tab: TabLayout.Tab?) { tab?.view?.alpha = 1f }
             override fun onTabUnselected(tab: TabLayout.Tab?) { tab?.view?.alpha = 0.4f }
@@ -196,71 +262,6 @@ class ShowDateActivity : AppCompatActivity() {
             startActivity(i)
         }
 
-//        sd_imgBtn1.setOnClickListener {
-//            var Intent = Intent(this, ShowPhotoActivity::class.java)
-//            Intent.putExtra("ListID", listID)
-//            Intent.putExtra("DayNum", dayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
-//            startActivity(Intent)
-//            overridePendingTransition(
-//                    R.anim.anim_slide_in_top,
-//                    R.anim.anim_slide_out_bottom
-//            )
-//        }
-//
-//        sd_imgBtn2.setOnClickListener {
-//            //가계부 버튼
-//            var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
-//            PDIntentToMoney.putExtra("ListID", listID)
-//            PDIntentToMoney.putExtra("DayNum", dayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
-//            startActivity(PDIntentToMoney)
-//            overridePendingTransition(
-//                    R.anim.anim_slide_in_top,
-//                    R.anim.anim_slide_out_bottom
-//            )
-//        }
-//
-//        sd_imgBtn3.setOnClickListener {
-//            var bitmap: Bitmap? = null
-//            if (tabPos == 0) { //Fragment1
-//                bitmap = (supportFragmentManager
-//                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
-//                        as Fragment1).getScreenshot()
-//
-//            }
-//            else if(tabPos == 1){ //Fragment2
-//                bitmap = (supportFragmentManager
-//                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
-//                        as Fragment2).getScreenshotFromRecyclerView()
-//            }
-//            else if(tabPos == 2){
-//                (supportFragmentManager
-//                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(2))
-//                        as Fragment4).getScreenShot()
-//            }
-//
-//            if(bitmap != null){
-//                val storage = this.cacheDir
-//                val fileName = "temp.jpg"
-//                val tempFile = File(storage, fileName)
-//                try {
-//                    tempFile.createNewFile()
-//                    val out = FileOutputStream(tempFile)
-//                    bitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
-//                    out.close()
-//                } catch (e: FileNotFoundException) {
-//                    e.printStackTrace()
-//                } catch (e: IOException) {
-//                    e.printStackTrace()
-//                }
-//                Log.v("tag", tempFile.toURI().toString())
-//                var uri = FileProvider.getUriForFile(this,packageName + ".fileprovider",tempFile)
-//                val shareIntent = Intent(Intent.ACTION_SEND)
-//                shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
-//                shareIntent.type = "image/*"
-//                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-//                startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
-//            }
-//        }
 
         // -------------------------
 //        sd_day_layout.setOnTouchListener { v, event ->
@@ -284,32 +285,13 @@ class ShowDateActivity : AppCompatActivity() {
 //        }
     }
 
-//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-//        val menuInflater = menuInflater
-//        menuInflater.inflate(R.menu.menu_main, menu)
-//        return true
-//    }
-//
-//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-//        when(item.itemId){
-//            R.id.menuPhoto -> {
-//
-//            }
-//            R.id.menuMoney -> {
-//
-//            }
-//            R.id.menuShare -> {
-//
-//            }
-//            android.R.id.home -> {
-//                finish()
-//            }
-//            else -> {
-//                return super.onOptionsItemSelected(item)
-//            }
-//        }
-//        return true
-//    }
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        val menuInflater = menuInflater
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+
 
 
 }
