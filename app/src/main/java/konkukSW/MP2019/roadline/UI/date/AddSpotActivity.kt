@@ -124,25 +124,23 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
             if(hour != null){
                 timePicker2.hour = hour!!
                 timePicker2.minute = minute!!
-//                dialogCheckTime.isChecked = true
-//                dialogTime.isEnabled = true
+                timePicker2.isEnabled = true
+                btnSwitch.isChecked = true
             }else{
                 timePicker2.hour = 0
                 timePicker2.minute = 0
-//                dialogCheckTime.isChecked = false
-//                dialogTime.isEnabled = false
+                timePicker2.isEnabled = false
+                btnSwitch.isChecked = false
             }
             if(memo != null){
                 memoEditText22.setText(memo)
-//                dialogCheckMemo.isChecked = true
-//                dialogMemo.isEnabled = true
 
             }else{
                 memoEditText22.text.clear()
-//                dialogCheckMemo.isChecked = false
-//                dialogMemo.isEnabled  = false
             }
-
+        }
+        else{
+            timePicker2.isEnabled = false
         }
 
         val bitmap = (ContextCompat.getDrawable(this,R.drawable.marker) as BitmapDrawable).bitmap
@@ -157,14 +155,6 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
         setSupportActionBar(as_toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
-//        builder = AlertDialog.Builder(this) //상세정보 추가 다이얼로그
-//        addDialog = layoutInflater.inflate(R.layout.add_memo_dialog, null)
-//        dialogMemo = addDialog.findViewById(R.id.memoEditText)
-//        dialogTime = addDialog.findViewById(R.id.timePicker)
-//        dialogTitle = addDialog.findViewById(R.id.titleEditText)
-//        dialogCheckMemo = addDialog.findViewById(R.id.checkBoxMemo)
-//        dialogCheckTime = addDialog.findViewById(R.id.checkBoxTime)
-//        builder.setView(addDialog)
 
         autocompleteFragment = supportFragmentManager.findFragmentById(R.id.AS_SearchBox) as AutocompleteSupportFragment?
         autocompleteFragment!!.setPlaceFields(Arrays.asList(Place.Field.ID, Place.Field.NAME,Place.Field.LAT_LNG))
@@ -174,6 +164,11 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
 
         if(pos > 0 && planId != null) // 경로 추천 버튼 추가
             path_bt.visibility = View.VISIBLE
+
+
+        btnSwitch.setOnCheckedChangeListener { compoundButton, b ->
+            timePicker2.isEnabled = b
+        }
     }
 
 
@@ -248,8 +243,11 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     plan.dayNum = DayNum
                     plan.name = spotName
                     plan.nameAlter = spotNameAlter
-                    plan.hour = hour
-                    plan.minute = minute
+                    if(btnSwitch.isChecked) {
+                        plan.hour = hour
+                        plan.minute = minute
+                    }
+
                     plan.memo = memo
                     plan.locationX = locationX
                     plan.locationY = locationY
@@ -260,8 +258,14 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                     realm.beginTransaction()
                     thisPlan!!.name = spotName
                     thisPlan!!.nameAlter = spotNameAlter
-                    thisPlan!!.hour = hour
-                    thisPlan!!.minute = minute
+                    if(btnSwitch.isChecked) {
+                        thisPlan!!.hour = hour
+                        thisPlan!!.minute = minute
+                    }
+                    else{
+                        thisPlan!!.hour = null
+                        thisPlan!!.minute = null
+                    }
                     thisPlan!!.memo = memo
                     thisPlan!!.locationX = locationX
                     thisPlan!!.locationY = locationY

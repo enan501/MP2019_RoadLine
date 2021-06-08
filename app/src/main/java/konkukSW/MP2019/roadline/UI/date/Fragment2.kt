@@ -18,8 +18,6 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.collection.LruCache
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -27,10 +25,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.PlanGridAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.widget.BaseDialog
-import kotlinx.android.synthetic.main.fragment_fragment1.view.*
-import kotlinx.android.synthetic.main.fragment_fragment2.view.*
-import kotlinx.android.synthetic.main.row_plan.*
-import org.w3c.dom.Text
+
 
 
 class Fragment2 : androidx.fragment.app.Fragment() {

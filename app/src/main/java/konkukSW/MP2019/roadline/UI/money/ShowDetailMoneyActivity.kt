@@ -66,7 +66,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
         DayNum = i.getIntExtra("DayNum", 0)
 
         priceList = arrayOf(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
-        pricePercentList = arrayOf(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f)
+        pricePercentList = arrayOf(0f, 0f, 0f, 0f, 0f, 0f)
 
         Realm.init(this)
         realm = Realm.getDefaultInstance()
@@ -92,7 +92,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
 
         for (i in 0 until categoryList.size) {
             val percent = (priceList[i] / totalMoneyValue) * 100
-            pricePercentList[i] = percent.toFloat()
+            pricePercentList[i] = (Math.round((percent * 10).toFloat()) / 10).toFloat()
         }
 
         //listView Data
@@ -106,7 +106,7 @@ class ShowDetailMoneyActivity : AppCompatActivity() {
             day.visibility = View.GONE
         } else {
             day.visibility = View.VISIBLE
-            day.text = "DAY"+DayNum.toString()
+            day.text = "DAY"+ DayNum.toString()
         }
         totalMoney.text = shortFormat.format(totalMoneyValue)
 
