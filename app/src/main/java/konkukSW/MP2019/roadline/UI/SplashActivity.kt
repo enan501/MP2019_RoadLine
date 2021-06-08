@@ -62,7 +62,13 @@ class SplashActivity : AppCompatActivity(){
         }
     }
     fun getCurrency():Boolean { // True : delay 주기
-        if (curResults.size < 142) {
+//        realm.beginTransaction()
+//        val newCurrency = realm.createObject(T_Currency::class.java, "KRW")
+//        newCurrency.name = "KRW"
+//        newCurrency.rate = 1.0
+//        realm.commitTransaction()
+
+        if (curResults.size < 0) {
             //환율정보 db 초기 세팅
             //이름,코드,환율 parsing
             Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
