@@ -24,6 +24,25 @@ fun refreshCurrency(context: Context) {
                 Realm.init(context)
                 var realm = Realm.getDefaultInstance()
                 var curResults = realm.where(T_Currency::class.java).findAll()
+                curResults.deleteAllFromRealm()
+
+                Jsoup.connect("https://kr.fxexchangerate.com/currency-symbols.html").get().run {
+                    select(".fxtable tr:nth-of-type(n+2)").forEach { element ->
+                        val curName = element.select("td:nth-child(1)>a").text() //이름
+                        val curCode = element.select("td:nth-child(2)").text() //코드
+                        val curSymbol =
+                                element.select("td:nth-child(3)").text().split(' ')[0].split(',')[0] //기
+                        if (curCode.isNotEmpty()) {
+                            setCurrency(realm, curCode, curName, curSymbol)
+                        }
+                    }
+
+                }
+                setCurrency(realm, "LAK", "라오스 킵", "₭")
+                setCurrency(realm, "LBP", "레바논 파운드", "ل.ل")
+                setCurrency(realm, "LSL", "레소토 로티", "L")
+                setCurrency(realm, "LRD", "라이베리아 달러", "$")
+                setCurrency(realm, "LYD", "리비아 디나르", "ل.د")
 
                 Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
                     for(i in 1..5){
@@ -63,4 +82,12 @@ fun showCheckNetworkDialog(context:Context){
     dialog.setMessage(context.getString(R.string.no_network))
             .setOkButton("닫기", View.OnClickListener { dialog.dismissDialog()})
             .show()
+}
+
+fun setCurrency(realm: Realm, code:String, name:String, symbol:String ){
+    realm.beginTransaction()
+    val newCurrency = realm.createObject(T_Currency::class.java, code)
+    newCurrency.name = name
+    newCurrency.symbol = symbol
+    realm.commitTransaction()
 }
