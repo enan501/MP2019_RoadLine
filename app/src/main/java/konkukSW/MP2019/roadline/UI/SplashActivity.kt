@@ -79,6 +79,7 @@ class SplashActivity : AppCompatActivity(){
                         setCurrency(curCode, curName, curSymbol)
                     }
                 }
+
             }
             setCurrency("LAK", "라오스 킵", "₭")
             setCurrency("LBP", "레바논 파운드", "ل.ل")
