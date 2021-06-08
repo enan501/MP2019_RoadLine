@@ -37,6 +37,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.*
 import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
+import konkukSW.MP2019.roadline.UI.date.ShowDateActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import konkukSW.MP2019.roadline.UI.widget.AddListDialog
 import konkukSW.MP2019.roadline.UI.widget.BaseDialog
@@ -63,7 +64,7 @@ import kotlin.collections.ArrayList
 class MainListActivity : AppCompatActivity() {
 
 
-    lateinit var MLAdapter:MainListAdapter
+    lateinit var MLAdapter: MainListAdapter
     lateinit var currencyAdapter: ArrayAdapter<String>
     lateinit var selectedCurrencyAdapter: CurrencyAdapter
     lateinit var realm:Realm
@@ -88,7 +89,9 @@ class MainListActivity : AppCompatActivity() {
 
     val curArray = arrayListOf<T_Currency>() //리스트 마다 dialog 내부의 화폐 종류
     lateinit var currencySpinner: SearchableSpinner
-    lateinit var korCur: T_Currency
+    val korCur: T_Currency by lazy{
+        curResults.where().equalTo("code", "KRW").findFirst()!!
+    }
     var dateStartEpoch: Long? = null
     var dateEndEpoch: Long? = null
     lateinit var imm :InputMethodManager
@@ -132,7 +135,6 @@ class MainListActivity : AppCompatActivity() {
             nowMonth = org.threeten.bp.LocalDate.now().monthValue - 1
             nowDay = org.threeten.bp.LocalDate.now().dayOfMonth
         }
-        korCur = curResults.where().equalTo("code", "KRW").findFirst()!!
     }
 
     fun initLayout(){
@@ -449,6 +451,9 @@ class MainListActivity : AppCompatActivity() {
                                 startText.visibility = View.GONE
                             }
                             builder.dismissDialog()
+                            val MLIntent = Intent(this@MainListActivity, ShowDateActivity::class.java)
+                            MLIntent.putExtra("ListID", newList.id)
+                            startActivity(MLIntent)
                         }
                         else{
                             val builder = BaseDialog.Builder(this@MainListActivity).create()
@@ -475,9 +480,8 @@ class MainListActivity : AppCompatActivity() {
 
         MLAdapter.itemClickListener = object : MainListAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val MLIntent = Intent(this@MainListActivity, PickDateActivity::class.java)
+                val MLIntent = Intent(this@MainListActivity, ShowDateActivity::class.java)
                 MLIntent.putExtra("ListID", data.id)
-                MLIntent.putExtra("backgroundImg", data.img)
                 MLIntent.putExtra("listPos", position)
                 startActivity(MLIntent)
             }
@@ -623,8 +627,8 @@ class MainListActivity : AppCompatActivity() {
                                         newDay.img = imgList[(i - 1).toInt()]
                                     realm.commitTransaction()
                                 }
-
                                 builder.dismissDialog()
+
                             } else {
                                 val builder = BaseDialog.Builder(this@MainListActivity).create()
                                 builder.setTitle("알림")

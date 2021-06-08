@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,7 +53,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     override fun onDestroy() {
-        (activity!! as ShowDateActivity).planResults.removeAllChangeListeners()
+        (requireActivity() as ShowDateActivity).planResults.removeAllChangeListeners()
         super.onDestroy()
     }
 
@@ -64,8 +65,8 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         initSwipe()
     }
     fun setObserve(){
-        (activity!! as ShowDateActivity).planResults.addChangeListener { _, _->
-            iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, context!!)
+        (requireActivity() as ShowDateActivity).planResults.addChangeListener { _, _->
+            iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, requireContext())
             rIconView.adapter = iconAdapter
             if(planAdapter.itemCount == 1){
                 backView.visibility = View.VISIBLE
@@ -74,11 +75,12 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 backView.visibility = View.INVISIBLE
             }
         }
+        Log.d("fragment1","hi")
     }
     fun initData(){
         mode = MODE_DEFAULT
         if(activity != null){
-            val intent = activity!!.intent
+            val intent = requireActivity().intent
             if(intent != null){
                 listID = intent.getStringExtra("ListID")
                 dayNum = intent.getIntExtra("DayNum", 0)
@@ -88,24 +90,15 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
     fun initLayout(){
         rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager = LinearLayoutManager(
-                activity!!,
-                RecyclerView.VERTICAL,
-                false
-        )
-        rView.layoutManager = layoutManager
-        planAdapter = PlanListAdapter((activity!! as ShowDateActivity).planResults, context!!, this)
+
+
+        planAdapter = PlanListAdapter((requireActivity() as ShowDateActivity).planResults, requireContext(), this)
         rView.adapter = planAdapter
 
 
         rIconView = v.findViewById(R.id.f1_rViewIcon) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager2 = LinearLayoutManager(
-                activity!!,
-                RecyclerView.VERTICAL,
-                false
-        )
-        rIconView.layoutManager = layoutManager2
-        iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, context!!)
+
+        iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, requireContext())
         rIconView.adapter = iconAdapter
         backView = v.findViewById(R.id.backView)
         if(planAdapter.itemCount == 1){
@@ -185,13 +178,13 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     fun initSwipe(){
-        callback = DateItemTouchHelperCallback(planAdapter, activity!!, ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
+        callback = DateItemTouchHelperCallback(planAdapter, requireActivity(), ItemTouchHelper.UP or ItemTouchHelper.DOWN, ItemTouchHelper.LEFT)
         itemTouchHelper = ItemTouchHelper(callback)
         itemTouchHelper.attachToRecyclerView(rView) //recyclerView에 붙이기
     }
 
 
-    fun combineImage(first:Bitmap, second:Bitmap):Bitmap?{
+    private fun combineImage(first:Bitmap, second:Bitmap):Bitmap?{
         val result = Bitmap.createBitmap(first.width + second.width, first.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(result)
         val paint = Paint()
@@ -210,7 +203,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         return result
     }
 
-    fun getScreenshotFromRecyclerView(view: RecyclerView, ad: RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
+    private fun getScreenshotFromRecyclerView(view: RecyclerView, ad: RecyclerView.Adapter<RecyclerView.ViewHolder>): Bitmap? {
         mode = MODE_CAPTURE
         var bigBitmap: Bitmap?
         val size = ad.itemCount - 1

@@ -7,6 +7,7 @@
         android:layout_height="match_parent"
         android:layout_marginRight="50dp"
         android:gravity="center"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <ImageView

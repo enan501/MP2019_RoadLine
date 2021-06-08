@@ -187,6 +187,7 @@
             android:minHeight="0dp"
             android:paddingVertical="10dp"
             android:paddingLeft="22dp"
+
             android:paddingRight="22dp"
             android:text="취소"
             android:textSize="12sp"
