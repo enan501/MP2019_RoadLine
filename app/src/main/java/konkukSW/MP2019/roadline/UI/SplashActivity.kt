@@ -41,14 +41,13 @@ class SplashActivity : AppCompatActivity(){
             checkCurrency()
         }
         Thread.sleep(1500)
+
     }
     suspend fun checkCurrency(){
         realm = Realm.getDefaultInstance()
         curResults = realm.where(T_Currency::class.java).findAll()
         if(NetworkStatus.isNetworkConnected(this)){
             getCurrency()
-            startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
-            finish()
         }
         else{
             if(curResults.size == 0){
@@ -56,62 +55,66 @@ class SplashActivity : AppCompatActivity(){
                     dialog.show()
                 }
             } else {
-                startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
-                finish()
+                goToMainListActivity()
             }
         }
     }
     fun getCurrency():Boolean { // True : delay 주기
-        if (curResults.size < 0) {
+        if (curResults.size < 142) {
             //환율정보 db 초기 세팅
-            //이름,코드,환율 parsing
-            Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
-                select("tbody >tr").forEach {element ->
-                    var curName = element.select("td:nth-child(2)>a").text()
-                    var curCode = element.select("td:nth-child(3)>a").text()
-                    var curRate = element.select("td:nth-child(4)").text()
-                    curName = "Kor"
-                    curCode = "KRRRRRR"
-                    curRate = "1.0"
-                    realm.beginTransaction()
-                    val newCurrency = realm.createObject(T_Currency::class.java, curCode)
-                    newCurrency.name = curName
-                    newCurrency.rate = curRate.toDouble()
-                    realm.commitTransaction()
-                }
-            }
-            //코드와 일치하는 기호 parsing
+            //이름, 코드, 기호 parsing
             Jsoup.connect("https://kr.fxexchangerate.com/currency-symbols.html").get().run {
-                select("tbody >tr").forEach {element ->
-                    var curCode = element.select("td:nth-child(2)").text()
-                    var curSymbol = element.select("td:nth-child(3)").text()
+                select(".fxtable tr:nth-of-type(n+2)").forEach { element ->
+                    val curName = element.select("td:nth-child(1)>a").text() //이름
+                    val curCode = element.select("td:nth-child(2)").text() //코드
+                    val curSymbol =
+                            element.select("td:nth-child(3)").text().split(' ')[0].split(',')[0] //기
                     if (curCode.isNotEmpty()) {
-                        realm.beginTransaction()
-                        curResults.where().equalTo("code",curCode).findFirst()!!.symbol = curSymbol
-                        realm.commitTransaction()
-
-                        //println(index.toString() + " : " + curCode + "/" + curSymbol)
+                        setCurrency(curCode, curName, curSymbol)
                     }
                 }
             }
-            //기호가 없는 화폐는 코드를 기호로 대체
+            setCurrency("LAK", "라오스 킵", "₭")
+            setCurrency("LBP", "레바논 파운드", "ل.ل")
+            setCurrency("LSL", "레소토 로티", "L")
+            setCurrency("LRD", "라이베리아 달러", "$")
+            setCurrency("LYD", "리비아 디나르", "ل.د")
 
-            for(T_currency in curResults){
-                if(T_currency.symbol.isEmpty())
-                {
-                    realm.beginTransaction()
-                    var code = T_currency.code
-                    T_currency.symbol = code
-                    realm.commitTransaction()
+            //이름 기준 환율 parsing
+            Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
+                for(i in 1..5){
+                    select(".fxtable:nth-of-type(${i}) tr:nth-of-type(n+2)").forEach {element ->
+                        var curName = element.select("td:nth-child(1)>a").text()
+                        var curRate = element.select("td:nth-child(2)").text()
+//                        Log.d("currency",curName)
+                        realm.beginTransaction()
+                        curResults.where().equalTo("name",curName).findFirst()!!.rate = curRate.toDouble()
+                        realm.commitTransaction()
+                    }
                 }
+
             }
+            startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
+            finish()
             return false
         } else {
+            startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
+            finish()
             return true
         }
     }
 
+    fun goToMainListActivity(){
+        startActivity(Intent(this@SplashActivity, MainListActivity::class.java))
+        finish()
+    }
 
-
+    fun setCurrency(code:String, name:String, symbol:String ){
+        realm.beginTransaction()
+        val newCurrency = realm.createObject(T_Currency::class.java, code)
+        newCurrency.name = name
+        newCurrency.symbol = symbol
+        realm.commitTransaction()
+    }
 }
 

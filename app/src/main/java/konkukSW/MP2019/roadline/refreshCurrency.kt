@@ -24,16 +24,19 @@ fun refreshCurrency(context: Context) {
                 Realm.init(context)
                 var realm = Realm.getDefaultInstance()
                 var curResults = realm.where(T_Currency::class.java).findAll()
-                //이미 db 구성되어 있으면 환율정보만 업데이트
-                Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
-                    select("tbody >tr").forEach { element ->
-                        var curCode = element.select("td:nth-child(3)>a").text()
-                        var curRate = element.select("td:nth-child(4)").text()
 
-                        realm.beginTransaction()
-                        curResults.where().equalTo("code", curCode).findFirst()!!.rate = curRate.toDouble()
-                        realm.commitTransaction()
+                Jsoup.connect("https://kr.fxexchangerate.com/currency-exchange-rates.html").get().run {
+                    for(i in 1..5){
+                        select(".fxtable:nth-of-type(${i}) tr:nth-of-type(n+2)").forEach {element ->
+                            var curName = element.select("td:nth-child(1)>a").text()
+                            println(curName)
+                            var curRate = element.select("td:nth-child(2)").text()
+                            realm.beginTransaction()
+                            curResults.where().equalTo("name",curName).findFirst()!!.rate = curRate.toDouble()
+                            realm.commitTransaction()
+                        }
                     }
+
                 }
                 pd.dismissDialog()
                 withContext(Dispatchers.Main){
