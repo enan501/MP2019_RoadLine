@@ -11,18 +11,27 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
+import com.google.android.material.tabs.TabLayoutMediator
 import io.realm.Realm
 import io.realm.RealmResults
+import io.realm.Sort
+import konkukSW.MP2019.roadline.Data.Adapter.DayListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.TabAdapter
 import konkukSW.MP2019.roadline.Data.DB.T_Day
 import konkukSW.MP2019.roadline.Data.DB.T_List
 import konkukSW.MP2019.roadline.Data.DB.T_Plan
+import konkukSW.MP2019.roadline.Data.Dataclass.PickDate
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.money.ShowMoneyActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import kotlinx.android.synthetic.main.activity_show_date.*
 import kotlinx.android.synthetic.main.fragment_fragment2.*
+import kotlinx.android.synthetic.main.item_date_button.view.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -30,14 +39,23 @@ import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.stream.Collectors
 
 
 class ShowDateActivity : AppCompatActivity() {
     private val TYPE_BEFORE = 0
     private val TYPE_NEXT = 1
 
+    private val planFragments = arrayListOf<Fragment>(
+            Fragment1(),
+            Fragment2(),
+            Fragment4()
+    )
+    val days by lazy{
+        dayResults.stream().map{PickDate(listID, it.num, it.date, it.img)}.collect(Collectors.toList())
+    }
     var listID = "a"
-    var dayNum = 0
+    var dayNum:Int? = 0
     var maxDayNum = 0
     lateinit var adapter: TabAdapter
     lateinit var realm: Realm
@@ -49,6 +67,14 @@ class ShowDateActivity : AppCompatActivity() {
     lateinit var thisList: T_List
     lateinit var dayResults: RealmResults<T_Day>
     lateinit var planResults:RealmResults<T_Plan>
+    val plans = MutableLiveData<T_Plan>()
+
+
+    val requestActivity: ActivityResultLauncher<Intent> = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult() // ◀ StartActivityForResult 처리를 담당
+    ) { activityResult ->
+        // action to do something
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_show_date)
@@ -68,7 +94,38 @@ class ShowDateActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun setPlans(selectedDay:Int?) {
+        if (dayNum != null){
+            if(dayNum != selectedDay) {
+                days[dayNum!!].isSelected = false
+                (rvDates.adapter as DayListAdapter).notifyItemChanged(dayNum!!)
+            }
+        } else{
+            btnAll.tvDateIcon.isSelected = false
+        }
+        if (selectedDay != null) {
+            planResults = realm.where<T_Plan>(T_Plan::class.java)
+                    .equalTo("listID", listID)
+                    .equalTo("dayNum", selectedDay)
+                    .findAll()
+                    .sort("pos")
+        } else {
+            planResults =  realm.where<T_Plan>(T_Plan::class.java)
+                    .equalTo("listID", listID)
+                    .findAll()
+                    .sort("dayNum",Sort.ASCENDING,"pos",Sort.ASCENDING)
+        }
+        supportFragmentManager.fragments.apply {
+            if(this.size >0) {
+                (this[0] as Fragment1).init()
+                (this[1] as Fragment2).init()
+                (this[2] as Fragment4).init()
+            }
+        }
 
+        dayNum = selectedDay
+        Log.d("enan",selectedDay.toString())
+    }
 
     fun initData() {
         listID = intent.getStringExtra("ListID")
@@ -76,201 +133,184 @@ class ShowDateActivity : AppCompatActivity() {
         Realm.init(this)
         realm = Realm.getDefaultInstance()
         thisList = realm.where<T_List>(T_List::class.java).equalTo("id", listID).findFirst()!!
-        dayResults = realm.where<T_Day>(T_Day::class.java).equalTo("listID", listID).findAll()!!
+        dayResults = realm.where<T_Day>(T_Day::class.java)
+                .equalTo("listID", listID)
+                .findAll().sort("num")
+        rvDates.adapter = DayListAdapter(object:DayListAdapter.OnItemClickListener{
+            override fun onItemClick(dayNum: Int?) {
+                setPlans(dayNum)
+            }
+        })
+        rvDates.itemAnimator = null
+        days[0].isSelected = true
+        (rvDates.adapter as DayListAdapter).submitList(days)
         maxDayNum = dayResults.size
         title = thisList.title
         sd_toolbar.title = title
-        sd_textView1.text = "DAY " + dayNum.toString()
-        if(android.os.Build.VERSION.SDK_INT >= 26) {
-            val dateFormat = DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
-            val date = LocalDate.ofEpochDay(dayResults.where().equalTo("num", dayNum).findFirst()!!.date)
-            sd_textView2.text = date.format(dateFormat)
-        }
-        else{
-            val dateFormat = org.threeten.bp.format.DateTimeFormatter.ofPattern("M월 dd일 E요일").withLocale(Locale.forLanguageTag("ko"))
-            val date = org.threeten.bp.LocalDate.ofEpochDay(dayResults.where().equalTo("num", dayNum).findFirst()!!.date)
-            sd_textView2.text = date.format(dateFormat)
-        }
-        planResults = realm.where<T_Plan>(T_Plan::class.java)
-                .equalTo("listID", listID)
-                .equalTo("dayNum", dayNum)
-                .findAll()
-                .sort("pos")
+
+
+
+        setPlans(dayNum)
+
     }
 
     fun initLayout(){
         setSupportActionBar(sd_toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        tabLayer = findViewById(R.id.sd_layout_tab)
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_list_select))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_timeline))
-        tabLayer!!.addTab(tabLayer!!.newTab().setIcon(R.drawable.tab_map))
-        tabLayer!!.tabGravity = TabLayout.GRAVITY_FILL
 
-        if(dayNum == maxDayNum){
-            sd_rightImg.visibility = View.INVISIBLE
-        }
-        if(dayNum == 1){
-            sd_leftImg.visibility = View.INVISIBLE
-        }
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+
+
+        btnAll.tvDateIcon.text = "A"
+        btnAll.tvDate.text = "ALL"
+
     }
 
 
     fun initListener() {
-        adapter = TabAdapter(supportFragmentManager, tabLayer!!.tabCount)
-        sd_viewPager.adapter = adapter
-        sd_viewPager.addOnPageChangeListener(object : androidx.viewpager.widget.ViewPager.OnPageChangeListener { //tab select같이해줘야함
-            override fun onPageScrollStateChanged(state: Int) {}
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-            override fun onPageSelected(position: Int) {
-                val tab = tabLayer!!.getTabAt(position)
-                tab!!.select()
+        btnAll.setOnClickListener {
+            setPlans(null)
+            btnAll.tvDateIcon.isSelected = true
+        }
+        sd_viewPager.adapter = PlanViewPagerAdapter(planFragments, this)
+        sd_viewPager.offscreenPageLimit = 3
+        TabLayoutMediator(sd_layout_tab,sd_viewPager){tab, position ->
+            tab.icon = when(position){
+                0->{ ContextCompat.getDrawable(this,R.drawable.tab_list)}
+                1->{ ContextCompat.getDrawable(this,R.drawable.tab_timeline)}
+                else->{ ContextCompat.getDrawable(this,R.drawable.tab_map)}
             }
-        })
-        tabLayer!!.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-            override fun onTabReselected(p0: TabLayout.Tab?) {}
-            override fun onTabUnselected(p0: TabLayout.Tab?) {}
-            override fun onTabSelected(tab: TabLayout.Tab) {
-                when (tab.position) {
-                    0 -> {
-                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list_select)
-                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                    }
-                    1 -> {
-                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline_select)
-                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map)
-                        gps_check.isChecked = false
-                    }
-                    2 -> {
-                        tabLayer!!.getTabAt(0)?.setIcon(R.drawable.tab_list)
-                        tabLayer!!.getTabAt(1)?.setIcon(R.drawable.tab_timeline)
-                        tabLayer!!.getTabAt(2)?.setIcon(R.drawable.tab_map_select)
+            tab.view.alpha = 0.4f
+        }.attach()
 
-                    }
-                }
-                sd_viewPager.currentItem = tab.position
-                tabPos = tab.position
-            }
+        sd_layout_tab.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener{
+            override fun onTabSelected(tab: TabLayout.Tab?) { tab?.view?.alpha = 1f }
+            override fun onTabUnselected(tab: TabLayout.Tab?) { tab?.view?.alpha = 0.4f }
+            override fun onTabReselected(tab: TabLayout.Tab?) { tab?.view?.alpha = 1f }
         })
 
-        sd_leftImg.setOnClickListener {
-            goIntent(TYPE_BEFORE)
+        sd_addPlanBtn.setOnClickListener {
+            val i = Intent(this, AddSpotActivity::class.java)
+            i.putExtra("pos", planResults.count() - 1)
+            i.putExtra("DayNum", dayNum)
+            i.putExtra("ListID", listID)
+            startActivity(i)
         }
 
-        sd_rightImg.setOnClickListener {
-            goIntent(TYPE_NEXT)
-        }
+//        sd_imgBtn1.setOnClickListener {
+//            var Intent = Intent(this, ShowPhotoActivity::class.java)
+//            Intent.putExtra("ListID", listID)
+//            Intent.putExtra("DayNum", dayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
+//            startActivity(Intent)
+//            overridePendingTransition(
+//                    R.anim.anim_slide_in_top,
+//                    R.anim.anim_slide_out_bottom
+//            )
+//        }
+//
+//        sd_imgBtn2.setOnClickListener {
+//            //가계부 버튼
+//            var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
+//            PDIntentToMoney.putExtra("ListID", listID)
+//            PDIntentToMoney.putExtra("DayNum", dayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
+//            startActivity(PDIntentToMoney)
+//            overridePendingTransition(
+//                    R.anim.anim_slide_in_top,
+//                    R.anim.anim_slide_out_bottom
+//            )
+//        }
+//
+//        sd_imgBtn3.setOnClickListener {
+//            var bitmap: Bitmap? = null
+//            if (tabPos == 0) { //Fragment1
+//                bitmap = (supportFragmentManager
+//                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
+//                        as Fragment1).getScreenshot()
+//
+//            }
+//            else if(tabPos == 1){ //Fragment2
+//                bitmap = (supportFragmentManager
+//                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
+//                        as Fragment2).getScreenshotFromRecyclerView()
+//            }
+//            else if(tabPos == 2){
+//                (supportFragmentManager
+//                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(2))
+//                        as Fragment4).getScreenShot()
+//            }
+//
+//            if(bitmap != null){
+//                val storage = this.cacheDir
+//                val fileName = "temp.jpg"
+//                val tempFile = File(storage, fileName)
+//                try {
+//                    tempFile.createNewFile()
+//                    val out = FileOutputStream(tempFile)
+//                    bitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
+//                    out.close()
+//                } catch (e: FileNotFoundException) {
+//                    e.printStackTrace()
+//                } catch (e: IOException) {
+//                    e.printStackTrace()
+//                }
+//                Log.v("tag", tempFile.toURI().toString())
+//                var uri = FileProvider.getUriForFile(this,packageName + ".fileprovider",tempFile)
+//                val shareIntent = Intent(Intent.ACTION_SEND)
+//                shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
+//                shareIntent.type = "image/*"
+//                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
+//                startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
+//            }
+//        }
 
-        sd_imgBtn1.setOnClickListener {
-            var Intent = Intent(this, ShowPhotoActivity::class.java)
-            Intent.putExtra("ListID", listID)
-            Intent.putExtra("DayNum", dayNum) // 0:모든 Day 사진첩 전체 출력/ 1이상이면 그것만 출력
-            startActivity(Intent)
-            overridePendingTransition(
-                    R.anim.anim_slide_in_top,
-                    R.anim.anim_slide_out_bottom
-            )
-        }
-
-        sd_imgBtn2.setOnClickListener {
-            //가계부 버튼
-            var PDIntentToMoney = Intent(this, ShowMoneyActivity::class.java)
-            PDIntentToMoney.putExtra("ListID", listID)
-            PDIntentToMoney.putExtra("DayNum", dayNum) // 0:모든 Day 가계부 전체 출력/ 1이상이면 그것만 출력
-            startActivity(PDIntentToMoney)
-            overridePendingTransition(
-                    R.anim.anim_slide_in_top,
-                    R.anim.anim_slide_out_bottom
-            )
-        }
-
-        sd_imgBtn3.setOnClickListener {
-            var bitmap: Bitmap? = null
-            if (tabPos == 0) { //Fragment1
-                bitmap = (supportFragmentManager
-                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(0))
-                        as Fragment1).getScreenshot()
-
-            }
-            else if(tabPos == 1){ //Fragment2
-                bitmap = (supportFragmentManager
-                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(1))
-                        as Fragment2).getScreenshotFromRecyclerView()
-            }
-            else if(tabPos == 2){
-                (supportFragmentManager
-                        .findFragmentByTag("android:switcher:" + sd_viewPager.getId() + ":" + adapter.getItemId(2))
-                        as Fragment4).getScreenShot()
-            }
-
-            if(bitmap != null){
-                val storage = this.cacheDir
-                val fileName = "temp.jpg"
-                val tempFile = File(storage, fileName)
-                try {
-                    tempFile.createNewFile()
-                    val out = FileOutputStream(tempFile)
-                    bitmap.compress(Bitmap.CompressFormat.JPEG,100, out)
-                    out.close()
-                } catch (e: FileNotFoundException) {
-                    e.printStackTrace()
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
-                Log.v("tag", tempFile.toURI().toString())
-                var uri = FileProvider.getUriForFile(this,packageName + ".fileprovider",tempFile)
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.addCategory(Intent.CATEGORY_DEFAULT)
-                shareIntent.type = "image/*"
-                shareIntent.putExtra(Intent.EXTRA_STREAM, uri)
-                startActivity(Intent.createChooser(shareIntent, "여행 일정 공유"))
-            }
-        }
-
-        sd_day_layout.setOnTouchListener { v, event ->
-            if(event.action == MotionEvent.ACTION_DOWN){
-                down_x = event.rawX
-            }
-            else if(event.action == MotionEvent.ACTION_UP){
-                up_x = event.rawX
-                if(up_x - down_x > 100){
-                    //왼쪽으로 넘어가기
-                    if(dayNum != 1)
-                        goIntent(TYPE_BEFORE)
-                }
-                else if(up_x - down_x < -100){
-                    //오른쪽으로 넘어가기
-                    if(dayNum != maxDayNum)
-                        goIntent(TYPE_NEXT)
-                }
-            }
-            true
-        }
+        // -------------------------
+//        sd_day_layout.setOnTouchListener { v, event ->
+//            if(event.action == MotionEvent.ACTION_DOWN){
+//                down_x = event.rawX
+//            }
+//            else if(event.action == MotionEvent.ACTION_UP){
+//                up_x = event.rawX
+//                if(up_x - down_x > 100){
+//                    //왼쪽으로 넘어가기
+//                    if(dayNum != 1)
+//                        goIntent(TYPE_BEFORE)
+//                }
+//                else if(up_x - down_x < -100){
+//                    //오른쪽으로 넘어가기
+//                    if(dayNum != maxDayNum)
+//                        goIntent(TYPE_NEXT)
+//                }
+//            }
+//            true
+//        }
     }
 
-    fun goIntent(type:Int){
-        var anim1:Int
-        var anim2:Int
-        var nextDay:Int
-        if(type == TYPE_BEFORE){
-            anim1 =  R.anim.anim_slide_in_left
-            anim2 =  R.anim.anim_slide_out_right
-            nextDay = dayNum - 1
-        }
-        else{
-            anim1 = R.anim.anim_slide_in_right
-            anim2 = R.anim.anim_slide_out_left
-            nextDay = dayNum + 1
-        }
-        var intentToNext = Intent(this, ShowDateActivity::class.java)
-        intentToNext.putExtra("ListID", listID)
-        intentToNext.putExtra("DayNum", nextDay)
-        startActivity(intentToNext)
-        overridePendingTransition(anim1, anim2)
-        finish()
-    }
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        val menuInflater = menuInflater
+//        menuInflater.inflate(R.menu.menu_main, menu)
+//        return true
+//    }
+//
+//    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+//        when(item.itemId){
+//            R.id.menuPhoto -> {
+//
+//            }
+//            R.id.menuMoney -> {
+//
+//            }
+//            R.id.menuShare -> {
+//
+//            }
+//            android.R.id.home -> {
+//                finish()
+//            }
+//            else -> {
+//                return super.onOptionsItemSelected(item)
+//            }
+//        }
+//        return true
+//    }
+
 
 }
 

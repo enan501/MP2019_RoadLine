@@ -10,7 +10,7 @@
 <color name="grayCC">#CCCCCC</color>
 <color name="grayE0">#E0E0E0</color>
 <color name="gray66">#AA666666</color>
-<color name="lightGray">#808080</color>
+    <color name="lightGray">#D8DBDE</color>
 <color name="darkGray">#565656</color>
 <color name="blackAlpha">#4B000000</color>
 <color name="white">#FFFFFF</color>

@@ -7,6 +7,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,6 +75,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
                 backView.visibility = View.INVISIBLE
             }
         }
+        Log.d("fragment1","hi")
     }
     fun initData(){
         mode = MODE_DEFAULT
@@ -88,23 +90,14 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
 
     fun initLayout(){
         rView = v.findViewById(R.id.f1_rView) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager = LinearLayoutManager(
-                requireActivity(),
-                RecyclerView.VERTICAL,
-                false
-        )
-        rView.layoutManager = layoutManager
+
+
         planAdapter = PlanListAdapter((requireActivity() as ShowDateActivity).planResults, requireContext(), this)
         rView.adapter = planAdapter
 
 
         rIconView = v.findViewById(R.id.f1_rViewIcon) as androidx.recyclerview.widget.RecyclerView
-        val layoutManager2 = LinearLayoutManager(
-                requireActivity(),
-                RecyclerView.VERTICAL,
-                false
-        )
-        rIconView.layoutManager = layoutManager2
+
         iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, requireContext())
         rIconView.adapter = iconAdapter
         backView = v.findViewById(R.id.backView)

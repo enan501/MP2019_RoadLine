@@ -45,11 +45,14 @@ class Fragment2 : androidx.fragment.app.Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         v = inflater.inflate(konkukSW.MP2019.roadline.R.layout.fragment_fragment2, container, false)
+        init()
+        return v
+    }
+    fun init(){
         setObserve()
         initData()
         initLayout()
         addListener()
-        return v
     }
 
     fun setObserve(){

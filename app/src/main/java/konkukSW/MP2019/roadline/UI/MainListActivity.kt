@@ -37,6 +37,7 @@ import konkukSW.MP2019.roadline.Data.Adapter.*
 import konkukSW.MP2019.roadline.Data.DB.*
 import konkukSW.MP2019.roadline.R
 import konkukSW.MP2019.roadline.UI.date.PickDateActivity
+import konkukSW.MP2019.roadline.UI.date.ShowDateActivity
 import konkukSW.MP2019.roadline.UI.photo.ShowPhotoActivity
 import konkukSW.MP2019.roadline.UI.widget.AddListDialog
 import konkukSW.MP2019.roadline.UI.widget.BaseDialog
@@ -475,9 +476,8 @@ class MainListActivity : AppCompatActivity() {
 
         MLAdapter.itemClickListener = object : MainListAdapter.OnItemClickListener {
             override fun OnItemClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val MLIntent = Intent(this@MainListActivity, PickDateActivity::class.java)
+                val MLIntent = Intent(this@MainListActivity, ShowDateActivity::class.java)
                 MLIntent.putExtra("ListID", data.id)
-                MLIntent.putExtra("backgroundImg", data.img)
                 MLIntent.putExtra("listPos", position)
                 startActivity(MLIntent)
             }
