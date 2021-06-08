@@ -110,7 +110,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     fun addListener(){
-        planAdapter.itemClickListener = object : PlanListAdapter.OnItemClickListener{
+        planAdapter.itemClickListener = object : PlanListAdapter.OnItemClickListener {
             override fun OnItemClick(holder: PlanListAdapter.FooterViewHolder) {
                 val i = Intent(activity, AddSpotActivity::class.java)
                 i.putExtra("pos", planAdapter.itemCount - 1)

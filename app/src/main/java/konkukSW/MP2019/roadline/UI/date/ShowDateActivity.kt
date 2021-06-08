@@ -165,11 +165,12 @@ class ShowDateActivity : AppCompatActivity() {
     }
 
     fun setPlans(selectedDay:Int?) {
-        if (dayNum != null){
+        if (dayNum != null) {
             if(dayNum != selectedDay) {
                 days[dayNum!!].isSelected = false
                 (rvDates.adapter as DayListAdapter).notifyItemChanged(dayNum!!)
             }
+
         } else{
             btnAll.tvDateIcon.isSelected = false
         }
@@ -184,6 +185,7 @@ class ShowDateActivity : AppCompatActivity() {
                     .equalTo("listID", listID)
                     .findAll()
                     .sort("dayNum",Sort.ASCENDING,"pos",Sort.ASCENDING)
+
         }
         supportFragmentManager.fragments.apply {
             if(this.size >0) {
@@ -222,10 +224,7 @@ class ShowDateActivity : AppCompatActivity() {
 
     fun initLayout(){
         setSupportActionBar(sd_toolbar)
-
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-
-
         btnAll.tvDateIcon.text = "A"
         btnAll.tvDate.text = "ALL"
 

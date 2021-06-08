@@ -262,6 +262,10 @@ class AddSpotActivity : AppCompatActivity(), OnMapReadyCallback {
                         thisPlan!!.hour = hour
                         thisPlan!!.minute = minute
                     }
+                    else{
+                        thisPlan!!.hour = null
+                        thisPlan!!.minute = null
+                    }
                     thisPlan!!.memo = memo
                     thisPlan!!.locationX = locationX
                     thisPlan!!.locationY = locationY
