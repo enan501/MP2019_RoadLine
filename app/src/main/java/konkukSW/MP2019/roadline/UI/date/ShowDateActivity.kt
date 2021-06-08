@@ -199,7 +199,6 @@ class ShowDateActivity : AppCompatActivity() {
 
     fun initData() {
         listID = intent.getStringExtra("ListID")
-        dayNum = intent.getIntExtra("DayNum", 0)
         Realm.init(this)
         realm = Realm.getDefaultInstance()
         thisList = realm.where<T_List>(T_List::class.java).equalTo("id", listID).findFirst()!!
@@ -217,7 +216,8 @@ class ShowDateActivity : AppCompatActivity() {
         maxDayNum = dayResults.size
         title = thisList.title
         sd_toolbar.title = title
-        setPlans(dayNum)
+        setPlans(null)
+        btnAll.isSelected = true
     }
 
     fun initLayout(){
