@@ -175,12 +175,14 @@ class ShowDateActivity : AppCompatActivity() {
             btnAll.tvDateIcon.isSelected = false
         }
         if (selectedDay != null) {
+            if(this::planResults.isInitialized) planResults.removeAllChangeListeners()
             planResults = realm.where<T_Plan>(T_Plan::class.java)
                     .equalTo("listID", listID)
                     .equalTo("dayNum", selectedDay)
                     .findAll()
                     .sort("pos")
         } else {
+            if(this::planResults.isInitialized) planResults.removeAllChangeListeners()
             planResults =  realm.where<T_Plan>(T_Plan::class.java)
                     .equalTo("listID", listID)
                     .findAll()
@@ -289,9 +291,6 @@ class ShowDateActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_main, menu)
         return true
     }
-
-
-
 
 }
 

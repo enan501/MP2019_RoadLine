@@ -487,10 +487,10 @@ class MainListActivity : AppCompatActivity() {
             }
 
             override fun OnDeleteClick(holder: MainListAdapter.ViewHolder, data: T_List, position: Int) {
-                val item = listResults[position]
+                val item = realm.where(T_List::class.java).equalTo("id",data.id).findFirst()!!
                 val builder = BaseDialog.Builder(this@MainListActivity).create()
                 builder.setTitle("알림")
-                        .setMessage("'" + item!!.title + "' 기록을 삭제할까요?")
+                        .setMessage("'" + data!!.title + "' 기록을 삭제할까요?")
                         .setOkButton("삭제", View.OnClickListener {
                             realm.beginTransaction()
 

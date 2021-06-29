@@ -16,6 +16,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import io.realm.RealmChangeListener
+import io.realm.RealmResults
 import konkukSW.MP2019.roadline.Data.Adapter.DateIconListAdapter
 import konkukSW.MP2019.roadline.Data.Adapter.DateItemTouchHelperCallback
 import konkukSW.MP2019.roadline.Data.Adapter.PlanListAdapter
@@ -43,6 +45,17 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     var listID = ""
     var dayNum = 0
 
+    val listener = RealmChangeListener<RealmResults<T_Plan>>{
+        iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, requireContext())
+        rIconView.adapter = iconAdapter
+        if(planAdapter.itemCount == 1){
+            backView.visibility = View.VISIBLE
+        }
+        else{
+            backView.visibility = View.INVISIBLE
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,7 +66,7 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
     }
 
     override fun onDestroy() {
-        (requireActivity() as ShowDateActivity).planResults.removeAllChangeListeners()
+        (requireActivity() as ShowDateActivity).planResults.removeChangeListener(listener)
         super.onDestroy()
     }
 
@@ -64,19 +77,11 @@ class Fragment1 : androidx.fragment.app.Fragment() {  //리스트
         addListener()
         initSwipe()
     }
+
     fun setObserve(){
-        (requireActivity() as ShowDateActivity).planResults.addChangeListener { _, _->
-            iconAdapter = DateIconListAdapter(planAdapter.itemCount - 1, requireContext())
-            rIconView.adapter = iconAdapter
-            if(planAdapter.itemCount == 1){
-                backView.visibility = View.VISIBLE
-            }
-            else{
-                backView.visibility = View.INVISIBLE
-            }
-        }
-        Log.d("fragment1","hi")
+        (requireActivity() as ShowDateActivity).planResults.addChangeListener(listener)
     }
+
     fun initData(){
         mode = MODE_DEFAULT
         if(activity != null){
